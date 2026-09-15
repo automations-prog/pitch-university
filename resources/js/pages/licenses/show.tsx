@@ -7,9 +7,15 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
+import { RichTextContent } from '@/components/rich-text-content';
 import { dashboard } from '@/routes';
 import { index as licensesIndex } from '@/routes/licenses';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronDown } from 'lucide-react';
 import type { License, LicenseStep } from '@/types';
 
 export default function LicenseShow({
@@ -62,26 +68,50 @@ export default function LicenseShow({
                             </p>
                         ) : (
                             <ol className="space-y-3">
-                                {steps.map((step, index) => (
-                                    <li
-                                        key={step.id}
-                                        className="flex items-start gap-3 rounded-lg border p-3"
-                                    >
-                                        <span className="bg-muted flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
-                                            {index + 1}
-                                        </span>
-                                        <div className="min-w-0 flex-1">
-                                            <p className="text-sm font-medium">
+                                {steps.map((step, index) =>
+                                    step.description ? (
+                                        <Collapsible
+                                            key={step.id}
+                                            asChild
+                                            defaultOpen={false}
+                                        >
+                                            <li className="rounded-lg border p-3">
+                                                <CollapsibleTrigger asChild>
+                                                    <button
+                                                        type="button"
+                                                        className="group flex w-full items-center gap-3 text-left"
+                                                    >
+                                                        <span className="bg-muted flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
+                                                            {index + 1}
+                                                        </span>
+                                                        <span className="min-w-0 flex-1 text-sm font-medium">
+                                                            {step.title}
+                                                        </span>
+                                                        <ChevronDown className="text-muted-foreground size-4 shrink-0 transition-transform group-data-[state=open]:rotate-180" />
+                                                    </button>
+                                                </CollapsibleTrigger>
+                                                <CollapsibleContent className="pl-9">
+                                                    <RichTextContent
+                                                        html={step.description}
+                                                        className="text-muted-foreground"
+                                                    />
+                                                </CollapsibleContent>
+                                            </li>
+                                        </Collapsible>
+                                    ) : (
+                                        <li
+                                            key={step.id}
+                                            className="flex items-center gap-3 rounded-lg border p-3"
+                                        >
+                                            <span className="bg-muted flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
+                                                {index + 1}
+                                            </span>
+                                            <span className="min-w-0 flex-1 text-sm font-medium">
                                                 {step.title}
-                                            </p>
-                                            {step.description && (
-                                                <p className="text-muted-foreground text-sm">
-                                                    {step.description}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </li>
-                                ))}
+                                            </span>
+                                        </li>
+                                    ),
+                                )}
                             </ol>
                         )}
                     </CardContent>

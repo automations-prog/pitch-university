@@ -7,23 +7,30 @@ use Database\Factories\VerticalTrainingFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
  * @property string $name
  * @property VerticalTrainingStatus $status
+ * @property int|null $license_id
  * @property string|null $script_title
  * @property string|null $script_scenario
  * @property string|null $script_body
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'status', 'script_title', 'script_scenario', 'script_body'])]
+#[Fillable(['name', 'status', 'license_id', 'script_title', 'script_scenario', 'script_body'])]
 class VerticalTraining extends Model
 {
     /** @use HasFactory<VerticalTrainingFactory> */
     use HasFactory;
+
+    public function license(): BelongsTo
+    {
+        return $this->belongsTo(License::class);
+    }
 
     /**
      * Get the attributes that should be cast.

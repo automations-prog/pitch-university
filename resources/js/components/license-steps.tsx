@@ -31,9 +31,10 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { Spinner } from '@/components/ui/spinner';
-import { Textarea } from '@/components/ui/textarea';
 import { brandButtonClass } from '@/lib/brand-theme';
+import { RichTextContent } from '@/components/rich-text-content';
 import { ArrowDown, ArrowUp, Pencil, Plus, Trash2 } from 'lucide-react';
 import type { License, LicenseStep } from '@/types';
 
@@ -47,6 +48,7 @@ function StepFormDialog({
     trigger: ReactNode;
 }) {
     const [open, setOpen] = useState(false);
+    const [description, setDescription] = useState(step?.description ?? '');
     const isEditing = Boolean(step);
 
     const form = isEditing
@@ -56,7 +58,7 @@ function StepFormDialog({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
                 <DialogTitle>
                     {isEditing ? 'Edit step' : 'Add step'}
                 </DialogTitle>
@@ -69,7 +71,10 @@ function StepFormDialog({
                 <Form
                     {...form}
                     resetOnSuccess
-                    onSuccess={() => setOpen(false)}
+                    onSuccess={() => {
+                        setOpen(false);
+                        setDescription(step?.description ?? '');
+                    }}
                     className="space-y-4"
                 >
                     {({ processing, errors }) => (
@@ -93,11 +98,16 @@ function StepFormDialog({
 
                             <div className="grid gap-2">
                                 <Label htmlFor="description">Description</Label>
-                                <Textarea
-                                    id="description"
+                                <input
+                                    type="hidden"
                                     name="description"
-                                    defaultValue={step?.description ?? ''}
-                                    placeholder="Optional details for this step"
+                                    value={description}
+                                />
+                                <RichTextEditor
+                                    id="description"
+                                    value={description}
+                                    onChange={setDescription}
+                                    placeholder="Details for this step"
                                 />
                                 {errors.description && (
                                     <p className="text-destructive text-sm">
@@ -188,9 +198,10 @@ export default function LicenseSteps({
                                         {step.title}
                                     </p>
                                     {step.description && (
-                                        <p className="text-muted-foreground text-sm">
-                                            {step.description}
-                                        </p>
+                                        <RichTextContent
+                                            html={step.description}
+                                            className="text-muted-foreground"
+                                        />
                                     )}
                                 </div>
                                 <div className="flex shrink-0 items-center gap-1">

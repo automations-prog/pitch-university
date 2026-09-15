@@ -26,17 +26,26 @@ import { brandButtonClass, resourceInputClass } from '@/lib/brand-theme';
 import { dashboard } from '@/routes';
 import { index as verticalTrainingIndex } from '@/routes/admin/vertical-training';
 import { ArrowLeft, Check, Target } from 'lucide-react';
-import type { VerticalTraining, VerticalTrainingStatus } from '@/types';
+import type {
+    License,
+    VerticalTraining,
+    VerticalTrainingStatus,
+} from '@/types';
 
 export default function EditVerticalTraining({
     training,
     statuses,
+    licenses,
 }: {
     training: VerticalTraining;
     statuses: VerticalTrainingStatus[];
+    licenses: License[];
 }) {
     const [status, setStatus] = useState<VerticalTrainingStatus>(
         training.status,
+    );
+    const [licenseId, setLicenseId] = useState<string>(
+        training.license_id ? String(training.license_id) : '',
     );
 
     return (
@@ -71,7 +80,7 @@ export default function EditVerticalTraining({
                                     Name and status for this training program.
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="grid items-start gap-4 sm:grid-cols-2">
+                            <CardContent className="grid items-start gap-4 sm:grid-cols-3">
                                 <div className="grid gap-2">
                                     <Label htmlFor="name">Name</Label>
                                     <div className="relative">
@@ -119,6 +128,37 @@ export default function EditVerticalTraining({
                                         </SelectContent>
                                     </Select>
                                     <InputError message={errors.status} />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="license_id">License</Label>
+                                    <input
+                                        type="hidden"
+                                        name="license_id"
+                                        value={licenseId}
+                                    />
+                                    <Select
+                                        value={licenseId}
+                                        onValueChange={setLicenseId}
+                                    >
+                                        <SelectTrigger
+                                            id="license_id"
+                                            className="w-full"
+                                        >
+                                            <SelectValue placeholder="Select a license" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {licenses.map((license) => (
+                                                <SelectItem
+                                                    key={license.id}
+                                                    value={String(license.id)}
+                                                >
+                                                    {license.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <InputError message={errors.license_id} />
                                 </div>
                             </CardContent>
 

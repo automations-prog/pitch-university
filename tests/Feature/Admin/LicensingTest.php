@@ -68,12 +68,16 @@ test('guests are redirected to login for licensing', function () {
     $response->assertRedirect(route('login'));
 });
 
-test('admins can create a license', function () {
+test('admins can create a license with instruction steps', function () {
     $admin = User::factory()->admin()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.licensing.store'), [
         'name' => 'Life Insurance License',
         'status' => 'active',
+        'steps' => [
+            ['title' => 'Complete pre-licensing course', 'description' => 'Finish the required coursework.'],
+            ['title' => 'Pass the state exam', 'description' => 'Schedule and pass the exam.'],
+        ],
     ]);
 
     $response->assertRedirect(route('admin.licensing.index'));
@@ -81,6 +85,44 @@ test('admins can create a license', function () {
         'name' => 'Life Insurance License',
         'status' => 'active',
     ]);
+    $license = License::where('name', 'Life Insurance License')->firstOrFail();
+    $this->assertDatabaseHas('license_steps', [
+        'license_id' => $license->id,
+        'title' => 'Complete pre-licensing course',
+        'order' => 0,
+    ]);
+    $this->assertDatabaseHas('license_steps', [
+        'license_id' => $license->id,
+        'title' => 'Pass the state exam',
+        'order' => 1,
+    ]);
+});
+
+test('a license requires at least one instruction step', function () {
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->post(route('admin.licensing.store'), [
+        'name' => 'Life Insurance License',
+        'status' => 'active',
+    ]);
+
+    $response->assertSessionHasErrors('steps');
+    $this->assertDatabaseMissing('licenses', ['name' => 'Life Insurance License']);
+});
+
+test('each instruction step requires a title and description', function () {
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->post(route('admin.licensing.store'), [
+        'name' => 'Life Insurance License',
+        'status' => 'active',
+        'steps' => [
+            ['title' => '', 'description' => ''],
+        ],
+    ]);
+
+    $response->assertSessionHasErrors(['steps.0.title', 'steps.0.description']);
+    $this->assertDatabaseMissing('licenses', ['name' => 'Life Insurance License']);
 });
 
 test('license names must be unique', function () {
@@ -90,6 +132,9 @@ test('license names must be unique', function () {
     $response = $this->actingAs($admin)->post(route('admin.licensing.store'), [
         'name' => 'Life Insurance License',
         'status' => 'active',
+        'steps' => [
+            ['title' => 'Complete pre-licensing course', 'description' => 'Finish the required coursework.'],
+        ],
     ]);
 
     $response->assertSessionHasErrors('name');
@@ -101,6 +146,9 @@ test('agents can not create a license', function () {
     $response = $this->actingAs($agent)->post(route('admin.licensing.store'), [
         'name' => 'Blocked License',
         'status' => 'active',
+        'steps' => [
+            ['title' => 'Complete pre-licensing course', 'description' => 'Finish the required coursework.'],
+        ],
     ]);
 
     $response->assertForbidden();
@@ -138,6 +186,42 @@ test('agents can not delete a license', function () {
     $license = License::factory()->create();
 
     $response = $this->actingAs($agent)->delete(route('admin.licensing.destroy', $license));
+
+    $response->assertForbidden();
+    $this->assertDatabaseHas('licenses', ['id' => $license->id]);
+});
+
+test('admins can bulk delete licenses', function () {
+    $admin = User::factory()->admin()->create();
+    $licenses = License::factory()->count(3)->create();
+
+    $response = $this->actingAs($admin)->delete(route('admin.licensing.bulk-destroy'), [
+        'ids' => $licenses->pluck('id')->toArray(),
+    ]);
+
+    $response->assertRedirect(route('admin.licensing.index'));
+    foreach ($licenses as $license) {
+        $this->assertDatabaseMissing('licenses', ['id' => $license->id]);
+    }
+});
+
+test('bulk deleting licenses requires at least one id', function () {
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->delete(route('admin.licensing.bulk-destroy'), [
+        'ids' => [],
+    ]);
+
+    $response->assertSessionHasErrors('ids');
+});
+
+test('agents can not bulk delete licenses', function () {
+    $agent = User::factory()->create();
+    $license = License::factory()->create();
+
+    $response = $this->actingAs($agent)->delete(route('admin.licensing.bulk-destroy'), [
+        'ids' => [$license->id],
+    ]);
 
     $response->assertForbidden();
     $this->assertDatabaseHas('licenses', ['id' => $license->id]);

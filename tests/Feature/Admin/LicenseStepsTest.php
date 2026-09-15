@@ -37,6 +37,21 @@ test('admins can add a step to a license', function () {
     ]);
 });
 
+test('a step description is required', function () {
+    $admin = User::factory()->admin()->create();
+    $license = License::factory()->create();
+
+    $response = $this->actingAs($admin)->post(route('admin.licensing.steps.store', $license), [
+        'title' => 'Missing description',
+    ]);
+
+    $response->assertSessionHasErrors('description');
+    $this->assertDatabaseMissing('license_steps', [
+        'license_id' => $license->id,
+        'title' => 'Missing description',
+    ]);
+});
+
 test('a new step is appended after existing steps', function () {
     $admin = User::factory()->admin()->create();
     $license = License::factory()->create();
@@ -45,6 +60,7 @@ test('a new step is appended after existing steps', function () {
 
     $this->actingAs($admin)->post(route('admin.licensing.steps.store', $license), [
         'title' => 'New step',
+        'description' => 'Details for the new step.',
     ]);
 
     $this->assertDatabaseHas('license_steps', [
@@ -61,7 +77,7 @@ test('admins can update a step', function () {
 
     $response = $this->actingAs($admin)->put(route('admin.licensing.steps.update', [$license, $step]), [
         'title' => 'Updated title',
-        'description' => null,
+        'description' => 'Updated description.',
     ]);
 
     $response->assertRedirect(route('admin.licensing.edit', $license));

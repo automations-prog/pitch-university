@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { FormEvent, MouseEvent, useState } from 'react';
+import { FormEvent, MouseEvent, useEffect, useState } from 'react';
 import LicenseController from '@/actions/App/Http/Controllers/Admin/LicenseController';
 import {
     AlertDialog,
@@ -15,6 +15,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -85,6 +86,40 @@ export default function LicensingIndex({
     perPageOptions: number[];
 }) {
     const [search, setSearch] = useState(filters.search ?? '');
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+    const selectableIds = licenses.data.map((license) => license.id);
+    const allSelected =
+        selectableIds.length > 0 &&
+        selectableIds.every((id) => selectedIds.includes(id));
+    const someSelected = selectableIds.some((id) => selectedIds.includes(id));
+
+    useEffect(() => {
+        setSelectedIds([]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [licenses.data.map((license) => license.id).join(',')]);
+
+    function toggleSelectAll(checked: boolean) {
+        setSelectedIds((current) =>
+            checked
+                ? [...new Set([...current, ...selectableIds])]
+                : current.filter((id) => !selectableIds.includes(id)),
+        );
+    }
+
+    function toggleSelectLicense(id: number, checked: boolean) {
+        setSelectedIds((current) =>
+            checked ? [...current, id] : current.filter((i) => i !== id),
+        );
+    }
+
+    function bulkDeleteLicenses() {
+        router.delete(LicenseController.bulkDestroy.url(), {
+            data: { ids: selectedIds },
+            preserveScroll: true,
+            onSuccess: () => setSelectedIds([]),
+        });
+    }
 
     function applyFilters(next: Partial<Filters>) {
         router.get(
@@ -235,10 +270,82 @@ export default function LicensingIndex({
                     </CardContent>
                 </Card>
 
+                {selectedIds.length > 0 && (
+                    <div className="flex items-center justify-between gap-4 rounded-lg border border-[#f598ff]/30 bg-[#f598ff]/10 px-4 py-2 text-sm dark:border-[#f598ff]/20 dark:bg-[#f598ff]/10">
+                        <span className="font-medium">
+                            {selectedIds.length} selected
+                        </span>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setSelectedIds([])}
+                            >
+                                Clear
+                            </Button>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        size="sm"
+                                    >
+                                        <Trash2 />
+                                        Delete selected
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                            Delete {selectedIds.length}{' '}
+                                            {selectedIds.length === 1
+                                                ? 'license'
+                                                : 'licenses'}
+                                            ?
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This permanently removes the
+                                            selected licenses. This cannot be
+                                            undone.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>
+                                            Cancel
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction
+                                            onClick={bulkDeleteLicenses}
+                                        >
+                                            Delete
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        </div>
+                    </div>
+                )}
+
                 <div className={resourceCardClass}>
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead className="w-10">
+                                    <Checkbox
+                                        checked={
+                                            allSelected
+                                                ? true
+                                                : someSelected
+                                                  ? 'indeterminate'
+                                                  : false
+                                        }
+                                        onCheckedChange={(checked) =>
+                                            toggleSelectAll(checked === true)
+                                        }
+                                        disabled={selectableIds.length === 0}
+                                        aria-label="Select all licenses"
+                                    />
+                                </TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Added</TableHead>
@@ -251,7 +358,7 @@ export default function LicensingIndex({
                             {licenses.data.length === 0 && (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={4}
+                                        colSpan={5}
                                         className="text-muted-foreground py-8 text-center"
                                     >
                                         No licenses found.
@@ -260,6 +367,20 @@ export default function LicensingIndex({
                             )}
                             {licenses.data.map((license) => (
                                 <TableRow key={license.id}>
+                                    <TableCell>
+                                        <Checkbox
+                                            checked={selectedIds.includes(
+                                                license.id,
+                                            )}
+                                            onCheckedChange={(checked) =>
+                                                toggleSelectLicense(
+                                                    license.id,
+                                                    checked === true,
+                                                )
+                                            }
+                                            aria-label={`Select ${license.name}`}
+                                        />
+                                    </TableCell>
                                     <TableCell className="font-medium">
                                         {license.name}
                                     </TableCell>

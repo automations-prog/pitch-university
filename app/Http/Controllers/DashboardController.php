@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Concerns\BuildsAgentReportQuery;
 use App\Enums\LicenseStatus;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
@@ -9,7 +10,6 @@ use App\Enums\VerticalTrainingStatus;
 use App\Models\License;
 use App\Models\User;
 use App\Models\VerticalTraining;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -19,6 +19,8 @@ use Inertia\Response;
 
 class DashboardController extends Controller
 {
+    use BuildsAgentReportQuery;
+
     /**
      * The selectable page sizes for the agent progress table.
      *
@@ -39,7 +41,6 @@ class DashboardController extends Controller
 
         $totalTrainings = VerticalTraining::where('status', VerticalTrainingStatus::Active)->count();
 
-        $licenseId = $request->string('license')->toString();
         $trainingId = $request->string('vertical_training')->toString();
 
         $selectedTraining = $trainingId
@@ -51,15 +52,7 @@ class DashboardController extends Controller
         $perPage = $request->integer('per_page', self::PER_PAGE_OPTIONS[0]);
         $perPage = in_array($perPage, self::PER_PAGE_OPTIONS, true) ? $perPage : self::PER_PAGE_OPTIONS[0];
 
-        $buildAgentQuery = fn (): Builder => User::query()
-            ->where('role', UserRole::Agent)
-            ->when($request->string('status')->toString(), fn ($query, string $status) => $query->where('status', $status))
-            ->when($licenseId, fn ($query, string $licenseId) => $query->whereHas(
-                'licenses',
-                fn ($licenses) => $licenses->whereKey($licenseId),
-            ))
-            ->with(['licenses' => fn ($query) => $query->where('status', LicenseStatus::Active)])
-            ->orderBy('name');
+        $buildAgentQuery = fn () => $this->agentReportQuery($request);
 
         // The charts summarize every agent matching the current filters, not
         // just the current page, so they're built from the full filtered set.
@@ -177,38 +170,6 @@ class DashboardController extends Controller
             'email' => $agent->email,
             'status' => $agent->status,
             ...$this->mockProgressFor($agent, $totalTrainings, $training),
-        ];
-    }
-
-    /**
-     * Deterministic sample progress for an agent, seeded by their id (and the
-     * selected training, when filtering to one) so the numbers stay stable
-     * across reloads instead of changing every request.
-     *
-     * Not backed by real roleplay attempts yet — placeholder until AI
-     * scoring is wired up.
-     *
-     * @return array<string, int|string|null>
-     */
-    private function mockProgressFor(User $agent, int $totalTrainings, ?VerticalTraining $training = null): array
-    {
-        $seed = crc32($agent->id.'-'.($training?->id ?? 'all'));
-
-        if ($training) {
-            $totalTrainings = 1;
-            $completed = $seed % 2;
-        } else {
-            $completed = $totalTrainings > 0 ? $seed % ($totalTrainings + 1) : 0;
-        }
-
-        $averageScore = $completed > 0 ? 55 + ($seed % 46) : null;
-        $lastActivity = $completed > 0 ? now()->subDays($seed % 30)->toDateString() : null;
-
-        return [
-            'trainings_completed' => $completed,
-            'total_trainings' => $totalTrainings,
-            'average_score' => $averageScore,
-            'last_activity' => $lastActivity,
         ];
     }
 }

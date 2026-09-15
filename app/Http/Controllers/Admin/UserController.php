@@ -206,12 +206,17 @@ class UserController extends Controller
     /**
      * Start impersonating the given user.
      */
-    public function impersonate(Request $request, User $user): RedirectResponse
+    /**
+     * Forces a full-page reload instead of a client-side Inertia visit, so
+     * any pages prefetched as the admin (which carry the admin's auth
+     * props) are discarded rather than served stale once impersonating.
+     */
+    public function impersonate(Request $request, User $user): \Symfony\Component\HttpFoundation\Response
     {
         Gate::authorize('impersonate', $user);
 
         $request->user()->impersonate($user);
 
-        return to_route('dashboard');
+        return Inertia::location(route('dashboard'));
     }
 }

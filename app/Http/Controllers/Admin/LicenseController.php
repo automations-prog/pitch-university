@@ -12,7 +12,9 @@ use App\Models\License;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -76,7 +78,17 @@ class LicenseController extends Controller
      */
     public function store(StoreLicenseRequest $request): RedirectResponse
     {
-        License::create($request->validated());
+        DB::transaction(function () use ($request) {
+            $license = License::create($request->safe()->only(['name', 'status']));
+
+            foreach (array_values($request->validated('steps')) as $order => $step) {
+                $license->steps()->create([
+                    'title' => $step['title'],
+                    'description' => $step['description'],
+                    'order' => $order,
+                ]);
+            }
+        });
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('License created.')]);
 
@@ -119,6 +131,29 @@ class LicenseController extends Controller
         $licensing->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('License deleted.')]);
+
+        return to_route('admin.licensing.index');
+    }
+
+    /**
+     * Remove multiple licenses at once.
+     */
+    public function bulkDestroy(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'ids' => ['required', 'array', 'min:1'],
+            'ids.*' => ['integer', Rule::exists('licenses', 'id')],
+        ]);
+
+        $licenses = License::whereIn('id', $validated['ids'])->get();
+
+        foreach ($licenses as $license) {
+            Gate::authorize('delete', $license);
+        }
+
+        License::whereIn('id', $licenses->pluck('id'))->delete();
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => trans_choice(':count license deleted.|:count licenses deleted.', $licenses->count(), ['count' => $licenses->count()])]);
 
         return to_route('admin.licensing.index');
     }

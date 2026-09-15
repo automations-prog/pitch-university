@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\LicenseStepController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserLicenseController;
 use App\Http\Controllers\Admin\VerticalTrainingController;
@@ -21,7 +22,10 @@ Route::middleware(['auth', 'verified', 'can:viewAny,'.User::class])
         Route::delete('users/{user}/licenses/{license}', [UserLicenseController::class, 'destroy'])->name('users.licenses.destroy');
 
         Route::resource('vertical-training', VerticalTrainingController::class)->except(['show']);
+        Route::delete('vertical-training', [VerticalTrainingController::class, 'bulkDestroy'])->name('vertical-training.bulk-destroy');
+
         Route::resource('licensing', LicenseController::class)->except(['show']);
+        Route::delete('licensing', [LicenseController::class, 'bulkDestroy'])->name('licensing.bulk-destroy');
 
         Route::scopeBindings()->group(function () {
             Route::post('licensing/{licensing}/steps', [LicenseStepController::class, 'store'])->name('licensing.steps.store');
@@ -29,6 +33,8 @@ Route::middleware(['auth', 'verified', 'can:viewAny,'.User::class])
             Route::delete('licensing/{licensing}/steps/{step}', [LicenseStepController::class, 'destroy'])->name('licensing.steps.destroy');
             Route::patch('licensing/{licensing}/steps/{step}/move', [LicenseStepController::class, 'move'])->name('licensing.steps.move');
         });
+
+        Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
     });
 
 Route::delete('impersonate', [ImpersonateController::class, 'leave'])

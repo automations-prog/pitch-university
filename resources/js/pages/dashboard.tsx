@@ -35,6 +35,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { resourceCardClass } from '@/lib/brand-theme';
+import { scoreBadgeVariant } from '@/lib/scoring';
 import { dashboard } from '@/routes';
 import {
     GraduationCap,
@@ -106,24 +107,6 @@ function StatCard({
             </CardContent>
         </Card>
     );
-}
-
-function scoreBadgeVariant(
-    score: number | null,
-): 'outline' | 'secondary' | 'destructive' {
-    if (score === null) {
-        return 'secondary';
-    }
-
-    if (score >= 80) {
-        return 'outline';
-    }
-
-    if (score >= 60) {
-        return 'secondary';
-    }
-
-    return 'destructive';
 }
 
 export default function Dashboard(props: Props) {

@@ -1,10 +1,12 @@
 import type { UserStatus } from '@/types/auth';
+import type { License } from '@/types/license';
 
 export type AgentProgress = {
     id: number;
     name: string;
     email: string;
     status: UserStatus;
+    licenses?: License[];
     trainings_completed: number;
     total_trainings: number;
     average_score: number | null;

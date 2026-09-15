@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\LicenseStatus;
 use App\Enums\VerticalTrainingStatus;
+use App\Models\License;
 use App\Models\VerticalTraining;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -28,9 +30,10 @@ class StoreVerticalTrainingRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', Rule::unique(VerticalTraining::class)],
             'status' => ['required', Rule::enum(VerticalTrainingStatus::class)],
-            'script_title' => ['nullable', 'string', 'max:255'],
-            'script_scenario' => ['nullable', 'string'],
-            'script_body' => ['nullable', 'string'],
+            'license_id' => ['required', 'integer', Rule::exists(License::class, 'id')->where('status', LicenseStatus::Active->value)],
+            'script_title' => ['required', 'string', 'max:255'],
+            'script_scenario' => ['required', 'string'],
+            'script_body' => ['required', 'string'],
         ];
     }
 }

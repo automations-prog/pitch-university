@@ -18,6 +18,8 @@ class VerticalTrainingResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'status' => $this->status,
+            'license_id' => $this->license_id,
+            'license' => LicenseResource::make($this->whenLoaded('license')),
             'script_title' => $this->script_title,
             'script_scenario' => $this->script_scenario,
             'script_body' => $this->script_body,

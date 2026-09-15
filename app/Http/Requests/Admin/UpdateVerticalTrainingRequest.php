@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Enums\VerticalTrainingStatus;
+use App\Models\License;
 use App\Models\VerticalTraining;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -31,6 +32,7 @@ class UpdateVerticalTrainingRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', Rule::unique(VerticalTraining::class)->ignore($training->id)],
             'status' => ['required', Rule::enum(VerticalTrainingStatus::class)],
+            'license_id' => ['required', 'integer', Rule::exists(License::class, 'id')],
             'script_title' => ['nullable', 'string', 'max:255'],
             'script_scenario' => ['nullable', 'string'],
             'script_body' => ['nullable', 'string'],

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\License;
 use App\Models\User;
 use App\Models\VerticalTraining;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -70,25 +71,33 @@ test('guests are redirected to login for vertical training', function () {
 
 test('admins can create a vertical training program', function () {
     $admin = User::factory()->admin()->create();
+    $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.vertical-training.store'), [
         'name' => 'Healthcare Vertical',
         'status' => 'active',
+        'license_id' => $license->id,
+        'script_title' => 'Cold call — initial outreach',
+        'script_scenario' => 'Agent calls a prospect who has never been contacted.',
+        'script_body' => "Agent: Hi, this is...\nProspect: ...",
     ]);
 
     $response->assertRedirect(route('admin.vertical-training.index'));
     $this->assertDatabaseHas('vertical_trainings', [
         'name' => 'Healthcare Vertical',
         'status' => 'active',
+        'license_id' => $license->id,
     ]);
 });
 
 test('admins can create a training with a roleplay script', function () {
     $admin = User::factory()->admin()->create();
+    $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.vertical-training.store'), [
         'name' => 'Healthcare Vertical',
         'status' => 'active',
+        'license_id' => $license->id,
         'script_title' => 'Cold call — initial outreach',
         'script_scenario' => 'Agent calls a prospect who has never been contacted.',
         'script_body' => "Agent: Hi, this is...\nProspect: ...",
@@ -102,28 +111,67 @@ test('admins can create a training with a roleplay script', function () {
     ]);
 });
 
-test('the roleplay script fields are optional when creating a training', function () {
+test('the roleplay script fields are required when creating a training', function () {
     $admin = User::factory()->admin()->create();
+    $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.vertical-training.store'), [
         'name' => 'No Script Vertical',
         'status' => 'active',
+        'license_id' => $license->id,
     ]);
 
-    $response->assertRedirect(route('admin.vertical-training.index'));
-    $this->assertDatabaseHas('vertical_trainings', [
+    $response->assertSessionHasErrors(['script_title', 'script_scenario', 'script_body']);
+    $this->assertDatabaseMissing('vertical_trainings', [
         'name' => 'No Script Vertical',
-        'script_title' => null,
+    ]);
+});
+
+test('a vertical training requires a license', function () {
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->post(route('admin.vertical-training.store'), [
+        'name' => 'No License Vertical',
+        'status' => 'active',
+        'script_title' => 'Cold call — initial outreach',
+        'script_scenario' => 'Agent calls a prospect who has never been contacted.',
+        'script_body' => "Agent: Hi, this is...\nProspect: ...",
+    ]);
+
+    $response->assertSessionHasErrors('license_id');
+    $this->assertDatabaseMissing('vertical_trainings', [
+        'name' => 'No License Vertical',
+    ]);
+});
+
+test('a vertical training must reference an active license', function () {
+    $admin = User::factory()->admin()->create();
+    $license = License::factory()->inactive()->create();
+
+    $response = $this->actingAs($admin)->post(route('admin.vertical-training.store'), [
+        'name' => 'Inactive License Vertical',
+        'status' => 'active',
+        'license_id' => $license->id,
+        'script_title' => 'Cold call — initial outreach',
+        'script_scenario' => 'Agent calls a prospect who has never been contacted.',
+        'script_body' => "Agent: Hi, this is...\nProspect: ...",
+    ]);
+
+    $response->assertSessionHasErrors('license_id');
+    $this->assertDatabaseMissing('vertical_trainings', [
+        'name' => 'Inactive License Vertical',
     ]);
 });
 
 test('admins can update a training\'s roleplay script', function () {
     $admin = User::factory()->admin()->create();
     $training = VerticalTraining::factory()->create();
+    $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->put(route('admin.vertical-training.update', $training), [
         'name' => $training->name,
         'status' => 'active',
+        'license_id' => $license->id,
         'script_title' => 'Objection handling',
         'script_scenario' => 'Prospect pushes back on price.',
         'script_body' => 'Agent: I understand price is a concern...',
@@ -170,10 +218,15 @@ test('the index reflects whether a training has a script', function () {
 test('vertical training names must be unique', function () {
     $admin = User::factory()->admin()->create();
     VerticalTraining::factory()->create(['name' => 'Healthcare Vertical']);
+    $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.vertical-training.store'), [
         'name' => 'Healthcare Vertical',
         'status' => 'active',
+        'license_id' => $license->id,
+        'script_title' => 'Cold call — initial outreach',
+        'script_scenario' => 'Agent calls a prospect who has never been contacted.',
+        'script_body' => "Agent: Hi, this is...\nProspect: ...",
     ]);
 
     $response->assertSessionHasErrors('name');
@@ -194,10 +247,12 @@ test('agents can not create a vertical training program', function () {
 test('admins can update a vertical training program', function () {
     $admin = User::factory()->admin()->create();
     $training = VerticalTraining::factory()->create();
+    $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->put(route('admin.vertical-training.update', $training), [
         'name' => $training->name,
         'status' => 'inactive',
+        'license_id' => $license->id,
     ]);
 
     $response->assertRedirect(route('admin.vertical-training.index'));
@@ -222,6 +277,42 @@ test('agents can not delete a vertical training program', function () {
     $training = VerticalTraining::factory()->create();
 
     $response = $this->actingAs($agent)->delete(route('admin.vertical-training.destroy', $training));
+
+    $response->assertForbidden();
+    $this->assertDatabaseHas('vertical_trainings', ['id' => $training->id]);
+});
+
+test('admins can bulk delete vertical training programs', function () {
+    $admin = User::factory()->admin()->create();
+    $trainings = VerticalTraining::factory()->count(3)->create();
+
+    $response = $this->actingAs($admin)->delete(route('admin.vertical-training.bulk-destroy'), [
+        'ids' => $trainings->pluck('id')->toArray(),
+    ]);
+
+    $response->assertRedirect(route('admin.vertical-training.index'));
+    foreach ($trainings as $training) {
+        $this->assertDatabaseMissing('vertical_trainings', ['id' => $training->id]);
+    }
+});
+
+test('bulk deleting vertical training programs requires at least one id', function () {
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->delete(route('admin.vertical-training.bulk-destroy'), [
+        'ids' => [],
+    ]);
+
+    $response->assertSessionHasErrors('ids');
+});
+
+test('agents can not bulk delete vertical training programs', function () {
+    $agent = User::factory()->create();
+    $training = VerticalTraining::factory()->create();
+
+    $response = $this->actingAs($agent)->delete(route('admin.vertical-training.bulk-destroy'), [
+        'ids' => [$training->id],
+    ]);
 
     $response->assertForbidden();
     $this->assertDatabaseHas('vertical_trainings', ['id' => $training->id]);

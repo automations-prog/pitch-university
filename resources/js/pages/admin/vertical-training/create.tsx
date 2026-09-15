@@ -26,14 +26,17 @@ import { brandButtonClass, resourceInputClass } from '@/lib/brand-theme';
 import { dashboard } from '@/routes';
 import { index as verticalTrainingIndex } from '@/routes/admin/vertical-training';
 import { ArrowLeft, Plus, Target } from 'lucide-react';
-import type { VerticalTrainingStatus } from '@/types';
+import type { License, VerticalTrainingStatus } from '@/types';
 
 export default function CreateVerticalTraining({
     statuses,
+    licenses,
 }: {
     statuses: VerticalTrainingStatus[];
+    licenses: License[];
 }) {
     const [status, setStatus] = useState<VerticalTrainingStatus>('active');
+    const [licenseId, setLicenseId] = useState<string>('');
 
     return (
         <>
@@ -67,7 +70,7 @@ export default function CreateVerticalTraining({
                                     Name and status for this training program.
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="grid items-start gap-4 sm:grid-cols-2">
+                            <CardContent className="grid items-start gap-4 sm:grid-cols-3">
                                 <div className="grid gap-2">
                                     <Label htmlFor="name">Name</Label>
                                     <div className="relative">
@@ -115,13 +118,44 @@ export default function CreateVerticalTraining({
                                     </Select>
                                     <InputError message={errors.status} />
                                 </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="license_id">License</Label>
+                                    <input
+                                        type="hidden"
+                                        name="license_id"
+                                        value={licenseId}
+                                    />
+                                    <Select
+                                        value={licenseId}
+                                        onValueChange={setLicenseId}
+                                    >
+                                        <SelectTrigger
+                                            id="license_id"
+                                            className="w-full"
+                                        >
+                                            <SelectValue placeholder="Select a license" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {licenses.map((license) => (
+                                                <SelectItem
+                                                    key={license.id}
+                                                    value={String(license.id)}
+                                                >
+                                                    {license.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <InputError message={errors.license_id} />
+                                </div>
                             </CardContent>
 
                             <CardHeader>
                                 <CardTitle>Roleplay script</CardTitle>
                                 <CardDescription>
                                     Content the AI will use to run the roleplay
-                                    call and score the agent. Optional for now.
+                                    call and score the agent.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="grid gap-4">
@@ -132,6 +166,7 @@ export default function CreateVerticalTraining({
                                     <Input
                                         id="script_title"
                                         name="script_title"
+                                        required
                                         placeholder="e.g. Cold call — initial outreach"
                                         className={resourceInputClass}
                                     />
@@ -145,6 +180,7 @@ export default function CreateVerticalTraining({
                                     <Textarea
                                         id="script_scenario"
                                         name="script_scenario"
+                                        required
                                         placeholder="Describe the situation the agent is role-playing."
                                     />
                                     <InputError
@@ -158,6 +194,7 @@ export default function CreateVerticalTraining({
                                         id="script_body"
                                         name="script_body"
                                         rows={8}
+                                        required
                                         placeholder="Write out the roleplay dialogue or talking points."
                                     />
                                     <InputError message={errors.script_body} />

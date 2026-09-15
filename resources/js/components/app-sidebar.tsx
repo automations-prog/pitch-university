@@ -1,5 +1,12 @@
 import { Link, usePage } from '@inertiajs/react';
-import { Award, LayoutGrid, ShieldCheck, Target, Users } from 'lucide-react';
+import {
+    Award,
+    FileBarChart,
+    LayoutGrid,
+    ShieldCheck,
+    Target,
+    Users,
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -14,6 +21,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { index as licensingIndex } from '@/routes/admin/licensing';
+import { index as reportsIndex } from '@/routes/admin/reports';
 import { index as usersIndex } from '@/routes/admin/users';
 import { index as verticalTrainingIndex } from '@/routes/admin/vertical-training';
 import { index as myLicensesIndex } from '@/routes/licenses';
@@ -53,6 +61,11 @@ export function AppSidebar() {
                       title: 'Licensing',
                       href: licensingIndex(),
                       icon: ShieldCheck,
+                  },
+                  {
+                      title: 'Reports',
+                      href: reportsIndex(),
+                      icon: FileBarChart,
                   },
               ]
             : []),

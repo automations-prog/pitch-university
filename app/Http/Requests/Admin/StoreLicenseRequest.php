@@ -28,6 +28,9 @@ class StoreLicenseRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', Rule::unique(License::class)],
             'status' => ['required', Rule::enum(LicenseStatus::class)],
+            'steps' => ['required', 'array', 'min:1'],
+            'steps.*.title' => ['required', 'string', 'max:255'],
+            'steps.*.description' => ['required', 'string'],
         ];
     }
 }
