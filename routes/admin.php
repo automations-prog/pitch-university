@@ -17,6 +17,8 @@ Route::middleware(['auth', 'verified', 'can:viewAny,'.User::class])
         Route::resource('users', UserController::class)->except(['show']);
         Route::delete('users', [UserController::class, 'bulkDestroy'])->name('users.bulk-destroy');
         Route::post('users/bulk-assign-license', [UserController::class, 'bulkAssignLicense'])->name('users.bulk-assign-license');
+        Route::post('users/pull-agents', [UserController::class, 'pullAgents'])->name('users.pull-agents');
+        Route::get('users/pull-status/{progressId}', [UserController::class, 'pullStatus'])->name('users.pull-status');
         Route::post('users/{user}/impersonate', [UserController::class, 'impersonate'])->name('users.impersonate');
         Route::post('users/{user}/licenses/{license}', [UserLicenseController::class, 'store'])->name('users.licenses.store');
         Route::delete('users/{user}/licenses/{license}', [UserLicenseController::class, 'destroy'])->name('users.licenses.destroy');

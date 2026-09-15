@@ -10,12 +10,16 @@ use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Http\Resources\LicenseResource;
 use App\Http\Resources\UserResource;
+use App\Jobs\PullAgentsFromCustomerApiJob;
 use App\Models\License;
 use App\Models\User;
+use App\Support\PullProgress;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -201,6 +205,34 @@ class UserController extends Controller
         )]);
 
         return to_route('admin.users.index');
+    }
+
+    /**
+     * Dispatch a job that pulls the student roster from the Customer API.
+     */
+    public function pullAgents(Request $request): RedirectResponse
+    {
+        Gate::authorize('create', User::class);
+
+        $progressId = $request->string('progress_id')->toString() ?: (string) Str::uuid();
+
+        PullProgress::start($progressId);
+
+        PullAgentsFromCustomerApiJob::dispatch($request->user(), $progressId);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Agent pull started.')]);
+
+        return back();
+    }
+
+    /**
+     * Report the progress of a "Pull agents" run for the frontend to poll.
+     */
+    public function pullStatus(Request $request, string $progressId): JsonResponse
+    {
+        Gate::authorize('create', User::class);
+
+        return response()->json(PullProgress::status($progressId));
     }
 
     /**

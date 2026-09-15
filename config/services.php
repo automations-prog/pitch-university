@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'customer_api' => [
+        'domain' => env('CUSTOMER_API_DOMAIN'),
+        'key' => env('CUSTOMER_API_KEY'),
+        'location_id' => env('CUSTOMER_API_LOCATION_ID'),
+        'page_size' => env('CUSTOMER_API_PAGE_SIZE', 50),
+    ],
+
 ];

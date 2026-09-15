@@ -1,7 +1,9 @@
 <?php
 
+use App\Jobs\PullAgentsFromCustomerApiJob;
 use App\Models\License;
 use App\Models\User;
+use Illuminate\Support\Facades\Bus;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('admins can view the users index', function () {
@@ -373,4 +375,39 @@ test('admins can update a user via method-spoofed post (matches frontend Form)',
         'name' => 'Updated Name',
         'status' => 'inactive',
     ]);
+});
+
+test('admins can trigger a pull of agents from the Customer API', function () {
+    Bus::fake();
+
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->post(route('admin.users.pull-agents'), [
+        'progress_id' => 'test-progress-id',
+    ]);
+
+    $response->assertRedirect();
+    Bus::assertDispatched(PullAgentsFromCustomerApiJob::class);
+});
+
+test('non-admins cannot trigger a pull of agents from the Customer API', function () {
+    Bus::fake();
+
+    $agent = User::factory()->create();
+
+    $response = $this->actingAs($agent)->post(route('admin.users.pull-agents'), [
+        'progress_id' => 'test-progress-id',
+    ]);
+
+    $response->assertForbidden();
+    Bus::assertNotDispatched(PullAgentsFromCustomerApiJob::class);
+});
+
+test('the pull status endpoint reports progress for a known progress id', function () {
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->get(route('admin.users.pull-status', 'unknown-progress-id'));
+
+    $response->assertOk();
+    $response->assertJson(['finished' => true]);
 });

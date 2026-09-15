@@ -1,5 +1,5 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { FormEvent, MouseEvent, useEffect, useState } from 'react';
+import { FormEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 import UserController from '@/actions/App/Http/Controllers/Admin/UserController';
 import {
     AlertDialog,
@@ -73,17 +73,28 @@ import { dashboard } from '@/routes';
 import {
     Award,
     FilterX,
+    Loader2,
     MoreHorizontal,
     Pencil,
     Plus,
     Power,
     PowerOff,
+    RefreshCw,
     Search,
     Trash2,
     UserRoundCog,
     X,
 } from 'lucide-react';
 import type { License, Paginated, User, UserRole, UserStatus } from '@/types';
+
+type PullStatus = {
+    finished: boolean;
+    totalJobs: number;
+    pendingJobs: number;
+    processedJobs: number;
+    progress: number;
+    failedJobs: number;
+};
 
 type Filters = {
     search: string;
@@ -112,6 +123,11 @@ export default function UsersIndex({
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [assignDialogOpen, setAssignDialogOpen] = useState(false);
     const [assignLicenseId, setAssignLicenseId] = useState('');
+    const [pulling, setPulling] = useState(false);
+    const [pullStatus, setPullStatus] = useState<PullStatus | null>(null);
+    const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+        undefined,
+    );
 
     const selectableIds = users.data
         .filter((user) => user.id !== auth.user.id)
@@ -169,6 +185,60 @@ export default function UsersIndex({
             },
         );
     }
+
+    function pollPullStatus(progressId: string) {
+        fetch(UserController.pullStatus.url(progressId), {
+            headers: { Accept: 'application/json' },
+        })
+            .then((response) => response.json())
+            .then((status: PullStatus) => {
+                setPullStatus(status);
+
+                if (status.finished) {
+                    setPulling(false);
+                    router.reload({ only: ['users'] });
+
+                    return;
+                }
+
+                pollTimeoutRef.current = setTimeout(
+                    () => pollPullStatus(progressId),
+                    1500,
+                );
+            })
+            .catch(() => {
+                setPulling(false);
+            });
+    }
+
+    function pullAgents() {
+        if (pulling) {
+            return;
+        }
+
+        const progressId = crypto.randomUUID();
+
+        setPulling(true);
+        setPullStatus(null);
+
+        router.post(
+            UserController.pullAgents.url(),
+            { progress_id: progressId },
+            {
+                preserveScroll: true,
+                onSuccess: () => pollPullStatus(progressId),
+                onError: () => setPulling(false),
+            },
+        );
+    }
+
+    useEffect(() => {
+        return () => {
+            if (pollTimeoutRef.current) {
+                clearTimeout(pollTimeoutRef.current);
+            }
+        };
+    }, []);
 
     function applyFilters(next: Partial<Filters>) {
         router.get(
@@ -234,13 +304,49 @@ export default function UsersIndex({
                             Manage agent accounts, roles, and access.
                         </p>
                     </div>
-                    <Button asChild className={brandButtonClass}>
-                        <Link href={UserController.create()}>
-                            <Plus />
-                            New user
-                        </Link>
-                    </Button>
+                    <div className="flex items-center gap-2">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={pullAgents}
+                            disabled={pulling}
+                        >
+                            {pulling ? (
+                                <Loader2 className="animate-spin" />
+                            ) : (
+                                <RefreshCw />
+                            )}
+                            {pulling ? 'Pulling agents…' : 'Pull agents'}
+                        </Button>
+                        <Button asChild className={brandButtonClass}>
+                            <Link href={UserController.create()}>
+                                <Plus />
+                                New user
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
+
+                {pulling && (
+                    <div className="flex items-center gap-3 rounded-lg border px-4 py-3 text-sm">
+                        <Loader2 className="text-muted-foreground size-4 animate-spin" />
+                        <div className="flex-1">
+                            <div className="bg-muted h-1.5 w-full overflow-hidden rounded-full">
+                                <div
+                                    className="bg-primary h-full transition-all"
+                                    style={{
+                                        width: `${pullStatus?.progress ?? 0}%`,
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        <span className="text-muted-foreground whitespace-nowrap">
+                            {pullStatus
+                                ? `${pullStatus.processedJobs}/${pullStatus.totalJobs} batches`
+                                : 'Starting…'}
+                        </span>
+                    </div>
+                )}
 
                 <Card>
                     <CardContent className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end">
