@@ -333,7 +333,7 @@ export default function VerticalTrainingIndex({
                 )}
 
                 <div className={resourceCardClass}>
-                    <Table>
+                    <Table className="[&_th]:px-4 [&_th]:py-3 [&_td]:px-4 [&_td]:py-3">
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-10">

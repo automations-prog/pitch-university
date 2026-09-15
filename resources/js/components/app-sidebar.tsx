@@ -48,9 +48,9 @@ export function AppSidebar() {
         ...(auth.user.role === 'admin'
             ? [
                   {
-                      title: 'Users',
-                      href: usersIndex(),
-                      icon: Users,
+                      title: 'Licensing',
+                      href: licensingIndex(),
+                      icon: ShieldCheck,
                   },
                   {
                       title: 'Vertical Training',
@@ -58,9 +58,9 @@ export function AppSidebar() {
                       icon: Target,
                   },
                   {
-                      title: 'Licensing',
-                      href: licensingIndex(),
-                      icon: ShieldCheck,
+                      title: 'Users',
+                      href: usersIndex(),
+                      icon: Users,
                   },
                   {
                       title: 'Reports',
