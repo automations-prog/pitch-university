@@ -53,6 +53,27 @@ test('the edit page exposes the user as a flat, unwrapped object', function () {
     );
 });
 
+test('admins can view a user', function () {
+    $admin = User::factory()->admin()->create();
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($admin)->get(route('admin.users.show', $user));
+
+    $response->assertInertia(fn (Assert $page) => $page
+        ->component('admin/users/show')
+        ->where('user.id', $user->id),
+    );
+});
+
+test('agents cannot view another user', function () {
+    $agent = User::factory()->create();
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($agent)->get(route('admin.users.show', $user));
+
+    $response->assertForbidden();
+});
+
 test('users index can be paginated with a selectable page size', function () {
     $admin = User::factory()->admin()->create();
     User::factory()->count(24)->create();

@@ -330,3 +330,24 @@ test('the edit page exposes the training as a flat, unwrapped object', function 
         ->missing('training.data'),
     );
 });
+
+test('admins can view a vertical training program', function () {
+    $admin = User::factory()->admin()->create();
+    $training = VerticalTraining::factory()->create();
+
+    $response = $this->actingAs($admin)->get(route('admin.vertical-training.show', $training));
+
+    $response->assertInertia(fn (Assert $page) => $page
+        ->component('admin/vertical-training/show')
+        ->where('training.id', $training->id),
+    );
+});
+
+test('agents cannot view a vertical training program', function () {
+    $agent = User::factory()->create();
+    $training = VerticalTraining::factory()->create();
+
+    $response = $this->actingAs($agent)->get(route('admin.vertical-training.show', $training));
+
+    $response->assertForbidden();
+});

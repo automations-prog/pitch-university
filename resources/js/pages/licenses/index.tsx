@@ -40,30 +40,30 @@ export default function LicensesIndex({ licenses }: { licenses: License[] }) {
                 ) : (
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         {licenses.map((license) => (
-                            <Card key={license.id}>
+                            <Card key={license.id} className="gap-4">
                                 <CardHeader>
-                                    <div
-                                        className="mb-2 flex size-10 items-center justify-center rounded-full text-white"
-                                        style={{
-                                            background:
-                                                'linear-gradient(135deg, #473364 0%, #5a4177 60%, #8a5fae 100%)',
-                                        }}
-                                    >
-                                        <Award className="size-5" />
+                                    <div className="flex items-center justify-between">
+                                        <div
+                                            className="flex size-10 items-center justify-center rounded-full text-white"
+                                            style={{
+                                                background:
+                                                    'linear-gradient(135deg, #473364 0%, #5a4177 60%, #8a5fae 100%)',
+                                            }}
+                                        >
+                                            <Award className="size-5" />
+                                        </div>
+                                        <Badge
+                                            variant={
+                                                license.status === 'active'
+                                                    ? 'outline'
+                                                    : 'destructive'
+                                            }
+                                        >
+                                            {license.status}
+                                        </Badge>
                                     </div>
                                     <CardTitle>{license.name}</CardTitle>
                                 </CardHeader>
-                                <CardContent>
-                                    <Badge
-                                        variant={
-                                            license.status === 'active'
-                                                ? 'outline'
-                                                : 'destructive'
-                                        }
-                                    >
-                                        {license.status}
-                                    </Badge>
-                                </CardContent>
                                 <CardFooter>
                                     <Button
                                         asChild

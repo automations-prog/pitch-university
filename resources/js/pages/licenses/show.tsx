@@ -68,7 +68,7 @@ export default function LicenseShow({
                             </p>
                         ) : (
                             <ol className="space-y-3">
-                                {steps.map((step, index) =>
+                                {steps.map((step) =>
                                     step.description ? (
                                         <Collapsible
                                             key={step.id}
@@ -81,16 +81,13 @@ export default function LicenseShow({
                                                         type="button"
                                                         className="group flex w-full items-center gap-3 text-left"
                                                     >
-                                                        <span className="bg-muted flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
-                                                            {index + 1}
-                                                        </span>
                                                         <span className="min-w-0 flex-1 text-sm font-medium">
                                                             {step.title}
                                                         </span>
                                                         <ChevronDown className="text-muted-foreground size-4 shrink-0 transition-transform group-data-[state=open]:rotate-180" />
                                                     </button>
                                                 </CollapsibleTrigger>
-                                                <CollapsibleContent className="pl-9">
+                                                <CollapsibleContent className="pt-2">
                                                     <RichTextContent
                                                         html={step.description}
                                                         className="text-muted-foreground"
@@ -103,9 +100,6 @@ export default function LicenseShow({
                                             key={step.id}
                                             className="flex items-center gap-3 rounded-lg border p-3"
                                         >
-                                            <span className="bg-muted flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
-                                                {index + 1}
-                                            </span>
                                             <span className="min-w-0 flex-1 text-sm font-medium">
                                                 {step.title}
                                             </span>

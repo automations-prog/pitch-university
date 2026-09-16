@@ -89,6 +89,18 @@ class VerticalTrainingController extends Controller
     }
 
     /**
+     * Display the given vertical training program.
+     */
+    public function show(VerticalTraining $vertical_training): Response
+    {
+        Gate::authorize('view', $vertical_training);
+
+        return Inertia::render('admin/vertical-training/show', [
+            'training' => VerticalTrainingResource::make($vertical_training->load('license')),
+        ]);
+    }
+
+    /**
      * Show the form for editing the given vertical training program.
      */
     public function edit(VerticalTraining $vertical_training): Response

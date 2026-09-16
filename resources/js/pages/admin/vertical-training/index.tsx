@@ -57,6 +57,7 @@ import { index as verticalTrainingIndex } from '@/routes/admin/vertical-training
 import { dashboard } from '@/routes';
 import {
     CircleCheck,
+    Eye,
     FilterX,
     MoreHorizontal,
     Pencil,
@@ -374,8 +375,20 @@ export default function VerticalTrainingIndex({
                                 </TableRow>
                             )}
                             {trainings.data.map((training) => (
-                                <TableRow key={training.id}>
-                                    <TableCell>
+                                <TableRow
+                                    key={training.id}
+                                    className="cursor-pointer"
+                                    onClick={() =>
+                                        router.visit(
+                                            VerticalTrainingController.show(
+                                                training.id,
+                                            ).url,
+                                        )
+                                    }
+                                >
+                                    <TableCell
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
                                         <Checkbox
                                             checked={selectedIds.includes(
                                                 training.id,
@@ -429,7 +442,10 @@ export default function VerticalTrainingIndex({
                                             training.created_at,
                                         ).toLocaleDateString()}
                                     </TableCell>
-                                    <TableCell className="text-right">
+                                    <TableCell
+                                        className="text-right"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button
@@ -443,6 +459,16 @@ export default function VerticalTrainingIndex({
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
+                                                <DropdownMenuItem asChild>
+                                                    <Link
+                                                        href={VerticalTrainingController.show(
+                                                            training.id,
+                                                        )}
+                                                    >
+                                                        <Eye />
+                                                        View
+                                                    </Link>
+                                                </DropdownMenuItem>
                                                 <DropdownMenuItem asChild>
                                                     <Link
                                                         href={VerticalTrainingController.edit(

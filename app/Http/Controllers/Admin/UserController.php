@@ -105,6 +105,18 @@ class UserController extends Controller
     }
 
     /**
+     * Display the given user.
+     */
+    public function show(User $user): Response
+    {
+        Gate::authorize('view', $user);
+
+        return Inertia::render('admin/users/show', [
+            'user' => UserResource::make($user->load('licenses')),
+        ]);
+    }
+
+    /**
      * Show the form for editing the given user.
      */
     public function edit(User $user): Response

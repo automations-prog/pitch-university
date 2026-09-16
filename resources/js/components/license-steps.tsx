@@ -58,7 +58,7 @@ function StepFormDialog({
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
-            <DialogContent className="max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
                 <DialogTitle>
                     {isEditing ? 'Edit step' : 'Add step'}
                 </DialogTitle>

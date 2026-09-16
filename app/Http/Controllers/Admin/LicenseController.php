@@ -96,6 +96,19 @@ class LicenseController extends Controller
     }
 
     /**
+     * Display the given license.
+     */
+    public function show(License $licensing): Response
+    {
+        Gate::authorize('view', $licensing);
+
+        return Inertia::render('admin/licensing/show', [
+            'license' => LicenseResource::make($licensing),
+            'steps' => LicenseStepResource::collection($licensing->steps),
+        ]);
+    }
+
+    /**
      * Show the form for editing the given license.
      */
     public function edit(License $licensing): Response

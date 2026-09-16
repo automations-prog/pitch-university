@@ -72,6 +72,7 @@ import { index as usersIndex } from '@/routes/admin/users';
 import { dashboard } from '@/routes';
 import {
     Award,
+    Eye,
     FilterX,
     Loader2,
     MoreHorizontal,
@@ -513,7 +514,10 @@ export default function UsersIndex({
                                             value={assignLicenseId}
                                             onValueChange={setAssignLicenseId}
                                         >
-                                            <SelectTrigger id="bulk-license">
+                                            <SelectTrigger
+                                                id="bulk-license"
+                                                className="w-full"
+                                            >
                                                 <SelectValue placeholder="Select a license" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -636,8 +640,21 @@ export default function UsersIndex({
                                 const isSelf = user.id === auth.user.id;
 
                                 return (
-                                    <TableRow key={user.id}>
-                                        <TableCell>
+                                    <TableRow
+                                        key={user.id}
+                                        className="cursor-pointer"
+                                        onClick={() =>
+                                            router.visit(
+                                                UserController.show(user.id)
+                                                    .url,
+                                            )
+                                        }
+                                    >
+                                        <TableCell
+                                            onClick={(e) =>
+                                                e.stopPropagation()
+                                            }
+                                        >
                                             <Checkbox
                                                 checked={selectedIds.includes(
                                                     user.id,
@@ -735,7 +752,12 @@ export default function UsersIndex({
                                                 user.created_at,
                                             ).toLocaleDateString()}
                                         </TableCell>
-                                        <TableCell className="text-right">
+                                        <TableCell
+                                            className="text-right"
+                                            onClick={(e) =>
+                                                e.stopPropagation()
+                                            }
+                                        >
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
                                                     <Button
@@ -749,6 +771,16 @@ export default function UsersIndex({
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem asChild>
+                                                        <Link
+                                                            href={UserController.show(
+                                                                user.id,
+                                                            )}
+                                                        >
+                                                            <Eye />
+                                                            View
+                                                        </Link>
+                                                    </DropdownMenuItem>
                                                     <DropdownMenuItem asChild>
                                                         <Link
                                                             href={UserController.edit(

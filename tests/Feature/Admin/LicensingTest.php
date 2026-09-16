@@ -239,3 +239,24 @@ test('the edit page exposes the license as a flat, unwrapped object', function (
         ->missing('license.data'),
     );
 });
+
+test('admins can view a license', function () {
+    $admin = User::factory()->admin()->create();
+    $license = License::factory()->create();
+
+    $response = $this->actingAs($admin)->get(route('admin.licensing.show', $license));
+
+    $response->assertInertia(fn (Assert $page) => $page
+        ->component('admin/licensing/show')
+        ->where('license.id', $license->id),
+    );
+});
+
+test('agents cannot view a license from the admin panel', function () {
+    $agent = User::factory()->create();
+    $license = License::factory()->create();
+
+    $response = $this->actingAs($agent)->get(route('admin.licensing.show', $license));
+
+    $response->assertForbidden();
+});

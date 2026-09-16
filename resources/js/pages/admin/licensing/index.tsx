@@ -56,6 +56,7 @@ import {
 import { index as licensingIndex } from '@/routes/admin/licensing';
 import { dashboard } from '@/routes';
 import {
+    Eye,
     FilterX,
     MoreHorizontal,
     Pencil,
@@ -366,8 +367,19 @@ export default function LicensingIndex({
                                 </TableRow>
                             )}
                             {licenses.data.map((license) => (
-                                <TableRow key={license.id}>
-                                    <TableCell>
+                                <TableRow
+                                    key={license.id}
+                                    className="cursor-pointer"
+                                    onClick={() =>
+                                        router.visit(
+                                            LicenseController.show(license.id)
+                                                .url,
+                                        )
+                                    }
+                                >
+                                    <TableCell
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
                                         <Checkbox
                                             checked={selectedIds.includes(
                                                 license.id,
@@ -400,7 +412,10 @@ export default function LicensingIndex({
                                             license.created_at,
                                         ).toLocaleDateString()}
                                     </TableCell>
-                                    <TableCell className="text-right">
+                                    <TableCell
+                                        className="text-right"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button
@@ -414,6 +429,16 @@ export default function LicensingIndex({
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
+                                                <DropdownMenuItem asChild>
+                                                    <Link
+                                                        href={LicenseController.show(
+                                                            license.id,
+                                                        )}
+                                                    >
+                                                        <Eye />
+                                                        View
+                                                    </Link>
+                                                </DropdownMenuItem>
                                                 <DropdownMenuItem asChild>
                                                     <Link
                                                         href={LicenseController.edit(
