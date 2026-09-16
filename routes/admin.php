@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\LicenseStepController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\ScreeningController;
+use App\Http\Controllers\Admin\ScreeningResponseController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserLicenseController;
 use App\Http\Controllers\Admin\VerticalTrainingController;
@@ -37,6 +39,13 @@ Route::middleware(['auth', 'verified', 'can:viewAny,'.User::class])
         });
 
         Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+
+        Route::get('screening', [ScreeningController::class, 'index'])->name('screening.index');
+        Route::post('screening', [ScreeningController::class, 'store'])->name('screening.store');
+        Route::get('screening/{screening}', [ScreeningController::class, 'show'])->name('screening.show');
+
+        Route::delete('screening-responses', [ScreeningResponseController::class, 'bulkDestroy'])->name('screening-responses.bulk-destroy');
+        Route::delete('screening-responses/{screeningResponse}', [ScreeningResponseController::class, 'destroy'])->name('screening-responses.destroy');
     });
 
 Route::delete('impersonate', [ImpersonateController::class, 'leave'])

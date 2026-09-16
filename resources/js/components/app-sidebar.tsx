@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     Award,
+    ClipboardCheck,
     FileBarChart,
     LayoutGrid,
     ShieldCheck,
@@ -22,6 +23,7 @@ import {
 import { dashboard } from '@/routes';
 import { index as licensingIndex } from '@/routes/admin/licensing';
 import { index as reportsIndex } from '@/routes/admin/reports';
+import { index as screeningIndex } from '@/routes/admin/screening';
 import { index as usersIndex } from '@/routes/admin/users';
 import { index as verticalTrainingIndex } from '@/routes/admin/vertical-training';
 import { index as myLicensesIndex } from '@/routes/licenses';
@@ -56,6 +58,11 @@ export function AppSidebar() {
                       title: 'Vertical Training',
                       href: verticalTrainingIndex(),
                       icon: Target,
+                  },
+                  {
+                      title: 'Screening',
+                      href: screeningIndex(),
+                      icon: ClipboardCheck,
                   },
                   {
                       title: 'Users',
