@@ -178,7 +178,7 @@ export default function ScreeningResponseShow({
                     </div>
                 </div>
 
-                <div className="grid gap-6 lg:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-3">
                     <Card>
                         <CardHeader>
                             <CardTitle>Candidate details</CardTitle>
@@ -280,82 +280,20 @@ export default function ScreeningResponseShow({
                                     </p>
                                 </div>
                             </div>
+                        </CardContent>
+                    </Card>
 
-                            <Separator />
-
-                            <div className="grid gap-3">
-                                <div className="flex items-center justify-between">
-                                    <Label className="text-muted-foreground text-xs font-semibold uppercase">
-                                        Candidate scorecard
-                                    </Label>
-                                    <span className="text-muted-foreground text-xs">
-                                        {ratedCount}/{SCORECARD_FIELDS.length}{' '}
-                                        rated
-                                    </span>
-                                </div>
-                                {SCORECARD_FIELDS.map(
-                                    ({ key, label, hint }) => (
-                                        <div
-                                            key={key}
-                                            className="dark:border-sidebar-border rounded-lg border border-[#ece7f5] p-3"
-                                        >
-                                            <div className="flex flex-wrap items-center justify-between gap-2">
-                                                <p className="text-sm font-medium">
-                                                    {label}
-                                                </p>
-                                                <ToggleGroup
-                                                    type="single"
-                                                    variant="outline"
-                                                    size="sm"
-                                                    value={ratings[key] ?? ''}
-                                                    onValueChange={(
-                                                        value: CallRating | '',
-                                                    ) =>
-                                                        setRatings(
-                                                            (current) => ({
-                                                                ...current,
-                                                                [key]:
-                                                                    value ||
-                                                                    null,
-                                                            }),
-                                                        )
-                                                    }
-                                                >
-                                                    {ratingOptions.map(
-                                                        (option) => (
-                                                            <ToggleGroupItem
-                                                                key={option}
-                                                                value={option}
-                                                                className={
-                                                                    RATING_ITEM_CLASS[
-                                                                        option
-                                                                    ]
-                                                                }
-                                                            >
-                                                                {ratingLabel(
-                                                                    option,
-                                                                )}
-                                                            </ToggleGroupItem>
-                                                        ),
-                                                    )}
-                                                </ToggleGroup>
-                                            </div>
-                                            <p className="text-muted-foreground mt-1 text-xs">
-                                                {hint}
-                                            </p>
-                                        </div>
-                                    ),
-                                )}
-                            </div>
-
-                            <Separator />
-
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Manager / HR notes</CardTitle>
+                        </CardHeader>
+                        <CardContent>
                             <div className="grid gap-1.5">
                                 <Label
                                     htmlFor="notes"
                                     className="text-muted-foreground text-xs font-semibold uppercase"
                                 >
-                                    Manager / HR notes
+                                    Notes
                                 </Label>
                                 <Textarea
                                     id="notes"
@@ -391,6 +329,63 @@ export default function ScreeningResponseShow({
                         </CardContent>
                     </Card>
                 </div>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Candidate scorecard</CardTitle>
+                    </CardHeader>
+                    <CardContent className="grid gap-3">
+                        <div className="flex items-center justify-between">
+                            <Label className="text-muted-foreground text-xs font-semibold uppercase">
+                                Rated
+                            </Label>
+                            <span className="text-muted-foreground text-xs">
+                                {ratedCount}/{SCORECARD_FIELDS.length} rated
+                            </span>
+                        </div>
+                        {SCORECARD_FIELDS.map(({ key, label, hint }) => (
+                            <div
+                                key={key}
+                                className="dark:border-sidebar-border rounded-lg border border-[#ece7f5] p-3"
+                            >
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                    <p className="text-sm font-medium">
+                                        {label}
+                                    </p>
+                                    <ToggleGroup
+                                        type="single"
+                                        variant="outline"
+                                        size="sm"
+                                        value={ratings[key] ?? ''}
+                                        onValueChange={(
+                                            value: CallRating | '',
+                                        ) =>
+                                            setRatings((current) => ({
+                                                ...current,
+                                                [key]: value || null,
+                                            }))
+                                        }
+                                    >
+                                        {ratingOptions.map((option) => (
+                                            <ToggleGroupItem
+                                                key={option}
+                                                value={option}
+                                                className={
+                                                    RATING_ITEM_CLASS[option]
+                                                }
+                                            >
+                                                {ratingLabel(option)}
+                                            </ToggleGroupItem>
+                                        ))}
+                                    </ToggleGroup>
+                                </div>
+                                <p className="text-muted-foreground mt-1 text-xs">
+                                    {hint}
+                                </p>
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
             </div>
         </>
     );
