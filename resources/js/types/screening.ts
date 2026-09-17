@@ -13,6 +13,7 @@ export type CallLog = {
     called_at: string | null;
     transcript: string | null;
     recording_path: string | null;
+    recording_url: string | null;
     notes: string | null;
     clarity: CallRating | null;
     energy_tone: CallRating | null;

@@ -42,4 +42,10 @@ return [
         'page_size' => env('CUSTOMER_API_PAGE_SIZE', 50),
     ],
 
+    'openai' => [
+        'key' => env('OPENAI_API_KEY'),
+        'realtime_model' => env('OPENAI_REALTIME_MODEL', 'gpt-realtime'),
+        'realtime_voice' => env('OPENAI_REALTIME_VOICE', 'verse'),
+    ],
+
 ];

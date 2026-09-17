@@ -16,6 +16,12 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -95,6 +101,8 @@ export default function ScreeningResponseShow({
     const [notes, setNotes] = useState(response.call_log?.notes ?? '');
     const [ratings, setRatings] = useState<Ratings>(initialRatings);
     const [savingAssessment, setSavingAssessment] = useState(false);
+    const [transcriptOpen, setTranscriptOpen] = useState(false);
+    const [recordingOpen, setRecordingOpen] = useState(false);
 
     const assessmentDirty =
         notes !== (response.call_log?.notes ?? '') ||
@@ -259,26 +267,44 @@ export default function ScreeningResponseShow({
                             </div>
 
                             <div className="grid gap-3 sm:grid-cols-2">
-                                <div className="text-muted-foreground flex flex-col items-center gap-1.5 rounded-lg border border-dashed p-4 text-center">
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        response.call_log?.transcript &&
+                                        setTranscriptOpen(true)
+                                    }
+                                    disabled={!response.call_log?.transcript}
+                                    className="text-muted-foreground hover:enabled:border-foreground/30 hover:enabled:text-foreground flex flex-col items-center gap-1.5 rounded-lg border border-dashed p-4 text-center transition disabled:cursor-not-allowed"
+                                >
                                     <FileText className="size-5 opacity-60" />
                                     <p className="text-xs font-semibold uppercase">
                                         Transcript
                                     </p>
-                                    <p className="text-xs">
-                                        {response.call_log?.transcript ??
-                                            'Available once AI calls are enabled.'}
+                                    <p className="line-clamp-2 text-xs">
+                                        {response.call_log?.transcript
+                                            ? 'Click to view full transcript'
+                                            : 'Available once AI calls are enabled.'}
                                     </p>
-                                </div>
-                                <div className="text-muted-foreground flex flex-col items-center gap-1.5 rounded-lg border border-dashed p-4 text-center">
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        response.call_log?.recording_url &&
+                                        setRecordingOpen(true)
+                                    }
+                                    disabled={!response.call_log?.recording_url}
+                                    className="text-muted-foreground hover:enabled:border-foreground/30 hover:enabled:text-foreground flex flex-col items-center gap-1.5 rounded-lg border border-dashed p-4 text-center transition disabled:cursor-not-allowed"
+                                >
                                     <Mic className="size-5 opacity-60" />
                                     <p className="text-xs font-semibold uppercase">
                                         Recording
                                     </p>
                                     <p className="text-xs">
-                                        {response.call_log?.recording_path ??
-                                            'No recording yet.'}
+                                        {response.call_log?.recording_url
+                                            ? 'Click to play recording'
+                                            : 'No recording yet.'}
                                     </p>
-                                </div>
+                                </button>
                             </div>
                         </CardContent>
                     </Card>
@@ -387,6 +413,34 @@ export default function ScreeningResponseShow({
                     </CardContent>
                 </Card>
             </div>
+
+            <Dialog open={transcriptOpen} onOpenChange={setTranscriptOpen}>
+                <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>Call transcript</DialogTitle>
+                    </DialogHeader>
+                    <p className="text-sm whitespace-pre-wrap">
+                        {response.call_log?.transcript}
+                    </p>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={recordingOpen} onOpenChange={setRecordingOpen}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Call recording</DialogTitle>
+                    </DialogHeader>
+                    {response.call_log?.recording_url && (
+                        // eslint-disable-next-line jsx-a11y/media-has-caption
+                        <audio
+                            controls
+                            autoPlay
+                            src={response.call_log.recording_url}
+                            className="w-full"
+                        />
+                    )}
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

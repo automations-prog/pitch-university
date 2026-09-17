@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class CallLogResource extends JsonResource
 {
@@ -19,6 +20,9 @@ class CallLogResource extends JsonResource
             'called_at' => $this->called_at,
             'transcript' => $this->transcript,
             'recording_path' => $this->recording_path,
+            'recording_url' => $this->recording_path
+                ? Storage::disk('public')->url($this->recording_path)
+                : null,
             'notes' => $this->notes,
             'clarity' => $this->clarity,
             'energy_tone' => $this->energy_tone,

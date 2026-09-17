@@ -499,7 +499,13 @@ export default function ScreeningIndex({
                             type="button"
                             variant="outline"
                             size="icon"
-                            onClick={() => linkUrl && copy(linkUrl)}
+                            onClick={async () => {
+                                if (!linkUrl) {
+                                    return;
+                                }
+                                await copy(linkUrl);
+                                setTimeout(() => setLinkUrl(null), 600);
+                            }}
                         >
                             <CreatedLinkIcon />
                             <span className="sr-only">Copy link</span>

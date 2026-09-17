@@ -24,7 +24,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['notes', 'clarity', 'energy_tone', 'composure_on_pushback', 'overall_gut_check'])]
+#[Fillable(['called_at', 'transcript', 'recording_path', 'notes', 'clarity', 'energy_tone', 'composure_on_pushback', 'overall_gut_check'])]
 class CallLog extends Model
 {
     /** @use HasFactory<CallLogFactory> */

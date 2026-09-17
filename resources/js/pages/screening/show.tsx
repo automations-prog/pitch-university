@@ -8,12 +8,13 @@ import {
     MicOff,
     PhoneOff,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import { useRealtimeCall } from '@/hooks/use-realtime-call';
 import { store as storeScreeningResponse } from '@/routes/screening';
 
 const BACKGROUND =
@@ -180,8 +181,6 @@ const FIELDS: {
 const inputClass =
     'rounded-xl border-white/25 bg-white/8 text-white placeholder:text-white/50 focus-visible:border-white/60 focus-visible:bg-white/12 focus-visible:ring-0';
 
-type CallPhase = 'connecting' | 'active' | 'ended';
-
 function formatCallDuration(totalSeconds: number): string {
     const minutes = Math.floor(totalSeconds / 60)
         .toString()
@@ -205,32 +204,22 @@ export default function PublicScreeningShow({
             phone_number: '',
         });
 
-    const [callPhase, setCallPhase] = useState<CallPhase>('connecting');
-    const [muted, setMuted] = useState(false);
-    const [elapsedSeconds, setElapsedSeconds] = useState(0);
+    const {
+        phase: callPhase,
+        muted,
+        elapsedSeconds,
+        error: callError,
+        start: startCall,
+        toggleMute,
+        endCall,
+    } = useRealtimeCall({ token });
 
     useEffect(() => {
-        if (!wasSuccessful) {
-            return;
+        if (wasSuccessful) {
+            void startCall();
         }
-
-        const timeout = setTimeout(() => setCallPhase('active'), 1500);
-
-        return () => clearTimeout(timeout);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [wasSuccessful]);
-
-    useEffect(() => {
-        if (callPhase !== 'active') {
-            return;
-        }
-
-        const interval = setInterval(
-            () => setElapsedSeconds((seconds) => seconds + 1),
-            1000,
-        );
-
-        return () => clearInterval(interval);
-    }, [callPhase]);
 
     function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -354,10 +343,25 @@ export default function PublicScreeningShow({
                                     page.
                                 </p>
                             </>
+                        ) : callPhase === 'error' ? (
+                            <>
+                                <div className="flex size-16 items-center justify-center">
+                                    <PhoneOff className="size-9 text-red-300" />
+                                </div>
+                                <h1 className="text-2xl font-bold">
+                                    Call couldn&apos;t connect
+                                </h1>
+                                <p className="text-sm text-white/70">
+                                    {callError ??
+                                        'Something went wrong starting the call.'}{' '}
+                                    Please refresh and try again, or make sure
+                                    microphone access is allowed.
+                                </p>
+                            </>
                         ) : (
                             <>
                                 <div className="relative flex size-16 items-center justify-center">
-                                    {callPhase === 'connecting' && (
+                                    {callPhase !== 'active' && (
                                         <>
                                             <span className="absolute inline-flex size-16 animate-ping rounded-full bg-[#a855f7]/20" />
                                             <span className="absolute inline-flex size-12 animate-pulse rounded-full bg-[#a855f7]/20" />
@@ -368,7 +372,7 @@ export default function PublicScreeningShow({
                                 <h1 className="text-2xl font-bold">
                                     AI Interviewer
                                 </h1>
-                                {callPhase === 'connecting' ? (
+                                {callPhase !== 'active' ? (
                                     <p className="text-sm text-white/70">
                                         Connecting you to your AI interviewer…
                                     </p>
@@ -391,9 +395,7 @@ export default function PublicScreeningShow({
                                     <div className="mt-3 flex items-center gap-4">
                                         <button
                                             type="button"
-                                            onClick={() =>
-                                                setMuted((current) => !current)
-                                            }
+                                            onClick={toggleMute}
                                             aria-label={
                                                 muted ? 'Unmute' : 'Mute'
                                             }
@@ -411,9 +413,7 @@ export default function PublicScreeningShow({
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() =>
-                                                setCallPhase('ended')
-                                            }
+                                            onClick={() => void endCall()}
                                             aria-label="End call"
                                             className="flex size-12 items-center justify-center rounded-full bg-red-500 transition hover:bg-red-600"
                                         >
