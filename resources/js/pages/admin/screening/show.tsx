@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/table';
 import { useClipboard } from '@/hooks/use-clipboard';
 import { resourceCardClass } from '@/lib/brand-theme';
+import { formatDate } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { index as screeningIndex } from '@/routes/admin/screening';
 import type { Screening, ScreeningResponse } from '@/types';
@@ -69,7 +70,6 @@ export default function ScreeningShow({
                             <TableRow>
                                 <TableHead>Full name</TableHead>
                                 <TableHead>Email</TableHead>
-                                <TableHead>Birthday</TableHead>
                                 <TableHead>Phone number</TableHead>
                                 <TableHead>Submitted</TableHead>
                             </TableRow>
@@ -78,7 +78,7 @@ export default function ScreeningShow({
                             {responses.length === 0 && (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={5}
+                                        colSpan={4}
                                         className="text-muted-foreground py-8 text-center"
                                     >
                                         No responses yet.
@@ -92,17 +92,10 @@ export default function ScreeningShow({
                                     </TableCell>
                                     <TableCell>{response.email}</TableCell>
                                     <TableCell>
-                                        {new Date(
-                                            response.birthday,
-                                        ).toLocaleDateString()}
-                                    </TableCell>
-                                    <TableCell>
                                         {response.phone_number}
                                     </TableCell>
                                     <TableCell>
-                                        {new Date(
-                                            response.created_at,
-                                        ).toLocaleDateString()}
+                                        {formatDate(response.created_at)}
                                     </TableCell>
                                 </TableRow>
                             ))}

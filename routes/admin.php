@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CallLogController;
 use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\LicenseStepController;
 use App\Http\Controllers\Admin\ReportController;
@@ -45,7 +46,10 @@ Route::middleware(['auth', 'verified', 'can:viewAny,'.User::class])
         Route::get('screening/{screening}', [ScreeningController::class, 'show'])->name('screening.show');
 
         Route::delete('screening-responses', [ScreeningResponseController::class, 'bulkDestroy'])->name('screening-responses.bulk-destroy');
+        Route::get('screening-responses/{screeningResponse}', [ScreeningResponseController::class, 'show'])->name('screening-responses.show');
         Route::delete('screening-responses/{screeningResponse}', [ScreeningResponseController::class, 'destroy'])->name('screening-responses.destroy');
+
+        Route::patch('call-logs/{callLog}', [CallLogController::class, 'update'])->name('call-logs.update');
     });
 
 Route::delete('impersonate', [ImpersonateController::class, 'leave'])

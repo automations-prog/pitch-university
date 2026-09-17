@@ -25,7 +25,6 @@ class StoreScreeningResponseRequest extends FormRequest
         return [
             'full_name' => ['required', 'string', 'min:2', 'max:255', 'regex:/^(?=.*\p{L})[\p{L}\p{M}\'\-\s]+$/u'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            'birthday' => ['required', 'date', 'before:today'],
             'phone_number' => ['required', 'string', 'min:7', 'max:20', 'regex:/^[0-9()+\-\s]+$/'],
         ];
     }

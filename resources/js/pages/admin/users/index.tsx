@@ -595,7 +595,7 @@ export default function UsersIndex({
                 )}
 
                 <div className={resourceCardClass}>
-                    <Table className="[&_th]:px-4 [&_th]:py-3 [&_td]:px-4 [&_td]:py-3">
+                    <Table className="[&_td]:px-4 [&_td]:py-3 [&_th]:px-4 [&_th]:py-3">
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-10">
@@ -651,9 +651,7 @@ export default function UsersIndex({
                                         }
                                     >
                                         <TableCell
-                                            onClick={(e) =>
-                                                e.stopPropagation()
-                                            }
+                                            onClick={(e) => e.stopPropagation()}
                                         >
                                             <Checkbox
                                                 checked={selectedIds.includes(
@@ -754,9 +752,7 @@ export default function UsersIndex({
                                         </TableCell>
                                         <TableCell
                                             className="text-right"
-                                            onClick={(e) =>
-                                                e.stopPropagation()
-                                            }
+                                            onClick={(e) => e.stopPropagation()}
                                         >
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>

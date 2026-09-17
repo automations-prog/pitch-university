@@ -22,7 +22,6 @@ class ScreeningResponseFactory extends Factory
             'screening_id' => Screening::factory(),
             'full_name' => fake()->name(),
             'email' => fake()->safeEmail(),
-            'birthday' => fake()->date(),
             'phone_number' => fake()->phoneNumber(),
         ];
     }

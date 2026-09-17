@@ -9,6 +9,8 @@ use App\Http\Resources\ScreeningResponseResource;
 use App\Models\Screening;
 use App\Models\ScreeningResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -17,16 +19,39 @@ use Inertia\Response;
 class ScreeningController extends Controller
 {
     /**
+     * The selectable page sizes for the screening index.
+     *
+     * @var array<int, int>
+     */
+    private const PER_PAGE_OPTIONS = [10, 25, 50, 100];
+
+    /**
      * Display a listing of the screenings.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
         Gate::authorize('viewAny', Screening::class);
 
-        $responses = ScreeningResponse::with('screening')->latest()->get();
+        $perPage = $request->integer('per_page', self::PER_PAGE_OPTIONS[0]);
+        $perPage = in_array($perPage, self::PER_PAGE_OPTIONS, true) ? $perPage : self::PER_PAGE_OPTIONS[0];
+
+        $responses = ScreeningResponse::with('screening')
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+
+        $paginated = ScreeningResponseResource::collection($responses)->response()->getData(true);
 
         return Inertia::render('admin/screening/index', [
-            'responses' => ScreeningResponseResource::collection($responses),
+            'responses' => [
+                'data' => $paginated['data'],
+                'links' => $paginated['meta']['links'],
+                'meta' => Arr::except($paginated['meta'], ['links']),
+            ],
+            'filters' => [
+                'per_page' => (string) $perPage,
+            ],
+            'perPageOptions' => self::PER_PAGE_OPTIONS,
         ]);
     }
 

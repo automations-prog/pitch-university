@@ -19,9 +19,9 @@ class ScreeningResponseResource extends JsonResource
             'screening_id' => $this->screening_id,
             'full_name' => $this->full_name,
             'email' => $this->email,
-            'birthday' => $this->birthday,
             'phone_number' => $this->phone_number,
             'public_url' => $this->whenLoaded('screening', fn () => route('screening.show', $this->screening->token)),
+            'call_log' => CallLogResource::make($this->whenLoaded('callLog')),
             'created_at' => $this->created_at,
         ];
     }

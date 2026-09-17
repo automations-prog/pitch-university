@@ -2,12 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import UserController from '@/actions/App/Http/Controllers/Admin/UserController';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { resourceBadgeClass } from '@/lib/brand-theme';
 import { dashboard } from '@/routes';
 import { index as usersIndex } from '@/routes/admin/users';
@@ -64,9 +59,7 @@ export default function ShowUser({ user }: { user: User }) {
                             <p className="text-muted-foreground text-sm">
                                 Email address
                             </p>
-                            <p className="text-sm font-medium">
-                                {user.email}
-                            </p>
+                            <p className="text-sm font-medium">{user.email}</p>
                         </div>
                         <div>
                             <p className="text-muted-foreground text-sm">
@@ -85,9 +78,7 @@ export default function ShowUser({ user }: { user: User }) {
                                 Created
                             </p>
                             <p className="text-sm font-medium">
-                                {new Date(
-                                    user.created_at,
-                                ).toLocaleDateString()}
+                                {new Date(user.created_at).toLocaleDateString()}
                             </p>
                         </div>
                     </CardContent>

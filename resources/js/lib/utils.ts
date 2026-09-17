@@ -10,3 +10,11 @@ export function cn(...inputs: ClassValue[]) {
 export function toUrl(url: NonNullable<InertiaLinkProps['href']>): string {
     return typeof url === 'string' ? url : url.url;
 }
+
+export function formatDate(value: string): string {
+    return new Date(value).toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+    });
+}

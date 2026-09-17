@@ -2,16 +2,32 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\CallRating;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ScreeningResponseResource;
 use App\Models\ScreeningResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ScreeningResponseController extends Controller
 {
+    /**
+     * Display the given screening response.
+     */
+    public function show(ScreeningResponse $screeningResponse): Response
+    {
+        Gate::authorize('view', $screeningResponse);
+
+        return Inertia::render('admin/screening-responses/show', [
+            'response' => ScreeningResponseResource::make($screeningResponse->load(['screening', 'callLog'])),
+            'ratingOptions' => CallRating::cases(),
+        ]);
+    }
+
     /**
      * Remove a screening response.
      */

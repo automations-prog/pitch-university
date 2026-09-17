@@ -17,6 +17,7 @@ class ScreeningResponseController extends Controller
     {
         return Inertia::render('screening/show', [
             'token' => $screening->token,
+            'alreadySubmitted' => $screening->responses()->exists(),
         ]);
     }
 
@@ -25,6 +26,8 @@ class ScreeningResponseController extends Controller
      */
     public function store(StoreScreeningResponseRequest $request, Screening $screening): RedirectResponse
     {
+        abort_if($screening->responses()->exists(), 409);
+
         $screening->responses()->create($request->validated());
 
         return redirect()->route('screening.show', $screening);

@@ -1,5 +1,14 @@
 import { Head, useForm } from '@inertiajs/react';
-import { CheckCircle2, GraduationCap } from 'lucide-react';
+import {
+    Bot,
+    CheckCircle2,
+    GraduationCap,
+    Lock,
+    Mic,
+    MicOff,
+    PhoneOff,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -128,7 +137,6 @@ const DOTS: Dot[] = [
 type ScreeningFormData = {
     full_name: string;
     email: string;
-    birthday: string;
     phone_number: string;
 };
 
@@ -141,7 +149,6 @@ const FIELDS: {
     maxLength?: number;
     pattern?: string;
     hint?: string;
-    max?: string;
 }[] = [
     {
         id: 'full_name',
@@ -160,12 +167,6 @@ const FIELDS: {
         maxLength: 255,
     },
     {
-        id: 'birthday',
-        label: 'Birthday',
-        type: 'date',
-        max: new Date(Date.now() - 86400000).toISOString().slice(0, 10),
-    },
-    {
         id: 'phone_number',
         label: 'Phone number',
         type: 'tel',
@@ -179,14 +180,57 @@ const FIELDS: {
 const inputClass =
     'rounded-xl border-white/25 bg-white/8 text-white placeholder:text-white/50 focus-visible:border-white/60 focus-visible:bg-white/12 focus-visible:ring-0';
 
-export default function PublicScreeningShow({ token }: { token: string }) {
+type CallPhase = 'connecting' | 'active' | 'ended';
+
+function formatCallDuration(totalSeconds: number): string {
+    const minutes = Math.floor(totalSeconds / 60)
+        .toString()
+        .padStart(2, '0');
+    const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+
+    return `${minutes}:${seconds}`;
+}
+
+export default function PublicScreeningShow({
+    token,
+    alreadySubmitted,
+}: {
+    token: string;
+    alreadySubmitted: boolean;
+}) {
     const { data, setData, post, processing, errors, wasSuccessful } =
         useForm<ScreeningFormData>({
             full_name: '',
             email: '',
-            birthday: '',
             phone_number: '',
         });
+
+    const [callPhase, setCallPhase] = useState<CallPhase>('connecting');
+    const [muted, setMuted] = useState(false);
+    const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+    useEffect(() => {
+        if (!wasSuccessful) {
+            return;
+        }
+
+        const timeout = setTimeout(() => setCallPhase('active'), 1500);
+
+        return () => clearTimeout(timeout);
+    }, [wasSuccessful]);
+
+    useEffect(() => {
+        if (callPhase !== 'active') {
+            return;
+        }
+
+        const interval = setInterval(
+            () => setElapsedSeconds((seconds) => seconds + 1),
+            1000,
+        );
+
+        return () => clearInterval(interval);
+    }, [callPhase]);
 
     function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -295,17 +339,103 @@ export default function PublicScreeningShow({ token }: { token: string }) {
             <div className="relative z-10 w-full max-w-[420px] rounded-3xl border border-white/[0.18] bg-white/[0.08] p-9 text-white shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl">
                 {wasSuccessful ? (
                     <div className="flex flex-col items-center gap-3 py-6 text-center">
-                        <div className="relative flex size-16 items-center justify-center">
-                            <span className="absolute inline-flex size-16 animate-ping rounded-full bg-emerald-400/20" />
-                            <span className="absolute inline-flex size-12 animate-pulse rounded-full bg-emerald-400/20" />
-                            <CheckCircle2 className="animate-in zoom-in relative size-12 text-emerald-400 duration-500" />
+                        {callPhase === 'ended' ? (
+                            <>
+                                <div className="relative flex size-16 items-center justify-center">
+                                    <span className="absolute inline-flex size-16 animate-ping rounded-full bg-emerald-400/20" />
+                                    <span className="absolute inline-flex size-12 animate-pulse rounded-full bg-emerald-400/20" />
+                                    <CheckCircle2 className="animate-in zoom-in relative size-12 text-emerald-400 duration-500" />
+                                </div>
+                                <h1 className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both text-2xl font-bold duration-500">
+                                    Thank you!
+                                </h1>
+                                <p className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both text-sm text-white/70 delay-100 duration-500">
+                                    Your call has ended. You may now close this
+                                    page.
+                                </p>
+                            </>
+                        ) : (
+                            <>
+                                <div className="relative flex size-16 items-center justify-center">
+                                    {callPhase === 'connecting' && (
+                                        <>
+                                            <span className="absolute inline-flex size-16 animate-ping rounded-full bg-[#a855f7]/20" />
+                                            <span className="absolute inline-flex size-12 animate-pulse rounded-full bg-[#a855f7]/20" />
+                                        </>
+                                    )}
+                                    <Bot className="relative size-9 text-[#e9d5ff]" />
+                                </div>
+                                <h1 className="text-2xl font-bold">
+                                    AI Interviewer
+                                </h1>
+                                {callPhase === 'connecting' ? (
+                                    <p className="text-sm text-white/70">
+                                        Connecting you to your AI interviewer…
+                                    </p>
+                                ) : (
+                                    <>
+                                        <p className="flex items-center gap-1.5 text-sm text-white/70">
+                                            <span className="inline-flex size-1.5 animate-pulse rounded-full bg-emerald-400" />
+                                            In call · {data.full_name}
+                                        </p>
+                                        <p className="font-mono text-sm text-white/50">
+                                            {formatCallDuration(elapsedSeconds)}
+                                        </p>
+                                        <span className="mt-1 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white/80">
+                                            Topic: Self Introduction
+                                        </span>
+                                    </>
+                                )}
+
+                                {callPhase === 'active' && (
+                                    <div className="mt-3 flex items-center gap-4">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setMuted((current) => !current)
+                                            }
+                                            aria-label={
+                                                muted ? 'Unmute' : 'Mute'
+                                            }
+                                            className={`flex size-12 items-center justify-center rounded-full border transition ${
+                                                muted
+                                                    ? 'border-white/40 bg-white/20'
+                                                    : 'border-white/25 bg-white/10 hover:bg-white/15'
+                                            }`}
+                                        >
+                                            {muted ? (
+                                                <MicOff className="size-5" />
+                                            ) : (
+                                                <Mic className="size-5" />
+                                            )}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setCallPhase('ended')
+                                            }
+                                            aria-label="End call"
+                                            className="flex size-12 items-center justify-center rounded-full bg-red-500 transition hover:bg-red-600"
+                                        >
+                                            <PhoneOff className="size-5" />
+                                        </button>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                ) : alreadySubmitted ? (
+                    <div className="flex flex-col items-center gap-3 py-6 text-center">
+                        <div className="flex size-16 items-center justify-center rounded-full bg-white/10">
+                            <Lock className="size-7 text-white/70" />
                         </div>
-                        <h1 className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both text-2xl font-bold duration-500">
-                            Thank you!
+                        <h1 className="text-2xl font-bold">
+                            Link already used
                         </h1>
-                        <p className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both text-sm text-white/70 delay-100 duration-500">
-                            Your response has been received. You may now close
-                            this page.
+                        <p className="text-sm text-white/70">
+                            This screening link has already been submitted and
+                            can&apos;t be used again. Please request a new link
+                            if you need to apply again.
                         </p>
                     </div>
                 ) : (
@@ -335,7 +465,6 @@ export default function PublicScreeningShow({ token }: { token: string }) {
                                         maxLength,
                                         pattern,
                                         hint,
-                                        max,
                                     },
                                     index,
                                 ) => (
@@ -368,7 +497,6 @@ export default function PublicScreeningShow({ token }: { token: string }) {
                                             maxLength={maxLength}
                                             pattern={pattern}
                                             title={hint}
-                                            max={max}
                                             value={data[id]}
                                             onChange={(e) =>
                                                 setData(id, e.target.value)

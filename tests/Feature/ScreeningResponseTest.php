@@ -11,7 +11,8 @@ test('guests can view the public screening form without authentication', functio
     $response->assertOk();
     $response->assertInertia(fn (Assert $page) => $page
         ->component('screening/show')
-        ->where('token', $screening->token),
+        ->where('token', $screening->token)
+        ->where('alreadySubmitted', false),
     );
 });
 
@@ -27,7 +28,6 @@ test('guests can submit a response to the screening form', function () {
     $response = $this->post(route('screening.store', $screening), [
         'full_name' => 'Jordan Blake',
         'email' => 'jordan@example.com',
-        'birthday' => '1995-05-10',
         'phone_number' => '555-123-4567',
     ]);
 
@@ -40,24 +40,62 @@ test('guests can submit a response to the screening form', function () {
     ]);
 });
 
-test('the same screening link accepts multiple responses', function () {
+test('submitting a response automatically creates a call log', function () {
     $screening = Screening::factory()->create();
 
     $this->post(route('screening.store', $screening), [
         'full_name' => 'Jordan Blake',
         'email' => 'jordan@example.com',
-        'birthday' => '1995-05-10',
         'phone_number' => '555-123-4567',
     ]);
 
+    $response = $screening->responses()->first();
+
+    $this->assertDatabaseHas('call_logs', [
+        'screening_response_id' => $response->id,
+        'called_at' => null,
+        'transcript' => null,
+        'recording_path' => null,
+        'notes' => null,
+    ]);
+});
+
+test('a screening link can only be submitted once', function () {
+    $screening = Screening::factory()->create();
+
     $this->post(route('screening.store', $screening), [
+        'full_name' => 'Jordan Blake',
+        'email' => 'jordan@example.com',
+        'phone_number' => '555-123-4567',
+    ]);
+
+    $response = $this->post(route('screening.store', $screening), [
         'full_name' => 'Sam Rivera',
         'email' => 'sam@example.com',
-        'birthday' => '1998-02-20',
         'phone_number' => '555-987-6543',
     ]);
 
-    expect($screening->responses()->count())->toBe(2);
+    $response->assertStatus(409);
+    expect($screening->responses()->count())->toBe(1);
+    expect($screening->responses()->first()->full_name)->toBe('Jordan Blake');
+});
+
+test('an already-submitted screening link is flagged when viewed again', function () {
+    $screening = Screening::factory()->create();
+
+    $this->post(route('screening.store', $screening), [
+        'full_name' => 'Jordan Blake',
+        'email' => 'jordan@example.com',
+        'phone_number' => '555-123-4567',
+    ]);
+
+    $response = $this->get(route('screening.show', $screening));
+
+    $response->assertOk();
+    $response->assertInertia(fn (Assert $page) => $page
+        ->component('screening/show')
+        ->where('alreadySubmitted', true),
+    );
 });
 
 test('the screening response requires all fields', function () {
@@ -65,20 +103,7 @@ test('the screening response requires all fields', function () {
 
     $response = $this->post(route('screening.store', $screening), []);
 
-    $response->assertSessionHasErrors(['full_name', 'email', 'birthday', 'phone_number']);
-});
-
-test('the screening response birthday must be in the past', function () {
-    $screening = Screening::factory()->create();
-
-    $response = $this->post(route('screening.store', $screening), [
-        'full_name' => 'Jordan Blake',
-        'email' => 'jordan@example.com',
-        'birthday' => now()->addDay()->toDateString(),
-        'phone_number' => '555-123-4567',
-    ]);
-
-    $response->assertSessionHasErrors('birthday');
+    $response->assertSessionHasErrors(['full_name', 'email', 'phone_number']);
 });
 
 test('the screening response email must be a valid email address', function () {
@@ -87,7 +112,6 @@ test('the screening response email must be a valid email address', function () {
     $response = $this->post(route('screening.store', $screening), [
         'full_name' => 'Jordan Blake',
         'email' => 'not-an-email',
-        'birthday' => '1995-05-10',
         'phone_number' => '555-123-4567',
     ]);
 
@@ -100,7 +124,6 @@ test('the screening response full name must contain only letters, spaces, hyphen
     $response = $this->post(route('screening.store', $screening), [
         'full_name' => 'Jordan123',
         'email' => 'jordan@example.com',
-        'birthday' => '1995-05-10',
         'phone_number' => '555-123-4567',
     ]);
 
@@ -113,7 +136,6 @@ test('the screening response phone number must contain only digits and phone sym
     $response = $this->post(route('screening.store', $screening), [
         'full_name' => 'Jordan Blake',
         'email' => 'jordan@example.com',
-        'birthday' => '1995-05-10',
         'phone_number' => 'call-me-maybe',
     ]);
 

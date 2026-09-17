@@ -296,7 +296,7 @@ export default function ReportsIndex({
                 </Card>
 
                 <div className={resourceCardClass}>
-                    <Table className="[&_th]:px-4 [&_th]:py-3 [&_td]:px-4 [&_td]:py-3">
+                    <Table className="[&_td]:px-4 [&_td]:py-3 [&_th]:px-4 [&_th]:py-3">
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Agent</TableHead>

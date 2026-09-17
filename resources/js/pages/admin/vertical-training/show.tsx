@@ -70,9 +70,7 @@ export default function ShowVerticalTraining({
                                 License
                             </p>
                             <p className="text-sm font-medium">
-                                {training.license
-                                    ? training.license.name
-                                    : '—'}
+                                {training.license ? training.license.name : '—'}
                             </p>
                         </div>
                     </CardContent>
