@@ -11,7 +11,7 @@ import {
     PhoneOff,
     Save,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -80,6 +80,8 @@ function ratingLabel(rating: CallRating): string {
     return rating.charAt(0).toUpperCase() + rating.slice(1);
 }
 
+const PLAYBACK_RATES = [0.5, 1, 1.25, 1.5, 2] as const;
+
 export default function ScreeningResponseShow({
     response,
     ratingOptions,
@@ -103,6 +105,8 @@ export default function ScreeningResponseShow({
     const [savingAssessment, setSavingAssessment] = useState(false);
     const [transcriptOpen, setTranscriptOpen] = useState(false);
     const [recordingOpen, setRecordingOpen] = useState(false);
+    const [playbackRate, setPlaybackRate] = useState<number>(1);
+    const audioRef = useRef<HTMLAudioElement>(null);
 
     const assessmentDirty =
         notes !== (response.call_log?.notes ?? '') ||
@@ -328,29 +332,6 @@ export default function ScreeningResponseShow({
                                     placeholder="Add notes about this candidate's call…"
                                     rows={4}
                                 />
-                                <div className="flex items-center gap-3">
-                                    <Button
-                                        type="button"
-                                        size="sm"
-                                        className="w-fit"
-                                        onClick={saveAssessment}
-                                        disabled={
-                                            savingAssessment ||
-                                            !response.call_log ||
-                                            !assessmentDirty
-                                        }
-                                    >
-                                        <Save />
-                                        {savingAssessment
-                                            ? 'Saving…'
-                                            : 'Save assessment'}
-                                    </Button>
-                                    {assessmentDirty && !savingAssessment && (
-                                        <span className="text-muted-foreground text-xs">
-                                            Unsaved changes
-                                        </span>
-                                    )}
-                                </div>
                             </div>
                         </CardContent>
                     </Card>
@@ -412,6 +393,28 @@ export default function ScreeningResponseShow({
                         ))}
                     </CardContent>
                 </Card>
+
+                <div className="flex items-center gap-3">
+                    <Button
+                        type="button"
+                        size="sm"
+                        className="w-fit"
+                        onClick={saveAssessment}
+                        disabled={
+                            savingAssessment ||
+                            !response.call_log ||
+                            !assessmentDirty
+                        }
+                    >
+                        <Save />
+                        {savingAssessment ? 'Saving…' : 'Save assessment'}
+                    </Button>
+                    {assessmentDirty && !savingAssessment && (
+                        <span className="text-muted-foreground text-xs">
+                            Unsaved changes
+                        </span>
+                    )}
+                </div>
             </div>
 
             <Dialog open={transcriptOpen} onOpenChange={setTranscriptOpen}>
@@ -431,13 +434,53 @@ export default function ScreeningResponseShow({
                         <DialogTitle>Call recording</DialogTitle>
                     </DialogHeader>
                     {response.call_log?.recording_url && (
-                        // eslint-disable-next-line jsx-a11y/media-has-caption
-                        <audio
-                            controls
-                            autoPlay
-                            src={response.call_log.recording_url}
-                            className="w-full"
-                        />
+                        <div className="grid gap-3">
+                            <div className="flex items-center justify-between gap-2">
+                                <Label className="text-muted-foreground text-xs font-semibold uppercase">
+                                    Speed
+                                </Label>
+                                <ToggleGroup
+                                    type="single"
+                                    variant="outline"
+                                    size="sm"
+                                    value={String(playbackRate)}
+                                    onValueChange={(value: string) => {
+                                        if (!value) {
+                                            return;
+                                        }
+
+                                        const rate = Number(value);
+                                        setPlaybackRate(rate);
+
+                                        if (audioRef.current) {
+                                            audioRef.current.playbackRate =
+                                                rate;
+                                        }
+                                    }}
+                                >
+                                    {PLAYBACK_RATES.map((rate) => (
+                                        <ToggleGroupItem
+                                            key={rate}
+                                            value={String(rate)}
+                                        >
+                                            {rate}x
+                                        </ToggleGroupItem>
+                                    ))}
+                                </ToggleGroup>
+                            </div>
+                            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                            <audio
+                                ref={audioRef}
+                                controls
+                                autoPlay
+                                src={response.call_log.recording_url}
+                                className="w-full"
+                                onLoadedMetadata={(event) => {
+                                    event.currentTarget.playbackRate =
+                                        playbackRate;
+                                }}
+                            />
+                        </div>
                     )}
                 </DialogContent>
             </Dialog>
