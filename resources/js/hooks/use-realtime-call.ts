@@ -43,7 +43,61 @@ const INTERRUPT_INSTRUCTION =
 
 const INTERRUPT_DELAY_MS = 10_000;
 
-const AUTO_HANGUP_DELAY_MS = 4_000;
+const CLOSING_LINE =
+    "Thanks so much for your time — welcome to Pitch University, and we'll follow up shortly on next steps.";
+
+/**
+ * The `response.audio_transcript.done`-style event this timer is keyed off
+ * fires once the closing line's *text* is finalized, not once the TTS audio
+ * has finished playing it aloud. A flat 4s delay was cutting the goodbye
+ * line off mid-sentence — 18 words takes ~6-7s to actually speak — so this
+ * is sized off the real script line instead of a guessed constant, with a
+ * buffer for playback/network jitter.
+ */
+const SPEECH_WORDS_PER_MINUTE = 150;
+const HANGUP_BUFFER_MS = 2_500;
+
+function estimateSpeechDurationMs(text: string): number {
+    const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
+
+    return Math.round((wordCount / SPEECH_WORDS_PER_MINUTE) * 60_000);
+}
+
+const AUTO_HANGUP_DELAY_MS =
+    estimateSpeechDurationMs(CLOSING_LINE) + HANGUP_BUFFER_MS;
+
+/**
+ * `MediaRecorder` support for `audio/webm` isn't universal — Safari (macOS
+ * and iOS, so most phones) only supports `audio/mp4`. Probe supported types
+ * in preference order instead of hardcoding one, or the call fails
+ * immediately with "mimetype is not supported" on any browser that doesn't
+ * support the first pick. Extensions match `StoreScreeningCallRequest`'s
+ * allowed `mimes:webm,wav,ogg,mp3,m4a` list.
+ */
+const RECORDING_MIME_CANDIDATES: { mimeType: string; extension: string }[] = [
+    { mimeType: 'audio/webm;codecs=opus', extension: 'webm' },
+    { mimeType: 'audio/webm', extension: 'webm' },
+    { mimeType: 'audio/ogg;codecs=opus', extension: 'ogg' },
+    { mimeType: 'audio/ogg', extension: 'ogg' },
+    { mimeType: 'audio/mp4', extension: 'm4a' },
+];
+
+function pickSupportedRecordingType(): {
+    mimeType: string;
+    extension: string;
+} {
+    const supported = RECORDING_MIME_CANDIDATES.find(({ mimeType }) =>
+        MediaRecorder.isTypeSupported(mimeType),
+    );
+
+    if (!supported) {
+        throw new Error(
+            'This browser does not support any compatible audio recording format.',
+        );
+    }
+
+    return supported;
+}
 
 /**
  * Recognize the AI's own scripted lines by their (known, instructed)
@@ -112,6 +166,11 @@ export function useRealtimeCall({ token }: { token: string }) {
     );
     const endingRef = useRef(false);
     const initialResponseSentRef = useRef(false);
+    const callInProgressRef = useRef(false);
+    const recordingTypeRef = useRef<{ mimeType: string; extension: string }>({
+        mimeType: 'audio/webm',
+        extension: 'webm',
+    });
 
     const sendEvent = useCallback((event: Record<string, unknown>) => {
         if (dataChannelRef.current?.readyState === 'open') {
@@ -247,6 +306,7 @@ export function useRealtimeCall({ token }: { token: string }) {
 
         initialResponseSentRef.current = false;
         pitchArmedRef.current = false;
+        callInProgressRef.current = false;
     }, []);
 
     const uploadRecording = useCallback(
@@ -257,7 +317,11 @@ export function useRealtimeCall({ token }: { token: string }) {
 
             const formData = new FormData();
             formData.append('transcript', transcript);
-            formData.append('recording', blob, 'call.webm');
+            formData.append(
+                'recording',
+                blob,
+                `call.${recordingTypeRef.current.extension}`,
+            );
 
             try {
                 await fetch(completeCall.url(token), {
@@ -284,7 +348,7 @@ export function useRealtimeCall({ token }: { token: string }) {
 
         const finish = async () => {
             const blob = new Blob(recordedChunksRef.current, {
-                type: 'audio/webm',
+                type: recordingTypeRef.current.mimeType,
             });
             cleanup();
             if (blob.size > 0) {
@@ -319,8 +383,15 @@ export function useRealtimeCall({ token }: { token: string }) {
     }, []);
 
     const start = useCallback(async () => {
+        if (callInProgressRef.current) {
+            return;
+        }
+        callInProgressRef.current = true;
+
         setPhase('connecting');
         setError(null);
+        endingRef.current = false;
+        transcriptRef.current = [];
 
         try {
             // Ask for the mic *before* minting the ephemeral session — the
@@ -376,8 +447,9 @@ export function useRealtimeCall({ token }: { token: string }) {
                     .connect(destination);
             };
 
+            recordingTypeRef.current = pickSupportedRecordingType();
             const recorder = new MediaRecorder(destination.stream, {
-                mimeType: 'audio/webm',
+                mimeType: recordingTypeRef.current.mimeType,
             });
             recordedChunksRef.current = [];
             recorder.ondataavailable = (dataEvent) => {
