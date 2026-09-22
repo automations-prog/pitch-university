@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Screening;
 use App\Models\ScreeningResponse;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<ScreeningResponse>
@@ -20,6 +21,7 @@ class ScreeningResponseFactory extends Factory
     {
         return [
             'screening_id' => Screening::factory(),
+            'token' => Str::random(40),
             'full_name' => fake()->name(),
             'email' => fake()->safeEmail(),
             'phone_number' => fake()->phoneNumber(),

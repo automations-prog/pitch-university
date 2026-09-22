@@ -141,7 +141,7 @@ type EphemeralSession = {
     session?: { id?: string };
 };
 
-export function useRealtimeCall({ token }: { token: string }) {
+export function useRealtimeCall({ token: responseToken }: { token: string }) {
     const [phase, setPhase] = useState<CallPhase>('idle');
     const [muted, setMuted] = useState(false);
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -171,6 +171,7 @@ export function useRealtimeCall({ token }: { token: string }) {
         mimeType: 'audio/webm',
         extension: 'webm',
     });
+    const wiredRemoteStreamIdRef = useRef<string | null>(null);
 
     const sendEvent = useCallback((event: Record<string, unknown>) => {
         if (dataChannelRef.current?.readyState === 'open') {
@@ -236,10 +237,7 @@ export function useRealtimeCall({ token }: { token: string }) {
             const text = (event.transcript as string | undefined) ?? '';
 
             if (type && ASSISTANT_TRANSCRIPT_EVENTS.has(type) && text) {
-                transcriptRef.current = [
-                    ...transcriptRef.current,
-                    { role: 'assistant', text },
-                ];
+                transcriptRef.current.push({ role: 'assistant', text });
 
                 const lower = text.toLowerCase();
 
@@ -260,10 +258,7 @@ export function useRealtimeCall({ token }: { token: string }) {
             }
 
             if (type && CANDIDATE_TRANSCRIPT_EVENTS.has(type) && text) {
-                transcriptRef.current = [
-                    ...transcriptRef.current,
-                    { role: 'candidate', text },
-                ];
+                transcriptRef.current.push({ role: 'candidate', text });
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -307,6 +302,7 @@ export function useRealtimeCall({ token }: { token: string }) {
         initialResponseSentRef.current = false;
         pitchArmedRef.current = false;
         callInProgressRef.current = false;
+        wiredRemoteStreamIdRef.current = null;
     }, []);
 
     const uploadRecording = useCallback(
@@ -324,7 +320,7 @@ export function useRealtimeCall({ token }: { token: string }) {
             );
 
             try {
-                await fetch(completeCall.url(token), {
+                await fetch(completeCall.url(responseToken), {
                     method: 'POST',
                     body: formData,
                     headers: xsrfHeader(),
@@ -335,7 +331,7 @@ export function useRealtimeCall({ token }: { token: string }) {
                 // a failed upload shouldn't block them from finishing.
             }
         },
-        [token],
+        [responseToken],
     );
 
     const endCall = useCallback(async () => {
@@ -402,7 +398,7 @@ export function useRealtimeCall({ token }: { token: string }) {
             });
             localStreamRef.current = localStream;
 
-            const sessionResponse = await fetch(createCallSession.url(token), {
+            const sessionResponse = await fetch(createCallSession.url(responseToken), {
                 method: 'POST',
                 headers: xsrfHeader(),
                 credentials: 'same-origin',
@@ -441,9 +437,16 @@ export function useRealtimeCall({ token }: { token: string }) {
             remoteAudioElRef.current = remoteAudio;
 
             pc.ontrack = (trackEvent) => {
-                remoteAudio.srcObject = trackEvent.streams[0];
+                const remoteStream = trackEvent.streams[0];
+                remoteAudio.srcObject = remoteStream;
+
+                if (wiredRemoteStreamIdRef.current === remoteStream.id) {
+                    return;
+                }
+                wiredRemoteStreamIdRef.current = remoteStream.id;
+
                 audioContext
-                    .createMediaStreamSource(trackEvent.streams[0])
+                    .createMediaStreamSource(remoteStream)
                     .connect(destination);
             };
 
@@ -538,7 +541,7 @@ export function useRealtimeCall({ token }: { token: string }) {
             );
             setPhase('error');
         }
-    }, [cleanup, handleServerEvent, sendEvent, token]);
+    }, [cleanup, handleServerEvent, sendEvent, responseToken]);
 
     useEffect(() => cleanup, [cleanup]);
 

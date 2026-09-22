@@ -13,13 +13,14 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property int $screening_id
+ * @property string $token
  * @property string $full_name
  * @property string $email
  * @property string $phone_number
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['full_name', 'email', 'phone_number'])]
+#[Fillable(['token', 'full_name', 'email', 'phone_number'])]
 class ScreeningResponse extends Model
 {
     /** @use HasFactory<ScreeningResponseFactory> */

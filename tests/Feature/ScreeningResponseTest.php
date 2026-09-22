@@ -12,7 +12,7 @@ test('guests can view the public screening form without authentication', functio
     $response->assertInertia(fn (Assert $page) => $page
         ->component('screening/show')
         ->where('token', $screening->token)
-        ->where('alreadySubmitted', false),
+        ->where('responseToken', null),
     );
 });
 
@@ -60,7 +60,7 @@ test('submitting a response automatically creates a call log', function () {
     ]);
 });
 
-test('a screening link can only be submitted once', function () {
+test('a screening link can be submitted by multiple candidates', function () {
     $screening = Screening::factory()->create();
 
     $this->post(route('screening.store', $screening), [
@@ -75,12 +75,14 @@ test('a screening link can only be submitted once', function () {
         'phone_number' => '555-987-6543',
     ]);
 
-    $response->assertStatus(409);
-    expect($screening->responses()->count())->toBe(1);
-    expect($screening->responses()->first()->full_name)->toBe('Jordan Blake');
+    $response->assertRedirect(route('screening.show', $screening));
+    expect($screening->responses()->count())->toBe(2);
+    expect($screening->responses()->pluck('full_name'))
+        ->toContain('Jordan Blake')
+        ->toContain('Sam Rivera');
 });
 
-test('an already-submitted screening link is flagged when viewed again', function () {
+test('each screening response gets its own token', function () {
     $screening = Screening::factory()->create();
 
     $this->post(route('screening.store', $screening), [
@@ -91,10 +93,12 @@ test('an already-submitted screening link is flagged when viewed again', functio
 
     $response = $this->get(route('screening.show', $screening));
 
+    $responseToken = $screening->responses()->first()->token;
+
     $response->assertOk();
     $response->assertInertia(fn (Assert $page) => $page
         ->component('screening/show')
-        ->where('alreadySubmitted', true),
+        ->where('responseToken', $responseToken),
     );
 });
 

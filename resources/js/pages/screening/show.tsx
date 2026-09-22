@@ -3,7 +3,6 @@ import {
     Bot,
     CheckCircle2,
     GraduationCap,
-    Lock,
     Mic,
     MicOff,
     PhoneOff,
@@ -192,10 +191,10 @@ function formatCallDuration(totalSeconds: number): string {
 
 export default function PublicScreeningShow({
     token,
-    alreadySubmitted,
+    responseToken,
 }: {
     token: string;
-    alreadySubmitted: boolean;
+    responseToken: string | null;
 }) {
     const { data, setData, post, processing, errors, wasSuccessful } =
         useForm<ScreeningFormData>({
@@ -212,14 +211,14 @@ export default function PublicScreeningShow({
         start: startCall,
         toggleMute,
         endCall,
-    } = useRealtimeCall({ token });
+    } = useRealtimeCall({ token: responseToken ?? '' });
 
     useEffect(() => {
-        if (wasSuccessful) {
+        if (wasSuccessful && responseToken) {
             void startCall();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [wasSuccessful]);
+    }, [wasSuccessful, responseToken]);
 
     function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -423,20 +422,6 @@ export default function PublicScreeningShow({
                                 )}
                             </>
                         )}
-                    </div>
-                ) : alreadySubmitted ? (
-                    <div className="flex flex-col items-center gap-3 py-6 text-center">
-                        <div className="flex size-16 items-center justify-center rounded-full bg-white/10">
-                            <Lock className="size-7 text-white/70" />
-                        </div>
-                        <h1 className="text-2xl font-bold">
-                            Link already used
-                        </h1>
-                        <p className="text-sm text-white/70">
-                            This screening link has already been submitted and
-                            can&apos;t be used again. Please request a new link
-                            if you need to apply again.
-                        </p>
                     </div>
                 ) : (
                     <>

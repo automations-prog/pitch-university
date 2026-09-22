@@ -24,14 +24,6 @@ function fakeRecording(string $name = 'call.wav'): UploadedFile
     return UploadedFile::fake()->createWithContent($name, $wav);
 }
 
-test('a call session can not be started before the screening form is submitted', function () {
-    $screening = Screening::factory()->create();
-
-    $response = $this->post(route('screening.call.session', $screening));
-
-    $response->assertStatus(409);
-});
-
 test('guests can mint a call session once the screening form is submitted', function () {
     Http::fake([
         'https://api.openai.com/v1/realtime/client_secrets' => Http::response([
@@ -41,9 +33,9 @@ test('guests can mint a call session once the screening form is submitted', func
         ]),
     ]);
 
-    $screening = Screening::factory()->has(ScreeningResponse::factory(), 'responses')->create();
+    $screeningResponse = ScreeningResponse::factory()->create();
 
-    $response = $this->post(route('screening.call.session', $screening));
+    $response = $this->post(route('screening.call.session', $screeningResponse));
 
     $response->assertOk();
     $response->assertJson([
@@ -55,9 +47,9 @@ test('guests can mint a call session once the screening form is submitted', func
 });
 
 test('completing a call requires a recording', function () {
-    $screening = Screening::factory()->has(ScreeningResponse::factory(), 'responses')->create();
+    $screeningResponse = ScreeningResponse::factory()->create();
 
-    $response = $this->post(route('screening.call.complete', $screening), [
+    $response = $this->post(route('screening.call.complete', $screeningResponse), [
         'transcript' => 'Hello there.',
     ]);
 
@@ -67,10 +59,9 @@ test('completing a call requires a recording', function () {
 test('completing a call stores the transcript and recording on the call log', function () {
     Storage::fake('public');
 
-    $screening = Screening::factory()->has(ScreeningResponse::factory(), 'responses')->create();
-    $screeningResponse = $screening->responses()->first();
+    $screeningResponse = ScreeningResponse::factory()->create();
 
-    $response = $this->post(route('screening.call.complete', $screening), [
+    $response = $this->post(route('screening.call.complete', $screeningResponse), [
         'transcript' => 'Hello there.',
         'recording' => fakeRecording(),
     ]);
@@ -89,17 +80,58 @@ test('completing a call stores the transcript and recording on the call log', fu
 test('a call can not be completed twice', function () {
     Storage::fake('public');
 
-    $screening = Screening::factory()->has(ScreeningResponse::factory(), 'responses')->create();
+    $screeningResponse = ScreeningResponse::factory()->create();
 
-    $this->post(route('screening.call.complete', $screening), [
+    $this->post(route('screening.call.complete', $screeningResponse), [
         'transcript' => 'First call.',
         'recording' => fakeRecording(),
     ]);
 
-    $response = $this->post(route('screening.call.complete', $screening), [
+    $response = $this->post(route('screening.call.complete', $screeningResponse), [
         'transcript' => 'Second call.',
         'recording' => fakeRecording(),
     ]);
 
     $response->assertStatus(409);
+});
+
+test('a call session can not be reminted after the call is completed', function () {
+    Storage::fake('public');
+
+    $screeningResponse = ScreeningResponse::factory()->create();
+
+    $this->post(route('screening.call.complete', $screeningResponse), [
+        'transcript' => 'First call.',
+        'recording' => fakeRecording(),
+    ]);
+
+    $response = $this->post(route('screening.call.session', $screeningResponse));
+
+    $response->assertStatus(409);
+});
+
+test('two candidates using the same screening link get independently scoped calls', function () {
+    Storage::fake('public');
+
+    Http::fake([
+        'https://api.openai.com/v1/realtime/client_secrets' => Http::response([
+            'value' => 'ek_abc123',
+            'expires_at' => now()->addMinute()->timestamp,
+            'session' => ['id' => 'sess_123'],
+        ]),
+    ]);
+
+    $screening = Screening::factory()->create();
+    $candidateA = ScreeningResponse::factory()->for($screening)->create();
+    $candidateB = ScreeningResponse::factory()->for($screening)->create();
+
+    $this->post(route('screening.call.session', $candidateA))->assertOk();
+
+    $this->post(route('screening.call.complete', $candidateB), [
+        'transcript' => 'Candidate B call.',
+        'recording' => fakeRecording(),
+    ])->assertOk();
+
+    expect($candidateA->callLog->fresh()->called_at)->toBeNull();
+    expect($candidateB->callLog->fresh()->called_at)->not->toBeNull();
 });
