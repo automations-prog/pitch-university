@@ -12,10 +12,11 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property string $token
+ * @property string|null $voice
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['token'])]
+#[Fillable(['token', 'voice'])]
 class Screening extends Model
 {
     /** @use HasFactory<ScreeningFactory> */

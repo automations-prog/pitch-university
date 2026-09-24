@@ -31,7 +31,7 @@ class OpenAiRealtimeClient
      *
      * @return array<string, mixed>
      */
-    public function createEphemeralSession(): array
+    public function createEphemeralSession(?string $voice = null): array
     {
         return $this->request()
             ->post('https://api.openai.com/v1/realtime/client_secrets', [
@@ -47,7 +47,7 @@ class OpenAiRealtimeClient
                     'model' => $this->model,
                     'audio' => [
                         'output' => [
-                            'voice' => $this->voice,
+                            'voice' => $voice ?? $this->voice,
                         ],
                     ],
                 ],

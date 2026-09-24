@@ -1,7 +1,8 @@
 import { Head, Link, router, useHttp } from '@inertiajs/react';
-import { Check, Copy, Eye, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
+import { Eye, MoreHorizontal, Plus, Trash2 } from 'lucide-react';
 import type { MouseEvent } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -19,6 +20,7 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
@@ -28,7 +30,6 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import {
     Pagination,
     PaginationContent,
@@ -66,7 +67,12 @@ import {
     destroy as destroyResponse,
     show as showResponse,
 } from '@/routes/admin/screening-responses';
-import type { Paginated, Screening, ScreeningResponse } from '@/types';
+import type {
+    Paginated,
+    RealtimeVoiceOption,
+    Screening,
+    ScreeningResponse,
+} from '@/types';
 
 type Filters = {
     per_page: string;
@@ -76,20 +82,28 @@ export default function ScreeningIndex({
     responses,
     filters,
     perPageOptions,
+    voices,
 }: {
     responses: Paginated<ScreeningResponse>;
     filters: Partial<Filters>;
     perPageOptions: number[];
+    voices: RealtimeVoiceOption[];
 }) {
-    const [linkUrl, setLinkUrl] = useState<string | null>(null);
-    const { post, processing } = useHttp<
-        Record<string, never>,
-        { screening: Screening }
-    >({});
-    const [copiedText, copy] = useClipboard();
-    const copyIconFor = (value: string) =>
-        copiedText === value ? Check : Copy;
-    const CreatedLinkIcon = copyIconFor(linkUrl ?? '');
+    const [createOpen, setCreateOpen] = useState(false);
+    const creatingRef = useRef(false);
+    const defaultVoice =
+        voices.find((voice) => voice.id === 'verse')?.id ??
+        voices[0]?.id ??
+        '';
+    const {
+        data,
+        setData,
+        post,
+        processing,
+    } = useHttp<{ voice: string }, { screening: Screening }>({
+        voice: defaultVoice,
+    });
+    const [, copy] = useClipboard();
 
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const selectableIds = responses.data.map((response) => response.id);
@@ -132,10 +146,32 @@ export default function ScreeningIndex({
     }
 
     function createScreening() {
+        // Guards against a fast double-click firing two requests before
+        // `processing` (React state, updates async) has re-rendered the
+        // button as disabled — that raced into two screenings/links being
+        // created from a single "Generate link" click.
+        if (creatingRef.current) {
+            return;
+        }
+        creatingRef.current = true;
+
         void post(screeningStore.url(), {
-            onSuccess: (data) => {
-                setLinkUrl(data.screening.public_url);
+            onSuccess: async (response) => {
+                setCreateOpen(false);
                 router.reload({ only: ['responses'] });
+
+                const copied = await copy(response.screening.public_url);
+
+                if (copied) {
+                    toast.success('Screening link generated and copied.');
+                } else {
+                    toast.error(
+                        'Screening link generated, but could not be copied automatically.',
+                    );
+                }
+            },
+            onFinish: () => {
+                creatingRef.current = false;
             },
         });
     }
@@ -166,8 +202,7 @@ export default function ScreeningIndex({
                     <Button
                         type="button"
                         className={brandButtonClass}
-                        onClick={createScreening}
-                        disabled={processing}
+                        onClick={() => setCreateOpen(true)}
                     >
                         <Plus />
                         New screening
@@ -480,37 +515,40 @@ export default function ScreeningIndex({
                 </div>
             </div>
 
-            <Dialog
-                open={linkUrl !== null}
-                onOpenChange={(open) => !open && setLinkUrl(null)}
-            >
+            <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Screening link created</DialogTitle>
+                        <DialogTitle>New screening</DialogTitle>
                         <DialogDescription>
-                            Share this link with candidates. Anyone with the
-                            link can fill out the screening form without signing
-                            in.
+                            Choose the AI interviewer voice this screening
+                            link's calls will use.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="flex w-full items-stretch gap-2">
-                        <Input readOnly value={linkUrl ?? ''} />
+                    <Select
+                        value={data.voice}
+                        onValueChange={(value) => setData('voice', value)}
+                    >
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a voice" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {voices.map((voice) => (
+                                <SelectItem key={voice.id} value={voice.id}>
+                                    {voice.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <DialogFooter>
                         <Button
                             type="button"
-                            variant="outline"
-                            size="icon"
-                            onClick={async () => {
-                                if (!linkUrl) {
-                                    return;
-                                }
-                                await copy(linkUrl);
-                                setTimeout(() => setLinkUrl(null), 600);
-                            }}
+                            className={brandButtonClass}
+                            onClick={createScreening}
+                            disabled={processing}
                         >
-                            <CreatedLinkIcon />
-                            <span className="sr-only">Copy link</span>
+                            Generate link
                         </Button>
-                    </div>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
         </>

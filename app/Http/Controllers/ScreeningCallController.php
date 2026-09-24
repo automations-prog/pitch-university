@@ -17,7 +17,7 @@ class ScreeningCallController extends Controller
     {
         abort_if($screeningResponse->callLog?->called_at !== null, 409);
 
-        return response()->json($client->createEphemeralSession());
+        return response()->json($client->createEphemeralSession($screeningResponse->screening->voice));
     }
 
     /**

@@ -17,6 +17,7 @@ class ScreeningResource extends JsonResource
         return [
             'id' => $this->id,
             'token' => $this->token,
+            'voice' => $this->voice,
             'public_url' => route('screening.show', $this->token),
             'responses_count' => $this->whenCounted('responses'),
             'created_at' => $this->created_at,

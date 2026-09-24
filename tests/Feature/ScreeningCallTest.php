@@ -46,6 +46,42 @@ test('guests can mint a call session once the screening form is submitted', func
     Http::assertSent(fn ($request) => $request->url() === 'https://api.openai.com/v1/realtime/client_secrets');
 });
 
+test('a call session uses the screening\'s chosen voice', function () {
+    Http::fake([
+        'https://api.openai.com/v1/realtime/client_secrets' => Http::response([
+            'value' => 'ek_abc123',
+            'expires_at' => now()->addMinute()->timestamp,
+            'session' => ['id' => 'sess_123'],
+        ]),
+    ]);
+
+    $screening = Screening::factory()->create(['voice' => 'cedar']);
+    $screeningResponse = ScreeningResponse::factory()->for($screening)->create();
+
+    $this->post(route('screening.call.session', $screeningResponse));
+
+    Http::assertSent(fn ($request) => $request->url() === 'https://api.openai.com/v1/realtime/client_secrets'
+        && $request['session']['audio']['output']['voice'] === 'cedar');
+});
+
+test('a call session falls back to the configured default voice when none is set', function () {
+    config(['services.openai.realtime_voice' => 'verse']);
+
+    Http::fake([
+        'https://api.openai.com/v1/realtime/client_secrets' => Http::response([
+            'value' => 'ek_abc123',
+            'expires_at' => now()->addMinute()->timestamp,
+            'session' => ['id' => 'sess_123'],
+        ]),
+    ]);
+
+    $screeningResponse = ScreeningResponse::factory()->create();
+
+    $this->post(route('screening.call.session', $screeningResponse));
+
+    Http::assertSent(fn ($request) => $request['session']['audio']['output']['voice'] === 'verse');
+});
+
 test('completing a call requires a recording', function () {
     $screeningResponse = ScreeningResponse::factory()->create();
 

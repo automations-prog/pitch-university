@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\RealtimeVoice;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreScreeningRequest;
 use App\Http\Resources\ScreeningResource;
@@ -52,6 +53,9 @@ class ScreeningController extends Controller
                 'per_page' => (string) $perPage,
             ],
             'perPageOptions' => self::PER_PAGE_OPTIONS,
+            'voices' => collect(RealtimeVoice::cases())
+                ->map(fn (RealtimeVoice $voice) => ['id' => $voice->value, 'name' => $voice->name])
+                ->all(),
         ]);
     }
 
@@ -64,7 +68,10 @@ class ScreeningController extends Controller
             $token = Str::random(40);
         } while (Screening::where('token', $token)->exists());
 
-        $screening = Screening::create(['token' => $token]);
+        $screening = Screening::create([
+            'token' => $token,
+            'voice' => $request->validated('voice'),
+        ]);
         $screening->loadCount('responses');
 
         return response()->json([

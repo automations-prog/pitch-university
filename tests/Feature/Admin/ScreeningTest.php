@@ -68,8 +68,31 @@ test('admins can generate a screening link', function () {
     $response = $this->actingAs($admin)->post(route('admin.screening.store'));
 
     $response->assertOk();
-    $response->assertJsonStructure(['screening' => ['id', 'token', 'public_url', 'responses_count', 'created_at']]);
+    $response->assertJsonStructure(['screening' => ['id', 'token', 'voice', 'public_url', 'responses_count', 'created_at']]);
     $this->assertDatabaseCount('screenings', 1);
+});
+
+test('admins can choose a voice when generating a screening link', function () {
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->post(route('admin.screening.store'), [
+        'voice' => 'cedar',
+    ]);
+
+    $response->assertOk();
+    $response->assertJson(['screening' => ['voice' => 'cedar']]);
+    $this->assertDatabaseHas('screenings', ['voice' => 'cedar']);
+});
+
+test('generating a screening link rejects an invalid voice', function () {
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->post(route('admin.screening.store'), [
+        'voice' => 'not-a-real-voice',
+    ]);
+
+    $response->assertSessionHasErrors('voice');
+    $this->assertDatabaseCount('screenings', 0);
 });
 
 test('agents can not generate a screening link', function () {

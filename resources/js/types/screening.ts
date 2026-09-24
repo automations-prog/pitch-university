@@ -1,9 +1,15 @@
 export type Screening = {
     id: number;
     token: string;
+    voice: string | null;
     public_url: string;
     responses_count: number;
     created_at: string;
+};
+
+export type RealtimeVoiceOption = {
+    id: string;
+    name: string;
 };
 
 export type CallRating = 'yes' | 'somewhat' | 'no';

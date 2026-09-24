@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\RealtimeVoice;
 use App\Models\Screening;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreScreeningRequest extends FormRequest
 {
@@ -22,6 +24,8 @@ class StoreScreeningRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'voice' => ['nullable', 'string', Rule::enum(RealtimeVoice::class)],
+        ];
     }
 }

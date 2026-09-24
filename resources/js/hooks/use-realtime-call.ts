@@ -45,28 +45,31 @@ const INTERRUPT_INSTRUCTION =
 
 const INTERRUPT_DELAY_MS = 10_000;
 
-const CLOSING_LINE =
-    "Thanks so much for your time — welcome to Pitch University, and we'll follow up shortly on next steps.";
+/**
+ * The `response.audio_transcript.done`-style event this watch starts on
+ * fires once the closing line's *text* is finalized, not once the TTS audio
+ * has finished playing it aloud — and how long that audio actually takes
+ * varies with the model's delivery pace and pauses (see the "natural
+ * pauses"/warmth instructions above), so a fixed word-count estimate can't
+ * be trusted; a flat-delay version of this cut the goodbye line off
+ * mid-sentence in practice. Instead, watch the *actual* output audio level
+ * via an `AnalyserNode` on the remote track (wired up in `pc.ontrack`) and
+ * only hang up once real trailing silence follows real detected speech.
+ */
+const HANGUP_SILENCE_RMS_THRESHOLD = 0.02;
+// Comfortably longer than a typical intentional mid-sentence pause (the
+// tone instructions above ask for those) so a dramatic beat before the
+// sentence's last clause doesn't itself get mistaken for "done talking".
+const HANGUP_SILENCE_HOLD_MS = 1_300;
+const HANGUP_WATCH_INTERVAL_MS = 100;
 
 /**
- * The `response.audio_transcript.done`-style event this timer is keyed off
- * fires once the closing line's *text* is finalized, not once the TTS audio
- * has finished playing it aloud. A flat 4s delay was cutting the goodbye
- * line off mid-sentence — 18 words takes ~6-7s to actually speak — so this
- * is sized off the real script line instead of a guessed constant, with a
- * buffer for playback/network jitter.
+ * Absolute fallback in case the silence watch above never fires (e.g. the
+ * analyser never reads a sample above threshold) — generous enough to cover
+ * a slow, pause-heavy delivery of the closing line with room to spare, so
+ * the call doesn't hang open indefinitely if audio-level detection fails.
  */
-const SPEECH_WORDS_PER_MINUTE = 150;
-const HANGUP_BUFFER_MS = 2_500;
-
-function estimateSpeechDurationMs(text: string): number {
-    const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
-
-    return Math.round((wordCount / SPEECH_WORDS_PER_MINUTE) * 60_000);
-}
-
-const AUTO_HANGUP_DELAY_MS =
-    estimateSpeechDurationMs(CLOSING_LINE) + HANGUP_BUFFER_MS;
+const HANGUP_SAFETY_TIMEOUT_MS = 20_000;
 
 /**
  * `MediaRecorder` support for `audio/webm` isn't universal — Safari (macOS
@@ -163,6 +166,10 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
         null,
     );
     const hangupTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const hangupWatchIntervalRef = useRef<ReturnType<
+        typeof setInterval
+    > | null>(null);
+    const remoteAnalyserRef = useRef<AnalyserNode | null>(null);
     const elapsedIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
         null,
     );
@@ -249,11 +256,10 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
 
                 if (
                     lower.includes(CLOSING_MARKER) &&
-                    !hangupTimeoutRef.current
+                    !hangupTimeoutRef.current &&
+                    !hangupWatchIntervalRef.current
                 ) {
-                    hangupTimeoutRef.current = setTimeout(() => {
-                        void endCall();
-                    }, AUTO_HANGUP_DELAY_MS);
+                    beginClosingLineHangupWatch();
                 }
 
                 return;
@@ -275,6 +281,10 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
         if (hangupTimeoutRef.current) {
             clearTimeout(hangupTimeoutRef.current);
             hangupTimeoutRef.current = null;
+        }
+        if (hangupWatchIntervalRef.current) {
+            clearInterval(hangupWatchIntervalRef.current);
+            hangupWatchIntervalRef.current = null;
         }
         if (elapsedIntervalRef.current) {
             clearInterval(elapsedIntervalRef.current);
@@ -305,6 +315,7 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
         pitchArmedRef.current = false;
         callInProgressRef.current = false;
         wiredRemoteStreamIdRef.current = null;
+        remoteAnalyserRef.current = null;
     }, []);
 
     const uploadRecording = useCallback(
@@ -364,6 +375,69 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
             await finish();
         }
     }, [cleanup, uploadRecording]);
+
+    /**
+     * Waits for the closing line's audio to actually finish playing (via
+     * real-time RMS level on the remote track's `AnalyserNode`) before
+     * hanging up, rather than guessing a fixed delay from the script text —
+     * see the constants above for why. Requires having heard the AI
+     * actually speak first, so a brief gap between the text finalizing and
+     * audio starting doesn't read as "already silent, done talking".
+     */
+    const beginClosingLineHangupWatch = useCallback(() => {
+        const analyser = remoteAnalyserRef.current;
+
+        if (!analyser) {
+            hangupTimeoutRef.current = setTimeout(() => {
+                void endCall();
+            }, HANGUP_SAFETY_TIMEOUT_MS);
+            return;
+        }
+
+        const levels = new Uint8Array(analyser.fftSize);
+        let hasHeardSpeech = false;
+        let silenceStartedAt: number | null = null;
+
+        hangupWatchIntervalRef.current = setInterval(() => {
+            analyser.getByteTimeDomainData(levels);
+
+            let sumSquares = 0;
+            for (let i = 0; i < levels.length; i++) {
+                const normalized = (levels[i] - 128) / 128;
+                sumSquares += normalized * normalized;
+            }
+            const rms = Math.sqrt(sumSquares / levels.length);
+
+            if (rms > HANGUP_SILENCE_RMS_THRESHOLD) {
+                hasHeardSpeech = true;
+                silenceStartedAt = null;
+                return;
+            }
+
+            if (!hasHeardSpeech) {
+                return;
+            }
+
+            silenceStartedAt ??= Date.now();
+
+            if (Date.now() - silenceStartedAt >= HANGUP_SILENCE_HOLD_MS) {
+                if (hangupWatchIntervalRef.current) {
+                    clearInterval(hangupWatchIntervalRef.current);
+                    hangupWatchIntervalRef.current = null;
+                }
+                void endCall();
+            }
+        }, HANGUP_WATCH_INTERVAL_MS);
+
+        hangupTimeoutRef.current = setTimeout(() => {
+            if (hangupWatchIntervalRef.current) {
+                clearInterval(hangupWatchIntervalRef.current);
+                hangupWatchIntervalRef.current = null;
+            }
+            void endCall();
+        }, HANGUP_SAFETY_TIMEOUT_MS);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const toggleMute = useCallback(() => {
         const stream = localStreamRef.current;
@@ -447,9 +521,14 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
                 }
                 wiredRemoteStreamIdRef.current = remoteStream.id;
 
-                audioContext
-                    .createMediaStreamSource(remoteStream)
-                    .connect(destination);
+                const remoteSource =
+                    audioContext.createMediaStreamSource(remoteStream);
+                remoteSource.connect(destination);
+
+                const analyser = audioContext.createAnalyser();
+                analyser.fftSize = 512;
+                remoteSource.connect(analyser);
+                remoteAnalyserRef.current = analyser;
             };
 
             recordingTypeRef.current = pickSupportedRecordingType();
@@ -480,9 +559,14 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
                                 // silence as the candidate finishing — a
                                 // live test with `server_vad` cut the
                                 // candidate off mid-thought repeatedly.
+                                // `eagerness: 'low'` (the most patient
+                                // setting) fixed that but left a noticeable
+                                // 5-10s dead-air gap before the AI's next
+                                // line; `medium` keeps enough patience to
+                                // avoid the cutoff while responding faster.
                                 turn_detection: {
                                     type: 'semantic_vad',
-                                    eagerness: 'low',
+                                    eagerness: 'medium',
                                 },
                                 transcription: { model: 'gpt-transcribe' },
                             },
