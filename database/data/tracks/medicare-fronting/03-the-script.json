@@ -1,0 +1,683 @@
+    {
+        "id": "the_script",
+        "title": "The Script, Word for Word",
+        "summary": "Every line of the Medicare script, every branch, why each question is asked, and how to deliver it.",
+        "est_minutes": 40,
+        "badge": {
+            "id": "badge_the_script",
+            "name": "Word Perfect",
+            "icon": "📜"
+        },
+        "lessons": [
+            {
+                "id": "script_1",
+                "title": "The Opening & Parts A and B",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>You read the script <strong>exactly as written</strong>. Not close. Exact. The opening does three jobs: it greets the consumer, says who you are and that the call is recorded, and asks the first qualifying question: <strong>do they have Medicare Parts A and B?</strong></p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "Opening",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Hey, good morning/afternoon (Customer Name)?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Yeah, who's this?"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Hey (Customer Name), this is _______, I'm with America's Health on a recorded line. We were just giving you a quick call today about your food and utility card that you never received. That card, it IS exclusively for members who have Medicare Parts A and B. You DO still have your Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "(Let them confirm)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "Branch: Yes / No",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "Yes, I do."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Yes - (continue) to the double-confirm."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "No, I don't have Medicare."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "There must have been a mistake. Thank you for your time, have a great day."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "(Code as DQ)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "Branch: I don't know",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "Parts A and B? I don't know what that means."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "I understand. Well, do you have the red, white and blue card by chance?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Oh, the flag card? Yeah, I have that."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, perfect, so then you DO have Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "I guess so, yes."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "(If yes, skip to 'Do you receive Medicaid') - you already confirmed the card, so you don't double-confirm it again."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "Recorded line, every time",
+                        "html": "<p>The opening says you're with America's Health <strong>on a recorded line</strong>. That is a compliance requirement. Never skip it or rush past it.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says \"I don't know\" when you ask about Parts A and B. What do you say next?",
+                        "choices": [
+                            "There must have been a mistake. Thank you for your time, have a great day.",
+                            "I understand. Well, do you have the red, white and blue card by chance?",
+                            "Perfect, and do you receive Medicaid along with your Medicare plan?",
+                            "Okay, LAST question here, do you have insurance through your work or the VA?"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "For \"I don't know,\" ask about the red, white and blue card. If yes, confirm Parts A and B and skip to the Medicaid question."
+                    },
+                    {
+                        "type": "check",
+                        "question": "After an \"I don't know\" consumer confirms the card and then confirms Parts A and B, where do you go?",
+                        "choices": [
+                            "Read the double-confirm card line",
+                            "Read the DNC disclaimer",
+                            "Skip to the Medicaid question",
+                            "Ask for the transfer"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "The script says: if yes, skip to 'Do you receive Medicaid'."
+                    }
+                ]
+            },
+            {
+                "id": "script_2",
+                "title": "Double-Confirm the Card",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Next you double-confirm that they have the <strong>red, white and blue card</strong>. Why? People confuse Medicare with other insurance. The card question helps make sure they really have Medicare, and it is a compliance step: <strong>double confirm Medicare Parts A and B</strong>.</p><p>If they have a different card, ask whether they have their Medicare number. If they don't, or they lost the card, ask whether they <strong>know</strong> their Medicare number or Social Security number. Either way, you continue with the script.</p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "Double-confirm",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, perfect, and JUST to double confirm, that IS the red, white and blue card, correct?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "(Let them confirm)"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Yep, that's the one."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Yes - (continue) to Medicaid."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "Branch: I have a different card",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "No, I've got a Humana card."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, no problem, but you DO have your Medicare number, correct?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "(If yes, continue. If no, read the No line below.)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "Branch: No / I'm not giving my number out / I lost it",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "I lost that card years ago."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, you WOULD have to know your Medicare number or Social Security number to review those increases. You don't need to give it to me, but the licensed agent may need it. Do you know either of those?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "(Either way, continue)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "You are NOT collecting their number",
+                        "html": "<p><strong>You NEVER ask the consumer to read or give you their Medicare number or Social Security number.</strong> The script only asks whether they <strong>know</strong> one of them. The licensed agent handles the actual numbers.</p><p>Never ask them to read it to you, and never write it down. \"You don't need to give it to me\" is part of the line for a reason.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says \"I have a different card, it's from my plan.\" What do you say?",
+                        "choices": [
+                            "I understand. Well, do you have the red, white and blue card by chance?",
+                            "Okay, no problem, but you DO have your Medicare number, correct?",
+                            "There must have been a mistake. Thank you for your time, have a great day.",
+                            "Okay, perfect, and JUST to double confirm, that IS the red, white and blue card, correct?"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "For a different card, ask if they have their Medicare number. If yes, continue; if no, read the No line (\"you WOULD have to know...\")."
+                    },
+                    {
+                        "type": "check",
+                        "question": "You read the \"you WOULD have to know your Medicare number or Social Security number\" line and the consumer doesn't know either one. What do you do?",
+                        "choices": [
+                            "Code as Not Interested",
+                            "Code as DQ",
+                            "Continue with the script to the Medicaid question",
+                            "Read the DNC disclaimer"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "The script says: either way, continue. You never ask them to read or give you the number."
+                    }
+                ]
+            },
+            {
+                "id": "script_3",
+                "title": "Medicaid, State & ZIP, Work or VA",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "script",
+                        "title": "Medicaid",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, and do you receive Medicaid along with your Medicare plan?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Yes/No - (continue)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Why ask about Medicaid?</strong> People with both Medicare and Medicaid may have different plan options. Either answer continues. It is never a DQ by itself.</p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "State and ZIP",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, thanks so much for confirming that for me. So yeah, it DOES look like you may be ENTITLED to some additional food benefits since the food prices have gone up. If that's sent, I DO still have you out in (state), with the zip code (zip code), correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Yes, still in Ohio."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Why confirm state and ZIP?</strong> Plans and benefits vary by area, so the specialist needs the right location. Confirming it is also a compliance step. Notice the line says you <strong>may</strong> be ENTITLED. That word matters.</p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "Work / VA insurance",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, LAST question here, do you have insurance through your work or the VA?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "No, just Medicare."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "No - (continue) to the transfer ask."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Yes, I still have my insurance from my job."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Oh, there must have been a mistake. Thank you for your time, have a great day."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "(CODE AS DQ)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "check",
+                        "question": "What is the LAST qualifying question before you ask for the transfer?",
+                        "choices": [
+                            "Okay, LAST question here, do you have insurance through your work or the VA?",
+                            "I DO still have you out in (state), with the zip code (zip code), correct?",
+                            "Perfect, and do you receive Medicaid along with your Medicare plan?",
+                            "Okay, perfect, and JUST to double confirm, that IS the red, white and blue card, correct?"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "The script literally says \"LAST question here\" for work or VA insurance."
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says yes, they have insurance through the VA. What do you say?",
+                        "choices": [
+                            "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving.",
+                            "No problem, I'll add you to our internal do not call list immediately and you won't receive any further calls from our company. We do apologize for any inconvenience, have a great day.",
+                            "Oh, there must have been a mistake. Thank you for your time, have a great day.",
+                            "Perfect, well that is EVERYTHING I need."
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Work or VA yes: read \"Oh, there must have been a mistake...\" and code as DQ."
+                    }
+                ]
+            },
+            {
+                "id": "script_4",
+                "title": "The Transfer Ask & Cold Transfer",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "script",
+                        "title": "Ask for the transfer",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, well that is EVERYTHING I need. So, a Medicare specialist is coming on the line now to review the additional food benefits for you. Give them JUST a few minutes to go over them with you, okay?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "AFFIRM - STOP and wait for a verbal yes. Do NOT click transfer until they say yes."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Okay, sure."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Yes - NOW click transfer and continue to the ringing line."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "Branch: they say no",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "No, I don't want to be transferred."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "No - do NOT click transfer. Read an EXTRA NOT INTERESTED rebuttal, then go back to the ask."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Well, I understand, but you've worked your whole life for these Medicare benefits. Give the agent JUST a few minutes to review and compare your plan to make SURE you're not missing out on ANYTHING you may be entitled to."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Give them JUST a few minutes to go over them with you, okay?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Wait for the yes. Only click transfer once they say yes."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "Cold transfer",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Alright, so you'll hear a little bit of ringing, that's just me connecting them in, and once they pick up they'll ask you for your name, okay?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "(You already have their permission to transfer. You do NOT need to ask for another okay here or once the licensed agent connects.)"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "In the meantime, how's that weather out there today?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "(FLUFF AWAY) - keep light small talk going while it rings. When the specialist picks up, stop talking."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "No yes, no transfer",
+                        "html": "<p>\"Give them JUST a few minutes to go over them with you, okay?\" is the <strong>ONLY time you ask for permission</strong> on the call. <strong>The consumer MUST say yes before you click transfer.</strong></p><ul><li><strong>Yes:</strong> click transfer and read the ringing line.</li><li><strong>No:</strong> don't transfer. Read an EXTRA NOT INTERESTED rebuttal, then go back to the ask and wait for the yes.</li></ul><p>That yes is your permission. The \"okay?\" at the end of the ringing line is not a second permission ask, and you don't need another confirmation once the licensed agent connects.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>\"Fluff away\"</strong> means make friendly small talk (like the weather) while the line rings. It keeps the consumer relaxed and on the line so they don't hang up during the ringing.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "The consumer says \"No\" when you ask them to give the specialist a few minutes. What do you do?",
+                        "choices": [
+                            "Start the whole script over from the opening",
+                            "Don't transfer. Read an EXTRA NOT INTERESTED rebuttal, then go back to \"Give them JUST a few minutes to go over them with you, okay?\"",
+                            "Transfer them anyway",
+                            "Code the call as DQ"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "No: read an EXTRA NOT INTERESTED rebuttal and go back to the ask. Never click transfer without a yes."
+                    },
+                    {
+                        "type": "check",
+                        "question": "When do you click the transfer button?",
+                        "choices": [
+                            "As soon as you finish reading the transfer ask",
+                            "Only after the consumer says yes to \"Give them JUST a few minutes to go over them with you, okay?\"",
+                            "After the ringing line, whether or not they agreed",
+                            "Right after they confirm their ZIP code"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "The consumer MUST say yes to the transfer ask before you click transfer. No yes, no transfer. That yes is enough: there is no second confirmation after the licensed agent connects."
+                    }
+                ]
+            },
+            {
+                "id": "script_5",
+                "title": "Delivery: Energy, Emphasis, No Pauses",
+                "est_minutes": 5,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Knowing the words is half the job. <strong>How</strong> you say them is the other half.</p><ul><li><strong>Energy.</strong> Smile when you talk. People can hear it. Flat, tired voices get hang-ups.</li><li><strong>Emphasis.</strong> The CAPITALIZED words in the script (IS, DO, JUST, EVERYTHING, LAST) are there on purpose. Punch them. They make the line sound confident and certain.</li><li><strong>No pauses.</strong> Keep moving. Long pauses give the consumer time to doubt, get distracted, or hang up.</li></ul>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>Practice this line out loud. Hit the capitalized words:</p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "Say it out loud",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, perfect, and JUST to double confirm, that IS the red, white and blue card, correct?"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, LAST question here, do you have insurance through your work or the VA?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Flow from question to question",
+                        "html": "<p>When the consumer answers, say \"Perfect\" and roll straight into the next line. Most lines already start with \"Perfect\" or \"Okay\" to help you do that.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "Why are some words in the script in CAPITAL letters?",
+                        "choices": [
+                            "They are typos you should fix",
+                            "They are words to say quietly",
+                            "They are words you can skip",
+                            "They are words to emphasize when you speak"
+                        ],
+                        "answer_index": 3,
+                        "explanation": "Capitalized words are emphasis cues. The script stays exactly as written."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Why should you avoid pausing between script lines?",
+                        "choices": [
+                            "Pauses give the consumer time to doubt, get distracted or hang up",
+                            "The dialer disconnects after a pause",
+                            "Pauses are only allowed on Fridays",
+                            "Pauses are a compliance violation by themselves"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "Keep momentum. Answer, \"Perfect,\" next line."
+                    }
+                ]
+            }
+        ],
+        "quiz": {
+            "pass_pct": 80,
+            "questions": [
+                {
+                    "id": "the_script_q1",
+                    "question": "What is the very first line of the script?",
+                    "choices": [
+                        "Good morning, do you have a minute?",
+                        "Hey, good morning/afternoon (Customer Name)?",
+                        "Hi, is this the homeowner?",
+                        "Hello, this is Medicare calling."
+                    ],
+                    "answer_index": 1,
+                    "explanation": "The script starts: \"Hey, good morning/afternoon (Customer Name)?\"",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "the_script_q2",
+                    "question": "Which company does the script say you are with?",
+                    "choices": [
+                        "The state Medicaid office",
+                        "Medicare",
+                        "Social Security",
+                        "America's Health"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "You are with America's Health on a recorded line. Never claim to be Medicare or the government.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "the_script_q3",
+                    "question": "What is the correct order of the qualifying questions?",
+                    "choices": [
+                        "Card, work or VA, Medicaid, Parts A and B, state and ZIP",
+                        "Medicaid, Parts A and B, work or VA, state and ZIP, card",
+                        "Parts A and B, red white and blue card, Medicaid, state and ZIP, work or VA",
+                        "State and ZIP, Parts A and B, card, work or VA, Medicaid"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Parts A and B, double-confirm the card, Medicaid, state and ZIP, then the LAST question: work or VA.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "the_script_q4",
+                    "question": "A consumer says No, they don't have Medicare Parts A and B. What do you say?",
+                    "choices": [
+                        "Perfect, and do you receive Medicaid along with your Medicare plan?",
+                        "I understand. Well, do you have the red, white and blue card by chance?",
+                        "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving.",
+                        "There must have been a mistake. Thank you for your time, have a great day."
+                    ],
+                    "answer_index": 3,
+                    "explanation": "No to Parts A and B: read the mistake line and code as DQ.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "the_script_q5",
+                    "question": "What comes right after the Medicaid question?",
+                    "choices": [
+                        "Asking about work or VA insurance",
+                        "Asking for the transfer",
+                        "Double-confirming the card",
+                        "Confirming their state and ZIP code"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "After Medicaid comes the state and ZIP line.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "the_script_q6",
+                    "question": "Which line is the exact transfer ask?",
+                    "choices": [
+                        "Perfect, so I'm going to transfer you now to Medicare to get your benefits, okay?",
+                        "Perfect, well that is EVERYTHING I need. So, a Medicare specialist is coming on the line now to give you your food card. Stay on the line, okay?",
+                        "Perfect, well that is EVERYTHING I need. So, a specialist is going to call you back later, okay?",
+                        "Perfect, well that is EVERYTHING I need. So, a Medicare specialist is coming on the line now to review the additional food benefits for you. Give them JUST a few minutes to go over them with you, okay?"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "The transfer ask must be read verbatim, including telling them a Medicare specialist is coming on the line.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "the_script_q7",
+                    "question": "What do you say while the line is ringing?",
+                    "choices": [
+                        "Nothing; stay completely silent while it rings.",
+                        "Please hold while I introduce you.",
+                        "Please don't hang up or you'll lose your benefits.",
+                        "In the meantime, how's that weather out there today?"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Fluff away with \"In the meantime, how's that weather out there today?\" Then go silent once the specialist picks up.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "the_script_q8",
+                    "question": "A consumer says \"I lost my card.\" What do you say?",
+                    "choices": [
+                        "There must have been a mistake. Thank you for your time, have a great day.",
+                        "Okay, perfect, so then you DO have Medicare Parts A and B, correct?",
+                        "Okay, you WOULD have to know your Medicare number or Social Security number to review those increases. You don't need to give it to me, but the licensed agent may need it. Do you know either of those?",
+                        "Oh, there must have been a mistake. Thank you for your time, have a great day."
+                    ],
+                    "answer_index": 2,
+                    "explanation": "No / I'm not giving my number out / I lost it: read the \"you WOULD have to know\" line, then continue either way.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "the_script_q9",
+                    "question": "A consumer answers \"Yes\" to the Medicaid question. What happens?",
+                    "choices": [
+                        "Read the DNC disclaimer",
+                        "Continue to state and ZIP",
+                        "Skip straight to the transfer",
+                        "Code as DQ"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Yes or No to Medicaid both continue.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "the_script_q10",
+                    "question": "What does \"FLUFF AWAY\" mean?",
+                    "choices": [
+                        "Put the consumer on mute",
+                        "Make light small talk while the transfer rings",
+                        "Skip the rest of the script",
+                        "Explain the benefits in detail"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Fluff means friendly small talk (like the weather) to keep the consumer relaxed while it rings.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "the_script_q11",
+                    "question": "How should you treat CAPITALIZED words like IS, DO and JUST?",
+                    "choices": [
+                        "Whisper them",
+                        "Skip them",
+                        "Replace them with your own words",
+                        "Emphasize them"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Capitals are emphasis cues. Punch them with energy.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "the_script_q12",
+                    "question": "An \"I don't know\" consumer confirms the card and Parts A and B. What do you read next?",
+                    "choices": [
+                        "Okay, perfect, and JUST to double confirm, that IS the red, white and blue card, correct?",
+                        "Perfect, well that is EVERYTHING I need. So, a Medicare specialist is coming on the line now to review the additional food benefits for you. Give them JUST a few minutes to go over them with you, okay?",
+                        "Okay, LAST question here, do you have insurance through your work or the VA?",
+                        "Perfect, and do you receive Medicaid along with your Medicare plan?"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "The script says skip to 'Do you receive Medicaid'.",
+                    "tags": [
+                        "script"
+                    ]
+                }
+            ]
+        }
+    }

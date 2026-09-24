@@ -1,13 +1,17 @@
 <?php
 
 use App\Http\Controllers\Admin\CallLogController;
+use App\Http\Controllers\Admin\ExamRetakeController;
 use App\Http\Controllers\Admin\LicenseController;
 use App\Http\Controllers\Admin\LicenseStepController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ScreeningController;
 use App\Http\Controllers\Admin\ScreeningResponseController;
+use App\Http\Controllers\Admin\TrainingProgressController;
+use App\Http\Controllers\Admin\TrainingTrackController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserLicenseController;
+use App\Http\Controllers\Admin\UserTrackController;
 use App\Http\Controllers\Admin\VerticalTrainingController;
 use App\Http\Controllers\ImpersonateController;
 use App\Models\User;
@@ -25,6 +29,8 @@ Route::middleware(['auth', 'verified', 'can:viewAny,'.User::class])
         Route::post('users/{user}/impersonate', [UserController::class, 'impersonate'])->name('users.impersonate');
         Route::post('users/{user}/licenses/{license}', [UserLicenseController::class, 'store'])->name('users.licenses.store');
         Route::delete('users/{user}/licenses/{license}', [UserLicenseController::class, 'destroy'])->name('users.licenses.destroy');
+        Route::post('users/{user}/tracks/{track:id}', [UserTrackController::class, 'store'])->name('users.tracks.store')->withoutScopedBindings();
+        Route::delete('users/{user}/tracks/{track:id}', [UserTrackController::class, 'destroy'])->name('users.tracks.destroy')->withoutScopedBindings();
 
         Route::resource('vertical-training', VerticalTrainingController::class);
         Route::delete('vertical-training', [VerticalTrainingController::class, 'bulkDestroy'])->name('vertical-training.bulk-destroy');
@@ -40,6 +46,11 @@ Route::middleware(['auth', 'verified', 'can:viewAny,'.User::class])
         });
 
         Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+
+        Route::get('training-tracks', [TrainingTrackController::class, 'index'])->name('training-tracks.index');
+        Route::get('training-tracks/{user}', [TrainingTrackController::class, 'show'])->name('training-tracks.show');
+        Route::post('training-tracks/{user}/exam-retakes', [ExamRetakeController::class, 'store'])->name('training-tracks.exam-retakes.store');
+        Route::get('training/progress', [TrainingProgressController::class, 'index'])->name('training.progress');
 
         Route::get('screening', [ScreeningController::class, 'index'])->name('screening.index');
         Route::post('screening', [ScreeningController::class, 'store'])->name('screening.store');

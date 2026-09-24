@@ -1,0 +1,382 @@
+    {
+        "id": "dispositions_transfers",
+        "title": "Dispositions, Transfers & Callbacks",
+        "summary": "Code every call correctly, complete cold transfers, and run the 3 scheduled callback process.",
+        "est_minutes": 30,
+        "badge": {
+            "id": "badge_dispositions_transfers",
+            "name": "Clean Coder",
+            "icon": "📋"
+        },
+        "lessons": [
+            {
+                "id": "disp_1",
+                "title": "Every Disposition",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>A <strong>disposition</strong> is the code you give a call when it ends. Accurate codes matter. Patterns of miscoding are improper call handling.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<ul><li><strong>Answering Machine:</strong> voicemail, ringing with no answer, or someone else answers and says they're not there. <em>Example: \"She's at work, try later.\"</em></li><li><strong>Dead Air:</strong> you call their name twice at the start but get no response. <em>Example: \"Hello, Mary? ... Mary?\" Nothing.</em></li><li><strong>Not Interested (NI):</strong> they acknowledge you when you greet them but hang up at any point after. <em>Example: they say \"yeah?\" then hang up during the opening.</em></li><li><strong>Hung-Up Transfer:</strong> they hang up during or after starting the transfer process. <em>Example: they hang up while it's ringing.</em></li><li><strong>Robo:</strong> a fake automated voice, not a real person.</li><li><strong>Transfer:</strong> the lead and agent connect and speak. Cold transfer completed.</li><li><strong>Wrong Number:</strong> the person says you have the wrong number.</li><li><strong>No English:</strong> the caller can't speak English.</li><li><strong>DNC (Do Not Call):</strong> they tell you not to call in any way, use profanity, or threaten you. Try to read the DNC script if possible.</li><li><strong>DQ (Disqualified):</strong> no Medicare Parts A and B; military coverage (VA, Tricare, Tricare for Life, CHAMPVA); insurance through work or retirement; covered by a Native American tribe.</li><li><strong>Conference Ended:</strong> every transfer attempt ends with the agent's line disconnecting, a busy signal, or number-not-in-service.</li><li><strong>No Agent:</strong> 5 transfer attempts, waiting at least 20 seconds each, and you still can't reach an agent.</li></ul>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "You say \"Hello, Robert?\" twice and hear nothing. What is the disposition?",
+                        "choices": [
+                            "Dead Air",
+                            "Answering Machine",
+                            "Robo",
+                            "Not Interested"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "Calling their name twice with no response is Dead Air."
+                    },
+                    {
+                        "type": "check",
+                        "question": "The consumer says \"Hello?\" then hangs up during your opening. What is the disposition?",
+                        "choices": [
+                            "Wrong Number",
+                            "Hung-Up Transfer",
+                            "Not Interested",
+                            "Dead Air"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "They acknowledged you, then hung up. That's NI."
+                    }
+                ]
+            },
+            {
+                "id": "disp_2",
+                "title": "Tricky Dispositions",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>These are the codes new fronters mix up most:</p><ul><li><strong>NI vs DQ:</strong> NI means they won't continue. DQ means they can't qualify.</li><li><strong>NI vs Hung-Up Transfer:</strong> if they hang up <strong>before</strong> the transfer process starts, it's NI. <strong>During or after</strong> starting the transfer, it's Hung-Up Transfer.</li><li><strong>NI vs DNC:</strong> \"not interested, bye\" is NI. \"Stop calling me\" is DNC.</li><li><strong>Conference Ended vs No Agent:</strong> Conference Ended is when <strong>every</strong> attempt ends with the agent's line disconnecting, a busy signal, or number-not-in-service. No Agent is when you make 5 attempts, wait at least 20 seconds each, and nobody picks up.</li></ul>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "You start the transfer and the consumer hangs up while it rings. What is the disposition?",
+                        "choices": [
+                            "Not Interested",
+                            "Conference Ended",
+                            "Hung-Up Transfer",
+                            "Transfer"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Hanging up during or after starting the transfer is Hung-Up Transfer."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Every transfer attempt gives you a busy signal. What is the disposition?",
+                        "choices": [
+                            "Dead Air",
+                            "No Agent",
+                            "Answering Machine",
+                            "Conference Ended"
+                        ],
+                        "answer_index": 3,
+                        "explanation": "Busy signal, disconnect, or not-in-service on every attempt is Conference Ended."
+                    },
+                    {
+                        "type": "check",
+                        "question": "You make 5 transfer attempts, waiting 20+ seconds each, and no agent ever picks up. What happens?",
+                        "choices": [
+                            "You can't reach an agent, so you follow the No Agent callback process",
+                            "Code Not Interested",
+                            "Code Transfer",
+                            "Code Conference Ended"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "5 attempts at 20+ seconds with no agent is No Agent territory. On the first call you schedule a callback."
+                    },
+                    {
+                        "type": "check",
+                        "question": "The consumer answers \"Yeah?\" and then hangs up while you're asking the Medicaid question. What is the disposition?",
+                        "choices": [
+                            "DNC",
+                            "Not Interested",
+                            "Hung-Up Transfer",
+                            "DQ"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "They acknowledged you and hung up before the transfer process started. That's Not Interested."
+                    }
+                ]
+            },
+            {
+                "id": "disp_3",
+                "title": "The Cold Transfer Step by Step",
+                "est_minutes": 5,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<ol><li>Get the verbal yes on \"Give them JUST a few minutes to go over them with you, okay?\" <strong>No yes, no transfer.</strong></li><li>Read the ringing line and press the <strong>transfer</strong> button.</li><li>Fluff away while it rings.</li><li>When the agent picks up, <strong>stop talking</strong>. Stay silent.</li><li>The agent usually asks who they're speaking with. Wait until <strong>both parties speak</strong>.</li><li>Press <strong>Leave Conference Call</strong>.</li><li>Disposition as <strong>Transfer</strong>.</li></ol>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "Don't leave too early",
+                        "html": "<p>If you leave before you hear both the agent and the consumer speak, the call may not connect properly. Wait for both voices.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "When do you press Leave Conference Call?",
+                        "choices": [
+                            "Once you've heard both the agent and the consumer speak",
+                            "After you introduce the consumer",
+                            "As soon as it starts ringing",
+                            "Right after the agent picks up, before anyone speaks"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "Wait for both parties to speak, then leave the conference and code Transfer."
+                    }
+                ]
+            },
+            {
+                "id": "disp_4",
+                "title": "No Agent & Scheduled Callbacks",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>When you can't reach an agent, you don't give up on a qualified consumer. You follow the <strong>3 scheduled callback rule</strong>:</p><ol><li><strong>Initial call:</strong> 5 transfer attempts, at least 20 seconds each. If you can't reach an agent, schedule a callback <strong>at least 15 minutes out</strong>.</li><li><strong>First scheduled callback:</strong> do a <strong>full reconfirmation</strong> (the whole script again) and 5 attempts at 20 seconds. If the lead doesn't pick up, schedule the 2nd callback at least 15 minutes out. That still counts as an attempt.</li><li><strong>Second scheduled callback:</strong> same rules. Schedule the 3rd and final callback at least 15 minutes out.</li><li><strong>Third and final callback:</strong> same rules. If there's still no pickup or no agent, code as <strong>No Agent</strong>.</li></ol>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "When callbacks stop",
+                        "html": "<p>If the lead <strong>hangs up or DNCs you</strong> at any point, the callbacks stop. Code the call to match what happened.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>After you complete the process, post in chat using this exact format, with the lead's number in front:</p><p><strong>12345678910 NA CBS DONE</strong></p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "How far out must each scheduled callback be?",
+                        "choices": [
+                            "The next day",
+                            "Exactly 1 hour",
+                            "At least 15 minutes",
+                            "At least 5 minutes"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Every callback is scheduled at least 15 minutes out."
+                    },
+                    {
+                        "type": "check",
+                        "question": "On a scheduled callback the lead answers. What do you do before transferring?",
+                        "choices": [
+                            "A full reconfirmation of every question",
+                            "Only confirm the ZIP code",
+                            "Transfer immediately without asking",
+                            "Skip the questions since they already qualified"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "Full reconfirmation every callback."
+                    },
+                    {
+                        "type": "check",
+                        "question": "On the second callback, the lead says \"Stop calling me.\" What happens?",
+                        "choices": [
+                            "Schedule the third callback anyway",
+                            "Read the DNC disclaimer, code DNC, and the callbacks stop",
+                            "Code No Agent",
+                            "Rebut and try the transfer again"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "If the lead DNCs you, callbacks stop and you code accordingly."
+                    }
+                ]
+            }
+        ],
+        "quiz": {
+            "pass_pct": 80,
+            "questions": [
+                {
+                    "id": "dispositions_transfers_q1",
+                    "question": "Someone answers and says \"He's not here right now.\" What is the disposition?",
+                    "choices": [
+                        "Not Interested",
+                        "Dead Air",
+                        "Wrong Number",
+                        "Answering Machine"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Someone else answering and saying they're not there is coded Answering Machine.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dispositions_transfers_q2",
+                    "question": "A recorded automated voice picks up and starts a message. It's not a person. What is the disposition?",
+                    "choices": [
+                        "Robo",
+                        "Dead Air",
+                        "No English",
+                        "Answering Machine"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "A fake automated voice is Robo.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dispositions_transfers_q3",
+                    "question": "When is a call coded Transfer?",
+                    "choices": [
+                        "When you press the transfer button",
+                        "When the lead and agent connect and speak",
+                        "When the phone starts ringing",
+                        "When the consumer says okay"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Transfer means the cold transfer is completed: both parties connect and speak.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dispositions_transfers_q4",
+                    "question": "A consumer says \"You've got the wrong number, no one by that name lives here.\" What is the disposition?",
+                    "choices": [
+                        "Answering Machine",
+                        "DQ",
+                        "Not Interested",
+                        "Wrong Number"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "The person says you have the wrong number.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dispositions_transfers_q5",
+                    "question": "How many transfer attempts, and how long each, before it counts as No Agent?",
+                    "choices": [
+                        "5 attempts, at least 20 seconds each",
+                        "5 attempts, at least 60 seconds each",
+                        "10 attempts, at least 5 seconds each",
+                        "3 attempts, at least 10 seconds each"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "5 attempts x at least 20 seconds.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dispositions_transfers_q6",
+                    "question": "Every transfer attempt says the number is not in service. What is the disposition?",
+                    "choices": [
+                        "Conference Ended",
+                        "Wrong Number",
+                        "Robo",
+                        "No Agent"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Not-in-service on every attempt is Conference Ended.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dispositions_transfers_q7",
+                    "question": "How many scheduled callbacks are in the no agent process?",
+                    "choices": [
+                        "3",
+                        "1",
+                        "5",
+                        "2"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "There are 3 scheduled callbacks. After the third, code No Agent.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dispositions_transfers_q8",
+                    "question": "What is the chat post format after completing the callback process?",
+                    "choices": [
+                        "NA DONE 12345678910",
+                        "12345678910 NA CBS DONE",
+                        "12345678910 NO AGENT",
+                        "CALLBACKS COMPLETE 12345678910"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Post the lead's number followed by NA CBS DONE.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dispositions_transfers_q9",
+                    "question": "On the third and final callback there's still no agent. What do you code?",
+                    "choices": [
+                        "Conference Ended",
+                        "Transfer",
+                        "No Agent",
+                        "Not Interested"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Third callback, still no pickup or no agent: code No Agent.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dispositions_transfers_q10",
+                    "question": "A consumer curses at you and threatens you. What is the disposition?",
+                    "choices": [
+                        "Hung-Up Transfer",
+                        "DNC",
+                        "Not Interested",
+                        "DQ"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "The threat makes it DNC. Read the DNC script if possible. Swearing by itself is NOT a DNC. That's an objection you rebut.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dispositions_transfers_q11",
+                    "question": "A consumer only speaks Spanish and you can't communicate. What is the disposition?",
+                    "choices": [
+                        "Dead Air",
+                        "DQ",
+                        "No English",
+                        "Wrong Number"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "A caller who can't speak English is No English.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dispositions_transfers_q12",
+                    "question": "On a scheduled callback the lead doesn't pick up. What do you do (if it's not the final callback)?",
+                    "choices": [
+                        "Stop the process and code NI",
+                        "Code DNC",
+                        "Schedule the next callback at least 15 minutes out; it still counts as an attempt",
+                        "Call again right away"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "No pickup still counts as an attempt; schedule the next callback 15+ minutes out.",
+                    "tags": [
+                        "operations"
+                    ]
+                }
+            ]
+        }
+    }

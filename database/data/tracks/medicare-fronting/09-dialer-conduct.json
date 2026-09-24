@@ -1,0 +1,356 @@
+    {
+        "id": "dialer_conduct",
+        "title": "Convoso & Call Conduct",
+        "summary": "Use the Convoso dialer the right way and stay clear of call avoidance and improper call handling.",
+        "est_minutes": 25,
+        "badge": {
+            "id": "badge_dialer_conduct",
+            "name": "Dialer Ready",
+            "icon": "🎧"
+        },
+        "lessons": [
+            {
+                "id": "dial_1",
+                "title": "Getting Logged In & Statuses",
+                "est_minutes": 6,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<ul><li><strong>Convoso only runs in Google Chrome.</strong></li><li>Copy the Convoso link from your team channel and log in.</li><li>Allow the microphone. Pick <strong>\"Allow while visiting the site.\"</strong></li><li>Select the Medicare calling campaign you're assigned and set your status.</li></ul>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Statuses:</strong></p><ul><li><strong>Available:</strong> you're taking calls.</li><li><strong>Break:</strong> 5 minutes or less, and not during power hours.</li><li><strong>Training:</strong> only when a manager pulls you.</li><li><strong>Personal Callback:</strong> for your scheduled callbacks.</li><li><strong>Lunch:</strong> 1:00 to 2:00 PM only.</li><li><strong>Logout:</strong> end of shift.</li></ul>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "NEVER use Not Ready",
+                        "html": "<p>There is a Not Ready status. <strong>Never use it.</strong></p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which browser does Convoso run in?",
+                        "choices": [
+                            "Firefox only",
+                            "Safari",
+                            "Google Chrome only",
+                            "Any browser"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Convoso only runs in Google Chrome."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which status should you NEVER use?",
+                        "choices": [
+                            "Personal Callback",
+                            "Available",
+                            "Not Ready",
+                            "Break"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Never use Not Ready."
+                    }
+                ]
+            },
+            {
+                "id": "dial_2",
+                "title": "Transfers, Wrap-Up & Editing Info",
+                "est_minutes": 6,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<ul><li><strong>Transfer:</strong> press the transfer button.</li><li><strong>Red X:</strong> the red X next to a line disconnects that line. Use it to drop a failed agent attempt, then press transfer again.</li><li><strong>Leave Conference Call:</strong> press it once you've heard both parties speak, then disposition as Transfer.</li><li><strong>Lead hangs up:</strong> you get a pop-up. Click wrap-up and disposition.</li><li><strong>Pausing after a call:</strong> pick the status from the dropdown <strong>before</strong> you disposition.</li><li><strong>Editing customer info:</strong> Contact tab, scroll down, Apply Changes. Click the Script tab to go back.</li></ul>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Failed attempt? Red X, then transfer",
+                        "html": "<p>If an agent attempt fails, don't hang up on the consumer. Use the red X next to the agent's line only, then press transfer again.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "An agent attempt fails. How do you drop just that line?",
+                        "choices": [
+                            "Hang up the whole call",
+                            "Click the red X next to that line, then press transfer again",
+                            "Set your status to Not Ready",
+                            "Press Leave Conference Call"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "The red X disconnects a single line."
+                    },
+                    {
+                        "type": "check",
+                        "question": "You need to take a break after this call. When do you pick the status?",
+                        "choices": [
+                            "From the dropdown before you disposition",
+                            "During the call",
+                            "You can't pause after a call",
+                            "After you disposition"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "Pick the status from the dropdown before dispositioning."
+                    },
+                    {
+                        "type": "check",
+                        "question": "How do you update a consumer's contact info?",
+                        "choices": [
+                            "Script tab, then press transfer",
+                            "Contact tab, scroll down, Apply Changes, then click the Script tab to return",
+                            "Ask the specialist to do it",
+                            "History tab, green phone icon"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Edit in the Contact tab and Apply Changes."
+                    }
+                ]
+            },
+            {
+                "id": "dial_3",
+                "title": "Callbacks in Convoso",
+                "est_minutes": 5,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Setting a callback:</strong> the Callback disposition needs a time.</p><ol><li>Click the blank space next to time.</li><li>Pick the date, hour and time.</li><li>Set the type to <strong>Personal Callback</strong>.</li><li>Disposition as <strong>Callback</strong>.</li></ol>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Making a scheduled callback:</strong></p><ol><li>Set your status to <strong>Personal Callback</strong>.</li><li>Go to the <strong>History</strong> tab.</li><li>Select the call.</li><li>Click the <strong>green phone icon</strong> in the primary phone field.</li></ol>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Remember the 15 minutes",
+                        "html": "<p>Every scheduled callback must be at least 15 minutes out.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "How do you place a scheduled callback?",
+                        "choices": [
+                            "Set Not Ready and dial manually",
+                            "Contact tab, Apply Changes",
+                            "Set Personal Callback status, go to History, select the call, click the green phone icon",
+                            "Set Available status and wait for the dialer"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Personal Callback status, History tab, select the call, green phone icon."
+                    },
+                    {
+                        "type": "check",
+                        "question": "What callback type do you choose when scheduling?",
+                        "choices": [
+                            "Personal Callback",
+                            "Break",
+                            "Available",
+                            "Training"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "Set the type to Personal Callback, then disposition as Callback."
+                    }
+                ]
+            },
+            {
+                "id": "dial_4",
+                "title": "Zero Tolerance: Call Avoidance & Improper Handling",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>These are <strong>zero tolerance</strong>. Don't do them.</p><p><strong>Call avoidance:</strong></p><ul><li>Staying in wrap-up or unavailable without approval</li><li>Not greeting the lead within a reasonable time</li><li>Hanging up when leads connect, or cherry-picking calls</li><li>Extending call time unnecessarily</li><li>Staying on dead calls or answering machines too long</li><li>Failing to rebut when the lead objects</li><li>Failing to rebut separate objections</li><li>Anything meant to delay or avoid calls</li></ul>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Improper call handling:</strong></p><ul><li>Profanity or inappropriate language</li><li>Being rude or unprofessional (volume, tone, word choice)</li><li>Patterns of miscoding, mishandling transfers, or no agents</li><li>Failing to follow compliance guidelines</li></ul>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "Zero tolerance means zero",
+                        "html": "<p>These aren't small mistakes. They can cost you your seat. Stay Available, greet fast, rebut every objection, code accurately.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "A lead connects and you hang up because they \"sounded old and slow.\" What is this?",
+                        "choices": [
+                            "Good time management",
+                            "Improper disposition only",
+                            "Call avoidance (hanging up when leads connect / cherry-picking)",
+                            "Allowed if you're behind on transfers"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Hanging up on connected leads or cherry-picking is call avoidance."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which of these is improper call handling?",
+                        "choices": [
+                            "Scheduling a callback 15 minutes out",
+                            "Reading the DNC disclaimer",
+                            "Rebutting a second objection",
+                            "Raising your voice at a consumer"
+                        ],
+                        "answer_index": 3,
+                        "explanation": "Being rude or unprofessional in volume, tone, or word choice is improper call handling."
+                    }
+                ]
+            }
+        ],
+        "quiz": {
+            "pass_pct": 80,
+            "questions": [
+                {
+                    "id": "dialer_conduct_q1",
+                    "question": "What do you click when Chrome asks about the microphone?",
+                    "choices": [
+                        "Allow this time only",
+                        "Ask every time",
+                        "Allow while visiting the site",
+                        "Block"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Allow the microphone: \"Allow while visiting the site.\"",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dialer_conduct_q2",
+                    "question": "How long can a Break status last?",
+                    "choices": [
+                        "15 minutes",
+                        "Up to 30 minutes",
+                        "5 minutes or less, not during power hours",
+                        "As long as you need"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Break is 5 minutes or less and not in power hours.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dialer_conduct_q3",
+                    "question": "When is the Training status used?",
+                    "choices": [
+                        "Whenever you want to review the script",
+                        "During lunch",
+                        "Only when a manager pulls you",
+                        "At the end of shift"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Training is only when a manager pulls you.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dialer_conduct_q4",
+                    "question": "A lead hangs up and you get a pop-up. What do you do?",
+                    "choices": [
+                        "Wait for the next call without coding",
+                        "Close the browser",
+                        "Click wrap-up and disposition",
+                        "Set Not Ready"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Click wrap-up and disposition.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dialer_conduct_q5",
+                    "question": "What do you press after hearing both parties speak on a transfer?",
+                    "choices": [
+                        "Transfer again",
+                        "Leave Conference Call",
+                        "Logout",
+                        "The red X on the consumer's line"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Leave Conference Call, then disposition as Transfer.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dialer_conduct_q6",
+                    "question": "Which is call avoidance?",
+                    "choices": [
+                        "Setting Lunch status at 1:00 PM",
+                        "Rebutting every objection",
+                        "Greeting the lead right away",
+                        "Staying in wrap-up without approval"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Staying in wrap-up or unavailable without approval is call avoidance.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dialer_conduct_q7",
+                    "question": "Which is call avoidance?",
+                    "choices": [
+                        "Coding Answering Machine quickly",
+                        "Leaving the conference after both parties speak",
+                        "Using Personal Callback for a scheduled callback",
+                        "Staying on an answering machine too long"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Staying on dead calls or answering machines too long is call avoidance.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dialer_conduct_q8",
+                    "question": "A consumer objects and you just say \"okay, bye\" without a rebuttal. What is this?",
+                    "choices": [
+                        "A DQ",
+                        "Correct handling",
+                        "Call avoidance: failing to rebut",
+                        "A DNC"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Failing to rebut when the lead objects is call avoidance.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dialer_conduct_q9",
+                    "question": "Which status do you use at the end of your shift?",
+                    "choices": [
+                        "Training",
+                        "Logout",
+                        "Break",
+                        "Not Ready"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Logout at the end of shift. Never Not Ready.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "dialer_conduct_q10",
+                    "question": "What is on the improper call handling list?",
+                    "choices": [
+                        "Patterns of miscoding, mishandling transfers or no agents",
+                        "Reading rebuttals verbatim",
+                        "Scheduling callbacks",
+                        "Using the red X on a failed agent line"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Patterns of miscoding are improper call handling.",
+                    "tags": [
+                        "operations"
+                    ]
+                }
+            ]
+        }
+    }

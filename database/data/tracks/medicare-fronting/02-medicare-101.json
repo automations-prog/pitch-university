@@ -1,0 +1,356 @@
+    {
+        "id": "medicare_101",
+        "title": "Medicare & the Product",
+        "summary": "Medicare vs Medicaid, Parts A and B and the card, the extra benefits consumers ask about, and who is not a fit.",
+        "est_minutes": 27,
+        "badge": {
+            "id": "badge_medicare_101",
+            "name": "Medicare Pro",
+            "icon": "🏥"
+        },
+        "lessons": [
+            {
+                "id": "m101_1",
+                "title": "Medicare vs Medicaid",
+                "est_minutes": 6,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>These two words sound alike, and consumers mix them up all the time. You can't.</p><ul><li><strong>Medicare</strong> is federal health insurance from the U.S. government. <strong>ALL people 65 and older qualify</strong>, plus people <strong>under 65 with certain disabilities</strong>. It helps cover hospital and medical care.</li><li><strong>Medicaid</strong> is a program paid for by both the state and federal government and <strong>run by each state</strong>. It gives health coverage to people with <strong>limited income</strong>. Benefits vary by state.</li></ul>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>An easy way to remember it: Medicare is about <strong>age</strong> (everyone 65 and older) or disability. Medicaid is about <strong>income</strong>. Some people have both. That's fine: in the script, a yes or no to Medicaid both continue.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "You are not the government",
+                        "html": "<p>Medicare is a government program, but <strong>you do not work for Medicare or the government</strong>. You are with America's Health. Never say or hint that you are calling from Medicare.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says, \"I get help because my income is low, and my state runs it.\" Which program are they describing?",
+                        "choices": [
+                            "Medicaid",
+                            "Medicare Part B",
+                            "The VA",
+                            "Medicare Part A"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "Medicaid is run by each state and is based on limited income."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Who qualifies for Medicare?",
+                        "choices": [
+                            "ALL people 65 and older, plus people under 65 with certain disabilities",
+                            "Anyone who works for the government",
+                            "Only veterans",
+                            "Only people with low income"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "Medicare is federal health insurance. ALL people 65 and older qualify, plus people under 65 with certain disabilities."
+                    }
+                ]
+            },
+            {
+                "id": "m101_2",
+                "title": "The Parts of Medicare & the Card",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>You only need to know two parts of Medicare for this job:</p><ul><li><strong>Part A (Hospital Insurance):</strong> helps cover inpatient hospital stays, skilled nursing facility care, and hospice.</li><li><strong>Part B (Medical Insurance):</strong> helps cover doctor visits, outpatient care, and preventive services. Most people pay a monthly premium for Part B.</li></ul>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>The script's first question is about Parts A and B because <strong>a consumer must have Medicare Parts A and B to qualify</strong>. No A and B means DQ.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>The red, white and blue card</strong> is the Medicare card. It shows the person's name, their Medicare number, and whether they have Part A (Hospital), Part B (Medical), or both. That is why the script double-confirms the card: it helps make sure they really have Medicare, not just some other insurance card.</p><p>If they don't have the card, the script asks whether they <strong>know</strong> their Medicare number or Social Security number. You never ask them to read or give you either number; the licensed agent handles that.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "When they don't know the parts",
+                        "html": "<p>Lots of consumers don't know what \"Parts A and B\" means. That's normal. If they say \"I don't know,\" the script has you ask about the red, white and blue card instead.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which part of Medicare helps cover doctor visits and outpatient care?",
+                        "choices": [
+                            "Part A",
+                            "Part B",
+                            "The red, white and blue card",
+                            "Medicaid"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Part B is Medical Insurance: doctor visits, outpatient care and preventive services. Part A is Hospital Insurance."
+                    },
+                    {
+                        "type": "check",
+                        "question": "What color is the Medicare card the script asks about?",
+                        "choices": [
+                            "Green and white",
+                            "Plain white",
+                            "Red, white and blue",
+                            "Blue and gold"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "The Medicare card is red, white and blue. The script double-confirms it."
+                    }
+                ]
+            },
+            {
+                "id": "m101_4",
+                "title": "Extra Benefits Consumers Ask About",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Consumers will ask what the benefits are. These are the extra benefits the script and rebuttals mention. Some Medicare plans <strong>may</strong> include them:</p><ul><li><strong>Healthy food card:</strong> may help with groceries on a monthly basis.</li><li><strong>Flex card:</strong> may help cover expenses like dental, hearing, vision and utilities.</li><li><strong>Part B giveback:</strong> some plans may help cover some or all of the Part B premium.</li></ul>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "These benefits are never guaranteed",
+                        "html": "<p>Extra benefits <strong>vary by plan, by area, and by the person's eligibility</strong>. Not every plan has them and not every person qualifies. That is why you always say <strong>\"may\"</strong> or <strong>\"maybe\"</strong>. Never promise a benefit, and never give a dollar amount.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>If a consumer asks \"How much will I get?\" you don't know, and you shouldn't guess. Only the licensed specialist can review what their options may include.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer asks, \"How much money is on the food card?\" What is the right move?",
+                        "choices": [
+                            "Tell them it is the same for everyone",
+                            "Tell them a typical amount so they stay interested",
+                            "Say that would be a great question for the agent once you get them there",
+                            "Tell them they are guaranteed to get one"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Never give dollar amounts or guarantees. Benefits vary by plan, area and eligibility."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Why do you say \"may\" when talking about extra benefits?",
+                        "choices": [
+                            "Because the consumer has already been approved",
+                            "Because the benefits are not real",
+                            "Because it sounds more polite",
+                            "Because benefits vary by plan, area and eligibility, so nothing is guaranteed"
+                        ],
+                        "answer_index": 3,
+                        "explanation": "Benefits are not guaranteed. \"May\" and \"maybe\" keep you honest and compliant."
+                    }
+                ]
+            },
+            {
+                "id": "m101_5",
+                "title": "Who's Not a Fit & What the Specialist Does",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Medicaid is not a DQ.</strong> The script asks, \"Do you receive Medicaid along with your Medicare plan?\" A <strong>yes or no both continue</strong>. It is information for the specialist.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>Some consumers are <strong>not a fit</strong> for this review and must be disqualified:</p><ul><li><strong>Insurance through work or retirement</strong> (employer or retiree coverage, like a union or city retirement plan)</li><li><strong>Military coverage:</strong> VA, Tricare, Tricare for Life, CHAMPVA</li><li><strong>Covered by a Native American tribe</strong></li></ul><p>These people already have coverage that works with Medicare in its own special way, and changing plans could affect that coverage. This review is not built for them, so you DQ them politely.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>What happens after the transfer?</strong> The licensed Medicare specialist reviews the consumer's current coverage and compares plan options that may be available in their area. <strong>Only the consumer can decide to change anything.</strong> Nobody can change their insurance for them, including you.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Use this when they fear change",
+                        "html": "<p>This is exactly why the rebuttal says \"changing your insurance is ONLY something you can do.\" It's true, and it calms people down.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says they have Medicare and Medicaid. What does that mean for the call?",
+                        "choices": [
+                            "They are disqualified",
+                            "Transfer them right away without the other questions",
+                            "Nothing changes; keep going with the script",
+                            "Code them as Not Interested"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Medicaid yes or no both continue. Having both Medicare and Medicaid is not a DQ."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which consumer is disqualified?",
+                        "choices": [
+                            "One who has Medicaid and Medicare",
+                            "One who lost their red, white and blue card",
+                            "One who says they are busy",
+                            "One who has Tricare for Life"
+                        ],
+                        "answer_index": 3,
+                        "explanation": "Military coverage (VA, Tricare, Tricare for Life, CHAMPVA) is a DQ."
+                    }
+                ]
+            }
+        ],
+        "quiz": {
+            "pass_pct": 80,
+            "questions": [
+                {
+                    "id": "medicare_101_q1",
+                    "question": "What is Medicaid?",
+                    "choices": [
+                        "A federal program only for people 65 and older",
+                        "A state and federally funded program run by each state for people with limited income",
+                        "Hospital insurance for people 65 and older",
+                        "A private insurance plan"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Medicaid is run by each state for people with limited income, and benefits vary by state.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "medicare_101_q13",
+                    "question": "Who qualifies for Medicare?",
+                    "choices": [
+                        "Only people with limited income",
+                        "ALL people 65 and older, plus people under 65 with certain disabilities",
+                        "Only veterans",
+                        "Only people who still work"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "ALL people 65 and older qualify for Medicare, plus people under 65 with certain disabilities.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "medicare_101_q2",
+                    "question": "Which Medicare part is Hospital Insurance?",
+                    "choices": [
+                        "Medicaid",
+                        "The red, white and blue card",
+                        "Part B",
+                        "Part A"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Part A helps cover inpatient hospital care.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "medicare_101_q14",
+                    "question": "What does Medicare Part B mainly help cover?",
+                    "choices": [
+                        "Doctor visits, outpatient care and preventive services",
+                        "Groceries",
+                        "Inpatient hospital stays only",
+                        "Utilities"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Part B is Medical Insurance. Part A is Hospital Insurance.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "medicare_101_q11",
+                    "question": "What does the red, white and blue card show?",
+                    "choices": [
+                        "That the person has Medicare, and whether they have Part A, Part B, or both",
+                        "Their Medicaid balance",
+                        "Their bank account number",
+                        "The amount of their food benefit"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "The red, white and blue card is the Medicare card. It shows Part A/Part B coverage. You only confirm they have it; you never ask them to read you a number.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "medicare_101_q6",
+                    "question": "A consumer has both Medicare and Medicaid. What does that mean for the call?",
+                    "choices": [
+                        "They are disqualified",
+                        "They must drop Medicaid first",
+                        "They get transferred without the other questions",
+                        "Nothing changes; Medicaid yes or no both continue"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Having both Medicare and Medicaid is not a DQ. Keep going with the script.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "medicare_101_q7",
+                    "question": "Which statement about the healthy food card and flex card is correct?",
+                    "choices": [
+                        "They are always worth the same amount",
+                        "They vary by plan, area and eligibility, so a consumer may or may not qualify",
+                        "They are mailed by the government",
+                        "Every Medicare member gets them automatically"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Extra benefits are never guaranteed. That's why you say \"may.\"",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "medicare_101_q12",
+                    "question": "What is the Part B giveback?",
+                    "choices": [
+                        "A benefit some plans may offer that helps cover some or all of the Part B premium",
+                        "A Medicaid payment",
+                        "A refund every Medicare member gets each year",
+                        "Cash the fronter can promise on the call"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Some plans may include a Part B giveback. It is never guaranteed and you never quote amounts.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "medicare_101_q8",
+                    "question": "A consumer's health coverage comes from their retirement plan with the city. What happens?",
+                    "choices": [
+                        "Code them as Not Interested",
+                        "They qualify; transfer them",
+                        "Schedule a callback",
+                        "They are disqualified"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Insurance through work or retirement is a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "medicare_101_q10",
+                    "question": "What does the licensed specialist do after the transfer?",
+                    "choices": [
+                        "Mails the consumer a food card",
+                        "Automatically switches the consumer to a better plan",
+                        "Reviews the consumer's coverage and compares plan options; only the consumer can decide to change",
+                        "Confirms the consumer's bank information"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "The specialist reviews and compares. Only the consumer can decide to change.",
+                    "tags": [
+                        "product"
+                    ]
+                }
+            ]
+        }
+    }

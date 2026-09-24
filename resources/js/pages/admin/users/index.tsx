@@ -58,11 +58,6 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
-import {
     brandButtonClass,
     resourceBadgeClass,
     resourceCardClass,
@@ -618,7 +613,6 @@ export default function UsersIndex({
                                 <TableHead>Email</TableHead>
                                 <TableHead>Role</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead>Licenses</TableHead>
                                 <TableHead>Joined</TableHead>
                                 <TableHead className="text-right">
                                     Actions
@@ -629,7 +623,7 @@ export default function UsersIndex({
                             {users.data.length === 0 && (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={8}
+                                        colSpan={7}
                                         className="text-muted-foreground py-8 text-center"
                                     >
                                         No users found.
@@ -688,62 +682,6 @@ export default function UsersIndex({
                                             >
                                                 {user.status}
                                             </Badge>
-                                        </TableCell>
-                                        <TableCell>
-                                            {user.licenses &&
-                                            user.licenses.length > 0 ? (
-                                                <div className="flex flex-wrap items-center gap-1">
-                                                    <Badge
-                                                        variant={
-                                                            user.licenses[0]
-                                                                .status ===
-                                                            'active'
-                                                                ? 'outline'
-                                                                : 'destructive'
-                                                        }
-                                                    >
-                                                        {user.licenses[0].name}
-                                                    </Badge>
-                                                    {user.licenses.length >
-                                                        1 && (
-                                                        <Tooltip>
-                                                            <TooltipTrigger
-                                                                asChild
-                                                            >
-                                                                <Badge
-                                                                    variant="secondary"
-                                                                    className="cursor-default"
-                                                                >
-                                                                    …
-                                                                </Badge>
-                                                            </TooltipTrigger>
-                                                            <TooltipContent>
-                                                                <ul className="space-y-0.5">
-                                                                    {user.licenses.map(
-                                                                        (
-                                                                            license,
-                                                                        ) => (
-                                                                            <li
-                                                                                key={
-                                                                                    license.id
-                                                                                }
-                                                                            >
-                                                                                {
-                                                                                    license.name
-                                                                                }
-                                                                            </li>
-                                                                        ),
-                                                                    )}
-                                                                </ul>
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    )}
-                                                </div>
-                                            ) : (
-                                                <span className="text-muted-foreground text-sm">
-                                                    —
-                                                </span>
-                                            )}
                                         </TableCell>
                                         <TableCell>
                                             {new Date(

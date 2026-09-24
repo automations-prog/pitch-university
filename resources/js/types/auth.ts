@@ -12,6 +12,7 @@ export type User = {
     role: UserRole;
     status: UserStatus;
     licenses_count: number;
+    course_tracks_count?: number;
     licenses?: License[];
     email_verified_at: string | null;
     two_factor_enabled?: boolean;

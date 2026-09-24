@@ -3,9 +3,11 @@ import {
     Award,
     ClipboardCheck,
     FileBarChart,
+    GraduationCap,
     LayoutGrid,
     ShieldCheck,
     Target,
+    ToggleRight,
     Users,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
@@ -24,10 +26,18 @@ import { dashboard } from '@/routes';
 import { index as licensingIndex } from '@/routes/admin/licensing';
 import { index as reportsIndex } from '@/routes/admin/reports';
 import { index as screeningIndex } from '@/routes/admin/screening';
+import { index as trainingTracksIndex } from '@/routes/admin/training-tracks';
 import { index as usersIndex } from '@/routes/admin/users';
 import { index as verticalTrainingIndex } from '@/routes/admin/vertical-training';
 import { index as myLicensesIndex } from '@/routes/licenses';
+import { index as trainingIndex } from '@/routes/training';
 import type { NavItem } from '@/types';
+
+/**
+ * Licensing ("Licensing" for admins, "My Licenses" for agents) is hidden from
+ * the sidebar for now. Set to true to show it again.
+ */
+const SHOW_LICENSING = false;
 
 export function AppSidebar() {
     const { auth } = usePage().props;
@@ -38,7 +48,16 @@ export function AppSidebar() {
             href: dashboard(),
             icon: LayoutGrid,
         },
-        ...(auth.user.licenses_count > 0
+        ...((auth.user.course_tracks_count ?? 0) > 0
+            ? [
+                  {
+                      title: 'My Training',
+                      href: trainingIndex(),
+                      icon: GraduationCap,
+                  },
+              ]
+            : []),
+        ...(SHOW_LICENSING && auth.user.licenses_count > 0
             ? [
                   {
                       title: 'My Licenses',
@@ -49,10 +68,19 @@ export function AppSidebar() {
             : []),
         ...(auth.user.role === 'admin'
             ? [
+                  ...(SHOW_LICENSING
+                      ? [
+                            {
+                                title: 'Licensing',
+                                href: licensingIndex(),
+                                icon: ShieldCheck,
+                            },
+                        ]
+                      : []),
                   {
-                      title: 'Licensing',
-                      href: licensingIndex(),
-                      icon: ShieldCheck,
+                      title: 'Training Tracks',
+                      href: trainingTracksIndex(),
+                      icon: ToggleRight,
                   },
                   {
                       title: 'Vertical Training',

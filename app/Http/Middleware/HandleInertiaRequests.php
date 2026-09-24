@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user()?->loadCount([
                     'licenses' => fn ($query) => $query->where('status', LicenseStatus::Active),
+                    'courseTracks',
                 ]),
                 'impersonating' => $request->session()->has(config('laravel-impersonate.session_key')),
             ],

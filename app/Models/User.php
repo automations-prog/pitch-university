@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -91,5 +92,39 @@ class User extends Authenticatable implements PasskeyUser
     public function licenses(): BelongsToMany
     {
         return $this->belongsToMany(License::class)->withTimestamps();
+    }
+
+    /**
+     * The training tracks this user has been given access to.
+     *
+     * @return BelongsToMany<CourseTrack, $this>
+     */
+    public function courseTracks(): BelongsToMany
+    {
+        return $this->belongsToMany(CourseTrack::class)->withTimestamps();
+    }
+
+    /**
+     * @return BelongsToMany<CourseLesson, $this>
+     */
+    public function completedCourseLessons(): BelongsToMany
+    {
+        return $this->belongsToMany(CourseLesson::class)->withTimestamps();
+    }
+
+    /**
+     * @return HasMany<CourseQuizAttempt, $this>
+     */
+    public function courseQuizAttempts(): HasMany
+    {
+        return $this->hasMany(CourseQuizAttempt::class);
+    }
+
+    /**
+     * @return HasMany<CourseExamAttempt, $this>
+     */
+    public function courseExamAttempts(): HasMany
+    {
+        return $this->hasMany(CourseExamAttempt::class);
     }
 }

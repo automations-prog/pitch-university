@@ -1,0 +1,1589 @@
+    {
+        "id": "real_calls",
+        "title": "Learn From Real Calls",
+        "summary": "Study real top-agent calls and real poor calls so you know exactly what to copy and what to avoid.",
+        "est_minutes": 90,
+        "badge": {
+            "id": "badge_real_calls",
+            "name": "Film Room",
+            "icon": "🎬"
+        },
+        "lessons": [
+            {
+                "id": "real_1",
+                "title": "A Perfect Call, Start to Finish",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>This module is built from <strong>real Medicare calls</strong>: calls from top agents and calls that went wrong. Names and personal details are removed. First, let's look at a call that went exactly right.</p><p>This top agent followed the script almost word for word. The consumer said yes to everything, and the agent got to the transfer in about a minute. Watch what they do after every question: <strong>they stop and wait.</strong></p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "A real top-agent call, part 1: the questions",
+                        "lines": [
+                            {
+                                "speaker": "note",
+                                "text": "0:00. The consumer picks up. The agent greets them by name right away."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Hey (Customer Name), this is _______, I'm with America's Health on a recorded line. We were just giving you a quick call today about your food and utility card that you never received. That card, it IS exclusively for members who have Medicare Parts A and B. You DO still have your Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Correct."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "0:21. Question 1 asked, answer WAITED for."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, perfect, and JUST to double confirm, that IS the red, white and blue card, correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Correct."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "0:26. Card double-confirmed."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, and do you receive Medicaid along with your Medicare plan?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Yes."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "0:32. Medicaid asked. Yes or no, you keep going."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, thanks so much for confirming that for me. So yeah, it DOES look like you may be ENTITLED to some additional food benefits since the food prices have gone up. If that's sent, I DO still have you out in (state), with the zip code (zip code), correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Correct."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "0:47. State and ZIP confirmed, with \"may\" in the benefit line."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, LAST question here, do you have insurance through your work or the VA?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Not at the present time."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "0:55. Work or VA: no. Every question is done."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Every question, every answer",
+                        "html": "<p>Count them: <strong>Parts A and B, the red, white and blue card, Medicaid, state and ZIP, work or VA.</strong> Five questions, five real answers. The agent never answered for the consumer and never stepped on a reply.</p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "Part 2: the okay and the transfer",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, well that is EVERYTHING I need. So, a Medicare specialist is coming on the line now to review the additional food benefits for you. Give them JUST a few minutes to go over them with you, okay?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Okay."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "About 1:05. The agent asked \"okay?\" and waited for the consumer to say yes. Only then did they click transfer. This is the ONLY time you ask permission on the call."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Alright, so you'll hear a little bit of ringing, that's just me connecting them in, and once they pick up they'll ask you for your name, okay?"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "In the meantime, how's that weather out there today?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "I don't know. I haven't been outside."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The agent kept it light: cooler weather, fall coming, football season. Short and friendly."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "About 1:55. The specialist picks up. The agent goes silent right away."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "The okay is not optional",
+                        "html": "<p>You <strong>must</strong> ask \"okay?\" and <strong>wait for a verbal yes</strong> before you click transfer. That yes is your permission. You don't need another okay on the ringing line or once the licensed agent connects.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Why it took about a minute",
+                        "html": "<p>From hello to the okay took roughly <strong>60 to 70 seconds</strong>. That's not because the agent rushed. It's because they knew every line by heart, so there was no dead air and no guessing.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "In the perfect call, what did the agent do after every qualifying question?",
+                        "choices": [
+                            "Moved straight to the next question to save time",
+                            "Stopped and waited for a clear answer",
+                            "Answered \"perfect\" before the consumer spoke",
+                            "Skipped ahead once the consumer said yes once"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Every question gets a real answer. The agent stopped and waited every time."
+                    },
+                    {
+                        "type": "check",
+                        "question": "When is the ONLY time you ask the consumer for permission on the call?",
+                        "choices": [
+                            "Before asking about Medicaid",
+                            "Before confirming the ZIP code",
+                            "At the transfer ask: \"Give them JUST a few minutes to go over them with you, okay?\"",
+                            "Before the weather small talk"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "You must ask the okay at the transfer ask and wait for a verbal yes."
+                    }
+                ]
+            },
+            {
+                "id": "real_2",
+                "title": "Fast and Friendly: How Top Agents Build Rapport",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Top agents sound like a friendly neighbor, not a robot. In real calls, they did the same few things over and over:</p><ul><li><strong>Use the name.</strong> They greet the consumer by name and use it again during the call.</li><li><strong>Warm words.</strong> \"Yes ma'am.\" \"Yes sir.\" \"No problem, hon.\"</li><li><strong>Mirror the mood.</strong> Sleepy consumer? Joke about needing coffee. Happy consumer? Be happy with them.</li><li><strong>Keep the pace up.</strong> They know the questions by heart, so there is never a pause while they look for the next line.</li></ul>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "Real moment: a sleepy consumer",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, and do you receive Medicaid along with your Medicare plan?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "I think so. I just woke up. Sorry."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "A top agent said: \"No problem, hon.\" Then went right to the next line."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, thanks so much for confirming that for me. So yeah, it DOES look like you may be ENTITLED to some additional food benefits since the food prices have gone up. If that's sent, I DO still have you out in (state), with the zip code (zip code), correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Correct."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>Notice what the warmth does: the consumer felt bad for being sleepy, the agent made it okay in three words, and the call kept moving. Friendly and fast work together.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "Warmth never replaces the script",
+                        "html": "<p>Management teaches the script <strong>word for word</strong>. Even top agents slip: in real calls, some rushed past an answer (\"Do you have Medicaid as well? Perfect.\" before the consumer spoke) or skipped the \"okay?\" at the transfer.</p><p><strong>Keep the warmth. Never skip a question. Never skip the wait.</strong> Speed comes from memorizing the lines, not from cutting them.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Mirror, don't mimic",
+                        "html": "<p>Match their energy and pace. If they're slow and quiet, soften your voice a little. If they're chatty, smile and keep it light. Then bring them right back to the next question.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "Where does a top agent's speed come from?",
+                        "choices": [
+                            "Skipping the Medicaid question",
+                            "Answering for the consumer",
+                            "Knowing every line by heart so there's no dead air",
+                            "Leaving out the okay at the transfer"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Fast comes from memorizing the script, never from cutting questions or waits."
+                    },
+                    {
+                        "type": "check",
+                        "question": "An agent asks \"Do you have Medicaid as well?\" and says \"Perfect\" before the consumer answers. What's wrong?",
+                        "choices": [
+                            "Nothing, it keeps the pace up",
+                            "They didn't wait for the answer",
+                            "They should never say perfect",
+                            "They should have skipped Medicaid"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Every question needs a real answer. Warm and fast is great, but you always wait."
+                    }
+                ]
+            },
+            {
+                "id": "real_3",
+                "title": "Ring Time: Keeping Them on the Line",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>The ringing is a danger zone. The consumer is waiting, with nothing to do, and that's when they hang up. Top agents fill that time with easy small talk.</p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "How the ring time starts",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Alright, so you'll hear a little bit of ringing, that's just me connecting them in, and once they pick up they'll ask you for your name, okay?"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "In the meantime, how's that weather out there today?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Hot. About 95."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "A top agent kept it going: \"Oh, same as here. When does it usually cool down over there?\""
+                            }
+                        ]
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Small talk that worked in real calls:</strong></p><ul><li>The weather and the heat (\"Most people I talked to today said the word of the day is hot.\")</li><li>Coffee (\"That cup of coffee will wake you right up.\")</li><li>\"How's your day so far?\"</li><li>Football season, fall coming, easy everyday stuff</li></ul><p><strong>Reassurance that worked:</strong></p><ul><li>\"You should be coming up shortly.\"</li><li>\"You should still hear it ringing until they pick up.\"</li><li>\"It rings about a minute, then I can reissue it.\"</li></ul>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "Stop talking the moment they pick up",
+                        "html": "<p>When the specialist says hello, <strong>go silent</strong>. Don't finish your story. They will ask who they're speaking with. Once the consumer answers, complete the cold transfer.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "No agent? Follow the rule",
+                        "html": "<p>Make <strong>5 transfer attempts, waiting at least 20 seconds on each</strong>. If you still can't reach a specialist, schedule a callback at least 15 minutes out. Keep the consumer relaxed while you reissue.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Keep small talk light",
+                        "html": "<p>Ring-time small talk should be easy and short: the weather, the heat, \"how's your day going?\"</p><p>Avoid heavy topics like politics. Long or heated conversations wear the consumer out, and they may not want to stay on for the specialist.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "The ring-time rule",
+                        "html": "<p><strong>Mirror what they bring up, but keep it short.</strong> Never start or feed a debate about politics, religion or other heavy topics. If they go there, give a short, kind reply and steer to something light, like the weather.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "The specialist picks up while you're in the middle of a story about the heat. What do you do?",
+                        "choices": [
+                            "Finish your story so you're not rude",
+                            "Introduce the consumer to the specialist",
+                            "Stop talking right away",
+                            "Ask the consumer to confirm their ZIP again"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Go silent the moment the specialist connects. We do cold transfers only."
+                    },
+                    {
+                        "type": "check",
+                        "question": "During ring time the consumer starts talking about politics. What's the best move?",
+                        "choices": [
+                            "Ask more questions so they feel heard",
+                            "Share your own opinion",
+                            "Give a short, kind reply and steer back to something light",
+                            "Hang up"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Never start or feed heavy topics like politics. Give a short, kind reply and steer back to something light."
+                    },
+                    {
+                        "type": "check",
+                        "question": "How many transfer attempts do you make before scheduling a callback?",
+                        "choices": [
+                            "1 attempt",
+                            "5 attempts, at least 20 seconds each",
+                            "10 attempts, 5 seconds each",
+                            "Keep trying until the consumer hangs up"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "5 attempts, waiting at least 20 seconds on each."
+                    }
+                ]
+            },
+            {
+                "id": "real_4",
+                "title": "Real Objections, Real Answers",
+                "est_minutes": 10,
+                "blocks": [
+                    {
+                        "type": "rebuttal",
+                        "objection": "Is this a scam? It came up as potential scam on my phone.",
+                        "response": "Oh, let me assure you (customer's name), I'm not asking for any credit card or banking information. I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "coach_note": "These objections are worded the way real consumers said them. The answer is always the script rebuttal, word for word, then go right back where you were. Stay calm and warm. A top agent also explained, in one or two sentences, that phone companies flag numbers they don't recognize and a computer dials for us. Then they went right back to the question. Don't turn it into a long speech."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "They call me all the time and I never receive nothing.",
+                        "response": "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                        "coach_note": "They're frustrated, not saying no. Stay upbeat, stress NEW and JUST, and go right back to your next question."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "Are they going to give me more? / How much am I getting?",
+                        "response": "That would be a great question for the agent once I get you there.",
+                        "coach_note": "NEVER say yes. In a real call, an agent answered \"That's what they're doing.\" Don't. That's a promise you can't make. Only the licensed specialist can review what they may qualify for."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "Is this insurance? The Part C?",
+                        "response": "That would be a great question for the agent once I get you there.",
+                        "coach_note": "In a poor call, an agent said \"No, it's not insurance, it's tied to your Medicare A and B.\" That's false and an automatic fail. The specialist reviews insurance plans. Don't explain it yourself. Use the line and keep moving."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I already did my insurance for next year, I got Humana.",
+                        "response": "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                        "coach_note": "Don't argue about their plan and don't say anything about it being good or bad. We're calling about the increases. Go right back to where you were."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I'm not changing my insurance. I'm not getting scammed out of the coverage I have.",
+                        "response": "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review.",
+                        "coach_note": "Use their name and slow down a little. Empathize first. They may have had the same coverage for years and they're scared to lose it. Never argue with them."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I do not give out information over the telephone.",
+                        "response": "Oh, let me assure you (customer's name), I'm not asking for any credit card or banking information. I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "coach_note": "Respect it. The key point is you're not asking for credit card or banking information. Then go right back to the question you were on."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "This is the 16th call I've had today and I'm sick of it.",
+                        "response": "Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+                        "coach_note": "Keep it SUPER brief and friendly. This is frustration, not a do-not-call request. It's only DNC if they ask you to stop calling or threaten you. Even swearing alone is an objection you rebut respectfully."
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Confused or hard-of-hearing consumers",
+                        "html": "<p>Some consumers can't hear well or get confused. One real consumer told the specialist, \"I'm real old and I can't understand unless you talk real slow.\"</p><ul><li><strong>Slow down</strong> and speak clearly.</li><li>Use <strong>short sentences</strong>. One question at a time.</li><li>Still get a <strong>clear answer</strong> to every question.</li><li>If they truly can't confirm the questions, <strong>don't force a transfer</strong>.</li></ul>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says, \"This is the 16th call today and I'm sick of it.\" Is that DNC?",
+                        "choices": [
+                            "Yes, code DNC right away",
+                            "No, it's an objection. Rebut with the SUPER brief line",
+                            "Yes, because they're upset",
+                            "No, hang up and code Not Interested"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "DNC is only a stop-calling request or a threat. Frustration is an objection."
+                    }
+                ]
+            },
+            {
+                "id": "real_5",
+                "title": "How Calls Go Wrong: Qualifying Mistakes",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Now the other side: poor calls. Most bad calls didn't fall apart because of a mean consumer. They fell apart because <strong>the agent skipped the basics.</strong></p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "Real mistake: transferring a DQ",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Hey (Customer Name), this is _______, I'm with America's Health on a recorded line. We were just giving you a quick call today about your food and utility card that you never received. That card, it IS exclusively for members who have Medicare Parts A and B. You DO still have your Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "No, I just got Medicaid."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The real agent said \"That's okay\" and kept going, all the way to a transfer. WRONG. Medicaid only means no Medicare A and B."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "What the agent should have said:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "There must have been a mistake. Thank you for your time, have a great day."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Code as DQ."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "A DQ transferred wastes everyone's time",
+                        "html": "<p>A consumer with <strong>no Medicare Parts A and B</strong> is a DQ. Read the DQ line and code DQ. \"That's okay\" is never the answer to \"no.\"</p><p>If they say \"I don't know,\" that's different: ask about the red, white and blue card.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "Skipped questions",
+                        "html": "<p>In the poor calls reviewed, <strong>every single one skipped at least one</strong> of these questions:</p><ul><li>The red, white and blue card double-confirm</li><li>Medicaid</li><li>Insurance through work or the VA</li></ul><p>Skip the work or VA question and you might transfer a DQ. Skip the card and you haven't double-confirmed Parts A and B. Ask all of them, every call.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "Callbacks get FULL reconfirmation",
+                        "html": "<p>In one poor callback, the agent only re-asked Parts A and B and the ZIP code, then transferred. <strong>Every callback needs full reconfirmation:</strong> Parts A and B, the card, Medicaid, state and ZIP, work or VA, and the okay.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "Asking without waiting",
+                        "html": "<p>Asking a question and moving on before they answer is the same as not asking. In a poor call, an agent asked about the red, white and blue card, the consumer said \"I don't know what it is,\" and the agent said \"That's fine\" and moved on. Stop. Wait. Get a real answer.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "You read the opening and the consumer says, \"No, I just got Medicaid.\" What do you do?",
+                        "choices": [
+                            "Say \"That's okay\" and keep going",
+                            "Ask about the red, white and blue card",
+                            "Read the DQ line and code DQ",
+                            "Transfer and let the specialist decide"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Medicaid only means no Medicare A and B. That's a DQ."
+                    },
+                    {
+                        "type": "check",
+                        "question": "You're making a scheduled callback to a consumer. What do you reconfirm?",
+                        "choices": [
+                            "Only Parts A and B",
+                            "Only the ZIP code",
+                            "Parts A and B and the ZIP code",
+                            "Everything: the full reconfirmation, then the okay"
+                        ],
+                        "answer_index": 3,
+                        "explanation": "Full reconfirmation on every callback."
+                    }
+                ]
+            },
+            {
+                "id": "real_6",
+                "title": "How Calls Go Wrong: Saying Things That Aren't True",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Going off script is where compliance breaks the most. Every line below came from a real poor call. <strong>Every one is an automatic fail.</strong></p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "Automatic fails from real calls",
+                        "html": "<ul><li><strong>\"It's not a sales call.\"</strong> Automatic fail. You're connecting them to a licensed specialist who reviews plans.</li><li><strong>\"No sir, it's not insurance, it's tied to your Medicare A and B.\"</strong> Automatic fail. False.</li><li><strong>\"This is from Medicare A and B... so it's totally free.\"</strong> Automatic fail. Claims to come from Medicare and promises something free.</li><li><strong>\"It's like more money on your card at no cost... from Medicare for their own members.\"</strong> Automatic fail. Promises money and claims a government connection.</li><li><strong>\"Your file came back under Medicare...\"</strong> Automatic fail. Sounds like you work for Medicare.</li><li><strong>Wrong company name</strong> (\"American Health,\" \"Americans Health\") or <strong>no recorded-line disclosure</strong>. Automatic fail. It's America's Health on a recorded line, every time.</li></ul>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "What to say instead",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "Is this insurance? The Part C?"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "That would be a great question for the agent once I get you there."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Then go right back where you were."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "The consequence",
+                        "html": "<p>In one poor call, the agent told the consumer it wasn't insurance and was tied to their Medicare. When the specialist started talking about plans, the consumer said: <strong>\"I thought this was some kind of government spend card.\"</strong> Then they bailed.</p><p>Misleading transfers <strong>waste the specialist's time</strong>, lose the consumer's trust, and are <strong>compliance violations</strong>.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Your two best friends",
+                        "html": "<p><strong>\"May\" and \"maybe.\"</strong> The consumer <em>may</em> be entitled to additional benefits. Never \"will,\" never \"free money,\" never a dollar amount, never \"from Medicare.\"</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which line is an automatic fail?",
+                        "choices": [
+                            "\"It DOES look like you may be ENTITLED to some additional food benefits\"",
+                            "\"It's not a sales call.\"",
+                            "\"That would be a great question for the agent once I get you there.\"",
+                            "\"I'm with America's Health on a recorded line\""
+                        ],
+                        "answer_index": 1,
+                        "explanation": "\"It's not a sales call\" is a false statement and an automatic fail."
+                    },
+                    {
+                        "type": "check",
+                        "question": "An agent opens with \"This is Alex with Americans Health, calling about your grocery card.\" What's wrong?",
+                        "choices": [
+                            "Nothing, that's close enough",
+                            "Wrong company name and no recorded-line disclosure",
+                            "They should have skipped the name",
+                            "They should have said it's from Medicare"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "It's America's Health, on a recorded line, every time."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Why did the consumer bail after saying \"I thought this was some kind of government spend card\"?",
+                        "choices": [
+                            "The specialist was rude",
+                            "The fronter misled them about what the call was",
+                            "The ZIP code was wrong",
+                            "The ring time was too short"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Misleading the consumer set up a transfer that fell apart and broke compliance."
+                    }
+                ]
+            },
+            {
+                "id": "real_7",
+                "title": "How Calls Go Wrong: Losing Control",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Some poor calls had the right questions but still fell apart. The agent lost control of the conversation. Here's what that looked like in real calls:</p><ul><li><strong>Arguing.</strong> \"No ma'am, you misunderstood, that's not true.\"</li><li><strong>Talking over them.</strong> The consumer was saying \"Hey, hey, hey, let me speak\" and the agent kept going.</li><li><strong>Dead air.</strong> \"Please hold... just one moment... please hold... one moment\" over and over.</li><li><strong>Rambling.</strong> Long explanations nobody asked for, instead of the next script line.</li></ul>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "Real moment: arguing vs. the fix",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "If you get one thing, then you're subject to get something else taken away from you."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The real agent said: \"No, you misunderstood, because that's not true.\" The consumer got more worried."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The fix: empathize, use the script line, keep moving."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, and do you receive Medicaid along with your Medicare plan?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "When they say \"let me speak\"",
+                        "html": "<p>Stop. Let them talk. Listen for the real objection, then use the rebuttal that fits it. A consumer who feels steamrolled hangs up or refuses the transfer.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "The three-step fix",
+                        "html": "<ol><li><strong>Empathize.</strong> \"Oh no, I understand.\"</li><li><strong>Use the script line.</strong> The rebuttal that fits, word for word.</li><li><strong>Keep moving.</strong> Go right back where you were. Don't stop or pause.</li></ol>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "A worried consumer says their benefits might get taken away. What's the best response?",
+                        "choices": [
+                            "\"No ma'am, you misunderstood, that's not true.\"",
+                            "Explain Medicare Advantage in detail",
+                            "Empathize, use the \"changing your insurance is ONLY something you can do\" rebuttal, and keep moving",
+                            "Put them on hold"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Never argue. Empathize, use the script line, keep moving."
+                    },
+                    {
+                        "type": "check",
+                        "question": "The consumer says \"Hey, hey, let me speak.\" What do you do?",
+                        "choices": [
+                            "Talk louder so they hear the rest",
+                            "Stop and let them talk, then rebut what they say",
+                            "Transfer right away",
+                            "Say \"please hold, one moment\""
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Stop talking, listen, then use the rebuttal that fits."
+                    }
+                ]
+            },
+            {
+                "id": "real_8",
+                "title": "The Short Rebuttal: Acknowledge, Bridge, Next Question",
+                "est_minutes": 9,
+                "blocks": [
+                    {
+                        "type": "script",
+                        "title": "Already have it (about 1 in 6 consumers say this)",
+                        "lines": [
+                            {
+                                "speaker": "note",
+                                "text": "The biggest pattern in top-agent calls: no speeches. One short line to acknowledge, a bridge back to why you called, then IMMEDIATELY the next qualifying question."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Below are the top objections in real calls, with what the Pace Model and the Compliance Model actually said. Learn the official rebuttal first. These show how short it can be."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "I have an Advantage plan, and it already gives me that card."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Yes ma'am. They're going to see if there may be an increase here for you. Do you have Medicaid as well?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, perfect. And you still have your Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Official rebuttal (\"I've already got it\"): Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "I'm busy (about 1 in 12)",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "I'm in the grocery store, so I'll be running."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "It's real brief, hon. Do you still have your red, white and blue card?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "No, you're fine. This will only take a minute. Do you receive Medicaid along with your Medicare plan?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Official rebuttal (\"I'm busy / Call me back\"): Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "I don't want to change (about 1 in 12)",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "Is this to change my Medicare plan?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "No one can change your plan but you, hon. These are additional food benefits since food prices are up. They're going to see if there may be an increase for you. Do you have Medicaid as well?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Well, changing your insurance is only something you can do. I don't even have the power to do that. You do still have your Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Official rebuttal (\"I don't want to change\"): Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "What benefits? (about 1 in 13)",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "Well, I don't understand what you're talking about."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "They're going to do a review to see if there may be an increase with your food benefit. Do you still have your red, white and blue card?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "I'm calling about the food and utility card. It's exclusive for members with Medicare Parts A and B. You do still have your Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Official rebuttal (\"What new benefits / What is that card for?\"): So the healthy food card is there to help you with groceries on a monthly basis, and the Flex Card covers expenses such as dental, hearing, vision and utilities. There's also a Part B give back for Medicare, which helps cover some, if not ALL, of your Part B premium."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "Who are you? (about 1 in 14)",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "Who's speaking?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "[your name] with America's Health, on a recorded line. We're calling about the food and utilities card. Are you still receiving Medicare A and B?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "My name is [your name]. I'm calling on behalf of America's Health on a recorded line. You do still have your Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Official rebuttal (\"Who are you with?\"): Oh I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review. Both models repeat the recorded line. Say \"America's Health\" slowly and clearly."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "I never got a card (about 1 in 14)",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "No, I never received anything like that."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "No worries. Do you have Medicaid with your Medicare?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "I know. That's why I'm calling you. You do still have Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "This maps to your opening line: the card \"IS exclusively for members who have Medicare Parts A and B.\" Don't argue about the card. Agree and ask the next question."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "I don't think I qualify (about 1 in 15)",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "Yeah, I don't think I qualify for that."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "That's what you're getting a review for today. Do you still have your red, white and blue card?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Well, you do still have Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Official rebuttal (\"I'm not interested\" family): I understand, but MANY people are finding out RIGHT now, they ACTUALLY qualify for WAY more than they're receiving. Never tell them they DO qualify. The specialist decides."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "I have a different card (about 1 in 16)",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "Well, I have a Blue Cross card. I have the red, white and blue one too."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Yes ma'am, you're good. Do you have Medicaid as well?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, all right, perfect. And do you receive Medicaid along with your Medicare plan?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Script branch (\"I have ____ card\"): if they do NOT have the red, white and blue card, say: Okay, no problem, but you DO have your Medicare number, correct?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "I just did this and they said I don't qualify (about 1 in 20)",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "I was told I can't get it. I've already been through it."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Well, there may be new benefits in your area, so that's why you're getting a new review today. Do you have Medicaid as well?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Well, there have just been some new allowances and some new increases. That's why I'm calling you. You still have Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Official rebuttal (\"I just did this and they said I don't qualify\"): Oh, you probably spoke with one of our small competitors. The difference is WE work with over 25 different health insurance providers, so people ARE finding that with US, they qualify for WAY more benefits than they're receiving."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says, \"I already have a food card with my plan.\" What do top agents do?",
+                        "choices": [
+                            "Explain in detail how their plan's card works",
+                            "Tell them the new card will pay more",
+                            "Acknowledge in one line, bridge back to the reason for the call, then ask the next qualifying question",
+                            "Skip the rest of the questions and transfer"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Acknowledge, bridge, next question. No speeches, no promises, and every question still gets asked."
+                    }
+                ]
+            },
+            {
+                "id": "real_9",
+                "title": "Under a Minute to the Transfer",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>The Pace Model asks for the transfer at a <strong>median of 50 seconds</strong>. The Compliance Model takes a little longer (about 81 seconds) because every answer gets a clear pause. Both transfer about 99% of their calls.</p><p>Fast does NOT mean skipping. Every question is still asked, and every answer is still heard. The time comes from cutting everything else:</p><ul><li><strong>No dead air.</strong> The next line is ready before they finish answering.</li><li><strong>Short confirmations.</strong> \"Perfect.\" \"Okay.\" \"Yes ma'am.\" Then the next question.</li><li><strong>No over-explaining.</strong> Details are a great question for the agent.</li></ul>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "What a 50-second call sounds like",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Hey [name], this is [your name], I'm with America's Health on a recorded line. We were just giving you a quick call today about your food and utility card that you never received. That card, it IS exclusively for members who have Medicare Parts A and B. You DO still have your Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Yes."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, perfect, and JUST to double confirm, that IS the red, white and blue card, correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Uh huh."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, and do you receive Medicaid along with your Medicare plan?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "No."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, thanks so much for confirming that for me. So yeah, it DOES look like you may be ENTITLED to some additional food benefits since the food prices have gone up. If that's sent, I DO still have you out in [state], with the zip code [ZIP], correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "That's right."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, LAST question here, do you have insurance through your work or the VA?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "No."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, well that is EVERYTHING I need. So, a Medicare specialist is coming on the line now to review the additional food benefits for you. Give them JUST a few minutes to go over them with you, okay?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Stop talking. Wait for the yes."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Okay."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Alright, so you'll hear a little bit of ringing, that's just me connecting them in, and once they pick up they'll ask you for your name, okay?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "Where calls are lost",
+                        "html": "<p>In real calls, the most common hang-up moments were right around the transfer ask. Agents who <strong>announced</strong> the transfer without asking \"okay?\" lost people.</p><p>The okay was skipped or not waited for on <strong>about 19% of transfers</strong>.</p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "Announcing vs. asking",
+                        "lines": [
+                            {
+                                "speaker": "note",
+                                "text": "Weak: announcing and rushing past"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "A specialist is coming on the line now, you'll hear ringing."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The consumer never agreed. That's a compliance miss, and a hang-up waiting to happen."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Right: ask the okay, then WAIT"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Give them JUST a few minutes to go over them with you, okay?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Silence. Let them answer. The Pace Model's version of the same moment:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Then you're all set, hon. The Medicare specialist is going to let you know about the additional food benefits. Give them a few minutes to go over it with you. Okay?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "The only permission in the call",
+                        "html": "<p>You MUST ask the okay and you MUST wait for a verbal yes <strong>before you click transfer</strong>. This is the ONLY time you ask permission. Speed everywhere else, never here.</p><p>That yes is your permission to transfer. The \"okay?\" at the end of the ringing line (\"they'll ask you for your name, okay?\") is not another permission ask, and there is no second confirmation once the licensed agent connects.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Speed habits to copy",
+                        "html": "<ul><li>Have the next line ready while they answer.</li><li>Use \"Perfect.\" as your bridge, not a paragraph.</li><li>Money or detail questions: \"That would be a great question for the agent once I get you there.\"</li><li>Speed up the gaps, not your voice. Many consumers are hard of hearing.</li></ul>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "You finish the transfer ask: \"Give them JUST a few minutes to go over them with you, okay?\" What next?",
+                        "choices": [
+                            "Start the transfer right away to save time",
+                            "Stop talking and wait for a verbal yes",
+                            "Ask the weather question",
+                            "Repeat the work or VA question"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "The okay before the transfer is required and you must wait for it. Skipping or rushing it cost transfers on about 19% of calls."
+                    },
+                    {
+                        "type": "check",
+                        "question": "How do top agents get to the transfer in under a minute?",
+                        "choices": [
+                            "They skip the Medicaid question",
+                            "They talk faster than the consumer can follow",
+                            "No dead air, short confirmations like \"Perfect.\", and no over-explaining",
+                            "They transfer before confirming the ZIP"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Every question is still asked and answered. The time comes from cutting pauses and extra talk."
+                    }
+                ]
+            },
+            {
+                "id": "real_10",
+                "title": "The Two Objections That Lose the Most Calls",
+                "est_minutes": 9,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Most objections barely cost anything. Two are different:</p><ul><li><strong>Refusing the transfer:</strong> 28% of consumers hung up after it, and 53% of the rebuttals were weak or missing.</li><li><strong>\"I'm not interested\":</strong> 24% hung up, and 53% of the rebuttals were weak or missing.</li><li><strong>\"I'm busy\"</strong> is next: 15% hung up.</li></ul><p>Half of agents fumble these. A strong, calm rebuttal is where your transfers come from.</p>"
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "Refuses the transfer (\"I don't want to be transferred\")",
+                        "response": "Well, I understand, but you've worked your whole life for these Medicare benefits. Give the agent JUST a few minutes to review and compare your plan to make SURE you're not missing out on ANYTHING you may be entitled to.",
+                        "coach_note": "Do NOT click transfer. Read this, then ask again: \"Give them JUST a few minutes to go over them with you, okay?\" and WAIT for the yes. The Compliance Model adds: \"I'll stay on the line with you until they pick up. Okay?\""
+                    },
+                    {
+                        "type": "script",
+                        "title": "What top agents actually say at the transfer",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "Don't ever take too long. I'm hanging up."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "I'll stay on the line with you until they pick up. Okay? I won't leave you hanging."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "If they hang up again, I'm not calling back."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model, while it rings:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "I understand, ma'am. We let it ring about a minute, so keep holding for me."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Go ahead and make the d*** transfer. I'm probably gonna hang up anyway."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Swearing alone is an objection, not a DNC. The Compliance Model stayed calm:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "I'll stay on the line with you until they pick up. Okay?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "If they say \"stop calling me\" or threaten you, read the DNC disclaimer and end the call: No problem, I'll add you to our internal do not call list immediately and you won't receive any further calls from our company. We do apologize for any inconvenience, have a great day."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I'm not interested",
+                        "response": "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving.",
+                        "coach_note": "Then go right back to the question you were on. Don't pause for a reaction."
+                    },
+                    {
+                        "type": "script",
+                        "title": "\"Not interested\": what top agents actually say",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "I'm not interested."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model bridges back to the card and re-asks the question:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Well, [name], that card, it is exclusive for members with Medicare Parts A and B. You do still have your Medicare Parts A and B, correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "No, thank you."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model re-introduces and asks. (Rewritten with \"may\" for compliance.)"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Well ma'am, it's about your food and groceries benefit. I'm [your name] with America's Health on a recorded line, and we're calling to see if there may be an increase with your food benefit. You still have Medicare A and B, correct?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I'm busy / Call me back",
+                        "response": "Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+                        "coach_note": "The Compliance Model: \"No, you're fine. This will only take a minute.\" Then straight into the next question. Don't offer a callback before you rebut."
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "What weak rebuttals looked like",
+                        "html": "<ul><li><strong>Hesitating.</strong> \"Um... well... okay...\" The consumer hears doubt and hangs up.</li><li><strong>Arguing.</strong> \"No, that's not true.\" Nobody takes a transfer from someone they're fighting with.</li><li><strong>Repeating the same line.</strong> Saying the food and utility card line again instead of a new rebuttal and the next question.</li><li><strong>No rebuttal at all.</strong> Taking the first no. That's call avoidance.</li></ul>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "At the transfer ask, the consumer says, \"No, I don't want to be transferred.\" What do you do?",
+                        "choices": [
+                            "Code Not Interested and move on",
+                            "Say \"A specialist is coming on now\" and transfer anyway",
+                            "Read an EXTRA NOT INTERESTED rebuttal, then go back to \"Give them JUST a few minutes to go over them with you, okay?\" and wait for the yes",
+                            "Read the DNC disclaimer"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Refusing the transfer loses 28% of calls. Read an EXTRA NOT INTERESTED rebuttal, re-ask, and wait for the yes before you click transfer."
+                    },
+                    {
+                        "type": "check",
+                        "question": "The consumer says, \"Why the hell are you calling me? Fine, transfer me, I'll probably hang up.\" What is this?",
+                        "choices": [
+                            "A DNC: read the disclaimer and end the call",
+                            "An objection: stay respectful, rebut, keep going",
+                            "A DQ",
+                            "Rude, so hang up"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Swearing alone is an objection. DNC is only when they ask you to stop calling or threaten you."
+                    }
+                ]
+            },
+            {
+                "id": "real_11",
+                "title": "What Real Calls Taught Us",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>We analyzed real Medicare fronter calls. Here are the objections you will hear most, as a share of conversations:</p><ol><li>\"I already have it\": 16% (about 1 in 6)</li><li>\"I'm busy / call me back\": 8%</li><li>\"I don't want to change my plan\": 8%</li><li>\"What benefits? What is this?\": 8%</li><li>\"Who are you with?\": 7%</li><li>\"I never got a card\": 7%</li><li>\"I don't think I qualify\": 7%</li><li>\"I have a different card\": 6%</li><li>\"I just did this and they said I don't qualify\": 5%</li><li>Refusing the transfer: 4%</li></ol><p>About 12% more were one-off questions (wrong state on file, confused by the VA question, can't hear you).</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Which objections lose calls?</strong> Share of consumers who hung up after each one:</p><ul><li>Refusing the transfer: 28%</li><li>\"I'm not interested\": 24%</li><li>\"I'm busy\": 15%</li><li>\"You're trying to sell me something\": 11%</li><li>\"I just did this and they said I have the best\": 8%</li><li>\"This is a scam\": 8%</li></ul><p>The most common ones (\"I already have it\", \"what benefits\") almost never lose the call if you rebut and keep moving.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "One in three consumers is confused or hard of hearing",
+                        "html": "<p>A third of the consumers in these calls were confused or struggled to hear. Slow down. Use short, clear questions. If they didn't understand, say it again in plain words (\"Is that through a job or retirement?\") and wait for a clear answer.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "Steps agents skip",
+                        "html": "<ul><li>The <strong>Medicaid</strong> question was skipped on <strong>10%</strong> of transfers.</li><li>The <strong>red, white and blue card</strong> double-confirm was skipped on <strong>7%</strong>.</li><li>The <strong>okay before the transfer</strong> was skipped or not waited for on about <strong>19%</strong>.</li></ul><p>Every step, every call.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "The top compliance problems on the floor",
+                        "html": "<ol><li><strong>Saying the benefit comes from Medicare itself.</strong> The review is with a licensed specialist. Don't tie the benefit to Medicare.</li><li><strong>Not saying \"America's Health\" clearly.</strong> \"American Health\" is wrong. Say \"America's Health\" slowly and clearly, every time.</li><li><strong>Promising money or stating increases as fact.</strong> \"May\" and \"maybe\" are your best friends. Never say yes to \"will I get more?\"</li><li><strong>Implying a state or government program.</strong> Never mention a state program, the government or the county.</li><li><strong>Skipping the recorded-line disclosure.</strong> \"On a recorded line\" goes in your opening every time.</li></ol>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which objection had the highest hang-up rate in real calls?",
+                        "choices": [
+                            "\"I already have it\"",
+                            "\"Who are you with?\"",
+                            "Refusing the transfer",
+                            "\"What benefits?\""
+                        ],
+                        "answer_index": 2,
+                        "explanation": "About 28% of consumers who refused the transfer hung up. \"I already have it\" is the most common, but rarely loses the call."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which opening is compliant?",
+                        "choices": [
+                            "\"This is [your name] from American Health. We're calling about your Medicare increase.\"",
+                            "\"This is [your name], I'm with America's Health on a recorded line.\"",
+                            "\"This is [your name] with the state benefits office.\"",
+                            "\"This is [your name] with America's Health. You qualify for an increase.\""
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Company name said correctly, recorded-line disclosure, no promises, no government affiliation."
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "Every one of these fails a simulator call",
+                        "html": "<p>Skipping a step, saying the benefit is from Medicare, saying the company name wrong, promising money or an increase, implying a government or state program, or leaving out the recorded line: <strong>any one of these fails a simulator call</strong>, no matter how fast you got the transfer.</p>"
+                    }
+                ]
+            }
+        ],
+        "quiz": {
+            "pass_pct": 80,
+            "questions": [
+                {
+                    "id": "real_calls_q1",
+                    "question": "A consumer answers the opening with \"No, I just got Medicaid.\" The agent says \"That's okay\" and keeps going. What's the mistake?",
+                    "choices": [
+                        "Nothing, Medicaid counts",
+                        "They should have asked about the card first",
+                        "Medicaid only means no Medicare A and B. They should read the DQ line and code DQ",
+                        "They should have asked for the Medicaid number"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "No Medicare Parts A and B is a DQ. Read the DQ line and code DQ.",
+                    "tags": [
+                        "real_calls",
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "real_calls_q2",
+                    "question": "A consumer asks, \"Are they going to give me more?\" Which answer is correct?",
+                    "choices": [
+                        "\"That's what they're doing.\"",
+                        "\"That would be a great question for the agent once I get you there.\"",
+                        "\"Yes, the increase is based on your area.\"",
+                        "\"It's free money on your card.\""
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Never say yes. Use the great-question-for-the-agent line.",
+                    "tags": [
+                        "real_calls",
+                        "rebuttal",
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "real_calls_q3",
+                    "question": "A consumer asks, \"Is this insurance? The Part C?\" An agent says, \"No, it's not insurance, it's tied to your Medicare A and B.\" What's wrong?",
+                    "choices": [
+                        "Nothing, that's accurate",
+                        "It's false and an automatic fail. They should use the great-question-for-the-agent line",
+                        "They should have said it's from the government",
+                        "They should have hung up"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "That statement is false. Use the script line and keep moving.",
+                    "tags": [
+                        "real_calls",
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "real_calls_q4",
+                    "question": "Which opening line is compliant?",
+                    "choices": [
+                        "\"This is from Medicare A and B, so it's totally free.\"",
+                        "\"I'm with American Health about your card.\"",
+                        "\"I'm with America's Health on a recorded line\"",
+                        "\"Your file came back under Medicare.\""
+                    ],
+                    "answer_index": 2,
+                    "explanation": "America's Health, on a recorded line. The others are automatic fails.",
+                    "tags": [
+                        "real_calls",
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "real_calls_q5",
+                    "question": "A consumer says their phone showed \"potential scam.\" What do you say?",
+                    "choices": [
+                        "Oh, let me assure you (customer's name), I'm not asking for any credit card or banking information. I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                        "\"It's not a sales call.\"",
+                        "\"You misunderstood, we're not a scam.\""
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Use the scam rebuttal word for word, then go right back where you were.",
+                    "tags": [
+                        "real_calls",
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "real_calls_q6",
+                    "question": "In a poor callback, the agent only re-asked Parts A and B and the ZIP code, then transferred. What should they have done?",
+                    "choices": [
+                        "Only confirm the ZIP code",
+                        "Skip straight to the transfer since it was already qualified",
+                        "A full reconfirmation of every question, then the okay",
+                        "Ask the consumer to call the specialist directly"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Every callback needs full reconfirmation.",
+                    "tags": [
+                        "real_calls",
+                        "callbacks"
+                    ]
+                },
+                {
+                    "id": "real_calls_q7",
+                    "question": "What kind of small talk should you make during ring time?",
+                    "choices": [
+                        "Politics and the news",
+                        "Keep it light: the weather, the heat, how their day is going",
+                        "Their health problems in detail",
+                        "Nothing; stay silent the whole time"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Keep small talk light and short, like the weather or how their day is going. Avoid heavy topics like politics.",
+                    "tags": [
+                        "real_calls",
+                        "transfers"
+                    ]
+                },
+                {
+                    "id": "real_calls_q8",
+                    "question": "The consumer says, \"I'm not getting scammed out of the coverage I have.\" Which is the best response?",
+                    "choices": [
+                        "\"No ma'am, you misunderstood, that's not true.\"",
+                        "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review.",
+                        "\"We don't need any information at all from you.\"",
+                        "\"Your plan will definitely be better.\""
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Empathize and use the don't-want-to-change rebuttal. Never argue.",
+                    "tags": [
+                        "real_calls",
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "real_calls_q9",
+                    "question": "A consumer says, \"This is the 16th call I've had today and I'm sick of it.\" What do you do?",
+                    "choices": [
+                        "Read the DNC disclaimer and code DNC",
+                        "Hang up and code Not Interested",
+                        "Rebut with the SUPER brief line and go right back where you were",
+                        "Tell them it's not a sales call"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Frustration is an objection. DNC is only a stop-calling request or a threat.",
+                    "tags": [
+                        "real_calls",
+                        "rebuttal",
+                        "dnc"
+                    ]
+                },
+                {
+                    "id": "real_calls_q10",
+                    "question": "Which of these did the top agent do in the perfect call?",
+                    "choices": [
+                        "Answered \"perfect\" before the consumer replied",
+                        "Asked \"okay?\" at the transfer ask and waited for a yes",
+                        "Skipped the Medicaid question to save time",
+                        "Kept talking after the specialist picked up"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "The okay at the transfer ask is required, and you wait for it.",
+                    "tags": [
+                        "real_calls",
+                        "script"
+                    ]
+                },
+                {
+                    "id": "real_calls_q11",
+                    "question": "A consumer keeps saying \"Hey, hey, let me speak\" while the agent talks. What's the fix?",
+                    "choices": [
+                        "Talk faster to finish the pitch",
+                        "Stop, listen, then use the rebuttal that fits and keep moving",
+                        "Put them on hold",
+                        "Transfer immediately"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Never talk over a consumer. Empathize, use the script line, keep moving.",
+                    "tags": [
+                        "real_calls",
+                        "conduct"
+                    ]
+                },
+                {
+                    "id": "real_calls_q12",
+                    "question": "A consumer says they're hard of hearing and can't understand fast talk. What do you do?",
+                    "choices": [
+                        "Talk louder and faster",
+                        "Slow down, use short sentences, and still get a clear answer to every question",
+                        "Answer the questions for them",
+                        "Transfer them even if they can't confirm anything"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Slow down and keep it simple, but don't force a transfer on someone who can't confirm.",
+                    "tags": [
+                        "real_calls",
+                        "conduct"
+                    ]
+                },
+                {
+                    "id": "real_calls_q13",
+                    "question": "What is the short-rebuttal pattern top agents use?",
+                    "choices": [
+                        "Explain the benefits in detail, then ask for the transfer",
+                        "Acknowledge in one line, bridge back to the reason for the call, then ask the next qualifying question",
+                        "Repeat the opening until they agree",
+                        "Skip to the transfer ask"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "No speeches. Acknowledge, bridge, next question.",
+                    "tags": [
+                        "real_calls",
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "real_calls_q14",
+                    "question": "The Pace Model asks for the transfer at a median of 50 seconds. How?",
+                    "choices": [
+                        "By skipping the Medicaid question",
+                        "By not waiting for the okay",
+                        "No dead air, short confirmations, no over-explaining, and every question still asked",
+                        "By answering money questions quickly"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Speed comes from cutting pauses and extra talk, never from skipping steps.",
+                    "tags": [
+                        "real_calls",
+                        "transfers"
+                    ]
+                },
+                {
+                    "id": "real_calls_q16",
+                    "question": "Which two objections lost the most calls?",
+                    "choices": [
+                        "\"I already have it\" and \"Who are you with?\"",
+                        "Refusing the transfer and \"I'm not interested\"",
+                        "\"What benefits?\" and \"I never got a card\"",
+                        "\"I have a different card\" and \"I'm busy\""
+                    ],
+                    "answer_index": 1,
+                    "explanation": "28% hung up after refusing the transfer and 24% after \"I'm not interested\". Half the rebuttals were weak.",
+                    "tags": [
+                        "real_calls",
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "real_calls_q17",
+                    "question": "A consumer at the transfer says, \"If this takes too long I'm hanging up.\" Which line is a Compliance Model habit?",
+                    "choices": [
+                        "\"You qualify, so just hold.\"",
+                        "\"I'll stay on the line with you until they pick up. Okay?\"",
+                        "\"Medicare is sending the specialist now.\"",
+                        "\"Fine, I'll call you back.\""
+                    ],
+                    "answer_index": 1,
+                    "explanation": "It reassures without promising anything, then asks okay.",
+                    "tags": [
+                        "real_calls",
+                        "transfers"
+                    ]
+                },
+                {
+                    "id": "real_calls_q18",
+                    "question": "What was the most common compliance problem in real calls?",
+                    "choices": [
+                        "Saying the benefit comes from Medicare itself",
+                        "Talking about the weather during the transfer",
+                        "Asking the Medicaid question",
+                        "Using the consumer's name"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "The most common problem was tying the benefit to Medicare. Next was saying the company name wrong (\"American Health\").",
+                    "tags": [
+                        "real_calls",
+                        "compliance"
+                    ]
+                }
+            ]
+        }
+    }

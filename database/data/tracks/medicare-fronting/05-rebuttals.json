@@ -1,0 +1,514 @@
+    {
+        "id": "rebuttals",
+        "title": "Objections & Rebuttals",
+        "summary": "Every rebuttal word for word, how to handle stacked objections, and the line between rude and DNC.",
+        "est_minutes": 40,
+        "badge": {
+            "id": "badge_rebuttals",
+            "name": "Objection Crusher",
+            "icon": "🛡️"
+        },
+        "lessons": [
+            {
+                "id": "reb_1",
+                "title": "The Golden Rule",
+                "est_minutes": 6,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Objections are normal. Almost every consumer pushes back at least once. An objection is not a no; it is a question or a worry. Your rebuttals answer it.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "The golden rule",
+                        "html": "<p><strong>GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE.</strong></p><p>Read the rebuttal, then go straight into the script line you were on. Don't wait for them to say \"okay.\" Don't leave silence. Silence is where hang-ups happen.</p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "Example: rebut and go right back",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, perfect, and JUST to double confirm, that IS the red, white and blue card, correct?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Look, I'm busy."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, perfect, and JUST to double confirm, that IS the red, white and blue card, correct?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Multiple objections.</strong> A consumer may object two, three or four times. <strong>Rebut each separate objection.</strong> Failing to rebut, or failing to rebut separate objections, is call avoidance. Every time, pick the rebuttal that fits what they just said, then go right back.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>Heads up: the practice consumers later in this course are <strong>built from real calls</strong>. They will be much harder than these examples. They will interrupt, stack objections, and test your patience.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "After you read a rebuttal, what do you do?",
+                        "choices": [
+                            "Start the script over from the opening",
+                            "Ask if they have any other questions",
+                            "Go right back where you were without stopping or pausing",
+                            "Wait silently for the consumer to agree"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE."
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer objects, you rebut, and they object again with something new. What do you do?",
+                        "choices": [
+                            "Repeat the same rebuttal louder",
+                            "Transfer them without finishing",
+                            "Code them Not Interested after one rebuttal",
+                            "Rebut the new objection too, then go back where you were"
+                        ],
+                        "answer_index": 3,
+                        "explanation": "Rebut each separate objection. Not doing so is call avoidance."
+                    }
+                ]
+            },
+            {
+                "id": "reb_2",
+                "title": "Brush-Offs",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Brush-offs are the fast, automatic \"no\" people give every caller. Most of the time they haven't even thought about it yet.</p>"
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I'm not interested",
+                        "response": "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving.",
+                        "coach_note": "Most people say this before they know what the call is about. Stress MANY, RIGHT, ACTUALLY and WAY. Then go right back to your line."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I'm busy / Call me back",
+                        "response": "Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+                        "coach_note": "You're telling them the truth: there are only a few quick questions. Say it fast and upbeat so it feels brief, then jump right back in."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I'm not interested (again, after your first rebuttal)",
+                        "response": "Well, I understand, but you've worked your whole life for these Medicare benefits. Give the agent JUST a few minutes to review and compare your plan to make SURE you're not missing out on ANYTHING you may be entitled to.",
+                        "coach_note": "This one is personal and respectful. They earned these benefits. Slow down slightly on \"worked your whole life,\" then hit SURE and ANYTHING. Note it keeps the word \"may.\""
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I'm still not interested",
+                        "response": "I understand, but these new benefits JUST became available, so your current plan may NOT include them. Now, we DO have on file that you may qualify for additional benefits or a new allowance.",
+                        "coach_note": "Use this when they push back again. It explains why their plan may not already have these benefits. Keep both \"may\"s; they keep you compliant."
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says \"Call me back later, I'm busy.\" Which rebuttal fits?",
+                        "choices": [
+                            "Oh, I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                            "Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+                            "That would be a great question for the agent once I get you there.",
+                            "Oh, so either you or a family member went online and expressed interest in a free review. We're just here to facilitate that for you."
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Busy / call me back gets the SUPER brief rebuttal."
+                    }
+                ]
+            },
+            {
+                "id": "reb_3",
+                "title": "Trust & Scam Fears",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Older consumers get a lot of scam calls. Being careful is smart, and you should respect it. These rebuttals tell them who you are and make clear you are not asking for financial info.</p>"
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "Who are you with?",
+                        "response": "Oh, I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "coach_note": "Answer right away and confidently. Hesitating sounds shady. Then go right back where you were."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "This is a scam / How do I know this isn't a scam",
+                        "response": "Oh, let me assure you (customer's name), I'm not asking for any credit card or banking information. I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "coach_note": "Use their name. Calm, warm and steady. The key point is you're not asking for credit card or banking information."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "How did you get my information?",
+                        "response": "Oh, so either you or a family member went online and expressed interest in a free review. We're just here to facilitate that for you.",
+                        "coach_note": "Keep it simple and friendly. Don't get defensive or over-explain. Say it and move on."
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "You never collect their numbers",
+                        "html": "<p><strong>You NEVER ask the consumer to read or give you their Medicare number or Social Security number.</strong> The script only asks whether they <strong>know</strong> one of them. The licensed agent handles the actual numbers.</p><p>If they say \"I'm not giving my number out,\" remember the script line already tells them: \"You don't need to give it to me, but the licensed agent may need it.\"</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "Never add to it",
+                        "html": "<p>Don't add \"I'm from Medicare\" or \"this is a government program\" to calm someone down. That is a lie and an automatic fail. The rebuttal as written is enough.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says \"How do I know you're not a scammer?\" Which rebuttal fits?",
+                        "choices": [
+                            "Oh, you probably spoke with one of our small competitors. But I DO see here that you may be ENTITLED to some additional food benefits since the food prices HAVE gone up.",
+                            "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving.",
+                            "Oh, let me assure you (customer's name), I'm not asking for any credit card or banking information. I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                            "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available."
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Scam fears get the rebuttal that says you're not asking for credit card or banking information."
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer asks \"Where did you even get my number?\" Which rebuttal fits?",
+                        "choices": [
+                            "Oh, I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                            "Oh, you probably spoke with one of our small competitors. The difference is WE work with over 25 different health insurance providers, so people ARE finding that with US, they qualify for WAY more benefits than they're receiving.",
+                            "Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+                            "Oh, so either you or a family member went online and expressed interest in a free review. We're just here to facilitate that for you."
+                        ],
+                        "answer_index": 3,
+                        "explanation": "How did you get my information: \"Oh so either you or a family member went online...\""
+                    }
+                ]
+            },
+            {
+                "id": "reb_4",
+                "title": "Already Covered",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Lots of consumers think they already have what they need or already went through this. These rebuttals explain there may be something new.</p>"
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I've already got it",
+                        "response": "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                        "coach_note": "Agree first (\"Oh no, I understand\") so they don't feel argued with. Then stress NEW and JUST."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I don't want to change / Do I have to change?",
+                        "response": "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review.",
+                        "coach_note": "This removes the fear. It's true: only the consumer can change their insurance. Use their name and sound reassuring."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I just did this and they said I have the best / everything",
+                        "response": "Oh, you probably spoke with one of our small competitors. But I DO see here that you may be ENTITLED to some additional food benefits since the food prices HAVE gone up.",
+                        "coach_note": "Keep it light, not insulting. Notice it says \"may be ENTITLED.\" Never drop the \"may.\""
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "I just did this and they said I don't qualify",
+                        "response": "Oh, you probably spoke with one of our small competitors. The difference is WE work with over 25 different health insurance providers, so people ARE finding that with US, they qualify for WAY more benefits than they're receiving.",
+                        "coach_note": "The difference is the number of providers. Stress WE, ARE and US."
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says \"I don't want to switch my plan.\" Which rebuttal fits?",
+                        "choices": [
+                            "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review.",
+                            "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving.",
+                            "Oh, let me assure you (customer's name), I'm not asking for any credit card or banking information. I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                            "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available."
+                        ],
+                        "answer_index": 0,
+                        "explanation": "Fear of changing gets \"changing your insurance is ONLY something you can do.\""
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says \"Somebody already called and said I don't qualify.\" Which rebuttal fits?",
+                        "choices": [
+                            "Oh, you probably spoke with one of our small competitors. The difference is WE work with over 25 different health insurance providers, so people ARE finding that with US, they qualify for WAY more benefits than they're receiving.",
+                            "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                            "Oh, you probably spoke with one of our small competitors. But I DO see here that you may be ENTITLED to some additional food benefits since the food prices HAVE gone up.",
+                            "I understand, but these new benefits JUST became available, so your current plan may NOT include them. Now, we DO have on file that you may qualify for additional benefits or a new allowance."
+                        ],
+                        "answer_index": 0,
+                        "explanation": "\"They said I don't qualify\" gets the 25 providers rebuttal."
+                    }
+                ]
+            },
+            {
+                "id": "reb_5",
+                "title": "Questions You Can't Answer & DNC",
+                "est_minutes": 9,
+                "blocks": [
+                    {
+                        "type": "rebuttal",
+                        "objection": "What new benefits / What is that card for?",
+                        "response": "So the healthy food card is there to help you with groceries on a monthly basis, and the Flex Card covers expenses such as dental, hearing, vision and utilities. There's also a Part B give back for Medicare, which helps cover some, if not ALL, of your Part B premium.",
+                        "coach_note": "Say it as written and go right back. Don't add dollar amounts or promises."
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "Any questions you don't know the answer to / How much do I qualify for, etc?",
+                        "response": "That would be a great question for the agent once I get you there.",
+                        "coach_note": "Never guess. This one line handles any question about amounts, plans or details. Then go right back."
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Rude vs DNC. This is critical.</strong></p><ul><li><strong>Rude consumer, even one who swears:</strong> grumpy, sarcastic, impatient, \"why the f*** are you calling me?\" That is an <strong>objection</strong>, not a DNC. Stay respectful (\"I understand, we're just trying to help\"), rebut, and keep going. Bailing on this call is call avoidance.</li><li><strong>DNC request:</strong> they tell you to stop calling, never call again, or take them off your list, or they threaten you (\"never call me again or I'm gonna sue your ass\"). Read the DNC disclaimer verbatim, end the call, and code DNC.</li></ul><p><strong>Swearing alone = rebut. Stop calling or a threat = DNC. NEVER rebut past a DNC request.</strong></p>"
+                    },
+                    {
+                        "type": "rebuttal",
+                        "objection": "Stop calling me. / Never call me again. / Take me off your list. / (threats: \"I'll sue you\", \"I'm reporting you\")",
+                        "response": "No problem, I'll add you to our internal do not call list immediately and you won't receive any further calls from our company. We do apologize for any inconvenience, have a great day.",
+                        "coach_note": "Read it exactly, then END CALL AND CODE AS DNC. No rebuttal, no arguing, no \"are you sure?\""
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "Stay calm no matter what",
+                        "html": "<p>Some consumers will swear or say mean things. <strong>Never swear back, never raise your voice, never get sarcastic.</strong> Profanity or rude behavior from you is improper call handling. Take a breath, stay respectful, and rebut. Plenty of consumers who start out cursing end up taking the transfer. Only read the DNC disclaimer when they tell you to stop calling or threaten you.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says, \"Ugh, you people call all the time. What is this?\" Rude or DNC?",
+                        "choices": [
+                            "Hang up without a disposition",
+                            "Rude but not a DNC request: rebut and continue",
+                            "DNC: read the disclaimer and end the call",
+                            "DQ: read the mistake line"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Complaining isn't asking not to be called. Rebut and go right back."
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says, \"Don't ever call this number again.\" What do you do?",
+                        "choices": [
+                            "Code as Not Interested",
+                            "Read the DNC disclaimer verbatim, end the call and code DNC",
+                            "Use the busy rebuttal",
+                            "Use the not interested rebuttal once, then DNC if they repeat it"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "That's a DNC request. Never rebut past it."
+                    }
+                ]
+            }
+        ],
+        "quiz": {
+            "pass_pct": 80,
+            "questions": [
+                {
+                    "id": "rebuttals_q1",
+                    "question": "What is the golden rule for every rebuttal?",
+                    "choices": [
+                        "Go right back where you were, don't stop or pause",
+                        "Always start the script over",
+                        "Wait for the consumer to agree before continuing",
+                        "Only rebut once per call"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Every rebuttal ends the same way: GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q2",
+                    "question": "Which is the exact \"I'm not interested\" rebuttal?",
+                    "choices": [
+                        "I understand, but EVERYONE is finding out RIGHT now, they ACTUALLY get WAY more than they're receiving",
+                        "I understand, but you really should listen because you're missing out on money",
+                        "I understand, but MANY people are finding out RIGHT now, they are GUARANTEED WAY more than they're receiving",
+                        "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving."
+                    ],
+                    "answer_index": 3,
+                    "explanation": "It must be verbatim. Changing words can break compliance.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q3",
+                    "question": "A consumer says \"Who are you with?\" Which rebuttal fits?",
+                    "choices": [
+                        "That would be a great question for the agent once I get you there.",
+                        "Oh, I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "Oh, you probably spoke with one of our small competitors. But I DO see here that you may be ENTITLED to some additional food benefits since the food prices HAVE gone up.",
+                        "Oh, so either you or a family member went online and expressed interest in a free review. We're just here to facilitate that for you."
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Answer with who you're with and the 25 providers.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q4",
+                    "question": "A consumer asks \"How much money will I get?\" Which rebuttal fits?",
+                    "choices": [
+                        "So the healthy food card is there to help you with groceries on a monthly basis, and the Flex Card covers expenses such as dental, hearing, vision and utilities. There's also a Part B give back for Medicare, which helps cover some, if not ALL, of your Part B premium.",
+                        "I understand, but these new benefits JUST became available, so your current plan may NOT include them. Now, we DO have on file that you may qualify for additional benefits or a new allowance.",
+                        "That would be a great question for the agent once I get you there.",
+                        "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving."
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Questions you can't answer go to the agent. Never guess amounts.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q5",
+                    "question": "A consumer says \"I already have that.\" Which rebuttal fits?",
+                    "choices": [
+                        "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review.",
+                        "Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+                        "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                        "Oh, let me assure you (customer's name), I'm not asking for any credit card or banking information. I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review."
+                    ],
+                    "answer_index": 2,
+                    "explanation": "\"I've already got it\" gets the NEW allowances and NEW increases rebuttal.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q6",
+                    "question": "Which exact words complete the scam rebuttal: \"Oh, let me assure you (customer's name), I'm not asking for any...\"",
+                    "choices": [
+                        "money, this is a free government program.",
+                        "personal information at all.",
+                        "credit card or banking information.",
+                        "your address or phone number."
+                    ],
+                    "answer_index": 2,
+                    "explanation": "\"...I'm not asking for any credit card or banking information.\" Never say it's a government program.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q7",
+                    "question": "A consumer objects three separate times. What must you do?",
+                    "choices": [
+                        "Rebut each separate objection and go right back to where you were",
+                        "Code DNC after the second objection",
+                        "Transfer them to stop the objections",
+                        "Rebut only the first one"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Rebut each separate objection, then go right back where you were. Failing to rebut separate objections is call avoidance.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q8",
+                    "question": "A consumer says \"I'll sue you if you call again.\" What do you do?",
+                    "choices": [
+                        "Read the DNC disclaimer, end the call and code DNC",
+                        "Rebut with \"Oh, let me assure you...\"",
+                        "Code Not Interested",
+                        "Keep going with the script"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Threats are DNC. Never rebut past a DNC request.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q9",
+                    "question": "A consumer says \"Do I have to change my plan?\" Which rebuttal fits?",
+                    "choices": [
+                        "Oh, you probably spoke with one of our small competitors. The difference is WE work with over 25 different health insurance providers, so people ARE finding that with US, they qualify for WAY more benefits than they're receiving.",
+                        "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review.",
+                        "Oh, you probably spoke with one of our small competitors. But I DO see here that you may be ENTITLED to some additional food benefits since the food prices HAVE gone up.",
+                        "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available."
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Only the consumer can change their insurance.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q10",
+                    "question": "How does the DNC disclaimer end?",
+                    "choices": [
+                        "\"We'll call you back at a better time\"",
+                        "\"Thank you for your time, have a great day\"",
+                        "\"But before you go, give the agent JUST a few minutes\"",
+                        "\"We do apologize for any inconvenience, have a great day.\""
+                    ],
+                    "answer_index": 3,
+                    "explanation": "The DNC disclaimer ends \"We do apologize for any inconvenience, have a great day.\" Then END CALL AND CODE AS DNC.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q11",
+                    "question": "A consumer says \"What's this card even for?\" Which rebuttal fits?",
+                    "choices": [
+                        "So the healthy food card is there to help you with groceries on a monthly basis, and the Flex Card covers expenses such as dental, hearing, vision and utilities. There's also a Part B give back for Medicare, which helps cover some, if not ALL, of your Part B premium.",
+                        "Oh, I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "That would be a great question for the agent once I get you there.",
+                        "Oh, so either you or a family member went online and expressed interest in a free review. We're just here to facilitate that for you."
+                    ],
+                    "answer_index": 0,
+                    "explanation": "\"What is that card for?\" gets the healthy food card / Flex Card rebuttal.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q12",
+                    "question": "A consumer sighs and says \"Fine, whatever, just hurry up.\" What kind of consumer is this?",
+                    "choices": [
+                        "DNC: read the disclaimer",
+                        "Dead Air: end the call",
+                        "DQ: read the mistake line",
+                        "Rude or impatient, but not DNC: keep going"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Impatience is not a request not to be called. Stay calm and keep moving.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "rebuttals_q14",
+                    "question": "At the double-confirm, the consumer says, \"I'm not giving my number out.\" What do you say?",
+                    "choices": [
+                        "Okay, you WOULD have to know your Medicare number or Social Security number to review those increases. You don't need to give it to me, but the licensed agent may need it. Do you know either of those?",
+                        "That would be a great question for the agent once I get you there.",
+                        "Oh, there must have been a mistake. Thank you for your time, have a great day.",
+                        "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving."
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Read the \"you WOULD have to know\" line, then continue either way. They never give you the number.",
+                    "tags": [
+                        "script"
+                    ]
+                }
+            ]
+        }
+    }

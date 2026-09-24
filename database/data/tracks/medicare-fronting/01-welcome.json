@@ -1,0 +1,340 @@
+    {
+        "id": "welcome",
+        "title": "Welcome & Your Mission",
+        "summary": "Why these calls matter, what a fronter does, and how Pitch University gets you ready for the phones.",
+        "est_minutes": 20,
+        "badge": {
+            "id": "badge_welcome",
+            "name": "Mission Ready",
+            "icon": "🎓"
+        },
+        "lessons": [
+            {
+                "id": "welcome_1",
+                "title": "Why These Calls Matter",
+                "est_minutes": 5,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Welcome to Pitch University. Before you ever touch a live call, you are going to learn the script, the product, the rules, and how to handle tough people. Let's start with the most important part: <strong>why you are here</strong>.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Your mission is to help consumers maximize their Medicare benefits.</strong></p><p>Many people on Medicare may be missing benefits that their plan options could include. Most of them never check. Plans change, new options show up, and people stay on the same plan year after year without knowing what else may be out there.</p><p>A free review with a licensed Medicare specialist is how they find out. Your job is to get them to that specialist.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>Think about the person on the other end. They are often older, on a fixed income, and they get a lot of calls. Some are lonely and happy to talk. Some are suspicious. Some are just busy. Every one of them deserves a caller who is friendly, confident, and honest.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Believe in the call",
+                        "html": "<p>When you know the review may really help someone, your energy changes. Consumers hear it. Confident, upbeat fronters get more transfers because people trust them.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "What is your mission as a fronter?",
+                        "choices": [
+                            "Sell consumers a new Medicare plan on the first call",
+                            "Collect as much personal information as possible",
+                            "Help consumers maximize their Medicare benefits by connecting them to a free review with a licensed specialist",
+                            "Sign consumers up for a food card"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "You don't sell or enroll anyone. You help people get a free review with a licensed specialist, who may find benefits they are missing."
+                    }
+                ]
+            },
+            {
+                "id": "welcome_2",
+                "title": "What a Fronter Does",
+                "est_minutes": 6,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>You are a <strong>fronter</strong>. You make the first contact, confirm a few qualification questions, handle objections, and pass the consumer to a licensed Medicare specialist. <strong>You never sell and you never enroll anyone.</strong></p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>Here is the job, step by step:</p><ol><li>Call the consumer.</li><li>Confirm they have Medicare Parts A and B.</li><li>Double-confirm with the red, white and blue card.</li><li>Ask if they receive Medicaid.</li><li>Verify their state and ZIP code.</li><li>Verify they have no insurance through work or the VA.</li><li>Tell them you are transferring them to a licensed Medicare specialist.</li><li>Transfer the call (no introduction), stay silent, and confirm both parties speak.</li><li>Leave the call to complete the cold transfer.</li></ol>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "What is a cold transfer?",
+                        "html": "<p>A <strong>cold transfer</strong> means you connect the consumer and the specialist <strong>without introducing them</strong>. You stay quiet, the specialist asks who they are speaking with, the consumer answers, and once you hear both of them speak you leave the call. We do cold transfers only.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Your goal: a minimum of 4 transfers per hour.</strong> That is the floor, not the ceiling. Top performers beat it every day, and they do it by staying on script, rebutting every objection, and never stalling between calls.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "What is the minimum transfer goal?",
+                        "choices": [
+                            "10 transfers per hour",
+                            "4 transfers per day",
+                            "4 transfers per hour",
+                            "1 transfer per hour"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "The minimum is 4 transfers per hour. Top performers consistently beat it."
+                    },
+                    {
+                        "type": "check",
+                        "question": "During a cold transfer, what do you do when the specialist picks up?",
+                        "choices": [
+                            "Introduce the consumer by name and explain what they need",
+                            "Stay silent and let the specialist and consumer speak",
+                            "Tell the specialist the consumer's ZIP code",
+                            "Hang up right away before anyone speaks"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Cold transfer means no introduction. Stay silent, confirm both parties speak, then leave the conference."
+                    }
+                ]
+            },
+            {
+                "id": "welcome_3",
+                "title": "Your Schedule & Power Hours",
+                "est_minutes": 4,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Here is your schedule (all times Eastern):</p><ul><li><strong>Monday to Thursday:</strong> 9:00 AM to 6:00 PM</li><li><strong>Friday:</strong> 9:00 AM to 5:00 PM</li><li><strong>Morning meeting:</strong> 8:50 AM on Zoom. It is paid. Be on the phones at 9:00.</li><li><strong>Lunch:</strong> 1:00 to 2:00 PM. Lunch is mandatory.</li></ul>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "Breaks and power hours",
+                        "html": "<p>Restroom breaks must be brief. <strong>Over 5 minutes gets you logged out.</strong></p><p><strong>POWER HOURS:</strong> no restroom breaks during the first hour of the day, the last hour of the day, the hour before lunch, or the hour after lunch. These are the busiest calling hours.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "It is 12:30 PM. Can you take a restroom break?",
+                        "choices": [
+                            "No, the hour before lunch is a power hour",
+                            "Yes, breaks are allowed any time before lunch",
+                            "Yes, as long as it is under 10 minutes",
+                            "Only if you already have 4 transfers this hour"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "Lunch starts at 1:00 PM, so 12:00 to 1:00 PM is the hour before lunch, which is a power hour."
+                    },
+                    {
+                        "type": "check",
+                        "question": "How long can a restroom break last before you get logged out?",
+                        "choices": [
+                            "There is no limit",
+                            "10 minutes",
+                            "5 minutes",
+                            "15 minutes"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Keep breaks brief. Over 5 minutes gets you logged out."
+                    }
+                ]
+            },
+            {
+                "id": "welcome_4",
+                "title": "How Pitch University Works",
+                "est_minutes": 5,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Why does Pitch University exist?</strong> So you can practice before the phones. Real consumers can be tough. Some are suspicious, some are rude, some may swear or act crazy. Here you face hard, realistic practice consumers first, so <strong>nothing on a live call surprises you</strong>.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>Here is how the course works:</p><ol><li><strong>Lessons.</strong> Read each lesson and answer the quick checks.</li><li><strong>Module quizzes.</strong> Each module ends with a quiz. You need <strong>80%</strong> to pass.</li><li><strong>Voice warm-ups.</strong> Practice saying the script out loud until it flows.</li><li><strong>Call simulations.</strong> Take practice calls with AI consumers. Levels unlock one at a time as you pass.</li><li><strong>Final exam.</strong> A product quiz, a script quiz, and 3 graded calls: easy, medium and hard.</li></ol>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Final exam rules",
+                        "html": "<p>You need <strong>80%</strong> to pass the final exam. You get <strong>1 retake</strong>. If you think a grade was wrong, you can appeal to your manager.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "What score do you need to pass a module quiz or the final exam?",
+                        "choices": [
+                            "80%",
+                            "90%",
+                            "100%",
+                            "70%"
+                        ],
+                        "answer_index": 0,
+                        "explanation": "Every quiz and the final exam require 80% to pass."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which of these is part of the final exam?",
+                        "choices": [
+                            "One live call with a real consumer",
+                            "A written essay about Medicare",
+                            "A product quiz, a script quiz, and 3 graded calls (easy, medium, hard)",
+                            "Only a script quiz"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "The final exam is a product quiz, a script quiz, and 3 graded calls. You get 1 retake."
+                    }
+                ]
+            }
+        ],
+        "quiz": {
+            "pass_pct": 80,
+            "questions": [
+                {
+                    "id": "welcome_q1",
+                    "question": "What is the mission of a Medicare fronter?",
+                    "choices": [
+                        "Help consumers maximize their Medicare benefits by getting them to a free review with a licensed specialist",
+                        "Enroll consumers in a new Medicare plan",
+                        "Sell supplemental insurance over the phone",
+                        "Mail consumers a food and utility card"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "You help consumers find out if they may be missing benefits by connecting them to a free review. You never sell or enroll.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "welcome_q2",
+                    "question": "Which of these does a fronter NEVER do?",
+                    "choices": [
+                        "Handle objections with rebuttals",
+                        "Enroll the consumer in a plan",
+                        "Confirm Medicare Parts A and B",
+                        "Verify state and ZIP code"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Fronters qualify and transfer. Only the licensed specialist reviews plans, and only the consumer can decide to change.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "welcome_q3",
+                    "question": "What is a cold transfer?",
+                    "choices": [
+                        "Transferring the call after the consumer hangs up",
+                        "Connecting the consumer and specialist without introducing them, then leaving once both speak",
+                        "Introducing the consumer to the specialist and staying on the whole call",
+                        "Calling the consumer back the next day"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Cold transfers only: no introduction, stay silent, confirm both parties speak, leave the conference.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "welcome_q4",
+                    "question": "What is the minimum number of transfers expected per hour?",
+                    "choices": [
+                        "2",
+                        "4",
+                        "6",
+                        "8"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "The minimum is 4 transfers per hour.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "welcome_q5",
+                    "question": "What time is the paid morning meeting?",
+                    "choices": [
+                        "8:30 AM Eastern on Zoom",
+                        "9:00 AM Eastern in person",
+                        "8:50 AM Eastern on Zoom",
+                        "There is no morning meeting"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "The paid meeting is 8:50 AM Eastern on Zoom, and you are on the phones at 9:00.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "welcome_q6",
+                    "question": "Which of these is NOT a power hour?",
+                    "choices": [
+                        "The last hour of the day",
+                        "3:00 PM to 4:00 PM on a Tuesday",
+                        "The hour right after lunch",
+                        "The first hour of the day"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Power hours are the first and last hour of the day and the hour before and after lunch (12-1 and 2-3). On a Tuesday, 3:00 to 4:00 PM is none of those.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "welcome_q7",
+                    "question": "What time does your shift end on Friday?",
+                    "choices": [
+                        "5:00 PM Eastern",
+                        "6:00 PM Eastern",
+                        "7:00 PM Eastern",
+                        "4:00 PM Eastern"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Monday to Thursday ends at 6:00 PM; Friday ends at 5:00 PM Eastern.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "welcome_q8",
+                    "question": "Why does Pitch University use tough, realistic practice consumers?",
+                    "choices": [
+                        "To test your typing speed",
+                        "Because real consumers are always polite",
+                        "So nothing on a live call surprises you",
+                        "To make the course take longer"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Real consumers may be suspicious, rude, or swear. Practicing on hard consumers first means you're ready.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "welcome_q9",
+                    "question": "How many retakes do you get on the final exam?",
+                    "choices": [
+                        "0",
+                        "Unlimited",
+                        "1",
+                        "2"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "You get 1 retake. If you think a grade was wrong, appeal to your manager.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "welcome_q10",
+                    "question": "How do call simulation levels open up?",
+                    "choices": [
+                        "They unlock after 4 live transfers",
+                        "Your manager unlocks them after a week",
+                        "All levels are open on day one",
+                        "They unlock level by level as you pass"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Simulations unlock one level at a time as you pass the one before.",
+                    "tags": [
+                        "operations"
+                    ]
+                }
+            ]
+        }
+    }

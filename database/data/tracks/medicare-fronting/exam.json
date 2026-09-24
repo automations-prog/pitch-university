@@ -1,0 +1,1507 @@
+{
+    "title": "Final Exam",
+    "sections": {
+        "product": {
+            "title": "Product Quiz",
+            "pass_pct": 80,
+            "draw": 20,
+            "pool": [
+                {
+                    "id": "fx_prod_1",
+                    "question": "Who qualifies for Medicare, the federal health insurance program?",
+                    "choices": [
+                        "ALL people 65 and older, plus people under 65 with certain disabilities",
+                        "Only people who work for the government",
+                        "Only people with limited income",
+                        "Only veterans and their families"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "ALL people 65 and older qualify for Medicare, plus people under 65 with certain disabilities.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_2",
+                    "question": "Who runs Medicaid?",
+                    "choices": [
+                        "The VA",
+                        "Only the federal government",
+                        "Each individual state, with state and federal funding",
+                        "Private insurance companies"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Medicaid is state and federally funded and run by each state.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_3",
+                    "question": "Medicaid coverage is mainly based on what?",
+                    "choices": [
+                        "Military service",
+                        "Limited income",
+                        "Age 65 or older",
+                        "Employer coverage"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Medicaid provides coverage for people with limited income.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_4",
+                    "question": "What does Medicare Part A mainly help cover?",
+                    "choices": [
+                        "Prescription drugs",
+                        "Hospital care, like inpatient stays",
+                        "Dental cleanings only",
+                        "Groceries"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Part A is Hospital Insurance.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_5",
+                    "question": "What does Medicare Part B mainly help cover?",
+                    "choices": [
+                        "Prescription drugs only",
+                        "Utilities",
+                        "Medical care, like doctor visits and outpatient care",
+                        "Inpatient hospital stays only"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Part B is Medical Insurance.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_12",
+                    "question": "What does the red, white and blue card prove?",
+                    "choices": [
+                        "The consumer has Medicare and shows Part A, Part B, or both",
+                        "The consumer has Medicaid",
+                        "The consumer has a food card",
+                        "The consumer is a veteran"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "It is the Medicare card.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_14",
+                    "question": "Why does the script ask whether the consumer receives Medicaid?",
+                    "choices": [
+                        "People with both Medicare and Medicaid may have different plan options",
+                        "To check their income level exactly",
+                        "Medicaid is a DQ",
+                        "To mail them Medicaid forms"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "It is information for the specialist. Yes or no continues.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_15",
+                    "question": "What might the healthy food card help with?",
+                    "choices": [
+                        "Hospital bills only",
+                        "Car repairs",
+                        "Groceries on a monthly basis",
+                        "Rent payments"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "The healthy food card is there to help with groceries monthly, in plans that include it.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_16",
+                    "question": "What expenses might a Flex Card help cover?",
+                    "choices": [
+                        "Dental, hearing, vision and utilities",
+                        "Only prescriptions",
+                        "Mortgage payments",
+                        "Only groceries"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "The Flex Card covers expenses such as dental, hearing, vision and utilities, in plans that include it.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_17",
+                    "question": "What is the Part B giveback?",
+                    "choices": [
+                        "A bonus for fronters",
+                        "A yearly check every Medicare member gets",
+                        "A benefit some plans may have that helps cover some or all of the Part B premium",
+                        "A Medicaid refund"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Some plans may include it. Never guaranteed.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_18",
+                    "question": "Are extra benefits like the food card guaranteed?",
+                    "choices": [
+                        "No, they vary by plan, area and eligibility",
+                        "Yes, if they have Medicaid",
+                        "Yes, once they are transferred",
+                        "Yes, for everyone with Parts A and B"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Nothing is guaranteed. That's why you say may.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_19",
+                    "question": "A consumer asks the dollar amount of a benefit. What is correct?",
+                    "choices": [
+                        "Give the most common amount",
+                        "You never give dollar amounts; that's a question for the agent",
+                        "Give the highest possible amount to keep them interested",
+                        "Say it's the same for everyone"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Never state dollar amounts.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_20",
+                    "question": "What does the licensed specialist do?",
+                    "choices": [
+                        "Changes the plan without asking",
+                        "Works for the government",
+                        "Collects banking information",
+                        "Reviews coverage and compares plan options that may be available"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "The specialist reviews and compares. Only the consumer decides.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_21",
+                    "question": "Who can decide to change the consumer's insurance?",
+                    "choices": [
+                        "Only the consumer",
+                        "The fronter",
+                        "Medicare",
+                        "The specialist, automatically"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Changing insurance is ONLY something the consumer can do.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_22",
+                    "question": "Which consumer must be disqualified?",
+                    "choices": [
+                        "Says they're busy",
+                        "Has insurance through their employer",
+                        "Has Medicaid and Medicare",
+                        "Doesn't know what Parts A and B mean but has the card"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Work insurance is a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_23",
+                    "question": "Which consumer must be disqualified?",
+                    "choices": [
+                        "Lives in a different state than expected",
+                        "Asks who you are with",
+                        "Has CHAMPVA",
+                        "Lost their red, white and blue card"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "CHAMPVA is military coverage, a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_24",
+                    "question": "Which consumer must be disqualified?",
+                    "choices": [
+                        "Receives Medicaid",
+                        "Covered by a Native American tribe",
+                        "Is on a fixed income",
+                        "Asks how you got their information"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Tribal coverage is a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_25",
+                    "question": "Which consumer must be disqualified?",
+                    "choices": [
+                        "Has Tricare for Life",
+                        "Says \"I already have it\"",
+                        "Has Medicare Parts A and B only",
+                        "Says \"I'm not interested\""
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Tricare for Life is a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_26",
+                    "question": "Which consumer must be disqualified?",
+                    "choices": [
+                        "Is suspicious of scams",
+                        "Doesn't have Medicare Parts A and B",
+                        "Has Medicaid",
+                        "Wants to know the benefits"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "No Parts A and B is a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_27",
+                    "question": "Why are consumers with employer, retiree or military coverage disqualified?",
+                    "choices": [
+                        "They are always too young",
+                        "They are always on Medicaid",
+                        "Their coverage works with Medicare in its own way and changing plans could affect it; this review isn't built for them",
+                        "They already have a food card"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "These coverages are not a fit for this review.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_28",
+                    "question": "A consumer says, \"My coverage is from my retirement with the school district.\" What is it?",
+                    "choices": [
+                        "Medicaid: continue",
+                        "Insurance through retirement: DQ",
+                        "Part B coverage: continue",
+                        "Not a coverage type; ignore it"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Retirement insurance is a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_29",
+                    "question": "A consumer has Medicare Parts A and B plus Medicaid, no work or VA insurance, and agrees to a few minutes. What is their status?",
+                    "choices": [
+                        "Needs a callback",
+                        "Not Interested",
+                        "Qualified for transfer",
+                        "DQ because of Medicaid"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Dual eligible consumers qualify if they pass everything else.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_30",
+                    "question": "A consumer says, \"I'm on the VA health plan.\" What is it?",
+                    "choices": [
+                        "Military coverage: DQ",
+                        "Medicaid: continue",
+                        "Not a DQ if they have Medicare too",
+                        "Medicare Part A: continue"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "VA coverage is a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_31",
+                    "question": "Which is TRUE about Medicare and the government?",
+                    "choices": [
+                        "America's Health is a government agency",
+                        "The specialist is a government employee",
+                        "You work for Medicare",
+                        "Medicare is a government program, but you are not from Medicare or the government"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Never claim government affiliation.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_33",
+                    "question": "A consumer's card is from their plan company instead of the red, white and blue card. Are they automatically DQ?",
+                    "choices": [
+                        "Yes, always DQ",
+                        "No; transfer immediately",
+                        "Yes, code Not Interested",
+                        "No; ask if they have their Medicare number"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Different card branch: \"Okay, no problem, but you DO have your Medicare number, correct?\"",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_34",
+                    "question": "Which is a correct way to describe what the consumer may get from the review?",
+                    "choices": [
+                        "They may find benefits their plan options could include",
+                        "They will definitely get more money",
+                        "Their premium will drop to zero",
+                        "They are guaranteed a food card"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Keep it conservative with may.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_35",
+                    "question": "Consumers on Medicare are often missing out because...",
+                    "choices": [
+                        "Everyone is on the wrong plan",
+                        "Medicare cancels benefits every month",
+                        "Plans change and many people never review their options",
+                        "The government hides benefits on purpose"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Many people stay on the same plan without checking what may be available.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_37",
+                    "question": "A consumer says, \"I've got Medicare but my husband's job insurance covers me first.\" What is it?",
+                    "choices": [
+                        "Wrong Number",
+                        "Medicare Part B: continue",
+                        "Medicaid: continue",
+                        "Insurance through work: DQ"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Employer coverage through a spouse's job is insurance through work.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_38",
+                    "question": "What do extra benefits depend on?",
+                    "choices": [
+                        "Nothing; they're the same for all",
+                        "The fronter's script",
+                        "The plan, the area, and the person's eligibility",
+                        "Only the consumer's age"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Benefits vary by plan, area and eligibility.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_39",
+                    "question": "A consumer says, \"I don't know my parts, but I have the red, white and blue card.\" What does that tell you?",
+                    "choices": [
+                        "They have Tricare; DQ",
+                        "Nothing useful; code NI",
+                        "They have Medicaid; DQ",
+                        "They have Medicare; confirm Parts A and B and continue"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "The card is the Medicare card. Confirm A and B and skip to Medicaid.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_40",
+                    "question": "Which consumers may qualify for a transfer?",
+                    "choices": [
+                        "Anyone over 50",
+                        "People with Medicare Parts A and B and no employer, retirement, military or tribal coverage",
+                        "Only people with Medicaid",
+                        "Anyone with any health insurance card"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Parts A and B, no DQ coverage.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_41",
+                    "question": "Where do extra benefits like a food card or flex card come from?",
+                    "choices": [
+                        "Medicare sends them to everyone with Parts A and B",
+                        "Certain plans that a licensed specialist reviews, not Medicare itself",
+                        "Social Security",
+                        "The fronter's company pays for them"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Extra benefits like food or flex cards may come through certain plans a licensed specialist reviews. Medicare itself doesn't send them.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_42",
+                    "question": "A consumer says, \"No, I just got Medicaid.\" What does that mean for qualifying?",
+                    "choices": [
+                        "They qualify, Medicaid is the same as Medicare",
+                        "They have no Medicare Parts A and B, so it's a DQ",
+                        "Ask for their Medicaid number and transfer",
+                        "Code it as No Agent"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Medicaid only means no Medicare Parts A and B. That's a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_43",
+                    "question": "A consumer says, \"I got Medicare and Medicaid.\" What does that mean?",
+                    "choices": [
+                        "They're a DQ because of Medicaid",
+                        "They may still qualify. Medicaid yes or no, you keep going",
+                        "They need to cancel Medicaid first",
+                        "Transfer without asking about work or VA"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "With Parts A and B, Medicaid yes or no is fine. Keep going with the questions.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_45",
+                    "question": "Which of these is a DQ?",
+                    "choices": [
+                        "Medicaid along with Medicare",
+                        "A retiree health plan through a former employer",
+                        "A Medicare plan the consumer chose themselves",
+                        "No red, white and blue card, but they have Medicare"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Insurance through work or retirement is a DQ, including retiree Medicare Advantage plans.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_46",
+                    "question": "Which answer is NOT a DQ?",
+                    "choices": [
+                        "\"I have Tricare for Life.\"",
+                        "\"I'm covered by my husband's job.\"",
+                        "\"I have Medicaid through the state.\"",
+                        "\"I only have Part A.\""
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Medicaid is not a DQ. Military coverage, employer coverage and no Part B are.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_47",
+                    "question": "A consumer says, \"So Medicare is giving me more money?\" What's the compliant answer?",
+                    "choices": [
+                        "\"Yes, Medicare is doing an increase.\"",
+                        "\"That would be a great question for the agent once I get you there.\"",
+                        "\"Yes, you qualify for all of it.\"",
+                        "\"It's a state program.\""
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Never say the benefit comes from Medicare, never say yes to more money, and never imply a state program.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_48",
+                    "question": "When you're not sure if the consumer's coverage is a DQ, what do you do?",
+                    "choices": [
+                        "Transfer and let the specialist sort it out",
+                        "Code DQ to be safe",
+                        "Ask one clarifying question: \"Is that through a job or retirement?\"",
+                        "Skip the work or VA question"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "One short clarifying question, then read the DQ line or keep going.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_49",
+                    "question": "A consumer is 72. Do they qualify for Medicare by age?",
+                    "choices": [
+                        "Only if they have low income",
+                        "Yes, ALL people 65 and older qualify for Medicare",
+                        "Only if they are a veteran",
+                        "Only if they still work"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "ALL people 65 and older qualify for Medicare, plus people under 65 with certain disabilities.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_50",
+                    "question": "A consumer is 58 and says they have Medicare because of a disability. Is that possible?",
+                    "choices": [
+                        "No, Medicare is only for people 65 and older",
+                        "No, they must mean Medicaid",
+                        "Yes, people under 65 with certain disabilities can have Medicare",
+                        "Only if they are a veteran"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Medicare covers ALL people 65 and older, plus people under 65 with certain disabilities.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_prod_51",
+                    "question": "What do you need from the consumer to qualify them?",
+                    "choices": [
+                        "Their full medical history",
+                        "Their doctor's name and phone number",
+                        "Their bank information",
+                        "Name, state, ZIP and insurance status, and (if no card) whether they KNOW their Medicare or Social Security number"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "You never ask them to read or give a Medicare or Social Security number. You only ask whether they know one; the licensed agent handles the actual number.",
+                    "tags": [
+                        "product",
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_prod_52",
+                    "question": "What is the Medicare card called in the script?",
+                    "choices": [
+                        "The green card",
+                        "The red, white and blue card",
+                        "The flex card",
+                        "The Medicaid card"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "The Medicare card is the red, white and blue card.",
+                    "tags": [
+                        "product"
+                    ]
+                }
+            ]
+        },
+        "script": {
+            "title": "Script Quiz",
+            "pass_pct": 80,
+            "draw": 20,
+            "pool": [
+                {
+                    "id": "fx_script_1",
+                    "question": "What is the first line of the script?",
+                    "choices": [
+                        "Good afternoon, is now a good time?",
+                        "Hey, good morning/afternoon (Customer Name)?",
+                        "Hello, may I speak with the account holder?",
+                        "Hi, this is Medicare calling for (Customer Name)."
+                    ],
+                    "answer_index": 1,
+                    "explanation": "The script opens with \"Hey, good morning/afternoon (Customer Name)?\"",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_2",
+                    "question": "What comes right after \"Hey, good morning/afternoon (Customer Name)?\"",
+                    "choices": [
+                        "The Medicaid question",
+                        "The transfer ask",
+                        "The intro with America's Health on a recorded line and the Parts A and B question",
+                        "The work or VA question"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Next is the intro and first qualifying question.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_3",
+                    "question": "Complete the line: \"That card, it IS exclusively for members who have...\"",
+                    "choices": [
+                        "Medicare Parts A and B.",
+                        "a VA plan.",
+                        "a food card already.",
+                        "Medicaid."
+                    ],
+                    "answer_index": 0,
+                    "explanation": "\"That card, it IS exclusively for members who have Medicare Parts A and B.\"",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_4",
+                    "question": "Which is the correct double-confirm line?",
+                    "choices": [
+                        "Okay, and you have your Medicare card with you right now, correct?",
+                        "Okay, perfect, and JUST to double confirm, that IS the red, white and blue card, correct?",
+                        "Okay, perfect, and JUST to double confirm, you still have your Medicare plan, correct?",
+                        "Okay, perfect and JUST to confirm you have Medicaid, correct?"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Read the double-confirm verbatim.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_5",
+                    "question": "What comes right after the double-confirm card question?",
+                    "choices": [
+                        "The Medicaid question",
+                        "The state and ZIP line",
+                        "The work or VA question",
+                        "The transfer ask"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Order: Parts A and B, card, Medicaid, state/ZIP, work or VA.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_6",
+                    "question": "Which is the correct Medicaid question?",
+                    "choices": [
+                        "Perfect and do you receive Social Security along with your Medicare plan?",
+                        "Perfect and how much Medicaid do you receive?",
+                        "Perfect, and do you receive Medicaid along with your Medicare plan?",
+                        "Are you on Medicaid instead of Medicare?"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Verbatim: \"Perfect, and do you receive Medicaid along with your Medicare plan?\"",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_7",
+                    "question": "What comes right after the Medicaid question?",
+                    "choices": [
+                        "Cold transfer",
+                        "State and ZIP",
+                        "Double-confirm the card",
+                        "Work or VA"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "After Medicaid, confirm state and ZIP.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_8",
+                    "question": "In the state and ZIP line, what are you told the consumer may be?",
+                    "choices": [
+                        "GUARANTEED a new food card",
+                        "APPROVED for a Part B refund",
+                        "ENTITLED to some additional food benefits",
+                        "OWED money by Medicare"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "\"It DOES look like you may be ENTITLED to some additional food benefits since the food prices have gone up.\"",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_9",
+                    "question": "Which line is the exact LAST question?",
+                    "choices": [
+                        "Okay, LAST question here, do you have insurance through your work or the VA?",
+                        "Okay, LAST question here, do you work?",
+                        "Okay, LAST question here, do you have any other insurance at all?",
+                        "Okay, LAST question here, are you a veteran?"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Verbatim: \"Okay, LAST question here, do you have insurance through your work or the VA?\"",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_10",
+                    "question": "What comes right after the work or VA question (when they say No)?",
+                    "choices": [
+                        "The transfer ask: \"Perfect, well that is EVERYTHING I need...\"",
+                        "The double-confirm card question",
+                        "The DNC disclaimer",
+                        "The Medicaid question"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "No to work or VA continues to the transfer ask.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_11",
+                    "question": "The consumer says Yes to work or VA insurance. What do you say?",
+                    "choices": [
+                        "Oh, there must have been a mistake. Thank you for your time, have a great day.",
+                        "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review.",
+                        "Well, I understand, but you've worked your whole life for these Medicare benefits. Give the agent JUST a few minutes to review and compare your plan to make SURE you're not missing out on ANYTHING you may be entitled to.",
+                        "That would be a great question for the agent once I get you there."
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Read the mistake line and CODE AS DQ.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_12",
+                    "question": "The consumer says \"I don't know\" to Parts A and B. What do you say?",
+                    "choices": [
+                        "I understand. Well, do you have the red, white and blue card by chance?",
+                        "Perfect, and do you receive Medicaid along with your Medicare plan?",
+                        "There must have been a mistake. Thank you for your time, have a great day.",
+                        "Okay, LAST question here, do you have insurance through your work or the VA?"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Ask about the red, white and blue card.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_13",
+                    "question": "The consumer says \"I have a Humana card, not that one.\" What do you say?",
+                    "choices": [
+                        "Okay, no problem, but you DO have your Medicare number, correct?",
+                        "There must have been a mistake. Thank you for your time, have a great day.",
+                        "Perfect, and do you receive Medicaid along with your Medicare plan?",
+                        "Okay, perfect, so then you DO have Medicare Parts A and B, correct?"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Different card: ask if they have their Medicare number. If yes, continue; if no, read the No line.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_14",
+                    "question": "At the double-confirm, the consumer says \"I'm not giving my number out.\" What do you say?",
+                    "choices": [
+                        "No problem, I'll add you to our internal do not call list immediately and you won't receive any further calls from our company. We do apologize for any inconvenience, have a great day.",
+                        "Oh, there must have been a mistake. Thank you for your time, have a great day.",
+                        "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving.",
+                        "Okay, you WOULD have to know your Medicare number or Social Security number to review those increases. You don't need to give it to me, but the licensed agent may need it. Do you know either of those?"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Read the \"you WOULD have to know\" line, then continue either way. They never give you the number.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_15",
+                    "question": "The consumer says No when you ask them to give the specialist a few minutes. What do you do?",
+                    "choices": [
+                        "Code DQ",
+                        "Don't transfer. Read an EXTRA NOT INTERESTED rebuttal, then go back to \"Give them JUST a few minutes to go over them with you, okay?\"",
+                        "Read the DNC disclaimer",
+                        "Transfer them anyway"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "No: read an EXTRA NOT INTERESTED rebuttal and go back to the ask. Never click transfer without a yes.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_16",
+                    "question": "Which is the exact ringing line?",
+                    "choices": [
+                        "Alright, so you'll hear a little bit of ringing, that's just me connecting them in, and once they pick up they'll ask you for your name, okay?",
+                        "Alright so you'll hear ringing, don't hang up, it's Medicare picking up okay?",
+                        "Alright please hold, I'm going to introduce you to the specialist now okay?",
+                        "Alright so the specialist will call you back in a few minutes okay?"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Read the ringing line verbatim. You already have their permission, so you don't need another okay here or once the licensed agent connects.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_17",
+                    "question": "What do you say while the transfer is ringing?",
+                    "choices": [
+                        "Remember, you're getting a food card today.",
+                        "You're definitely going to love this new plan.",
+                        "Please don't hang up or you'll lose your benefits.",
+                        "In the meantime, how's that weather out there today?"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Fluff away with the weather line. Never pressure or promise.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_18",
+                    "question": "A consumer asks \"Why are you calling me?\" at the double-confirm. Which rebuttal fits?",
+                    "choices": [
+                        "No problem, I'll add you to our internal do not call list immediately and you won't receive any further calls from our company. We do apologize for any inconvenience, have a great day.",
+                        "Oh, so either you or a family member went online and expressed interest in a free review. We're just here to facilitate that for you.",
+                        "Oh, you probably spoke with one of our small competitors. The difference is WE work with over 25 different health insurance providers, so people ARE finding that with US, they qualify for WAY more benefits than they're receiving.",
+                        "Oh, there must have been a mistake. Thank you for your time, have a great day."
+                    ],
+                    "answer_index": 1,
+                    "explanation": "How did you get my information fits, then go right back to the double-confirm.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_19",
+                    "question": "A consumer says \"I talked to someone last week, they said I already have the best plan.\" Which rebuttal fits?",
+                    "choices": [
+                        "Oh, I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "Oh, you probably spoke with one of our small competitors. But I DO see here that you may be ENTITLED to some additional food benefits since the food prices HAVE gone up.",
+                        "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                        "Oh, you probably spoke with one of our small competitors. The difference is WE work with over 25 different health insurance providers, so people ARE finding that with US, they qualify for WAY more benefits than they're receiving."
+                    ],
+                    "answer_index": 1,
+                    "explanation": "\"They said I have the best\" gets the small competitors + may be ENTITLED rebuttal.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_20",
+                    "question": "A consumer says \"I'm not interested\" for the second time after your first rebuttal. Which is a correct next rebuttal?",
+                    "choices": [
+                        "That would be a great question for the agent once I get you there.",
+                        "Well, I understand, but you've worked your whole life for these Medicare benefits. Give the agent JUST a few minutes to review and compare your plan to make SURE you're not missing out on ANYTHING you may be entitled to.",
+                        "Oh, so either you or a family member went online and expressed interest in a free review. We're just here to facilitate that for you.",
+                        "No problem, I'll add you to our internal do not call list immediately and you won't receive any further calls from our company. We do apologize for any inconvenience, have a great day."
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Use an EXTRA NOT INTERESTED rebuttal, then go right back.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_21",
+                    "question": "A consumer says \"This sounds like a scam.\" Which rebuttal fits?",
+                    "choices": [
+                        "Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+                        "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review.",
+                        "Oh, let me assure you (customer's name), I'm not asking for any credit card or banking information. I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving."
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Scam fears get the no credit card or banking information rebuttal.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_22",
+                    "question": "A consumer says \"What benefits are you talking about?\" Which rebuttal fits?",
+                    "choices": [
+                        "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                        "Oh, I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "I understand, but these new benefits JUST became available, so your current plan may NOT include them. Now, we DO have on file that you may qualify for additional benefits or a new allowance.",
+                        "So the healthy food card is there to help you with groceries on a monthly basis, and the Flex Card covers expenses such as dental, hearing, vision and utilities. There's also a Part B give back for Medicare, which helps cover some, if not ALL, of your Part B premium."
+                    ],
+                    "answer_index": 3,
+                    "explanation": "What new benefits / what is that card for.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_23",
+                    "question": "A consumer asks \"Which plan is best for me?\" Which rebuttal fits?",
+                    "choices": [
+                        "That would be a great question for the agent once I get you there.",
+                        "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review.",
+                        "Oh, you probably spoke with one of our small competitors. But I DO see here that you may be ENTITLED to some additional food benefits since the food prices HAVE gone up.",
+                        "So the healthy food card is there to help you with groceries on a monthly basis, and the Flex Card covers expenses such as dental, hearing, vision and utilities. There's also a Part B give back for Medicare, which helps cover some, if not ALL, of your Part B premium."
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Questions you don't know the answer to go to the agent.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_24",
+                    "question": "A consumer says \"I don't have time for this.\" Which rebuttal fits?",
+                    "choices": [
+                        "Oh, so either you or a family member went online and expressed interest in a free review. We're just here to facilitate that for you.",
+                        "Oh, let me assure you (customer's name), I'm not asking for any credit card or banking information. I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+                        "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving."
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Busy gets the SUPER brief rebuttal.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_25",
+                    "question": "Complete the rebuttal: \"The difference is WE work with over...\"",
+                    "choices": [
+                        "5 government agencies",
+                        "25 different health insurance providers",
+                        "every insurance company in America",
+                        "100 different Medicare offices"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "\"...over 25 different health insurance providers.\"",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_26",
+                    "question": "A consumer grumbles, \"You people are so annoying, what do you want?\" What do you do?",
+                    "choices": [
+                        "Read the DNC disclaimer and end the call",
+                        "Code DQ",
+                        "Stay calm, rebut and continue",
+                        "Hang up without coding"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Rude is not DNC. Rebut and continue.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_27",
+                    "question": "A consumer says, \"Take me off your list.\" What do you do?",
+                    "choices": [
+                        "Transfer them so the specialist can handle it",
+                        "Rebut once, then DNC if they repeat it",
+                        "Code Not Interested",
+                        "Read the DNC disclaimer verbatim, end the call, code DNC"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Never rebut past a DNC request.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_script_28",
+                    "question": "Which is the exact DNC disclaimer?",
+                    "choices": [
+                        "Okay, we'll try you again at a better time. Have a great day",
+                        "Sorry about that, we'll put you on the Medicare do not call list, have a great day",
+                        "No problem, I'll remove you, but first give the agent JUST a few minutes",
+                        "No problem, I'll add you to our internal do not call list immediately and you won't receive any further calls from our company. We do apologize for any inconvenience, have a great day."
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Read it verbatim, END CALL AND CODE AS DNC.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_script_29",
+                    "question": "Where is the ONLY place you ask for permission on the call?",
+                    "choices": [
+                        "The Medicaid question",
+                        "The ringing line",
+                        "The opening greeting",
+                        "The transfer ask: \"Give them JUST a few minutes to go over them with you, okay?\""
+                    ],
+                    "answer_index": 3,
+                    "explanation": "It is the ONLY permission ask, and you must wait for a verbal yes.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_script_30",
+                    "question": "Which statement would be an automatic fail?",
+                    "choices": [
+                        "\"I'm with America's Health on a recorded line.\"",
+                        "\"That would be a great question for the agent once I get you there.\"",
+                        "\"I'm calling from Medicare about your benefits.\"",
+                        "\"you may be ENTITLED to some additional food benefits\""
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Claiming to be Medicare is a lie and an automatic fail.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_script_31",
+                    "question": "Which statement would be an automatic fail?",
+                    "choices": [
+                        "\"In the meantime, how's that weather out there today?\"",
+                        "\"do you receive Medicaid along with your Medicare plan?\"",
+                        "\"We're just here to facilitate your free review\"",
+                        "\"If you transfer, you're guaranteed a card worth money every month.\""
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Promising dollar amounts or guarantees is an automatic fail.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_script_32",
+                    "question": "Why must you always say \"may\" or \"maybe\"?",
+                    "choices": [
+                        "Only on callbacks",
+                        "It makes the call longer",
+                        "Nothing is guaranteed, so you can't promise what they'll qualify for",
+                        "It's a sales trick"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "May and maybe are your best friends.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_script_33",
+                    "question": "What must you do once the agent connects on the transfer?",
+                    "choices": [
+                        "Stop talking; once the lead responds, complete the transfer",
+                        "Stay on the full call",
+                        "Introduce the consumer and their benefits",
+                        "Read the DNC disclaimer"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Stop talking. Cold transfers only.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_script_34",
+                    "question": "The consumer hangs up while the transfer is ringing. What is the disposition?",
+                    "choices": [
+                        "Not Interested",
+                        "Transfer",
+                        "Hung-Up Transfer",
+                        "Conference Ended"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Hanging up during or after starting the transfer is Hung-Up Transfer.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "fx_script_35",
+                    "question": "The consumer says No to Medicare Parts A and B. How do you code it?",
+                    "choices": [
+                        "Not Interested",
+                        "DNC",
+                        "Wrong Number",
+                        "DQ"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "No - read the mistake line and code as DQ.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "fx_script_36",
+                    "question": "You read the \"you WOULD have to know your Medicare number or Social Security number\" line and the consumer doesn't know either one. What do you do?",
+                    "choices": [
+                        "Code DQ",
+                        "Code DNC",
+                        "Continue with the script",
+                        "Code Dead Air"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Either way, continue. Never ask them to read or give you the number.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "fx_script_37",
+                    "question": "After every transfer attempt, the agent's line disconnects. What is the disposition?",
+                    "choices": [
+                        "Conference Ended",
+                        "No Agent",
+                        "Transfer",
+                        "Hung-Up Transfer"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Agent line disconnecting on every attempt is Conference Ended.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "fx_script_38",
+                    "question": "On a scheduled callback, what must you do with the qualifying questions?",
+                    "choices": [
+                        "A full reconfirmation",
+                        "Skip them",
+                        "Ask only the ZIP code",
+                        "Ask only the Medicaid question"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Full reconfirmation every callback.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "fx_script_39",
+                    "question": "A consumer objects to the card question, then objects again at the ZIP line with a different worry. What must you do?",
+                    "choices": [
+                        "Code NI on the second objection",
+                        "Only rebut the first",
+                        "Skip the ZIP line",
+                        "Rebut each objection and go right back each time"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Rebut each separate objection. Not doing so is call avoidance.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_40",
+                    "question": "What is the correct order of the end of the call?",
+                    "choices": [
+                        "Ringing line, transfer ask, work or VA question, fluff",
+                        "Fluff, work or VA question, ringing line, transfer ask",
+                        "Transfer ask, work or VA question, fluff, ringing line",
+                        "Work or VA question, transfer ask, ringing line, fluff, stay silent when the agent picks up"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "LAST question, then the transfer ask, then the cold transfer.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_41",
+                    "question": "A consumer asks, \"How much am I getting?\" What do you say?",
+                    "choices": [
+                        "\"That's what they're doing.\"",
+                        "\"That would be a great question for the agent once I get you there.\"",
+                        "\"Probably a lot more than you get now.\"",
+                        "\"It depends on your area, usually a good amount.\""
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Never promise or guess an amount. Use the great-question-for-the-agent line.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_42",
+                    "question": "A consumer says, \"It came up as potential scam on my phone.\" Which rebuttal fits?",
+                    "choices": [
+                        "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                        "Oh, let me assure you (customer's name), I'm not asking for any credit card or banking information. I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+                        "That would be a great question for the agent once I get you there."
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Scam worries get the scam rebuttal, then go right back where you were.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_43",
+                    "question": "Which of these lines from real calls is an automatic fail?",
+                    "choices": [
+                        "\"Okay, LAST question here, do you have insurance through your work or the VA?\"",
+                        "\"It's like more money on your card at no cost, from Medicare for their own members.\"",
+                        "\"Perfect, and do you receive Medicaid along with your Medicare plan?\"",
+                        "\"In the meantime, how's that weather out there today?\""
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Promising money and claiming a Medicare connection are automatic fails.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_44",
+                    "question": "You're on a scheduled callback with a consumer you already qualified earlier. What do you do?",
+                    "choices": [
+                        "Confirm Parts A and B and the ZIP, then transfer",
+                        "Transfer right away",
+                        "Do a full reconfirmation and ask the okay again",
+                        "Ask only about work or VA"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Every callback needs full reconfirmation.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_45",
+                    "question": "The specialist picks up while you're mid-sentence in ring-time small talk. What do you do?",
+                    "choices": [
+                        "Finish your sentence",
+                        "Stop talking right away",
+                        "Introduce the consumer by name",
+                        "Repeat the consumer's ZIP for the specialist"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Stop talking once the agent connects. We do cold transfers only.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_46",
+                    "question": "A consumer says, \"I'm not changing my insurance.\" Which rebuttal is word for word correct?",
+                    "choices": [
+                        "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review.",
+                        "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                        "Oh, let me assure you (customer's name), I'm not asking for any credit card or banking information. I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "Oh no, you misunderstood, that's not true. Nothing changes."
+                    ],
+                    "answer_index": 0,
+                    "explanation": "The don't-want-to-change rebuttal. Empathize and never argue.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_47",
+                    "question": "You ask, \"Perfect, and do you receive Medicaid along with your Medicare plan?\" and the consumer hasn't answered yet. What do you do?",
+                    "choices": [
+                        "Say \"Perfect\" and move to the ZIP",
+                        "Wait for a clear answer",
+                        "Assume yes",
+                        "Skip to the transfer ask"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Every question gets a real answer. Wait for it.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_48",
+                    "question": "A consumer says, \"I already did my insurance for next year, I got Humana.\" What do you say?",
+                    "choices": [
+                        "That would be a great question for the agent once I get you there.",
+                        "\"Humana isn't a good plan.\"",
+                        "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                        "\"Then there must have been a mistake. Have a great day.\""
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Use the I've-already-got-it rebuttal and go right back where you were.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_49",
+                    "question": "You say, \"Give them JUST a few minutes to go over them with you, okay?\" and the consumer is silent. What now?",
+                    "choices": [
+                        "Transfer anyway",
+                        "Wait for a verbal yes before transferring",
+                        "Code Not Interested",
+                        "Move on to the weather question"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "You must ask the okay and wait for permission before the transfer.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_script_50",
+                    "question": "At the transfer ask, the consumer says, \"No, I don't want to talk to anybody else.\" What do you say?",
+                    "choices": [
+                        "Well, I understand, but you've worked your whole life for these Medicare benefits. Give the agent JUST a few minutes to review and compare your plan to make SURE you're not missing out on ANYTHING you may be entitled to.",
+                        "No problem, I'll add you to our internal do not call list immediately and you won't receive any further calls from our company. We do apologize for any inconvenience, have a great day.",
+                        "Oh, I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review.",
+                        "That would be a great question for the agent once I get you there."
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Don't transfer. Read an EXTRA NOT INTERESTED rebuttal, go back to \"Give them JUST a few minutes...\" and wait for the yes.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_51",
+                    "question": "The consumer says, \"I'm driving, call me back later.\" What do you say?",
+                    "choices": [
+                        "\"Sure, I'll call you tomorrow.\"",
+                        "Oh (Customer's Name), changing your insurance is ONLY something you can do. I don't even have the power to do that. There have just been some new allowances and new benefits that have JUST become available. We're just here to facilitate your free review.",
+                        "Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+                        "\"You'll lose the benefit if you don't do it now.\""
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Use the I'm-busy rebuttal and go right back where you were.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_52",
+                    "question": "At the work or VA question, the consumer says, \"Just my retiree Advantage plan from my old employer.\" What do you say?",
+                    "choices": [
+                        "Perfect, and do you receive Medicaid along with your Medicare plan?",
+                        "Oh, there must have been a mistake. Thank you for your time, have a great day.",
+                        "Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.",
+                        "Give them JUST a few minutes to go over them with you, okay?"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "A retiree plan through a former employer is a DQ. Read the mistake line and code DQ.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_53",
+                    "question": "Which opening line is correct?",
+                    "choices": [
+                        "\"I'm with American Health on a recorded line.\"",
+                        "\"I'm with America's Health on a recorded line.\"",
+                        "\"I'm with Medicare on a recorded line.\"",
+                        "\"I'm with America's Health.\" (no recorded line)"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Say \"America's Health\" slowly and clearly, and always say \"on a recorded line.\"",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_script_54",
+                    "question": "The consumer says, \"I already have that card with my plan.\" Which response follows the top-agent pattern?",
+                    "choices": [
+                        "A long explanation of their plan's benefits",
+                        "Acknowledge in one line, bridge back to why you called, then ask the next qualifying question",
+                        "\"Yes, and you'll get even more money.\"",
+                        "Hang up and code Not Interested"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Acknowledge, bridge, next question. The official line is the I've-already-got-it rebuttal.",
+                    "tags": [
+                        "rebuttal"
+                    ]
+                },
+                {
+                    "id": "fx_script_55",
+                    "question": "When do you click the transfer button?",
+                    "choices": [
+                        "Right after the work or VA question",
+                        "As soon as you read the transfer ask",
+                        "Only after the consumer says yes to \"Give them JUST a few minutes to go over them with you, okay?\"",
+                        "After the ringing line, even if they didn't agree"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "The consumer MUST say yes before you click transfer. No yes, no transfer.",
+                    "tags": [
+                        "script",
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_script_56",
+                    "question": "At the double-confirm, the consumer says, \"I lost that card.\" What do you say?",
+                    "choices": [
+                        "Okay, you WOULD have to know your Medicare number or Social Security number to review those increases. You don't need to give it to me, but the licensed agent may need it. Do you know either of those?",
+                        "There must have been a mistake. Thank you for your time, have a great day.",
+                        "Okay, LAST question here, do you have insurance through your work or the VA?",
+                        "No problem, I'll add you to our internal do not call list immediately and you won't receive any further calls from our company. We do apologize for any inconvenience, have a great day."
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Read the \"you WOULD have to know\" line, then continue either way. Never ask them to read or give the number.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_script_58",
+                    "question": "The licensed agent connects after the consumer already said yes to \"Give them JUST a few minutes... okay?\" Do you need to confirm permission again?",
+                    "choices": [
+                        "Yes, ask the consumer again before leaving the call",
+                        "No. Their yes to the transfer ask is the permission; there's no second confirmation",
+                        "Yes, the licensed agent must hear them say okay",
+                        "Only on callbacks"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "You need the consumer's yes before clicking transfer. You don't need to double confirm it after the licensed agent connects.",
+                    "tags": [
+                        "script",
+                        "compliance"
+                    ]
+                }
+            ]
+        }
+    }
+}

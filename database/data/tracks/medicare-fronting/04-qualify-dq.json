@@ -1,0 +1,564 @@
+    {
+        "id": "qualify_dq",
+        "title": "Qualifying & Disqualifying",
+        "summary": "Who qualifies, every DQ reason, and exactly what to say when someone is disqualified.",
+        "est_minutes": 33,
+        "badge": {
+            "id": "badge_qualify_dq",
+            "name": "Sharp Qualifier",
+            "icon": "🔍"
+        },
+        "lessons": [
+            {
+                "id": "qdq_1",
+                "title": "Who Qualifies",
+                "est_minutes": 6,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>A consumer qualifies for the transfer when they:</p><ul><li>Have <strong>Medicare Parts A and B</strong></li><li>Have the <strong>red, white and blue card</strong>, or at least know their Medicare number or Social Security number (they never read or give it to you)</li><li>Have confirmed their <strong>state and ZIP</strong></li><li>Do <strong>NOT</strong> have insurance through work, retirement, the VA or other military coverage, or a Native American tribe</li><li>Say <strong>yes</strong> to giving the specialist a few minutes</li></ul>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>Medicaid is <strong>not</strong> on this list as a yes-or-no rule. A consumer with Medicaid and Medicare can qualify. A consumer without Medicaid can qualify too.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "Qualify with the script, not your gut",
+                        "html": "<p>Don't decide someone \"sounds too young\" or \"probably doesn't qualify.\" Ask the questions. The answers decide.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which consumer qualifies for the transfer?",
+                        "choices": [
+                            "Has Parts A and B but still has insurance through their job",
+                            "Has Parts A and B, the red, white and blue card, confirms ZIP, no work or VA insurance, and agrees to a few minutes",
+                            "Has Parts A and B and Tricare for Life",
+                            "Has only Medicaid and no Medicare"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "They must pass every question and give permission. Work insurance, no Medicare, and Tricare are all DQs."
+                    }
+                ]
+            },
+            {
+                "id": "qdq_2",
+                "title": "Every DQ Reason",
+                "est_minutes": 7,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Code as <strong>DQ (Disqualified)</strong> when the consumer has:</p><ul><li><strong>No Medicare Parts A and B</strong></li><li><strong>Military coverage:</strong> VA, Tricare, Tricare for Life, or CHAMPVA</li><li><strong>Insurance through work or retirement</strong> (employer, union, or retiree plans)</li><li><strong>Coverage through a Native American tribe</strong></li></ul>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Which line do you read?</strong></p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "No Medicare Parts A and B",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "No, I'm not on Medicare yet."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "There must have been a mistake. Thank you for your time, have a great day."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "(Code as DQ)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "Work, retirement, VA or other DQ coverage",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "Yes, I've got Tricare for Life."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Oh, there must have been a mistake. Thank you for your time, have a great day."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "(CODE AS DQ)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "DQ is not the same as Not Interested",
+                        "html": "<p>A DQ means they <strong>can't</strong> qualify. Not Interested means they <strong>won't</strong> continue. Don't mix them up; miscoding patterns are an improper call handling issue.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which is a DQ reason?",
+                        "choices": [
+                            "Says they're busy",
+                            "Receives Medicaid",
+                            "Covered by a Native American tribe",
+                            "Lost their red, white and blue card"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Tribal coverage is a DQ. The others are not."
+                    }
+                ]
+            },
+            {
+                "id": "qdq_3",
+                "title": "Practice: Qualify or DQ?",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Real consumers don't use the words on the DQ list. They say it their own way. Read each answer and decide.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "You ask about work or VA insurance. The consumer says, \"I've got Tricare for Life.\" What now?",
+                        "choices": [
+                            "Code as Not Interested",
+                            "Continue to the transfer ask; Tricare for Life is just Medicare",
+                            "Rebut with \"I understand, but MANY people are finding out RIGHT now...\"",
+                            "Read \"Oh, there must have been a mistake. Thank you for your time, have a great day.\" and code DQ"
+                        ],
+                        "answer_index": 3,
+                        "explanation": "Tricare for Life is military coverage, which is a DQ."
+                    },
+                    {
+                        "type": "check",
+                        "question": "The consumer says, \"Just the insurance from my retirement plan with the city.\" What now?",
+                        "choices": [
+                            "Retirement plans don't count; continue",
+                            "It is insurance through retirement, so read the mistake line and code DQ",
+                            "Schedule a callback",
+                            "Ask them to cancel the retirement plan first"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Insurance through work or retirement is a DQ."
+                    },
+                    {
+                        "type": "check",
+                        "question": "At the double-confirm, the consumer says, \"I just have the Medicaid card.\" What do you say?",
+                        "choices": [
+                            "Oh, there must have been a mistake. Thank you for your time, have a great day.",
+                            "Perfect, and do you receive Medicaid along with your Medicare plan?",
+                            "There must have been a mistake. Thank you for your time, have a great day.",
+                            "Okay, no problem, but you DO have your Medicare number, correct?"
+                        ],
+                        "answer_index": 3,
+                        "explanation": "That is the \"I have ____ card\" branch. Ask if they have their Medicare number. If yes, continue; if no, read the No line."
+                    },
+                    {
+                        "type": "check",
+                        "question": "The consumer says, \"I have Medicaid, and yes, I have Medicare A and B too.\" What now?",
+                        "choices": [
+                            "Code DQ because they have Medicaid",
+                            "Keep going; Medicaid is not a DQ",
+                            "Ask them to pick one",
+                            "Code DNC"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "Dual eligible consumers continue."
+                    },
+                    {
+                        "type": "check",
+                        "question": "The consumer says, \"I get my health insurance through my wife's job.\" What now?",
+                        "choices": [
+                            "Continue, because it's not their own job",
+                            "Rebut and ask for the transfer",
+                            "Code as Wrong Number",
+                            "Treat it as insurance through work: read the mistake line and code DQ"
+                        ],
+                        "answer_index": 3,
+                        "explanation": "Coverage through an employer plan is insurance through work. That is a DQ."
+                    },
+                    {
+                        "type": "check",
+                        "question": "The consumer says, \"I use CHAMPVA.\" What now?",
+                        "choices": [
+                            "Continue; CHAMPVA isn't the VA",
+                            "DQ; CHAMPVA is military coverage",
+                            "Transfer and let the specialist decide",
+                            "Code Not Interested"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "CHAMPVA is on the military coverage DQ list."
+                    }
+                ]
+            },
+            {
+                "id": "qdq_4",
+                "title": "Hearing DQs Said Sideways",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Consumers almost never say \"I have insurance through my employer.\" They say it sideways, often before or after you ask the work or VA question. You have to hear it, and when you do, read the DQ line.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "What to listen for",
+                        "html": "<ol><li><strong>Retiree coverage:</strong> \"a plan through my old job\", \"my retirement\", \"my pension\", \"the city\", \"the union\". This includes retiree Medicare Advantage plans through a former employer.</li><li><strong>VA or Tricare:</strong> VA, Tricare, Tricare for Life, CHAMPVA.</li><li><strong>Employer coverage:</strong> through their job or a spouse's job.</li><li><strong>No Medicare A and B:</strong> only Part A, only Medicaid, not on Medicare yet.</li></ol>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "How it sounds when they say it sideways",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "I've got the plan through the city, from when I retired."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Retiree coverage. DQ."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "My Advantage plan comes through the union."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Retiree coverage, even though it's Medicare Advantage. DQ."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "My husband still works, so I'm on his insurance."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Employer coverage through a spouse. DQ."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "I go to the VA for everything."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "VA. DQ."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "I only have Part A. I never signed up for B."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "No Medicare A and B. DQ."
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "I have Medicaid through the state."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "NOT a DQ. Medicaid is fine. Keep going."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "script",
+                        "title": "The exact DQ lines",
+                        "lines": [
+                            {
+                                "speaker": "note",
+                                "text": "Insurance through work, retirement or the VA:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Oh, there must have been a mistake. Thank you for your time, have a great day."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Code as DQ. No Medicare A and B:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "There must have been a mistake. Thank you for your time, have a great day."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "Code as DQ. Don't rebut a DQ, and don't transfer it to be \"safe.\""
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "tip",
+                        "title": "When in doubt, ask one clarifying question",
+                        "html": "<p>If you're not sure where the coverage comes from, ask: <strong>\"Is that through a job or retirement?\"</strong></p><p>This is a Compliance Model habit. One short question, then wait. If it's through a job, retirement, a union or the military, read the DQ line. If not, keep going.</p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "What the model agents actually say",
+                        "lines": [
+                            {
+                                "speaker": "consumer",
+                                "text": "I don't have insurance with the VA, but I have Kaiser."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Compliance Model splits the question so nothing gets missed:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay, all right, no problem. And do you have insurance through a job?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "What? Now?"
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model puts it in plain words for a confused consumer:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Work, like an old job, or the VA military?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "I have public aid."
+                            },
+                            {
+                                "speaker": "note",
+                                "text": "The Pace Model clarifies instead of assuming:"
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Okay. Through Medicaid, not Medicare?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "check",
+                        "question": "You ask the work or VA question. The consumer says, \"No, but my Medicare Advantage plan is through my old company's retirement.\" What now?",
+                        "choices": [
+                            "They said no, so continue to the transfer ask",
+                            "Medicare Advantage is fine, so continue",
+                            "Read \"Oh, there must have been a mistake. Thank you for your time, have a great day.\" and code DQ",
+                            "Rebut with the not interested line"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "A retiree plan through a former employer is insurance through retirement, even if it's Medicare Advantage."
+                    },
+                    {
+                        "type": "check",
+                        "question": "The consumer says, \"I've got my pension plan coverage.\" You aren't sure if that's health insurance. What do you do?",
+                        "choices": [
+                            "Assume it isn't and transfer",
+                            "Ask one clarifying question: \"Is that through a job or retirement?\"",
+                            "Code DQ without asking",
+                            "Tell them the specialist will figure it out"
+                        ],
+                        "answer_index": 1,
+                        "explanation": "When in doubt, ask one short clarifying question and wait for the answer."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which answer is NOT a DQ?",
+                        "choices": [
+                            "\"I use Tricare for Life.\"",
+                            "\"I'm on my wife's plan from her job.\"",
+                            "\"I get Medicaid along with my Medicare.\"",
+                            "\"I only have Part A.\""
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Medicaid with Medicare continues. Tricare, employer coverage and no Part B are all DQs."
+                    }
+                ]
+            }
+        ],
+        "quiz": {
+            "pass_pct": 80,
+            "questions": [
+                {
+                    "id": "qualify_dq_q1",
+                    "question": "Which of these is a DQ reason?",
+                    "choices": [
+                        "Not knowing what Parts A and B are",
+                        "Being busy",
+                        "Insurance through work or retirement",
+                        "Receiving Medicaid"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Work or retirement insurance is a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "qualify_dq_q2",
+                    "question": "Which military coverages are DQs?",
+                    "choices": [
+                        "VA, Tricare, Tricare for Life and CHAMPVA",
+                        "Only Tricare",
+                        "None; military coverage is fine",
+                        "Only the VA"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "All four military coverages are DQs.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "qualify_dq_q3",
+                    "question": "A consumer says they are covered by their tribe. How do you code it?",
+                    "choices": [
+                        "DQ",
+                        "No English",
+                        "Not Interested",
+                        "Transfer"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Coverage by a Native American tribe is a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "qualify_dq_q4",
+                    "question": "What line do you read when a consumer says Yes to work or VA insurance?",
+                    "choices": [
+                        "I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving.",
+                        "Perfect, and do you receive Medicaid along with your Medicare plan?",
+                        "Oh, there must have been a mistake. Thank you for your time, have a great day.",
+                        "No problem, I'll add you to our internal do not call list immediately and you won't receive any further calls from our company. We do apologize for any inconvenience, have a great day."
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Read \"Oh, there must have been a mistake...\" and code DQ.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "qualify_dq_q5",
+                    "question": "A consumer has Medicaid and Medicare Parts A and B. Can they qualify?",
+                    "choices": [
+                        "Only on a callback",
+                        "No, Medicaid is a DQ",
+                        "Only if they drop Medicaid",
+                        "Yes, Medicaid is not a DQ"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Medicaid yes or no both continue.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "qualify_dq_q6",
+                    "question": "A consumer says, \"I'm 62 and not on Medicare yet.\" What happens?",
+                    "choices": [
+                        "Transfer them anyway",
+                        "Schedule a callback for when they turn 65",
+                        "Code Not Interested",
+                        "DQ; they don't have Medicare Parts A and B"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "No Medicare Parts A and B is a DQ.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "qualify_dq_q7",
+                    "question": "What is the difference between DQ and Not Interested?",
+                    "choices": [
+                        "NI is only used after a transfer",
+                        "They mean the same thing",
+                        "DQ is for rude people; NI is for polite people",
+                        "DQ means they can't qualify; Not Interested means they won't continue"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Keep them straight. Miscoding is improper call handling.",
+                    "tags": [
+                        "operations"
+                    ]
+                },
+                {
+                    "id": "qualify_dq_q8",
+                    "question": "A consumer says, \"My old union plan still covers me.\" What now?",
+                    "choices": [
+                        "Rebut with the busy rebuttal",
+                        "Continue; unions don't count",
+                        "DQ; that is insurance through work or retirement",
+                        "Code DNC"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Union and retiree plans are work/retirement insurance.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "qualify_dq_q9",
+                    "question": "Why does the script double-confirm the red, white and blue card?",
+                    "choices": [
+                        "To confirm their address",
+                        "To be sure the consumer really has Medicare Parts A and B",
+                        "To collect their card number",
+                        "To check their Medicaid balance"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Double-confirming Parts A and B is a compliance step. You don't collect the number.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "qualify_dq_q10",
+                    "question": "Before you ask, a consumer says, \"I only have Tricare for Life, is that okay?\" What do you do?",
+                    "choices": [
+                        "Tell them it's fine and keep going",
+                        "Put them on hold",
+                        "Read the mistake line and code DQ",
+                        "Use the \"I've already got it\" rebuttal"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Tricare for Life is a DQ no matter when in the call it comes up.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "qualify_dq_q11",
+                    "question": "The consumer says, \"I have a plan through the union from when I retired.\" What now?",
+                    "choices": [
+                        "Continue; union plans don't count",
+                        "Read \"Oh, there must have been a mistake. Thank you for your time, have a great day.\" and code DQ",
+                        "Rebut and transfer",
+                        "Code Not Interested"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Retiree coverage through a union is insurance through retirement. Read the DQ line.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "qualify_dq_q13",
+                    "question": "The consumer says, \"I get my care at the VA, but I have Medicare too.\" What now?",
+                    "choices": [
+                        "Continue, since they have Medicare",
+                        "Ask about the red, white and blue card",
+                        "DQ: VA coverage. Read the mistake line and code DQ",
+                        "Transfer and let the specialist decide"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "VA and Tricare coverage are DQs even with Medicare.",
+                    "tags": [
+                        "product"
+                    ]
+                }
+            ]
+        }
+    }

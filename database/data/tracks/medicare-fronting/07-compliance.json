@@ -1,0 +1,361 @@
+    {
+        "id": "compliance",
+        "title": "Compliance",
+        "summary": "Every compliance guideline, why it exists, and the lies and promises that are automatic fails.",
+        "est_minutes": 25,
+        "badge": {
+            "id": "badge_compliance",
+            "name": "Compliance Champ",
+            "icon": "⚖️"
+        },
+        "lessons": [
+            {
+                "id": "comp_1",
+                "title": "The Compliance Checklist",
+                "est_minutes": 8,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>Compliance rules protect the consumer, the company, and <strong>your job</strong>. Here is every guideline and why it matters:</p><ol><li><strong>Say you're on a recorded line with America's Health.</strong> Consumers have a right to know who is calling and that the call is recorded.</li><li><strong>Double confirm Medicare Parts A and B.</strong> Only people with Parts A and B qualify. Double-confirming prevents bad transfers.</li><li><strong>Confirm ZIP code and state.</strong> Plans vary by area. The specialist needs the right location.</li><li><strong>Verify they don't have insurance through an employer or the VA</strong> (retirement, military, etc.). Those people aren't a fit.</li><li><strong>Tell them they are transferring to a specialist.</strong> No surprises. They know who they're about to talk to.</li><li><strong>Wait for verbal confirmation to transfer.</strong> You MUST ask for the okay and wait for permission before you click transfer. This is the ONLY time you ask for permission on the call.</li><li><strong>Stop talking once the agent connects.</strong> They usually ask who they're speaking with. Once the lead responds, complete the transfer. Cold transfers only.</li><li><strong>May and maybe are your best friends.</strong> Always say may or maybe when mentioning something the lead may qualify for.</li><li><strong>Stick to the script.</strong> Going off script and freestyling is where compliance is broken the most.</li><li><strong>NEVER ask the consumer to read or give you a Medicare number or Social Security number.</strong> The script only asks whether they know one. The licensed agent handles the actual numbers.</li></ol>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "Failing compliance is improper call handling",
+                        "html": "<p>Not following compliance guidelines is on the zero-tolerance list. Know these cold.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "Where is compliance broken the most?",
+                        "choices": [
+                            "Leaving the conference call",
+                            "Reading the rebuttals",
+                            "Confirming the ZIP code",
+                            "Going off script and freestyling"
+                        ],
+                        "answer_index": 3,
+                        "explanation": "Stay scripted. Freestyling is where compliance breaks most."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Why do you tell the consumer they're being transferred to a specialist?",
+                        "choices": [
+                            "So the consumer can hang up first",
+                            "It's optional; you can skip it",
+                            "It's a compliance rule so the consumer knows who they're about to talk to",
+                            "Because the specialist is from the government"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Telling them they're transferring to a specialist is a required compliance step."
+                    },
+                    {
+                        "type": "check",
+                        "question": "The consumer lost their card. What does the script have you ask about their Medicare number or Social Security number?",
+                        "choices": [
+                            "Ask them to read you their Medicare number",
+                            "Ask for the last four digits of their Social Security number",
+                            "Ask whether they KNOW either number, without asking them to give it to you",
+                            "Skip it and transfer"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "You only ask whether they know one of the numbers. Never ask them to read or give it to you; the licensed agent handles the actual numbers."
+                    }
+                ]
+            },
+            {
+                "id": "comp_2",
+                "title": "May and Maybe",
+                "est_minutes": 5,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>You <strong>don't know</strong> what any consumer will qualify for. Nobody does until the specialist reviews it. So any time you talk about something they could get, you say <strong>may</strong> or <strong>maybe</strong>.</p>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<ul><li><strong>Right:</strong> \"you may be ENTITLED to some additional food benefits\"</li><li><strong>Wrong:</strong> \"you ARE entitled to additional food benefits\"</li><li><strong>Wrong:</strong> \"you're getting a food card\"</li></ul>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "Never drop the may",
+                        "html": "<p>The script and rebuttals already have \"may\" in the right places. If you rush and drop it, you just made a promise. Slow down on those words.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which statement is compliant?",
+                        "choices": [
+                            "You qualify for additional benefits",
+                            "You're definitely getting a food card",
+                            "You may qualify for additional benefits",
+                            "Everyone on Medicare gets these benefits"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Always use may or maybe for anything they could qualify for."
+                    }
+                ]
+            },
+            {
+                "id": "comp_3",
+                "title": "One Permission Ask & Stay Scripted",
+                "est_minutes": 5,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p>There is <strong>one</strong> permission ask on the whole call: \"Give them JUST a few minutes to go over them with you, okay?\" You MUST wait for a verbal yes <strong>before you click transfer</strong>. If they say no, read an EXTRA NOT INTERESTED rebuttal and ask again.</p><p>You never transfer someone who hasn't said yes. And you don't ask permission anywhere else (like \"is it okay if I ask you some questions?\"). That just invites a no.</p>"
+                    },
+                    {
+                        "type": "script",
+                        "title": "The permission ask",
+                        "lines": [
+                            {
+                                "speaker": "agent",
+                                "text": "Perfect, well that is EVERYTHING I need. So, a Medicare specialist is coming on the line now to review the additional food benefits for you. Give them JUST a few minutes to go over them with you, okay?"
+                            },
+                            {
+                                "speaker": "consumer",
+                                "text": "Yeah, okay."
+                            },
+                            {
+                                "speaker": "agent",
+                                "text": "Alright, so you'll hear a little bit of ringing, that's just me connecting them in, and once they pick up they'll ask you for your name, okay?"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "warning",
+                        "title": "Stay scripted",
+                        "html": "<p>If you forget a line, look at the script. Do not make something up. A made-up line is the fastest way to break compliance.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "When must you wait for a verbal yes?",
+                        "choices": [
+                            "After the ringing line (\"they'll ask you for your name okay?\")",
+                            "After every single question",
+                            "After \"Give them JUST a few minutes to go over them with you, okay?\"",
+                            "After the opening greeting"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "The transfer ask is the ONLY permission ask. Once they say yes, you don't need another okay on the ringing line or after the licensed agent connects."
+                    }
+                ]
+            },
+            {
+                "id": "comp_4",
+                "title": "Never Lie, Never Promise",
+                "est_minutes": 6,
+                "blocks": [
+                    {
+                        "type": "text",
+                        "html": "<p><strong>Never lie or promise anything to get a transfer.</strong> Not a little. Not once. These are <strong>automatic fails</strong> in simulations and on the final exam:</p><ul><li>Promising money: \"you'll get free money if you transfer\"</li><li>Claiming to be Medicare, Social Security, or the government</li><li>Promising a dollar amount: \"you'll get a card worth a lot every month\"</li><li>Promising approval: \"you're guaranteed to qualify\"</li><li>Saying their plan will definitely be better</li></ul>"
+                    },
+                    {
+                        "type": "text",
+                        "html": "<p>Why so strict? These consumers trust what you say. A lie hurts them, can get the company in serious trouble, and ends your job here. A transfer you got with a lie is not a win.</p>"
+                    },
+                    {
+                        "type": "callout",
+                        "tone": "compliance",
+                        "title": "If you don't know, don't say it",
+                        "html": "<p>Use \"That would be a great question for the agent once I get you there.\" and keep going.</p>"
+                    },
+                    {
+                        "type": "check",
+                        "question": "A consumer says, \"I'll only stay on if you promise I get the card.\" What do you do?",
+                        "choices": [
+                            "Promise the card so they stay on",
+                            "Tell them a dollar amount",
+                            "Tell them the government guarantees it",
+                            "Don't promise; use the right rebuttal and keep the \"may\""
+                        ],
+                        "answer_index": 3,
+                        "explanation": "Promising benefits is an automatic fail. Nothing is guaranteed."
+                    },
+                    {
+                        "type": "check",
+                        "question": "Which of these is an automatic fail?",
+                        "choices": [
+                            "Saying \"you may be ENTITLED to some additional food benefits\"",
+                            "Reading the DNC disclaimer",
+                            "Saying \"I'm calling from Medicare\"",
+                            "Confirming the consumer's ZIP code"
+                        ],
+                        "answer_index": 2,
+                        "explanation": "Claiming to be Medicare or the government is a lie and an automatic fail."
+                    }
+                ]
+            }
+        ],
+        "quiz": {
+            "pass_pct": 80,
+            "questions": [
+                {
+                    "id": "compliance_q1",
+                    "question": "What must you say in the opening for compliance?",
+                    "choices": [
+                        "That you're calling from Medicare",
+                        "That you're with America's Health on a recorded line",
+                        "That the consumer has been approved",
+                        "That the call is not recorded"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Say you're on a recorded line with America's Health.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "compliance_q2",
+                    "question": "How many times do you ask for permission on the call?",
+                    "choices": [
+                        "Twice: at the opening and the transfer",
+                        "Once, at the transfer ask",
+                        "Before every question",
+                        "Never"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "The transfer ask is the ONLY permission ask.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "compliance_q3",
+                    "question": "Which words are \"your best friends\" for compliance?",
+                    "choices": [
+                        "May and maybe",
+                        "Always and never",
+                        "Guaranteed and definitely",
+                        "Free and money"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Always say may or maybe for anything they may qualify for.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "compliance_q4",
+                    "question": "What should you do once the agent connects on the transfer?",
+                    "choices": [
+                        "Introduce the lead",
+                        "Keep fluffing about the weather",
+                        "Tell the agent the lead's ZIP code",
+                        "Stop talking and let the agent and lead speak"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Stop talking once the agent connects. Cold transfers only.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "compliance_q5",
+                    "question": "Which statement is an automatic fail?",
+                    "choices": [
+                        "\"You'll get free money if you transfer.\"",
+                        "\"That would be a great question for the agent once I get you there.\"",
+                        "\"You may qualify for additional benefits.\"",
+                        "\"I'm with America's Health.\""
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Promising money to get a transfer is a lie and an automatic fail.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "compliance_q6",
+                    "question": "Why confirm the consumer's state and ZIP code?",
+                    "choices": [
+                        "Plans and benefits vary by area, and it's a compliance step",
+                        "To mail them a card",
+                        "To check their credit",
+                        "It's optional"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Confirming state and ZIP is required.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "compliance_q7",
+                    "question": "A consumer asks, \"Is this the government?\" What is true?",
+                    "choices": [
+                        "You can say you work with Social Security",
+                        "You must never claim to be the government; you're with America's Health",
+                        "You should hang up",
+                        "You can say yes if it helps"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Never claim government affiliation.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "compliance_q8",
+                    "question": "You forget the next line. What do you do?",
+                    "choices": [
+                        "Skip to the transfer",
+                        "Ask the consumer what they want to talk about",
+                        "Make up something close",
+                        "Look at the script and read it"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Stay scripted. Freestyling is where compliance breaks most.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "compliance_q9",
+                    "question": "Can you tell a consumer \"You're guaranteed approval\"?",
+                    "choices": [
+                        "No, never promise approval",
+                        "Only on a callback",
+                        "Yes, if they have Medicaid",
+                        "Yes, if they qualified on every question"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Promising guaranteed approval is an automatic fail.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "compliance_q10",
+                    "question": "What does the insurance through work or VA check protect against?",
+                    "choices": [
+                        "Wrong numbers",
+                        "Robo calls",
+                        "Consumers who are busy",
+                        "Transferring people with employer, retirement or military coverage who aren't a fit"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Verify no employer or VA insurance (retirement, military, etc.).",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "compliance_q11",
+                    "question": "A consumer worries they'll have to give you their Medicare number or Social Security number. What is true?",
+                    "choices": [
+                        "You should code them Not Interested",
+                        "You never ask them to read or give either one; you only ask whether they know one, and the licensed agent handles the number",
+                        "You should read the DNC disclaimer",
+                        "You should skip the rest of the questions and transfer"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Never ask a consumer to read or give their Medicare or Social Security number. The script only asks whether they know one.",
+                    "tags": [
+                        "compliance"
+                    ]
+                }
+            ]
+        }
+    }
