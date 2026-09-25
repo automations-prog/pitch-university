@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\CourseExamAttempt;
+use App\Models\CourseExamRetakeGrant;
 use App\Models\CourseLesson;
 use App\Models\CourseModule;
 use App\Models\CourseQuizAttempt;
@@ -28,21 +30,125 @@ class TrainingProgress
     /** @var SupportCollection<int, SupportCollection<int, CourseQuizAttempt>> */
     private SupportCollection $attemptsByModule;
 
-    public function __construct(public User $user, public CourseTrack $track)
-    {
-        $this->modules = $track->modules()->with('lessons')->get();
+    private ?ExamProgress $examProgress = null;
 
-        $this->completedLessonIds = $user->completedCourseLessons()
+    /**
+     * The user's modules, completed lessons, quiz attempts and exam data may be
+     * passed in when already loaded, as forTracks() does for several tracks.
+     *
+     * @param  Collection<int, CourseModule>|null  $modules  the track's modules with their lessons
+     * @param  array<int, bool>|null  $completedLessonIds
+     * @param  SupportCollection<int, SupportCollection<int, CourseQuizAttempt>>|null  $attemptsByModule
+     * @param  array{attempts: SupportCollection<int, CourseExamAttempt>, grants: array<string, int>}|null  $examData
+     */
+    public function __construct(
+        public User $user,
+        public CourseTrack $track,
+        ?Collection $modules = null,
+        ?array $completedLessonIds = null,
+        ?SupportCollection $attemptsByModule = null,
+        private ?array $examData = null,
+    ) {
+        $this->modules = $modules ?? $track->modules()->with('lessons')->get();
+
+        $this->completedLessonIds = $completedLessonIds ?? $user->completedCourseLessons()
             ->pluck('course_lessons.id')
             ->mapWithKeys(fn (int $lessonId) => [$lessonId => true])
             ->all();
 
-        $this->attemptsByModule = $user->courseQuizAttempts()
+        $this->attemptsByModule = $attemptsByModule ?? $user->courseQuizAttempts()
             ->whereIn('course_module_id', $this->modules->modelKeys())
             ->latest('id')
             ->get()
             ->toBase()
             ->groupBy('course_module_id');
+    }
+
+    /**
+     * Build the user's progress in each of the given tracks with a fixed number
+     * of queries, however many tracks there are.
+     *
+     * @param  Collection<int, CourseTrack>  $tracks
+     * @return SupportCollection<int, self>
+     */
+    public static function forTracks(User $user, Collection $tracks): SupportCollection
+    {
+        $tracks->loadMissing(['modules.lessons', 'exam']);
+
+        $moduleIds = $tracks->flatMap(fn (CourseTrack $track) => $track->modules->modelKeys())->all();
+        $examIds = $tracks->pluck('exam.id')->filter()->all();
+
+        $completedLessonIds = $user->completedCourseLessons()
+            ->pluck('course_lessons.id')
+            ->mapWithKeys(fn (int $lessonId) => [$lessonId => true])
+            ->all();
+
+        $attemptsByModule = $user->courseQuizAttempts()
+            ->whereIn('course_module_id', $moduleIds)
+            ->latest('id')
+            ->get()
+            ->toBase()
+            ->groupBy('course_module_id');
+
+        $examAttempts = $user->courseExamAttempts()
+            ->whereIn('course_exam_id', $examIds)
+            ->latest('id')
+            ->get()
+            ->toBase()
+            ->groupBy('course_exam_id');
+
+        $examGrants = CourseExamRetakeGrant::query()
+            ->whereBelongsTo($user)
+            ->whereIn('course_exam_id', $examIds)
+            ->selectRaw('course_exam_id, section, count(*) as grants_count')
+            ->groupBy('course_exam_id', 'section')
+            ->toBase()
+            ->get()
+            ->groupBy('course_exam_id')
+            ->map(fn (SupportCollection $rows) => $rows->mapWithKeys(fn (object $row) => [$row->section => (int) $row->grants_count])->all());
+
+        return $tracks->toBase()->map(function (CourseTrack $track) use ($user, $completedLessonIds, $attemptsByModule, $examAttempts, $examGrants) {
+            return new self(
+                $user,
+                $track,
+                $track->modules,
+                $completedLessonIds,
+                $attemptsByModule,
+                $track->exam === null ? null : [
+                    'attempts' => $examAttempts->get($track->exam->id, collect()),
+                    'grants' => $examGrants->get($track->exam->id, []),
+                ],
+            );
+        })->values();
+    }
+
+    /**
+     * The user's standing on the track's final exam, or null when the track
+     * has none.
+     */
+    public function examProgress(): ?ExamProgress
+    {
+        if ($this->track->exam === null) {
+            return null;
+        }
+
+        return $this->examProgress ??= new ExamProgress(
+            $this->user,
+            $this->track->exam,
+            $this->modulesPassed(),
+            $this->examData['attempts'] ?? null,
+            $this->examData['grants'] ?? null,
+        );
+    }
+
+    /**
+     * Whether the track has modules and every one of them is passed.
+     */
+    public function modulesPassed(): bool
+    {
+        $summary = $this->trackSummary();
+
+        return $summary['total_modules'] > 0 && $summary['passed_modules'] === $summary['total_modules'];
     }
 
     /**
@@ -178,17 +284,14 @@ class TrainingProgress
      */
     public function trackStatus(): array
     {
-        $summary = $this->trackSummary();
-        $exam = $this->track->exam;
-
-        $isCertified = $exam !== null && ExamProgress::forTrack($this->user, $exam, $this)->isPassed();
-        $modulesPassed = $summary['total_modules'] > 0 && $summary['passed_modules'] === $summary['total_modules'];
+        $examProgress = $this->examProgress();
+        $isCertified = $examProgress?->isPassed() ?? false;
 
         return [
-            ...$summary,
-            'has_exam' => $exam !== null,
+            ...$this->trackSummary(),
+            'has_exam' => $examProgress !== null,
             'is_certified' => $isCertified,
-            'is_complete' => $exam !== null ? $isCertified : $modulesPassed,
+            'is_complete' => $examProgress !== null ? $isCertified : $this->modulesPassed(),
             'average_score' => $this->averageScore(),
         ];
     }

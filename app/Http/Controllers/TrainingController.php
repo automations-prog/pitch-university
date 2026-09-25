@@ -24,15 +24,13 @@ class TrainingController extends Controller
     {
         $user = $request->user();
 
-        $tracks = $user->courseTracks()->with('exam')->orderBy('position')->get();
+        $tracks = $user->courseTracks()->orderBy('position')->get();
 
         return Inertia::render('training/index', [
-            'tracks' => $tracks->map(function (CourseTrack $track) use ($user) {
-                return [
-                    ...$this->trackData($track),
-                    'progress' => (new TrainingProgress($user, $track))->trackStatus(),
-                ];
-            }),
+            'tracks' => TrainingProgress::forTracks($user, $tracks)->map(fn (TrainingProgress $progress) => [
+                ...$this->trackData($progress->track),
+                'progress' => $progress->trackStatus(),
+            ]),
         ]);
     }
 

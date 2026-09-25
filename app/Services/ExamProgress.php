@@ -28,16 +28,28 @@ class ExamProgress
     /** @var array<string, int> */
     private array $grantsBySection;
 
-    public function __construct(public User $user, public CourseExam $exam, private bool $modulesPassed)
-    {
-        $this->attemptsBySection = $exam->attempts()
+    /**
+     * The user's attempts (newest first) and retake grants per section may be
+     * passed in when already loaded, e.g. for several tracks at once.
+     *
+     * @param  Collection<int, CourseExamAttempt>|null  $attempts
+     * @param  array<string, int>|null  $grantsBySection
+     */
+    public function __construct(
+        public User $user,
+        public CourseExam $exam,
+        private bool $modulesPassed,
+        ?Collection $attempts = null,
+        ?array $grantsBySection = null,
+    ) {
+        $this->attemptsBySection = ($attempts ?? $exam->attempts()
             ->whereBelongsTo($user)
             ->latest('id')
             ->get()
-            ->toBase()
+            ->toBase())
             ->groupBy('section');
 
-        $this->grantsBySection = $exam->retakeGrants()
+        $this->grantsBySection = $grantsBySection ?? $exam->retakeGrants()
             ->whereBelongsTo($user)
             ->selectRaw('section, count(*) as grants_count')
             ->groupBy('section')
@@ -51,9 +63,7 @@ class ExamProgress
      */
     public static function forTrack(User $user, CourseExam $exam, TrainingProgress $trackProgress): self
     {
-        $summary = $trackProgress->trackSummary();
-
-        return new self($user, $exam, $summary['total_modules'] > 0 && $summary['passed_modules'] === $summary['total_modules']);
+        return new self($user, $exam, $trackProgress->modulesPassed());
     }
 
     public function isUnlocked(): bool

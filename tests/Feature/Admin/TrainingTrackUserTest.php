@@ -1,10 +1,13 @@
 <?php
 
+use App\Models\CourseExam;
+use App\Models\CourseExamAttempt;
 use App\Models\CourseLesson;
 use App\Models\CourseModule;
 use App\Models\CourseQuizAttempt;
 use App\Models\CourseTrack;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('admins can view a user\'s progress in each assigned track', function () {
@@ -66,4 +69,39 @@ test('agents can not view a user\'s training progress', function () {
     $this->actingAs($agent)
         ->get(route('admin.training-tracks.show', User::factory()->create()))
         ->assertForbidden();
+});
+
+test('a user\'s training progress page runs the same number of queries however many tracks they have', function () {
+    $admin = User::factory()->admin()->create();
+    $agent = User::factory()->create();
+
+    $addTrack = function (int $position, bool $isAssigned) use ($agent): void {
+        $track = CourseTrack::factory()->create(['position' => $position]);
+        $module = CourseModule::factory()->for($track, 'track')->create();
+        $agent->completedCourseLessons()->attach(CourseLesson::factory()->for($module, 'module')->create());
+        CourseQuizAttempt::factory()->for($agent)->for($module, 'module')->create();
+        $exam = CourseExam::factory()->for($track, 'track')->create();
+        CourseExamAttempt::factory()->for($agent)->for($exam, 'exam')->create();
+
+        if ($isAssigned) {
+            $agent->courseTracks()->attach($track);
+        }
+    };
+
+    $countQueries = function () use ($admin, $agent): int {
+        DB::flushQueryLog();
+        DB::enableQueryLog();
+        $this->actingAs($admin)->get(route('admin.training-tracks.show', $agent))->assertOk();
+
+        return count(DB::getQueryLog());
+    };
+
+    $addTrack(0, isAssigned: true);
+    $addTrack(1, isAssigned: false);
+    $queriesWithTwoTracks = $countQueries();
+
+    $addTrack(2, isAssigned: true);
+    $addTrack(3, isAssigned: false);
+
+    expect($countQueries())->toBe($queriesWithTwoTracks);
 });

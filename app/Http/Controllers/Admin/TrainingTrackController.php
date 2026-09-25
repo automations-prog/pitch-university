@@ -8,7 +8,6 @@ use App\Models\CourseModule;
 use App\Models\CourseQuizAttempt;
 use App\Models\CourseTrack;
 use App\Models\User;
-use App\Services\ExamProgress;
 use App\Services\TrainingProgress;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -106,10 +105,8 @@ class TrainingTrackController extends Controller
                 'email' => $user->email,
                 'role' => $user->role,
             ],
-            'tracks' => [
-                ...$assignedTracks->map(fn (CourseTrack $track) => $this->trackProgress($user, $track, isAssigned: true)),
-                ...$unassignedTracksWithProgress->map(fn (CourseTrack $track) => $this->trackProgress($user, $track, isAssigned: false)),
-            ],
+            'tracks' => TrainingProgress::forTracks($user, $assignedTracks->concat($unassignedTracksWithProgress))
+                ->map(fn (TrainingProgress $progress) => $this->trackProgress($progress, isAssigned: $assignedTracks->contains($progress->track))),
             'availableTracks' => CourseTrack::query()
                 ->orderBy('position')
                 ->get(['id', 'name'])
@@ -124,20 +121,19 @@ class TrainingTrackController extends Controller
     /**
      * @return array<string, mixed>
      */
-    private function trackProgress(User $user, CourseTrack $track, bool $isAssigned): array
+    private function trackProgress(TrainingProgress $progress, bool $isAssigned): array
     {
-        $progress = new TrainingProgress($user, $track);
-
-        $exam = $track->exam;
+        $track = $progress->track;
+        $examProgress = $progress->examProgress();
 
         return [
             'slug' => $track->slug,
             'name' => $track->name,
             'is_assigned' => $isAssigned,
             ...$progress->trackSummary(),
-            'exam' => $exam ? [
-                'id' => $exam->id,
-                ...ExamProgress::forTrack($user, $exam, $progress)->summary(),
+            'exam' => $examProgress ? [
+                'id' => $examProgress->exam->id,
+                ...$examProgress->summary(),
             ] : null,
             'modules' => $progress->modules()->map(fn (CourseModule $module) => [
                 'slug' => $module->slug,

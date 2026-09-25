@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\CourseExam;
 use App\Models\CourseLesson;
 use App\Models\CourseModule;
 use App\Models\CourseQuizAttempt;
 use App\Models\CourseTrack;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia as Assert;
 
 /**
@@ -246,4 +248,32 @@ test('track cards show the average of the agent\'s best quiz score per attempted
         ->assertInertia(fn (Assert $page) => $page
             ->where('tracks.0.progress.average_score', 80)
             ->where('tracks.1.progress.average_score', null));
+});
+
+test('my training runs the same number of queries however many tracks are assigned', function () {
+    $agent = User::factory()->create();
+
+    $addTrack = function (int $position) use ($agent): void {
+        $track = CourseTrack::factory()->create(['position' => $position]);
+        $module = trackModuleWithLessons($track);
+        CourseExam::factory()->for($track, 'track')->create();
+        CourseQuizAttempt::factory()->for($agent)->for($module, 'module')->create();
+        $agent->courseTracks()->attach($track);
+    };
+
+    $countQueries = function () use ($agent): int {
+        DB::flushQueryLog();
+        DB::enableQueryLog();
+        $this->actingAs($agent)->get(route('training.index'))->assertOk();
+
+        return count(DB::getQueryLog());
+    };
+
+    $addTrack(0);
+    $queriesWithOneTrack = $countQueries();
+
+    $addTrack(1);
+    $addTrack(2);
+
+    expect($countQueries())->toBe($queriesWithOneTrack);
 });
