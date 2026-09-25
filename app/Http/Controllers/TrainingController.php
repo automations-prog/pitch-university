@@ -28,15 +28,9 @@ class TrainingController extends Controller
 
         return Inertia::render('training/index', [
             'tracks' => $tracks->map(function (CourseTrack $track) use ($user) {
-                $progress = new TrainingProgress($user, $track);
-
                 return [
                     ...$this->trackData($track),
-                    'progress' => [
-                        ...$progress->trackSummary(),
-                        'has_exam' => $track->exam !== null,
-                        'is_certified' => $track->exam !== null && ExamProgress::forTrack($user, $track->exam, $progress)->isPassed(),
-                    ],
+                    'progress' => (new TrainingProgress($user, $track))->trackStatus(),
                 ];
             }),
         ]);

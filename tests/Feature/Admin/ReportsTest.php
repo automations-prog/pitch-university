@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\CourseModule;
+use App\Models\CourseQuizAttempt;
+use App\Models\CourseTrack;
 use App\Models\License;
 use App\Models\User;
-use App\Models\VerticalTraining;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('admins can view the reports page', function () {
@@ -88,15 +90,40 @@ test('the reports page exposes each agent\'s assigned licenses', function () {
     );
 });
 
-test('the reports page progress narrows to a single vertical training when filtered', function () {
+test('the reports page shows each agent\'s live track progress', function () {
     $admin = User::factory()->admin()->create();
-    User::factory()->create();
-    $training = VerticalTraining::factory()->create();
+    $agent = User::factory()->create();
+    $completedTrack = CourseTrack::factory()->create();
+    $module = CourseModule::factory()->for($completedTrack, 'track')->create();
+    CourseQuizAttempt::factory()->for($agent)->for($module, 'module')->create(['score_pct' => 90, 'created_at' => '2026-09-20 10:00:00']);
+    $agent->courseTracks()->attach([$completedTrack->id, CourseTrack::factory()->create()->id]);
 
-    $response = $this->actingAs($admin)->get(route('admin.reports.index', ['vertical_training' => $training->id]));
+    $response = $this->actingAs($admin)->get(route('admin.reports.index'));
 
     $response->assertInertia(fn (Assert $page) => $page
-        ->where('agents.data.0.total_trainings', 1),
+        ->where('agents.data.0.id', $agent->id)
+        ->where('agents.data.0.trainings_completed', 1)
+        ->where('agents.data.0.total_trainings', 2)
+        ->where('agents.data.0.average_score', 90)
+        ->where('agents.data.0.last_activity', '2026-09-20'),
+    );
+});
+
+test('the reports page narrows to agents assigned to a single track when filtered', function () {
+    $admin = User::factory()->admin()->create();
+    $track = CourseTrack::factory()->create();
+    $otherTrack = CourseTrack::factory()->create();
+    $assignedAgent = User::factory()->create();
+    $assignedAgent->courseTracks()->attach([$track->id, $otherTrack->id]);
+    User::factory()->create()->courseTracks()->attach($otherTrack);
+
+    $response = $this->actingAs($admin)->get(route('admin.reports.index', ['track' => $track->id]));
+
+    $response->assertInertia(fn (Assert $page) => $page
+        ->has('agents.data', 1)
+        ->where('agents.data.0.id', $assignedAgent->id)
+        ->where('agents.data.0.total_trainings', 1)
+        ->where('filters.track', (string) $track->id),
     );
 });
 

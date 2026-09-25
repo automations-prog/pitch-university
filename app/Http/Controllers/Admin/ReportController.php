@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Concerns\BuildsAgentReportQuery;
 use App\Enums\LicenseStatus;
 use App\Enums\UserStatus;
-use App\Enums\VerticalTrainingStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LicenseResource;
+use App\Models\CourseTrack;
 use App\Models\License;
 use App\Models\User;
-use App\Models\VerticalTraining;
+use App\Services\AgentTrainingReport;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
@@ -29,24 +30,25 @@ class ReportController extends Controller
     private const PER_PAGE_OPTIONS = [10, 25, 50, 100];
 
     /**
-     * Display the agent training/license report.
+     * Display each agent's live training track progress and licenses.
      */
     public function index(Request $request): Response
     {
         Gate::authorize('viewAny', User::class);
 
-        $totalTrainings = VerticalTraining::where('status', VerticalTrainingStatus::Active)->count();
-
-        $trainingId = $request->string('vertical_training')->toString();
-
-        $selectedTraining = $trainingId
-            ? VerticalTraining::where('status', VerticalTrainingStatus::Active)->find($trainingId)
-            : null;
+        $tracks = CourseTrack::query()->orderBy('position')->get(['id', 'name']);
+        $selectedTrack = $tracks->find($request->integer('track'));
 
         $perPage = $request->integer('per_page', self::PER_PAGE_OPTIONS[0]);
         $perPage = in_array($perPage, self::PER_PAGE_OPTIONS, true) ? $perPage : self::PER_PAGE_OPTIONS[0];
 
-        $agents = $this->agentReportQuery($request)->paginate($perPage)->withQueryString();
+        $agents = $this->agentReportQuery($request)
+            ->when($selectedTrack, fn (Builder $query, CourseTrack $track) => $query
+                ->whereHas('courseTracks', fn (Builder $query) => $query->whereKey($track->id)))
+            ->paginate($perPage)
+            ->withQueryString();
+
+        $report = new AgentTrainingReport(collect($agents->getCollection()->modelKeys()), $selectedTrack);
 
         $agents->through(fn (User $agent) => [
             'id' => $agent->id,
@@ -54,7 +56,7 @@ class ReportController extends Controller
             'email' => $agent->email,
             'status' => $agent->status,
             'licenses' => LicenseResource::collection($agent->licenses),
-            ...$this->mockProgressFor($agent, $totalTrainings, $selectedTraining),
+            ...$report->summary($agent->id),
         ]);
 
         $paginated = $agents->toArray();
@@ -66,13 +68,13 @@ class ReportController extends Controller
                 'meta' => Arr::except($paginated, ['data', 'links']),
             ],
             'filters' => [
-                ...$request->only(['search', 'status', 'license', 'vertical_training']),
+                ...$request->only(['search', 'status', 'license', 'track']),
                 'per_page' => (string) $perPage,
             ],
             'perPageOptions' => self::PER_PAGE_OPTIONS,
             'statuses' => UserStatus::cases(),
             'licenses' => License::where('status', LicenseStatus::Active)->orderBy('name')->get(['id', 'name']),
-            'trainings' => VerticalTraining::where('status', VerticalTrainingStatus::Active)->orderBy('name')->get(['id', 'name']),
+            'trainings' => $tracks,
         ]);
     }
 }

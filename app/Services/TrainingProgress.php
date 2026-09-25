@@ -145,4 +145,51 @@ class TrainingProgress
             'total_modules' => $this->modules->count(),
         ];
     }
+
+    /**
+     * The best quiz score of each module the user has attempted.
+     *
+     * @return SupportCollection<int, int>
+     */
+    public function bestScores(): SupportCollection
+    {
+        return $this->modules->toBase()
+            ->map(fn (CourseModule $module) => $this->bestScore($module))
+            ->filter(fn (?int $score) => $score !== null)
+            ->values();
+    }
+
+    /**
+     * The average of the user's best quiz score per attempted module, or null
+     * when no quiz has been attempted yet.
+     */
+    public function averageScore(): ?int
+    {
+        $scores = $this->bestScores();
+
+        return $scores->isEmpty() ? null : (int) round($scores->avg());
+    }
+
+    /**
+     * The track summary plus final exam certification, and whether the track
+     * counts as complete: certified when it has an exam, otherwise every module passed.
+     *
+     * @return array{passed_modules: int, total_modules: int, has_exam: bool, is_certified: bool, is_complete: bool, average_score: int|null}
+     */
+    public function trackStatus(): array
+    {
+        $summary = $this->trackSummary();
+        $exam = $this->track->exam;
+
+        $isCertified = $exam !== null && ExamProgress::forTrack($this->user, $exam, $this)->isPassed();
+        $modulesPassed = $summary['total_modules'] > 0 && $summary['passed_modules'] === $summary['total_modules'];
+
+        return [
+            ...$summary,
+            'has_exam' => $exam !== null,
+            'is_certified' => $isCertified,
+            'is_complete' => $exam !== null ? $isCertified : $modulesPassed,
+            'average_score' => $this->averageScore(),
+        ];
+    }
 }

@@ -7,7 +7,6 @@ use App\Http\Controllers\Admin\LicenseStepController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ScreeningController;
 use App\Http\Controllers\Admin\ScreeningResponseController;
-use App\Http\Controllers\Admin\TrainingProgressController;
 use App\Http\Controllers\Admin\TrainingTrackController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UserLicenseController;
@@ -50,7 +49,6 @@ Route::middleware(['auth', 'verified', 'can:viewAny,'.User::class])
         Route::get('training-tracks', [TrainingTrackController::class, 'index'])->name('training-tracks.index');
         Route::get('training-tracks/{user}', [TrainingTrackController::class, 'show'])->name('training-tracks.show');
         Route::post('training-tracks/{user}/exam-retakes', [ExamRetakeController::class, 'store'])->name('training-tracks.exam-retakes.store');
-        Route::get('training/progress', [TrainingProgressController::class, 'index'])->name('training.progress');
 
         Route::get('screening', [ScreeningController::class, 'index'])->name('screening.index');
         Route::post('screening', [ScreeningController::class, 'store'])->name('screening.store');

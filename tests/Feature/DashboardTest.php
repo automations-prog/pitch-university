@@ -1,8 +1,15 @@
 <?php
 
+use App\Enums\CallRating;
+use App\Models\CourseExam;
+use App\Models\CourseExamAttempt;
+use App\Models\CourseLesson;
+use App\Models\CourseModule;
+use App\Models\CourseQuizAttempt;
+use App\Models\CourseTrack;
 use App\Models\License;
+use App\Models\ScreeningResponse;
 use App\Models\User;
-use App\Models\VerticalTraining;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('guests are redirected to the login page', function () {
@@ -20,8 +27,8 @@ test('authenticated users can visit the dashboard', function () {
 
 test('agents see their own progress instead of admin stats', function () {
     $agent = User::factory()->create();
-    VerticalTraining::factory()->count(2)->create();
-    VerticalTraining::factory()->inactive()->create();
+    $agent->courseTracks()->attach(CourseTrack::factory()->count(2)->create());
+    CourseTrack::factory()->create();
 
     $response = $this->actingAs($agent)->get(route('dashboard'));
 
@@ -29,7 +36,7 @@ test('agents see their own progress instead of admin stats', function () {
     $response->assertInertia(fn (Assert $page) => $page
         ->component('dashboard')
         ->where('isAdmin', false)
-        ->has('progress.trainings_completed')
+        ->where('progress.trainings_completed', 0)
         ->where('progress.total_trainings', 2)
         ->has('trainingScores', 2)
         ->missing('stats')
@@ -38,28 +45,39 @@ test('agents see their own progress instead of admin stats', function () {
     );
 });
 
-test('an agent\'s training scores are per-training, deterministic, and exclude inactive trainings', function () {
+test('an agent\'s training scores show their status and average quiz score in each assigned track', function () {
     $agent = User::factory()->create();
-    $training = VerticalTraining::factory()->create(['name' => 'Cold Calling']);
-    VerticalTraining::factory()->inactive()->create();
 
-    $seed = crc32($agent->id.'-'.$training->id);
-    $completed = $seed % 2;
-    $expectedScore = $completed > 0 ? 55 + ($seed % 46) : null;
+    $inProgressTrack = CourseTrack::factory()->create(['name' => 'Cold Calling', 'position' => 0]);
+    $passedModule = CourseModule::factory()->for($inProgressTrack, 'track')->create(['position' => 0]);
+    CourseModule::factory()->for($inProgressTrack, 'track')->create(['position' => 1]);
+    CourseQuizAttempt::factory()->for($agent)->for($passedModule, 'module')->create(['score_pct' => 85]);
 
-    $response = $this->actingAs($agent)->get(route('dashboard'));
+    $examNextTrack = CourseTrack::factory()->create(['position' => 1]);
+    $examNextModule = CourseModule::factory()->for($examNextTrack, 'track')->create();
+    CourseQuizAttempt::factory()->for($agent)->for($examNextModule, 'module')->create();
+    CourseExam::factory()->for($examNextTrack, 'track')->create();
 
-    $response->assertInertia(fn (Assert $page) => $page
-        ->has('trainingScores', 1)
-        ->where('trainingScores.0.id', $training->id)
-        ->where('trainingScores.0.name', 'Cold Calling')
-        ->where('trainingScores.0.trainings_completed', $completed)
-        ->where('trainingScores.0.average_score', $expectedScore),
-    );
+    $lessonOnlyTrack = CourseTrack::factory()->create(['position' => 2]);
+    $lessonOnlyModule = CourseModule::factory()->for($lessonOnlyTrack, 'track')->create();
+    $agent->completedCourseLessons()->attach(CourseLesson::factory()->for($lessonOnlyModule, 'module')->create());
 
-    // Same agent + training seed should stay stable across requests.
+    $notStartedTrack = CourseTrack::factory()->create(['position' => 3]);
+    CourseModule::factory()->for($notStartedTrack, 'track')->create();
+
+    CourseTrack::factory()->create(['position' => 4]);
+
+    $agent->courseTracks()->attach([$inProgressTrack->id, $examNextTrack->id, $lessonOnlyTrack->id, $notStartedTrack->id]);
+
     $this->actingAs($agent)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
-        ->where('trainingScores.0.average_score', $expectedScore),
+        ->has('trainingScores', 4)
+        ->where('trainingScores.0.name', 'Cold Calling')
+        ->where('trainingScores.0.status', 'in_progress')
+        ->where('trainingScores.0.average_score', 85)
+        ->where('trainingScores.1.status', 'exam_next')
+        ->where('trainingScores.2.status', 'in_progress')
+        ->where('trainingScores.2.average_score', null)
+        ->where('trainingScores.3.status', 'not_started'),
     );
 });
 
@@ -67,7 +85,6 @@ test('admins see progress stats and the agent table', function () {
     $admin = User::factory()->admin()->create();
     User::factory()->count(2)->create();
     User::factory()->inactive()->create();
-    VerticalTraining::factory()->create();
 
     $response = $this->actingAs($admin)->get(route('dashboard'));
 
@@ -120,17 +137,40 @@ test('the admin dashboard agent table can be filtered by license', function () {
     );
 });
 
-test('the admin dashboard progress narrows to a single vertical training when filtered', function () {
+test('the admin dashboard agent table shows each agent\'s live track progress', function () {
     $admin = User::factory()->admin()->create();
-    User::factory()->count(3)->create();
-    $training = VerticalTraining::factory()->create();
-    VerticalTraining::factory()->count(2)->create();
+    $agent = User::factory()->create();
+    $completedTrack = CourseTrack::factory()->create();
+    $module = CourseModule::factory()->for($completedTrack, 'track')->create();
+    CourseQuizAttempt::factory()->for($agent)->for($module, 'module')->create(['score_pct' => 90, 'created_at' => '2026-09-20 10:00:00']);
+    $agent->courseTracks()->attach([$completedTrack->id, CourseTrack::factory()->create()->id]);
 
-    $response = $this->actingAs($admin)->get(route('dashboard', ['vertical_training' => $training->id]));
+    $this->actingAs($admin)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
+        ->where('agents.data.0.id', $agent->id)
+        ->where('agents.data.0.trainings_completed', 1)
+        ->where('agents.data.0.total_trainings', 2)
+        ->where('agents.data.0.average_score', 90)
+        ->where('agents.data.0.last_activity', '2026-09-20'),
+    );
+});
+
+test('the admin dashboard narrows to agents assigned to a single track when filtered', function () {
+    $admin = User::factory()->admin()->create();
+    $track = CourseTrack::factory()->create();
+    $otherTrack = CourseTrack::factory()->create();
+    $assignedAgent = User::factory()->create();
+    $assignedAgent->courseTracks()->attach([$track->id, $otherTrack->id]);
+    User::factory()->create()->courseTracks()->attach($otherTrack);
+
+    $response = $this->actingAs($admin)->get(route('dashboard', ['track' => $track->id]));
 
     $response->assertInertia(fn (Assert $page) => $page
-        ->has('agents.data', 3)
-        ->where('agents.data.0.total_trainings', 1),
+        ->has('agents.data', 1)
+        ->where('agents.data.0.id', $assignedAgent->id)
+        ->where('agents.data.0.total_trainings', 1)
+        ->has('trackOverview', 1)
+        ->where('trackOverview.0.slug', $track->slug)
+        ->where('filters.track', (string) $track->id),
     );
 });
 
@@ -179,16 +219,17 @@ test('an invalid per_page value on the dashboard falls back to the default', fun
     );
 });
 
-test('inactive licenses and trainings are excluded from the dashboard filter options', function () {
+test('inactive licenses are excluded from the dashboard filter options, which list every training track', function () {
     $admin = User::factory()->admin()->create();
     License::factory()->inactive()->create();
-    VerticalTraining::factory()->inactive()->create();
+    $track = CourseTrack::factory()->create();
 
     $response = $this->actingAs($admin)->get(route('dashboard'));
 
     $response->assertInertia(fn (Assert $page) => $page
         ->has('licenses', 0)
-        ->has('trainings', 0),
+        ->has('trainings', 1)
+        ->where('trainings.0.id', $track->id),
     );
 });
 
@@ -220,4 +261,177 @@ test('the dashboard charts reflect the filtered agent set', function () {
         ->where('charts.status_split.0.value', 0)
         ->where('charts.status_split.1.value', 3),
     );
+});
+
+test('the agent dashboard stats count completed tracks and certifications', function () {
+    $agent = User::factory()->create();
+
+    $completedTrack = CourseTrack::factory()->create(['position' => 0]);
+    $completedModule = CourseModule::factory()->for($completedTrack, 'track')->create();
+    CourseQuizAttempt::factory()->for($agent)->for($completedModule, 'module')->create();
+
+    $certifiedTrack = CourseTrack::factory()->create(['position' => 1]);
+    $certifiedModule = CourseModule::factory()->for($certifiedTrack, 'track')->create();
+    CourseQuizAttempt::factory()->for($agent)->for($certifiedModule, 'module')->create();
+    $exam = CourseExam::factory()->for($certifiedTrack, 'track')->create();
+    CourseExamAttempt::factory()->for($agent)->for($exam, 'exam')->create(['section' => 'product']);
+    CourseExamAttempt::factory()->for($agent)->for($exam, 'exam')->create(['section' => 'script']);
+
+    $notStartedTrack = CourseTrack::factory()->create(['position' => 2]);
+    CourseModule::factory()->for($notStartedTrack, 'track')->create();
+
+    CourseTrack::factory()->create();
+
+    $agent->courseTracks()->attach([$completedTrack->id, $certifiedTrack->id, $notStartedTrack->id]);
+
+    $this->actingAs($agent)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
+        ->where('progress.total_trainings', 3)
+        ->where('progress.trainings_completed', 2)
+        ->where('progress.certifications', 1),
+    );
+});
+
+test('a track with a final exam does not count as completed on the agent dashboard until the agent is certified', function () {
+    $agent = User::factory()->create();
+    $track = CourseTrack::factory()->create();
+    $module = CourseModule::factory()->for($track, 'track')->create();
+    CourseQuizAttempt::factory()->for($agent)->for($module, 'module')->create();
+    CourseExam::factory()->for($track, 'track')->create();
+    $agent->courseTracks()->attach($track);
+
+    $this->actingAs($agent)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
+        ->where('progress.trainings_completed', 0)
+        ->where('progress.certifications', 0),
+    );
+});
+
+test('the admin dashboard summarizes how assigned agents are progressing in each track', function () {
+    $admin = User::factory()->admin()->create();
+
+    $track = CourseTrack::factory()->create(['position' => 0]);
+    $module = CourseModule::factory()->for($track, 'track')->create();
+    $lesson = CourseLesson::factory()->for($module, 'module')->create();
+    $exam = CourseExam::factory()->for($track, 'track')->create();
+
+    $notStarted = User::factory()->create();
+    $startedLessons = User::factory()->create();
+    $startedLessons->completedCourseLessons()->attach($lesson);
+    $awaitingExam = User::factory()->create();
+    CourseQuizAttempt::factory()->for($awaitingExam)->for($module, 'module')->create();
+    CourseExamAttempt::factory()->for($awaitingExam)->for($exam, 'exam')->create(['section' => 'product']);
+    $certified = User::factory()->create();
+    CourseQuizAttempt::factory()->for($certified)->for($module, 'module')->create();
+    CourseExamAttempt::factory()->for($certified)->for($exam, 'exam')->create(['section' => 'product']);
+    CourseExamAttempt::factory()->for($certified)->for($exam, 'exam')->create(['section' => 'script']);
+    $unassigned = User::factory()->create();
+    CourseQuizAttempt::factory()->for($unassigned)->for($module, 'module')->create();
+
+    $track->users()->attach([$notStarted->id, $startedLessons->id, $awaitingExam->id, $certified->id, $admin->id]);
+
+    $trackWithoutExam = CourseTrack::factory()->create(['position' => 1]);
+    $firstModule = CourseModule::factory()->for($trackWithoutExam, 'track')->create();
+    $secondModule = CourseModule::factory()->for($trackWithoutExam, 'track')->create();
+    CourseQuizAttempt::factory()->for($notStarted)->for($firstModule, 'module')->create();
+    CourseQuizAttempt::factory()->for($notStarted)->for($secondModule, 'module')->create();
+    CourseQuizAttempt::factory()->for($certified)->for($firstModule, 'module')->create();
+    CourseQuizAttempt::factory()->failed()->for($certified)->for($secondModule, 'module')->create();
+    $trackWithoutExam->users()->attach([$notStarted->id, $certified->id]);
+
+    $this->actingAs($admin)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
+        ->has('trackOverview', 2)
+        ->where('trackOverview.0.slug', $track->slug)
+        ->where('trackOverview.0.has_exam', true)
+        ->where('trackOverview.0.assigned', 4)
+        ->where('trackOverview.0.not_started', 1)
+        ->where('trackOverview.0.in_progress', 2)
+        ->where('trackOverview.0.completed', 1)
+        ->where('trackOverview.1.has_exam', false)
+        ->where('trackOverview.1.assigned', 2)
+        ->where('trackOverview.1.not_started', 0)
+        ->where('trackOverview.1.in_progress', 1)
+        ->where('trackOverview.1.completed', 1),
+    );
+});
+
+test('the agent dashboard averages the agent\'s best quiz score per attempted module across tracks', function () {
+    $agent = User::factory()->create();
+
+    $track = CourseTrack::factory()->create(['position' => 0]);
+    $retakenModule = CourseModule::factory()->for($track, 'track')->create(['position' => 0]);
+    $passedModule = CourseModule::factory()->for($track, 'track')->create(['position' => 1]);
+    CourseModule::factory()->for($track, 'track')->create(['position' => 2]);
+    CourseQuizAttempt::factory()->failed()->for($agent)->for($retakenModule, 'module')->create(['score_pct' => 40]);
+    CourseQuizAttempt::factory()->for($agent)->for($retakenModule, 'module')->create(['score_pct' => 90]);
+    CourseQuizAttempt::factory()->for($agent)->for($passedModule, 'module')->create(['score_pct' => 70]);
+
+    $otherTrack = CourseTrack::factory()->create(['position' => 1]);
+    $otherModule = CourseModule::factory()->for($otherTrack, 'track')->create();
+    CourseQuizAttempt::factory()->failed()->for($agent)->for($otherModule, 'module')->create(['score_pct' => 50]);
+
+    $notStartedTrack = CourseTrack::factory()->create(['position' => 2]);
+    CourseModule::factory()->for($notStartedTrack, 'track')->create();
+
+    $agent->courseTracks()->attach([$track->id, $otherTrack->id, $notStartedTrack->id]);
+
+    $this->actingAs($agent)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
+        ->where('progress.average_score', 70),
+    );
+});
+
+test('the admin track overview averages assigned agents\' best quiz scores', function () {
+    $admin = User::factory()->admin()->create();
+    $track = CourseTrack::factory()->create();
+    $module = CourseModule::factory()->for($track, 'track')->create();
+    CourseTrack::factory()->create(['position' => 1]);
+
+    $retook = User::factory()->create();
+    CourseQuizAttempt::factory()->failed()->for($retook)->for($module, 'module')->create(['score_pct' => 30]);
+    CourseQuizAttempt::factory()->failed()->for($retook)->for($module, 'module')->create(['score_pct' => 60]);
+    $passed = User::factory()->create();
+    CourseQuizAttempt::factory()->for($passed)->for($module, 'module')->create(['score_pct' => 90]);
+    $unassigned = User::factory()->create();
+    CourseQuizAttempt::factory()->failed()->for($unassigned)->for($module, 'module')->create(['score_pct' => 10]);
+
+    $track->users()->attach([$retook->id, $passed->id]);
+
+    $this->actingAs($admin)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
+        ->where('trackOverview.0.average_score', 75)
+        ->where('trackOverview.1.average_score', null),
+    );
+});
+
+test('the admin dashboard summarizes the screening funnel and lists the latest responses', function () {
+    $admin = User::factory()->admin()->create();
+
+    ScreeningResponse::factory()->count(2)->create();
+    $calledOnly = ScreeningResponse::factory()->create();
+    $calledOnly->callLog->update(['called_at' => now()]);
+    $recommended = ScreeningResponse::factory()->create();
+    $recommended->callLog->update(['called_at' => now(), 'overall_gut_check' => CallRating::Yes]);
+    $rejected = ScreeningResponse::factory()->create(['full_name' => 'Latest Candidate']);
+    $rejected->callLog->update(['called_at' => now(), 'overall_gut_check' => CallRating::No]);
+
+    $this->actingAs($admin)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
+        ->where('screenings.stats.responses', 5)
+        ->where('screenings.stats.awaiting_call', 2)
+        ->where('screenings.stats.called', 3)
+        ->where('screenings.stats.awaiting_review', 1)
+        ->where('screenings.stats.reviewed', 2)
+        ->where('screenings.gut_check', [
+            ['name' => 'Yes', 'value' => 1],
+            ['name' => 'Somewhat', 'value' => 0],
+            ['name' => 'No', 'value' => 1],
+        ])
+        ->has('screenings.recent', 3)
+        ->where('screenings.recent.0.full_name', 'Latest Candidate')
+        ->where('screenings.recent.0.overall_gut_check', 'no'),
+    );
+});
+
+test('agents do not see screening data on their dashboard', function () {
+    ScreeningResponse::factory()->create();
+
+    $this->actingAs(User::factory()->create())
+        ->get(route('dashboard'))
+        ->assertInertia(fn (Assert $page) => $page->missing('screenings'));
 });

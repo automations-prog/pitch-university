@@ -10,6 +10,7 @@ import {
     ChartTooltip,
     EmptyChartState,
 } from '@/components/charts/chart-primitives';
+import { trackStatusLabels } from '@/lib/scoring';
 import type { AgentProgressSummary, AgentTrainingScore } from '@/types';
 import {
     Bar,
@@ -30,7 +31,7 @@ const NOT_STARTED_COLOR = '#d8d3e6';
 
 function CompletionDonut({ progress }: { progress: AgentProgressSummary }) {
     if (progress.total_trainings === 0) {
-        return <EmptyChartState message="No active trainings yet." />;
+        return <EmptyChartState message="No training assigned yet." />;
     }
 
     const remaining = progress.total_trainings - progress.trainings_completed;
@@ -53,7 +54,7 @@ function CompletionDonut({ progress }: { progress: AgentProgressSummary }) {
                     <Cell fill={COMPLETED_COLOR} />
                     <Cell fill={REMAINING_COLOR} />
                 </Pie>
-                <Tooltip content={<ChartTooltip unit="trainings" />} />
+                <Tooltip content={<ChartTooltip unit="tracks" />} />
             </PieChart>
         </ResponsiveContainer>
     );
@@ -76,9 +77,9 @@ function TrainingScoreTooltip({
         <div className="bg-popover text-popover-foreground rounded-md border px-3 py-1.5 text-xs shadow-md">
             <p className="font-medium">{training.name}</p>
             <p className="text-muted-foreground">
-                {training.trainings_completed > 0
-                    ? `Score: ${training.average_score}%`
-                    : 'Not started'}
+                {trackStatusLabels[training.status]}
+                {training.average_score !== null &&
+                    ` · Avg. ${training.average_score}%`}
             </p>
         </div>
     );
@@ -90,7 +91,7 @@ function TrainingScoreBarChart({
     trainingScores: AgentTrainingScore[];
 }) {
     if (trainingScores.length === 0) {
-        return <EmptyChartState message="No active trainings yet." />;
+        return <EmptyChartState message="No training assigned yet." />;
     }
 
     const data = trainingScores.map((training) => ({
@@ -128,7 +129,7 @@ function TrainingScoreBarChart({
                         <Cell
                             key={training.id}
                             fill={
-                                training.trainings_completed > 0
+                                training.average_score !== null
                                     ? COMPLETED_COLOR
                                     : NOT_STARTED_COLOR
                             }
@@ -153,7 +154,7 @@ export default function AgentDashboardCharts({
                 <CardHeader>
                     <CardTitle>Your completion</CardTitle>
                     <CardDescription>
-                        Trainings completed vs. remaining.
+                        Training tracks completed vs. remaining.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -163,9 +164,10 @@ export default function AgentDashboardCharts({
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Your scores per training</CardTitle>
+                    <CardTitle>Your scores per track</CardTitle>
                     <CardDescription>
-                        Muted bars are trainings you haven&apos;t started yet.
+                        Average of your best quiz score per module. Muted bars
+                        are tracks with no quiz attempts yet.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

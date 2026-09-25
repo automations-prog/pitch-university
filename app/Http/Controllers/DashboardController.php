@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Concerns\BuildsAgentReportQuery;
+use App\Enums\CallRating;
 use App\Enums\LicenseStatus;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
-use App\Enums\VerticalTrainingStatus;
+use App\Models\CallLog;
+use App\Models\CourseTrack;
 use App\Models\License;
+use App\Models\ScreeningResponse;
 use App\Models\User;
-use App\Models\VerticalTraining;
+use App\Services\AgentTrainingReport;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -39,30 +43,26 @@ class DashboardController extends Controller
             return $this->agentDashboard($user);
         }
 
-        $totalTrainings = VerticalTraining::where('status', VerticalTrainingStatus::Active)->count();
-
-        $trainingId = $request->string('vertical_training')->toString();
-
-        $selectedTraining = $trainingId
-            ? VerticalTraining::where('status', VerticalTrainingStatus::Active)->find($trainingId)
-            : null;
+        $tracks = CourseTrack::query()->orderBy('position')->get(['id', 'name']);
+        $selectedTrack = $tracks->find($request->integer('track'));
 
         $activeLicenses = License::where('status', LicenseStatus::Active)->orderBy('name')->get(['id', 'name']);
 
         $perPage = $request->integer('per_page', self::PER_PAGE_OPTIONS[0]);
         $perPage = in_array($perPage, self::PER_PAGE_OPTIONS, true) ? $perPage : self::PER_PAGE_OPTIONS[0];
 
-        $buildAgentQuery = fn () => $this->agentReportQuery($request);
+        $buildAgentQuery = fn () => $this->agentReportQuery($request)
+            ->when($selectedTrack, fn (Builder $query, CourseTrack $track) => $query
+                ->whereHas('courseTracks', fn (Builder $query) => $query->whereKey($track->id)));
 
         // The charts summarize every agent matching the current filters, not
         // just the current page, so they're built from the full filtered set.
         $allFilteredAgentModels = $buildAgentQuery()->get();
-        $allFilteredAgents = $allFilteredAgentModels->map(
-            fn (User $agent) => $this->agentProgressRow($agent, $totalTrainings, $selectedTraining),
-        );
+        $report = new AgentTrainingReport(collect($allFilteredAgentModels->modelKeys()), $selectedTrack);
+        $allFilteredAgents = $allFilteredAgentModels->map(fn (User $agent) => $this->agentProgressRow($agent, $report));
 
         $agentsPage = $buildAgentQuery()->paginate($perPage)->withQueryString();
-        $agentsPage->through(fn (User $agent) => $this->agentProgressRow($agent, $totalTrainings, $selectedTraining));
+        $agentsPage->through(fn (User $agent) => $this->agentProgressRow($agent, $report));
         $paginated = $agentsPage->toArray();
 
         $totalAgents = User::where('role', UserRole::Agent)->count();
@@ -74,7 +74,7 @@ class DashboardController extends Controller
                 'total_agents' => $totalAgents,
                 'active_agents' => $activeAgents,
                 'inactive_agents' => $totalAgents - $activeAgents,
-                'total_trainings' => $totalTrainings,
+                'total_trainings' => $tracks->count(),
             ],
             'agents' => [
                 'data' => $paginated['data'],
@@ -82,10 +82,12 @@ class DashboardController extends Controller
                 'meta' => Arr::except($paginated, ['data', 'links']),
             ],
             'charts' => $this->chartsFor($allFilteredAgents, $allFilteredAgentModels, $activeLicenses),
+            'trackOverview' => $report->trackOverview(),
+            'screenings' => $this->screeningOverview(),
             'licenses' => $activeLicenses,
-            'trainings' => VerticalTraining::where('status', VerticalTrainingStatus::Active)->orderBy('name')->get(['id', 'name']),
+            'trainings' => $tracks,
             'filters' => [
-                ...$request->only(['status', 'license', 'vertical_training']),
+                ...$request->only(['status', 'license', 'track']),
                 'per_page' => (string) $perPage,
             ],
             'perPageOptions' => self::PER_PAGE_OPTIONS,
@@ -93,24 +95,64 @@ class DashboardController extends Controller
     }
 
     /**
-     * Display the personal dashboard for a non-admin agent: their own sample
-     * progress plus a per-training breakdown.
+     * Display the personal dashboard for a non-admin agent: their progress
+     * and quiz scores across their assigned training tracks.
      */
     private function agentDashboard(User $user): Response
     {
-        $trainings = VerticalTraining::where('status', VerticalTrainingStatus::Active)->orderBy('name')->get();
-
-        $trainingScores = $trainings->map(fn (VerticalTraining $training) => [
-            'id' => $training->id,
-            'name' => $training->name,
-            ...$this->mockProgressFor($user, 1, $training),
-        ])->values();
+        $report = new AgentTrainingReport(collect([$user->id]));
 
         return Inertia::render('dashboard', [
             'isAdmin' => false,
-            'progress' => $this->mockProgressFor($user, $trainings->count()),
-            'trainingScores' => $trainingScores,
+            'progress' => $report->summary($user->id),
+            'trainingScores' => $report->trackScores($user->id),
         ]);
+    }
+
+    /**
+     * Where screening candidates are in the funnel: responded, called by the
+     * AI voice agent, and rated by an admin, plus the overall gut-check split
+     * and the most recent responses.
+     *
+     * @return array{stats: array{responses: int, called: int, awaiting_call: int, awaiting_review: int, reviewed: int}, gut_check: array<int, array{name: string, value: int}>, recent: Collection<int, array<string, mixed>>}
+     */
+    private function screeningOverview(): array
+    {
+        $responses = ScreeningResponse::count();
+        $called = CallLog::whereNotNull('called_at')->count();
+        $reviewed = CallLog::whereNotNull('called_at')->whereNotNull('overall_gut_check')->count();
+
+        $gutCheckCounts = CallLog::whereNotNull('overall_gut_check')
+            ->selectRaw('overall_gut_check, count(*) as total')
+            ->groupBy('overall_gut_check')
+            ->pluck('total', 'overall_gut_check');
+
+        return [
+            'stats' => [
+                'responses' => $responses,
+                'called' => $called,
+                'awaiting_call' => $responses - $called,
+                'awaiting_review' => $called - $reviewed,
+                'reviewed' => $reviewed,
+            ],
+            'gut_check' => collect(CallRating::cases())->map(fn (CallRating $rating) => [
+                'name' => $rating->name,
+                'value' => (int) $gutCheckCounts->get($rating->value, 0),
+            ])->all(),
+            'recent' => ScreeningResponse::query()
+                ->with('callLog')
+                ->latest('id')
+                ->limit(3)
+                ->get()
+                ->map(fn (ScreeningResponse $response) => [
+                    'id' => $response->id,
+                    'full_name' => $response->full_name,
+                    'email' => $response->email,
+                    'created_at' => $response->created_at,
+                    'called_at' => $response->callLog?->called_at,
+                    'overall_gut_check' => $response->callLog?->overall_gut_check,
+                ]),
+        ];
     }
 
     /**
@@ -162,14 +204,14 @@ class DashboardController extends Controller
      *
      * @return array<string, mixed>
      */
-    private function agentProgressRow(User $agent, int $totalTrainings, ?VerticalTraining $training): array
+    private function agentProgressRow(User $agent, AgentTrainingReport $report): array
     {
         return [
             'id' => $agent->id,
             'name' => $agent->name,
             'email' => $agent->email,
             'status' => $agent->status,
-            ...$this->mockProgressFor($agent, $totalTrainings, $training),
+            ...$report->summary($agent->id),
         ];
     }
 }

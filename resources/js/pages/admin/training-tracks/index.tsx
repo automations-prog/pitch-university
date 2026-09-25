@@ -36,10 +36,8 @@ import {
     resourceInputClass,
 } from '@/lib/brand-theme';
 import { dashboard } from '@/routes';
-import { progress as trainingProgressReport } from '@/routes/admin/training';
 import { index as trainingTracksIndex } from '@/routes/admin/training-tracks';
 import {
-    BarChart3,
     Eye,
     FilterX,
     MoreHorizontal,
@@ -161,12 +159,6 @@ export default function TrainingTracksIndex({
                             progress.
                         </p>
                     </div>
-                    <Button asChild variant="outline">
-                        <Link href={trainingProgressReport()}>
-                            <BarChart3 />
-                            Progress report
-                        </Link>
-                    </Button>
                 </div>
 
                 <Card>

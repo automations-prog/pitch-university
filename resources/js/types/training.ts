@@ -9,6 +9,8 @@ export type CourseTrackProgress = {
     total_modules: number;
     has_exam?: boolean;
     is_certified?: boolean;
+    is_complete?: boolean;
+    average_score?: number | null;
 };
 
 export type CourseTrackOption = {

@@ -5,6 +5,17 @@ import TrainingTrackController from '@/actions/App/Http/Controllers/Admin/Traini
 import UserTrackController from '@/actions/App/Http/Controllers/Admin/UserTrackController';
 import { CourseProgressBar } from '@/components/course-progress-bar';
 import { ExamStatusBadge } from '@/components/exam-status-badge';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import {
     Card,
@@ -372,20 +383,54 @@ function ExamPanel({
                                 </ul>
                             )}
                             {section.is_out_of_attempts && (
-                                <Button
-                                    type="button"
-                                    size="sm"
-                                    variant="outline"
-                                    disabled={pendingSection === section.key}
-                                    onClick={() => grantRetake(section)}
-                                >
-                                    {pendingSection === section.key ? (
-                                        <Spinner />
-                                    ) : (
-                                        <RotateCcw />
-                                    )}
-                                    Grant retake
-                                </Button>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            variant="outline"
+                                            disabled={
+                                                pendingSection === section.key
+                                            }
+                                        >
+                                            {pendingSection === section.key ? (
+                                                <Spinner />
+                                            ) : (
+                                                <RotateCcw />
+                                            )}
+                                            Grant retake
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>
+                                                Grant a retake for{' '}
+                                                {section.title}?
+                                            </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This gives the user one more
+                                                attempt at the {section.title}{' '}
+                                                section of {exam.title}. They
+                                                have used{' '}
+                                                {section.attempts_used}/
+                                                {section.attempts_allowed}{' '}
+                                                attempts so far.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>
+                                                Cancel
+                                            </AlertDialogCancel>
+                                            <AlertDialogAction
+                                                onClick={() =>
+                                                    grantRetake(section)
+                                                }
+                                            >
+                                                Grant retake
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
                             )}
                         </div>
                     ))}

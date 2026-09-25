@@ -50,7 +50,7 @@ type Filters = {
     search: string;
     status: string;
     license: string;
-    vertical_training: string;
+    track: string;
     per_page: string;
 };
 
@@ -109,7 +109,7 @@ export default function ReportsIndex({
         filters.search ||
         filters.status ||
         filters.license ||
-        filters.vertical_training,
+        filters.track,
     );
 
     function clearAllFilters() {
@@ -118,7 +118,7 @@ export default function ReportsIndex({
             search: '',
             status: '',
             license: '',
-            vertical_training: '',
+            track: '',
         });
     }
 
@@ -132,8 +132,8 @@ export default function ReportsIndex({
                         Reports
                     </h2>
                     <p className="text-muted-foreground text-sm">
-                        Agent training completion and license status, at a
-                        glance.
+                        Agent training track progress, quiz scores, and
+                        license status, at a glance.
                     </p>
                 </div>
 
@@ -249,14 +249,13 @@ export default function ReportsIndex({
                                 htmlFor="training-filter"
                                 className="text-muted-foreground text-xs font-semibold uppercase"
                             >
-                                Vertical training
+                                Training track
                             </Label>
                             <Select
-                                value={filters.vertical_training || 'all'}
+                                value={filters.track || 'all'}
                                 onValueChange={(value) =>
                                     applyFilters({
-                                        vertical_training:
-                                            value === 'all' ? '' : value,
+                                        track: value === 'all' ? '' : value,
                                     })
                                 }
                             >
@@ -264,12 +263,10 @@ export default function ReportsIndex({
                                     id="training-filter"
                                     className="w-full sm:w-48"
                                 >
-                                    <SelectValue placeholder="Vertical training" />
+                                    <SelectValue placeholder="Training track" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">
-                                        All trainings
-                                    </SelectItem>
+                                    <SelectItem value="all">All tracks</SelectItem>
                                     {trainings.map((training) => (
                                         <SelectItem
                                             key={training.id}

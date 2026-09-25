@@ -19,17 +19,37 @@ import type {
     CourseScriptLine,
 } from '@/types';
 
-export function CourseBlocks({ blocks }: { blocks: CourseBlock[] }) {
+/**
+ * Renders a lesson's blocks. When `storageKey` is given, quick check answers
+ * are remembered in the browser so they survive navigating between lessons.
+ */
+export function CourseBlocks({
+    blocks,
+    storageKey,
+}: {
+    blocks: CourseBlock[];
+    storageKey?: string;
+}) {
     return (
         <div className="space-y-6">
             {blocks.map((block, index) => (
-                <CourseBlockItem key={index} block={block} />
+                <CourseBlockItem
+                    key={index}
+                    block={block}
+                    storageKey={storageKey && `${storageKey}:${index}`}
+                />
             ))}
         </div>
     );
 }
 
-function CourseBlockItem({ block }: { block: CourseBlock }) {
+function CourseBlockItem({
+    block,
+    storageKey,
+}: {
+    block: CourseBlock;
+    storageKey?: string;
+}) {
     switch (block.type) {
         case 'text':
             return (
@@ -41,7 +61,12 @@ function CourseBlockItem({ block }: { block: CourseBlock }) {
         case 'callout':
             return <CalloutBlock block={block as CourseCalloutBlock} />;
         case 'check':
-            return <CheckBlock block={block as CourseCheckBlock} />;
+            return (
+                <CheckBlock
+                    block={block as CourseCheckBlock}
+                    storageKey={storageKey}
+                />
+            );
         case 'script':
             return <ScriptBlock block={block as CourseScriptBlock} />;
         case 'rebuttal':
@@ -191,8 +216,55 @@ function RebuttalBlock({ block }: { block: CourseRebuttalBlock }) {
     );
 }
 
-function CheckBlock({ block }: { block: CourseCheckBlock }) {
-    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+function readStoredAnswer(storageKey?: string): number | null {
+    if (!storageKey) {
+        return null;
+    }
+
+    try {
+        const stored = localStorage.getItem(storageKey);
+
+        return stored === null ? null : Number(stored);
+    } catch {
+        return null;
+    }
+}
+
+function writeStoredAnswer(
+    storageKey: string | undefined,
+    index: number | null,
+): void {
+    if (!storageKey) {
+        return;
+    }
+
+    try {
+        if (index === null) {
+            localStorage.removeItem(storageKey);
+        } else {
+            localStorage.setItem(storageKey, String(index));
+        }
+    } catch {
+        // Storage is unavailable (e.g. private mode); the answer just won't persist.
+    }
+}
+
+function CheckBlock({
+    block,
+    storageKey,
+}: {
+    block: CourseCheckBlock;
+    storageKey?: string;
+}) {
+    const [selectedIndex, setSelectedIndexState] = useState<number | null>(
+        () => readStoredAnswer(storageKey),
+    );
+
+    const setSelectedIndex = (index: number | null) => {
+        setSelectedIndexState(index);
+        writeStoredAnswer(storageKey, index);
+    };
+
     const isAnswered = selectedIndex !== null;
     const isCorrect = selectedIndex === block.answer_index;
 

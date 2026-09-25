@@ -1,5 +1,6 @@
 import type { UserStatus } from '@/types/auth';
 import type { License } from '@/types/license';
+import type { CallRating } from '@/types/screening';
 
 export type AgentProgress = {
     id: number;
@@ -40,14 +41,51 @@ export type DashboardCharts = {
 export type AgentProgressSummary = {
     trainings_completed: number;
     total_trainings: number;
+    certifications: number;
     average_score: number | null;
     last_activity: string | null;
 };
 
+export type TrackStatus =
+    | 'certified'
+    | 'complete'
+    | 'exam_next'
+    | 'in_progress'
+    | 'not_started';
+
 export type AgentTrainingScore = {
     id: number;
     name: string;
-    trainings_completed: number;
+    status: TrackStatus;
     average_score: number | null;
-    last_activity: string | null;
+};
+
+export type TrackOverviewRow = {
+    slug: string;
+    name: string;
+    has_exam: boolean;
+    average_score: number | null;
+    assigned: number;
+    not_started: number;
+    in_progress: number;
+    completed: number;
+};
+
+export type ScreeningOverview = {
+    stats: {
+        responses: number;
+        called: number;
+        awaiting_call: number;
+        awaiting_review: number;
+        reviewed: number;
+    };
+    gut_check: ChartDatum[];
+    recent: {
+        id: number;
+        full_name: string;
+        email: string;
+        created_at: string;
+        called_at: string | null;
+        overall_gut_check: CallRating | null;
+    }[];
 };

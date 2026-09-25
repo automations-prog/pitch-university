@@ -78,19 +78,3 @@ test('agents can not grant retakes', function () {
 
     expect($exam->retakeGrants()->count())->toBe(0);
 });
-
-test('the progress report shows exam scores per section', function () {
-    $admin = User::factory()->admin()->create();
-    [$agent, $exam] = agentOutOfScriptAttempts();
-    CourseExamAttempt::factory()->for($agent)->for($exam, 'exam')->create(['section' => 'product', 'score_pct' => 95]);
-
-    $this->actingAs($admin)
-        ->get(route('admin.training.progress', ['track' => $exam->track->slug]))
-        ->assertInertia(fn (Assert $page) => $page
-            ->where('examSections.0.key', 'product')
-            ->where('users.data.0.exam.is_certified', false)
-            ->where('users.data.0.exam.sections.product.best_score', 95)
-            ->where('users.data.0.exam.sections.product.passed', true)
-            ->where('users.data.0.exam.sections.script.passed', false)
-            ->where('users.data.0.exam.sections.script.attempts_count', 2));
-});

@@ -226,3 +226,24 @@ test('every quiz question must be answered with a valid choice', function () {
 
     expect($agent->courseQuizAttempts()->count())->toBe(0);
 });
+
+test('track cards show the average of the agent\'s best quiz score per attempted module', function () {
+    $track = CourseTrack::factory()->create(['position' => 0]);
+    $retakenModule = trackModuleWithLessons($track, 0);
+    $passedModule = trackModuleWithLessons($track, 1);
+    trackModuleWithLessons($track, 2);
+    $notStartedTrack = CourseTrack::factory()->create(['position' => 1]);
+    trackModuleWithLessons($notStartedTrack);
+    $agent = agentAssignedTo($track);
+    $agent->courseTracks()->attach($notStartedTrack);
+
+    CourseQuizAttempt::factory()->failed()->for($agent)->for($retakenModule, 'module')->create(['score_pct' => 40]);
+    CourseQuizAttempt::factory()->for($agent)->for($retakenModule, 'module')->create(['score_pct' => 90]);
+    CourseQuizAttempt::factory()->for($agent)->for($passedModule, 'module')->create(['score_pct' => 70]);
+
+    $this->actingAs($agent)
+        ->get(route('training.index'))
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('tracks.0.progress.average_score', 80)
+            ->where('tracks.1.progress.average_score', null));
+});

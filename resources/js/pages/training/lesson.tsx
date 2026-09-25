@@ -1,4 +1,4 @@
-import { Form, Head, Link, setLayoutProps } from '@inertiajs/react';
+import { Form, Head, Link, setLayoutProps, usePage } from '@inertiajs/react';
 import TrainingController from '@/actions/App/Http/Controllers/TrainingController';
 import { CourseBlocks } from '@/components/training-blocks';
 import { CourseProgressBar } from '@/components/course-progress-bar';
@@ -35,6 +35,8 @@ export default function TrainingLesson({
     previousLesson,
     nextLesson,
 }: Props) {
+    const { auth } = usePage().props;
+
     setLayoutProps({
         breadcrumbs: [
             { title: 'Dashboard', href: dashboard() },
@@ -94,7 +96,11 @@ export default function TrainingLesson({
 
                 <Card>
                     <CardContent className="py-2">
-                        <CourseBlocks blocks={lesson.blocks} />
+                        <CourseBlocks
+                            key={lesson.slug}
+                            blocks={lesson.blocks}
+                            storageKey={`training-check:${auth.user.id}:${track.slug}:${module.slug}:${lesson.slug}`}
+                        />
                     </CardContent>
                 </Card>
 
@@ -122,6 +128,7 @@ export default function TrainingLesson({
                             module.slug,
                             lesson.slug,
                         ])}
+                        options={{ preserveState: false }}
                     >
                         {({ processing }) => (
                             <Button

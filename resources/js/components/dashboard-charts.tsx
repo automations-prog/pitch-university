@@ -55,7 +55,7 @@ function StatusDonut({ data }: { data: ChartDatum[] }) {
     );
 }
 
-function DistributionBarChart({ data }: { data: ChartDatum[] }) {
+export function DistributionBarChart({ data }: { data: ChartDatum[] }) {
     if (!hasValues(data)) {
         return <EmptyChartState />;
     }
@@ -121,7 +121,7 @@ export default function DashboardCharts({
                 <CardHeader>
                     <CardTitle>Training completion</CardTitle>
                     <CardDescription>
-                        Agents grouped by trainings completed.
+                        Agents grouped by training tracks completed.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -133,7 +133,7 @@ export default function DashboardCharts({
                 <CardHeader>
                     <CardTitle>Average score distribution</CardTitle>
                     <CardDescription>
-                        Agents grouped by average roleplay score band.
+                        Agents grouped by average quiz score band.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

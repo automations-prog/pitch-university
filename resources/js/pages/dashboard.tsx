@@ -1,7 +1,9 @@
 import { Head, router } from '@inertiajs/react';
 import { MouseEvent } from 'react';
 import AgentDashboardCharts from '@/components/agent-dashboard-charts';
+import { CourseProgressBar } from '@/components/course-progress-bar';
 import DashboardCharts from '@/components/dashboard-charts';
+import { ScreeningOverviewCard } from '@/components/screening-overview';
 import { Badge } from '@/components/ui/badge';
 import {
     Card,
@@ -35,11 +37,11 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { resourceCardClass } from '@/lib/brand-theme';
-import { scoreBadgeVariant } from '@/lib/scoring';
+import { scoreBadgeVariant, trackStatusLabels } from '@/lib/scoring';
 import { dashboard } from '@/routes';
 import {
+    Award,
     GraduationCap,
-    Info,
     type LucideIcon,
     UserCheck,
     Users,
@@ -53,6 +55,8 @@ import type {
     DashboardFilterOption,
     DashboardStats,
     Paginated,
+    ScreeningOverview,
+    TrackOverviewRow,
 } from '@/types';
 
 type Props =
@@ -66,12 +70,14 @@ type Props =
           stats: DashboardStats;
           agents: Paginated<AgentProgress>;
           charts: DashboardChartsData;
+          trackOverview: TrackOverviewRow[];
+          screenings: ScreeningOverview;
           licenses: DashboardFilterOption[];
           trainings: DashboardFilterOption[];
           filters: {
               status?: string;
               license?: string;
-              vertical_training?: string;
+              track?: string;
               per_page?: string;
           };
           perPageOptions: number[];
@@ -83,7 +89,7 @@ function StatCard({
     icon: Icon,
 }: {
     label: string;
-    value: number;
+    value: number | string;
     icon: LucideIcon;
 }) {
     return (
@@ -109,6 +115,109 @@ function StatCard({
     );
 }
 
+/**
+ * How the agents assigned to each training track are progressing.
+ */
+function TrackOverviewCard({ tracks }: { tracks: TrackOverviewRow[] }) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Training tracks</CardTitle>
+                <CardDescription>
+                    Progress of the agents assigned to each track. Tracks with
+                    a final exam are complete once the agent is certified. The
+                    average score is each agent&apos;s best quiz score per
+                    module.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className={resourceCardClass}>
+                    <Table className="[&_td]:px-4 [&_td]:py-3 [&_th]:px-4 [&_th]:py-3">
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Track</TableHead>
+                                <TableHead>Assigned</TableHead>
+                                <TableHead>Not started</TableHead>
+                                <TableHead>In progress</TableHead>
+                                <TableHead>Completed</TableHead>
+                                <TableHead>Avg. score</TableHead>
+                                <TableHead className="w-40">Completion</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {tracks.length === 0 && (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={7}
+                                        className="text-muted-foreground py-8 text-center"
+                                    >
+                                        No training tracks yet.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                            {tracks.map((track) => (
+                                <TableRow key={track.slug}>
+                                    <TableCell className="font-medium">
+                                        <span className="inline-flex items-center gap-2">
+                                            {track.name}
+                                            {track.has_exam && (
+                                                <Badge
+                                                    variant="outline"
+                                                    className="gap-1"
+                                                >
+                                                    <Award className="size-3" />
+                                                    Exam
+                                                </Badge>
+                                            )}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>{track.assigned}</TableCell>
+                                    <TableCell>{track.not_started}</TableCell>
+                                    <TableCell>{track.in_progress}</TableCell>
+                                    <TableCell>{track.completed}</TableCell>
+                                    <TableCell>
+                                        <Badge
+                                            variant={scoreBadgeVariant(
+                                                track.average_score,
+                                            )}
+                                        >
+                                            {track.average_score === null
+                                                ? '—'
+                                                : `${track.average_score}%`}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        {track.assigned === 0 ? (
+                                            <span className="text-muted-foreground text-xs">
+                                                No agents assigned
+                                            </span>
+                                        ) : (
+                                            <div className="space-y-1">
+                                                <CourseProgressBar
+                                                    value={track.completed}
+                                                    max={track.assigned}
+                                                />
+                                                <p className="text-muted-foreground text-xs">
+                                                    {Math.round(
+                                                        (track.completed /
+                                                            track.assigned) *
+                                                            100,
+                                                    )}
+                                                    %
+                                                </p>
+                                            </div>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
 export default function Dashboard(props: Props) {
     if (!props.isAdmin) {
         const { progress, trainingScores } = props;
@@ -123,35 +232,30 @@ export default function Dashboard(props: Props) {
                             Your progress
                         </h2>
                         <p className="text-muted-foreground text-sm">
-                            Training completion and roleplay scoring, at a
+                            Your training progress and quiz scores, at a
                             glance.
-                        </p>
-                    </div>
-
-                    <div className="flex items-start gap-2 rounded-lg border border-[#f598ff]/30 bg-[#f598ff]/10 px-4 py-3 text-sm dark:border-[#f598ff]/20 dark:bg-[#f598ff]/10">
-                        <Info className="mt-0.5 size-4 shrink-0" />
-                        <p>
-                            Progress and scores below are sample data for
-                            preview — real roleplay scoring isn&apos;t wired up
-                            yet.
                         </p>
                     </div>
 
                     <div className="grid gap-4 sm:grid-cols-3">
                         <StatCard
-                            label="Trainings completed"
-                            value={progress.trainings_completed}
+                            label="Tracks completed"
+                            value={`${progress.trainings_completed}/${progress.total_trainings}`}
                             icon={GraduationCap}
                         />
                         <StatCard
-                            label="Average score"
-                            value={progress.average_score ?? 0}
-                            icon={UserCheck}
+                            label="Certifications"
+                            value={progress.certifications}
+                            icon={Award}
                         />
                         <StatCard
-                            label="Total active trainings"
-                            value={progress.total_trainings}
-                            icon={Users}
+                            label="Average quiz score"
+                            value={
+                                progress.average_score === null
+                                    ? '—'
+                                    : `${progress.average_score}%`
+                            }
+                            icon={UserCheck}
                         />
                     </div>
 
@@ -162,9 +266,10 @@ export default function Dashboard(props: Props) {
 
                     <Card>
                         <CardHeader>
-                            <CardTitle>Your trainings</CardTitle>
+                            <CardTitle>Your training scores</CardTitle>
                             <CardDescription>
-                                Status and score for every active training.
+                                Status and average quiz score for every
+                                assigned track.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -172,9 +277,9 @@ export default function Dashboard(props: Props) {
                                 <Table>
                                     <TableHeader>
                                         <TableRow>
-                                            <TableHead>Training</TableHead>
+                                            <TableHead>Track</TableHead>
                                             <TableHead>Status</TableHead>
-                                            <TableHead>Score</TableHead>
+                                            <TableHead>Avg. score</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -184,7 +289,7 @@ export default function Dashboard(props: Props) {
                                                     colSpan={3}
                                                     className="text-muted-foreground py-8 text-center"
                                                 >
-                                                    No active trainings yet.
+                                                    No training assigned yet.
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -196,16 +301,19 @@ export default function Dashboard(props: Props) {
                                                 <TableCell>
                                                     <Badge
                                                         variant={
-                                                            training.trainings_completed >
-                                                            0
+                                                            training.status ===
+                                                                'certified' ||
+                                                            training.status ===
+                                                                'complete'
                                                                 ? 'outline'
                                                                 : 'secondary'
                                                         }
                                                     >
-                                                        {training.trainings_completed >
-                                                        0
-                                                            ? 'Completed'
-                                                            : 'Not started'}
+                                                        {
+                                                            trackStatusLabels[
+                                                                training.status
+                                                            ]
+                                                        }
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell>
@@ -236,6 +344,8 @@ export default function Dashboard(props: Props) {
         stats,
         agents,
         charts,
+        trackOverview,
+        screenings,
         licenses,
         trainings,
         filters,
@@ -243,7 +353,7 @@ export default function Dashboard(props: Props) {
     } = props;
 
     function applyFilter(
-        key: 'status' | 'license' | 'vertical_training' | 'per_page',
+        key: 'status' | 'license' | 'track' | 'per_page',
         value: string,
     ) {
         router.get(
@@ -266,16 +376,8 @@ export default function Dashboard(props: Props) {
                         Dashboard
                     </h2>
                     <p className="text-muted-foreground text-sm">
-                        Agent training progress and roleplay scoring, at a
-                        glance.
-                    </p>
-                </div>
-
-                <div className="flex items-start gap-2 rounded-lg border border-[#f598ff]/30 bg-[#f598ff]/10 px-4 py-3 text-sm dark:border-[#f598ff]/20 dark:bg-[#f598ff]/10">
-                    <Info className="mt-0.5 size-4 shrink-0" />
-                    <p>
-                        Progress and scores below are sample data for preview —
-                        real roleplay scoring isn&apos;t wired up yet.
+                        Agent training progress, quiz scores, and
+                        screenings, at a glance.
                     </p>
                 </div>
 
@@ -296,11 +398,15 @@ export default function Dashboard(props: Props) {
                         icon={UserX}
                     />
                     <StatCard
-                        label="Active trainings"
+                        label="Training tracks"
                         value={stats.total_trainings}
                         icon={GraduationCap}
                     />
                 </div>
+
+                <TrackOverviewCard tracks={trackOverview} />
+
+                <ScreeningOverviewCard screenings={screenings} />
 
                 <DashboardCharts charts={charts} />
 
@@ -309,8 +415,8 @@ export default function Dashboard(props: Props) {
                         <div>
                             <CardTitle>Agent progress</CardTitle>
                             <CardDescription>
-                                Training completion and average roleplay score
-                                per agent.
+                                Tracks completed and average quiz score per
+                                agent.
                             </CardDescription>
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
@@ -359,18 +465,16 @@ export default function Dashboard(props: Props) {
                                 </SelectContent>
                             </Select>
                             <Select
-                                value={filters.vertical_training || 'all'}
+                                value={filters.track || 'all'}
                                 onValueChange={(value) =>
-                                    applyFilter('vertical_training', value)
+                                    applyFilter('track', value)
                                 }
                             >
                                 <SelectTrigger className="w-48">
-                                    <SelectValue placeholder="Vertical training" />
+                                    <SelectValue placeholder="Training track" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="all">
-                                        All trainings
-                                    </SelectItem>
+                                    <SelectItem value="all">All tracks</SelectItem>
                                     {trainings.map((training) => (
                                         <SelectItem
                                             key={training.id}
