@@ -3,7 +3,6 @@ import { useState } from 'react';
 import UserController from '@/actions/App/Http/Controllers/Admin/UserController';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -13,7 +12,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -29,28 +27,17 @@ import { brandButtonClass, resourceInputClass } from '@/lib/brand-theme';
 import { dashboard } from '@/routes';
 import { index as usersIndex } from '@/routes/admin/users';
 import { ArrowLeft, Mail, Plus, User as UserIcon } from 'lucide-react';
-import type { License, UserRole, UserStatus } from '@/types';
+import type { UserRole, UserStatus } from '@/types';
 
 export default function CreateUser({
     roles,
     statuses,
-    licenses,
 }: {
     roles: UserRole[];
     statuses: UserStatus[];
-    licenses: License[];
 }) {
     const [role, setRole] = useState<UserRole>('agent');
     const [status, setStatus] = useState<UserStatus>('active');
-    const [selectedLicenseIds, setSelectedLicenseIds] = useState<number[]>([]);
-
-    function toggleLicense(licenseId: number, checked: boolean) {
-        setSelectedLicenseIds((current) =>
-            checked
-                ? [...current, licenseId]
-                : current.filter((id) => id !== licenseId),
-        );
-    }
 
     return (
         <>
@@ -78,11 +65,10 @@ export default function CreateUser({
                 <Form
                     {...UserController.store.form()}
                     resetOnSuccess={['password', 'password_confirmation']}
-                    className="grid items-start gap-6 lg:grid-cols-3"
                 >
                     {({ processing, errors }) => (
                         <>
-                            <Card className="lg:col-span-2">
+                            <Card>
                                 <CardHeader>
                                     <CardTitle>Account details</CardTitle>
                                     <CardDescription>
@@ -269,71 +255,6 @@ export default function CreateUser({
                                         Create user
                                     </Button>
                                 </CardFooter>
-                            </Card>
-
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Licenses</CardTitle>
-                                    <CardDescription>
-                                        Assign licenses this user already holds.
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    {selectedLicenseIds.map((id) => (
-                                        <input
-                                            key={id}
-                                            type="hidden"
-                                            name="license_ids[]"
-                                            value={id}
-                                        />
-                                    ))}
-                                    {licenses.length === 0 ? (
-                                        <p className="text-muted-foreground text-sm">
-                                            No licenses have been created yet.
-                                        </p>
-                                    ) : (
-                                        <ul className="space-y-2">
-                                            {licenses.map((license) => (
-                                                <li
-                                                    key={license.id}
-                                                    className="flex items-center gap-3 rounded-lg border p-3"
-                                                >
-                                                    <Checkbox
-                                                        id={`license-${license.id}`}
-                                                        checked={selectedLicenseIds.includes(
-                                                            license.id,
-                                                        )}
-                                                        onCheckedChange={(
-                                                            checked,
-                                                        ) =>
-                                                            toggleLicense(
-                                                                license.id,
-                                                                checked ===
-                                                                    true,
-                                                            )
-                                                        }
-                                                    />
-                                                    <label
-                                                        htmlFor={`license-${license.id}`}
-                                                        className="min-w-0 flex-1 cursor-pointer truncate text-sm font-medium"
-                                                    >
-                                                        {license.name}
-                                                    </label>
-                                                    <Badge
-                                                        variant={
-                                                            license.status ===
-                                                            'active'
-                                                                ? 'outline'
-                                                                : 'destructive'
-                                                        }
-                                                    >
-                                                        {license.status}
-                                                    </Badge>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </CardContent>
                             </Card>
                         </>
                     )}

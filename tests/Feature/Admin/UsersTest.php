@@ -49,7 +49,9 @@ test('the edit page exposes the user as a flat, unwrapped object', function () {
     $response->assertInertia(fn (Assert $page) => $page
         ->component('admin/users/edit')
         ->where('user.id', $user->id)
-        ->missing('user.data'),
+        ->missing('user.data')
+        ->missing('licenses')
+        ->missing('availableLicenses'),
     );
 });
 
@@ -130,13 +132,13 @@ test('admins can create a user', function () {
     ]);
 });
 
-test('admins can assign licenses while creating a user', function () {
+test('creating a user does not assign licenses', function () {
     $admin = User::factory()->admin()->create();
     $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.users.store'), [
         'name' => 'New Agent',
-        'email' => 'licensed-agent@example.com',
+        'email' => 'unlicensed-agent@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
         'role' => 'agent',
@@ -145,39 +147,14 @@ test('admins can assign licenses while creating a user', function () {
     ]);
 
     $response->assertRedirect(route('admin.users.index'));
-    $user = User::where('email', 'licensed-agent@example.com')->firstOrFail();
-    $this->assertDatabaseHas('license_user', [
-        'user_id' => $user->id,
-        'license_id' => $license->id,
-    ]);
+    $user = User::where('email', 'unlicensed-agent@example.com')->firstOrFail();
+    expect($user->licenses)->toBeEmpty();
 });
 
-test('an inactive license can not be assigned while creating a user', function () {
-    $admin = User::factory()->admin()->create();
-    $license = License::factory()->inactive()->create();
-
-    $response = $this->actingAs($admin)->post(route('admin.users.store'), [
-        'name' => 'New Agent',
-        'email' => 'blocked-license@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
-        'role' => 'agent',
-        'status' => 'active',
-        'license_ids' => [$license->id],
-    ]);
-
-    $response->assertSessionHasErrors('license_ids.0');
-    $this->assertDatabaseMissing('users', ['email' => 'blocked-license@example.com']);
-});
-
-test('inactive licenses are excluded from the create page and bulk-assign picker', function () {
+test('inactive licenses are excluded from the bulk-assign picker', function () {
     $admin = User::factory()->admin()->create();
     License::factory()->create();
     License::factory()->inactive()->create();
-
-    $this->actingAs($admin)
-        ->get(route('admin.users.create'))
-        ->assertInertia(fn (Assert $page) => $page->has('licenses', 1));
 
     $this->actingAs($admin)
         ->get(route('admin.users.index'))
@@ -201,7 +178,7 @@ test('an inactive license can not be bulk assigned', function () {
     ]);
 });
 
-test('the create page exposes the available licenses', function () {
+test('the create page offers roles and statuses but no licenses', function () {
     $admin = User::factory()->admin()->create();
     License::factory()->create();
 
@@ -209,7 +186,9 @@ test('the create page exposes the available licenses', function () {
 
     $response->assertInertia(fn (Assert $page) => $page
         ->component('admin/users/create')
-        ->has('licenses', 1),
+        ->has('roles')
+        ->has('statuses')
+        ->missing('licenses'),
     );
 });
 

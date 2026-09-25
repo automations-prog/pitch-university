@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\ScreeningController;
 use App\Http\Controllers\Admin\ScreeningResponseController;
 use App\Http\Controllers\Admin\TrainingTrackController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\UserLicenseController;
 use App\Http\Controllers\Admin\UserTrackController;
 use App\Http\Controllers\Admin\VerticalTrainingController;
 use App\Http\Controllers\ImpersonateController;
@@ -26,8 +25,6 @@ Route::middleware(['auth', 'verified', 'can:viewAny,'.User::class])
         Route::post('users/pull-agents', [UserController::class, 'pullAgents'])->name('users.pull-agents');
         Route::get('users/pull-status/{progressId}', [UserController::class, 'pullStatus'])->name('users.pull-status');
         Route::post('users/{user}/impersonate', [UserController::class, 'impersonate'])->name('users.impersonate');
-        Route::post('users/{user}/licenses/{license}', [UserLicenseController::class, 'store'])->name('users.licenses.store');
-        Route::delete('users/{user}/licenses/{license}', [UserLicenseController::class, 'destroy'])->name('users.licenses.destroy');
         Route::post('users/{user}/tracks/{track:id}', [UserTrackController::class, 'store'])->name('users.tracks.store')->withoutScopedBindings();
         Route::delete('users/{user}/tracks/{track:id}', [UserTrackController::class, 'destroy'])->name('users.tracks.destroy')->withoutScopedBindings();
 

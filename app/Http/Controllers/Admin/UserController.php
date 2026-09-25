@@ -86,7 +86,6 @@ class UserController extends Controller
         return Inertia::render('admin/users/create', [
             'roles' => UserRole::cases(),
             'statuses' => UserStatus::cases(),
-            'licenses' => LicenseResource::collection(License::query()->where('status', LicenseStatus::Active)->orderBy('name')->get()),
         ]);
     }
 
@@ -95,9 +94,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        $user = User::create($request->safe()->only(['name', 'email', 'password', 'role', 'status']));
-
-        $user->licenses()->sync($request->validated('license_ids') ?? []);
+        User::create($request->safe()->only(['name', 'email', 'password', 'role', 'status']));
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('User created.')]);
 
@@ -127,8 +124,6 @@ class UserController extends Controller
             'user' => UserResource::make($user),
             'roles' => UserRole::cases(),
             'statuses' => UserStatus::cases(),
-            'licenses' => LicenseResource::collection($user->licenses),
-            'availableLicenses' => LicenseResource::collection(License::query()->where('status', LicenseStatus::Active)->orderBy('name')->get()),
         ]);
     }
 

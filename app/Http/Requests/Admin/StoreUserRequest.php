@@ -4,10 +4,8 @@ namespace App\Http\Requests\Admin;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
-use App\Enums\LicenseStatus;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
-use App\Models\License;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -37,8 +35,6 @@ class StoreUserRequest extends FormRequest
             'password' => $this->passwordRules(),
             'role' => ['required', Rule::enum(UserRole::class)],
             'status' => ['required', Rule::enum(UserStatus::class)],
-            'license_ids' => ['nullable', 'array'],
-            'license_ids.*' => ['integer', Rule::exists(License::class, 'id')->where('status', LicenseStatus::Active->value)],
         ];
     }
 }
