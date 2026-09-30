@@ -30,5 +30,15 @@ export const resourceBadgeClass =
 export const brandButtonClass =
     'gap-2 rounded-lg border-0 font-bold text-white bg-[linear-gradient(135deg,#473364_0%,#5a4177_60%,#8a5fae_100%)] hover:opacity-95';
 
+// The brand gradient on its own — icon tiles, filled meters, and the trainee's
+// chat bubbles on the roleplay page.
+export const brandGradientClass =
+    'bg-[linear-gradient(135deg,#473364_0%,#5a4177_60%,#8a5fae_100%)]';
+
+export const brandAccentTextClass = 'text-[#7a3fa0] dark:text-[#f5b8ff]';
+
+// A selected card or option (roleplay level picker, disposition picker).
+export const brandSelectedClass = 'border-[#f598ff] ring-2 ring-[#f598ff]/40';
+
 export const resourceInputClass =
     'rounded-lg border-slate-200 focus-visible:border-[#f598ff] focus-visible:ring-2 focus-visible:ring-[#f598ff]/40 dark:border-input';

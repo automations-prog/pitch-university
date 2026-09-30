@@ -36,6 +36,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('{track}/{module}/quiz', [TrainingController::class, 'submitQuiz'])->name('quiz.store');
         });
 
+    Route::inertia('roleplay', 'roleplay/index')->name('roleplay.index');
+
     Route::get('licenses', [LicenseController::class, 'index'])->name('licenses.index');
     Route::get('licenses/{license}', [LicenseController::class, 'show'])->name('licenses.show');
 });

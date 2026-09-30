@@ -4,6 +4,7 @@ import {
     ClipboardCheck,
     FileBarChart,
     GraduationCap,
+    Headphones,
     LayoutGrid,
     ShieldCheck,
     Target,
@@ -30,6 +31,7 @@ import { index as trainingTracksIndex } from '@/routes/admin/training-tracks';
 import { index as usersIndex } from '@/routes/admin/users';
 import { index as verticalTrainingIndex } from '@/routes/admin/vertical-training';
 import { index as myLicensesIndex } from '@/routes/licenses';
+import { index as roleplayIndex } from '@/routes/roleplay';
 import { index as trainingIndex } from '@/routes/training';
 import type { NavItem } from '@/types';
 
@@ -57,6 +59,11 @@ export function AppSidebar() {
                   },
               ]
             : []),
+        {
+            title: 'Roleplay',
+            href: roleplayIndex(),
+            icon: Headphones,
+        },
         ...(SHOW_LICENSING && auth.user.licenses_count > 0
             ? [
                   {
