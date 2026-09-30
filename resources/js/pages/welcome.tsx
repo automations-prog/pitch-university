@@ -205,16 +205,14 @@ export default function Welcome() {
                 ))}
 
                 <div className="relative z-10 flex w-full max-w-2xl flex-col items-center gap-9 text-center">
-                    <div
-                        className="flex size-20 items-center justify-center rounded-3xl shadow-[0_20px_50px_-15px_rgba(90,65,119,0.6)]"
+                    <img
+                        src="/images/pitch-university-logo-white.png"
+                        alt="Pitch University — Prepare, Pass, Produce"
+                        className="size-64 drop-shadow-[0_20px_40px_rgba(20,10,40,0.5)] sm:size-72"
                         style={{
-                            background:
-                                'linear-gradient(135deg, #473364 0%, #5a4177 60%, #8a5fae 100%)',
                             animation: 'float-badge 5s ease-in-out infinite',
                         }}
-                    >
-                        <GraduationCap className="size-10 text-white" />
-                    </div>
+                    />
 
                     <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
                         <span className="relative flex size-2">
@@ -232,15 +230,7 @@ export default function Welcome() {
                     </div>
 
                     <div className="space-y-4">
-                        <h1
-                            className="bg-clip-text text-5xl font-extrabold text-balance text-transparent sm:text-6xl"
-                            style={{
-                                backgroundImage:
-                                    'linear-gradient(135deg, #ffffff 0%, #f5b8ff 55%, #c774ff 100%)',
-                            }}
-                        >
-                            Pitch University
-                        </h1>
+                        <h1 className="sr-only">Pitch University</h1>
                         <p className="mx-auto max-w-md text-base text-balance text-white/70">
                             Sales training, licensing, and enablement for our
                             agents — all in one place. We&apos;re putting the
