@@ -203,7 +203,7 @@ test('completing stores the call, grades it and reveals the persona', function (
         ->and($session->events)->toBe([['type' => 'agent_speech', 'start' => 5000, 'end' => 9000]])
         ->and($session->delivery_status)->toBe('pending');
     Storage::disk('local')->assertExists($session->recording_path);
-    Queue::assertPushedOn('roleplay', GradeRoleplayDelivery::class, fn (GradeRoleplayDelivery $job) => $job->roleplaySession->is($session));
+    Queue::assertPushed(GradeRoleplayDelivery::class, fn (GradeRoleplayDelivery $job) => $job->roleplaySession->is($session));
 });
 
 test('completing rejects an event log that isn\'t JSON', function () {

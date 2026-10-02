@@ -95,9 +95,8 @@ test('when the AI review fails the measured criteria are still saved', function 
         ->and($criteria['composure']['score'])->toBeNull();
 });
 
-test('the job runs on its own queue and times out before the queue would retry it', function () {
+test('the job times out before the queue would retry it', function () {
     $job = new GradeRoleplayDelivery(RoleplaySession::factory()->make());
 
-    expect($job->queue)->toBe('roleplay')
-        ->and($job->timeout)->toBeLessThan(config('queue.connections.database.retry_after'));
+    expect($job->timeout)->toBeLessThan(config('queue.connections.database.retry_after'));
 });

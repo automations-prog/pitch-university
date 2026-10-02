@@ -28,14 +28,7 @@ class GradeRoleplayDelivery implements ShouldQueue
      */
     public int $timeout = 75;
 
-    /**
-     * Its own queue, so a big admin agent sync can't hold up trainees'
-     * scores (and the other way round).
-     */
-    public function __construct(public readonly RoleplaySession $roleplaySession)
-    {
-        $this->onQueue('roleplay');
-    }
+    public function __construct(public readonly RoleplaySession $roleplaySession) {}
 
     /**
      * Execute the job.
