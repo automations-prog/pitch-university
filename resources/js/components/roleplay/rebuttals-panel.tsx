@@ -11,7 +11,8 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { brandSelectedClass } from '@/lib/brand-theme';
-import { REBUTTAL_CLOSER, REBUTTALS, type Rebuttal } from '@/lib/roleplay-data';
+import { useRoleplayContent } from '@/lib/roleplay-content';
+import type { Rebuttal } from '@/lib/roleplay-data';
 import { cn } from '@/lib/utils';
 
 export function RebuttalsPanel({
@@ -21,14 +22,16 @@ export function RebuttalsPanel({
 }: {
     disabled: boolean;
     isObjectionOpen: boolean;
-    onRead: (rebuttal: Rebuttal, lineIndex: number) => void;
+    /** Mock only. Live calls show rebuttals as reference, with no "Say this". */
+    onRead?: (rebuttal: Rebuttal, lineIndex: number) => void;
 }) {
+    const { rebuttals: allRebuttals, rebuttalCloser } = useRoleplayContent();
     const [query, setQuery] = useState('');
 
     const rebuttals = useMemo(() => {
         const needle = query.trim().toLowerCase();
 
-        return Object.values(REBUTTALS).filter(
+        return allRebuttals.filter(
             (rebuttal) =>
                 needle === '' ||
                 rebuttal.title.toLowerCase().includes(needle) ||
@@ -36,7 +39,7 @@ export function RebuttalsPanel({
                     line.toLowerCase().includes(needle),
                 ),
         );
-    }, [query]);
+    }, [allRebuttals, query]);
 
     return (
         <Card
@@ -58,7 +61,7 @@ export function RebuttalsPanel({
                         </span>
                     )}
                 </CardTitle>
-                <CardDescription>{REBUTTAL_CLOSER}</CardDescription>
+                <CardDescription>{rebuttalCloser}</CardDescription>
                 <div className="relative mt-2">
                     <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
                     <Input
@@ -95,16 +98,20 @@ export function RebuttalsPanel({
                                     text={line}
                                     className="text-muted-foreground leading-relaxed"
                                 />
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="self-end"
-                                    disabled={disabled}
-                                    onClick={() => onRead(rebuttal, lineIndex)}
-                                >
-                                    <MessageSquareQuote />
-                                    Say this
-                                </Button>
+                                {onRead && (
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="self-end"
+                                        disabled={disabled}
+                                        onClick={() =>
+                                            onRead(rebuttal, lineIndex)
+                                        }
+                                    >
+                                        <MessageSquareQuote />
+                                        Say this
+                                    </Button>
+                                )}
                             </div>
                         ))}
                     </div>

@@ -23,11 +23,11 @@ import {
     resourceBadgeClass,
     resourceCardClass,
 } from '@/lib/brand-theme';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Spinner } from '@/components/ui/spinner';
+import { useRoleplayContent } from '@/lib/roleplay-content';
 import {
-    LEVELS,
-    OBJECTIONS,
     OUTCOME_LABELS,
-    QUIRK_MIN_LEVEL,
     startingPatience,
     type DifficultyLevel,
     type Level,
@@ -53,16 +53,24 @@ const OUTCOME_COLORS: Record<Outcome, string> = {
 
 const SAMPLE_LINE_COUNT = 3;
 
+type StartControls = {
+    onStart: () => void;
+    isStarting: boolean;
+    error: string | null;
+    practiceWithoutMic: boolean;
+    onPracticeWithoutMicChange: (practiceWithoutMic: boolean) => void;
+};
+
 export function LevelPicker({
     selectedLevel,
     onSelect,
-    onStart,
+    ...startControls
 }: {
     selectedLevel: DifficultyLevel;
     onSelect: (level: DifficultyLevel) => void;
-    onStart: () => void;
-}) {
-    const level = LEVELS.find(
+} & StartControls) {
+    const { levels } = useRoleplayContent();
+    const level = levels.find(
         (candidate) => candidate.level === selectedLevel,
     )!;
 
@@ -81,7 +89,7 @@ export function LevelPicker({
         event.preventDefault();
         const next = Math.min(
             Math.max(selectedLevel + step, 1),
-            LEVELS.length,
+            levels.length,
         ) as DifficultyLevel;
         onSelect(next);
         event.currentTarget
@@ -97,7 +105,7 @@ export function LevelPicker({
                 onKeyDown={selectWithArrowKeys}
                 className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"
             >
-                {LEVELS.map((candidate) => (
+                {levels.map((candidate) => (
                     <LevelCard
                         key={candidate.level}
                         level={candidate}
@@ -107,7 +115,7 @@ export function LevelPicker({
                 ))}
             </div>
 
-            <LevelDetails level={level} onStart={onStart} />
+            <LevelDetails level={level} {...startControls} />
         </div>
     );
 }
@@ -171,9 +179,10 @@ function LevelCard({
 }
 
 function IntensityMeter({ level }: { level: DifficultyLevel }) {
+    const { levels } = useRoleplayContent();
     return (
         <span className="flex gap-1" aria-hidden>
-            {LEVELS.map((candidate) => (
+            {levels.map((candidate) => (
                 <span
                     key={candidate.level}
                     className={cn(
@@ -191,20 +200,25 @@ function IntensityMeter({ level }: { level: DifficultyLevel }) {
 function LevelDetails({
     level,
     onStart,
+    isStarting,
+    error,
+    practiceWithoutMic,
+    onPracticeWithoutMicChange,
 }: {
     level: Level;
-    onStart: () => void;
-}) {
+} & StartControls) {
+    const { objections, quirkMinLevel } = useRoleplayContent();
     const Icon = LEVEL_ICONS[level.level];
     const patience = startingPatience(level.level);
-    const hasQuirk = level.level >= QUIRK_MIN_LEVEL;
+    const hasQuirk = level.level >= quirkMinLevel;
 
     const unlocked = useMemo(
         () =>
-            OBJECTIONS.filter((objection) => objection.minLevel <= level.level)
+            objections
+                .filter((objection) => objection.minLevel <= level.level)
                 .slice()
                 .sort((a, b) => b.weight - a.weight),
-        [level.level],
+        [level.level, objections],
     );
     const newlyUnlocked = unlocked.filter(
         (objection) => objection.minLevel === level.level,
@@ -311,14 +325,37 @@ function LevelDetails({
                                 ? 'Every consumer at this level can be transferred, so focus on the flow.'
                                 : 'Not every consumer here should be transferred. Catch DQs and DNC demands.'}
                         </p>
-                        <Button
-                            size="lg"
-                            className={brandButtonClass}
-                            onClick={onStart}
-                        >
-                            <PhoneCall />
-                            Start level {level.level}
-                        </Button>
+                        <div className="flex flex-col items-end gap-2">
+                            <Button
+                                size="lg"
+                                className={brandButtonClass}
+                                disabled={isStarting}
+                                onClick={onStart}
+                            >
+                                {isStarting ? <Spinner /> : <PhoneCall />}
+                                Start level {level.level}
+                            </Button>
+                            <label
+                                htmlFor="practice-without-mic"
+                                className="text-muted-foreground flex items-center gap-2 text-xs"
+                            >
+                                <Checkbox
+                                    id="practice-without-mic"
+                                    checked={practiceWithoutMic}
+                                    onCheckedChange={(checked) =>
+                                        onPracticeWithoutMicChange(
+                                            checked === true,
+                                        )
+                                    }
+                                />
+                                Practice without mic
+                            </label>
+                            {error && (
+                                <p className="text-destructive text-xs">
+                                    {error}
+                                </p>
+                            )}
+                        </div>
                     </div>
                 </div>
 

@@ -46,6 +46,7 @@ return [
         'key' => env('OPENAI_API_KEY'),
         'realtime_model' => env('OPENAI_REALTIME_MODEL', 'gpt-realtime'),
         'realtime_voice' => env('OPENAI_REALTIME_VOICE', 'verse'),
+        'roleplay_daily_limit' => (int) env('OPENAI_ROLEPLAY_DAILY_LIMIT', 20),
     ],
 
 ];

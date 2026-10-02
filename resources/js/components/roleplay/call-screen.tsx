@@ -1,31 +1,38 @@
-import {
-    ChevronRight,
-    Heart,
-    PhoneOff,
-    Sparkles,
-    TriangleAlert,
-} from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { Heart, Sparkles } from 'lucide-react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { RebuttalsPanel } from '@/components/roleplay/rebuttals-panel';
 import { ScriptTracker } from '@/components/roleplay/script-tracker';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import type {
-    TranscriptLine,
-    useRoleplayCall,
-} from '@/hooks/use-roleplay-call';
-import {
-    brandButtonClass,
-    brandGradientClass,
-    resourceCardClass,
-} from '@/lib/brand-theme';
-import { SCRIPT_SECTIONS } from '@/lib/roleplay-data';
-import type { Persona } from '@/lib/roleplay-persona';
+import { brandGradientClass, resourceCardClass } from '@/lib/brand-theme';
+import { useRoleplayContent } from '@/lib/roleplay-content';
+import type { Lead, Level, Rebuttal } from '@/lib/roleplay-data';
 import { cn } from '@/lib/utils';
 
-type RoleplayCall = ReturnType<typeof useRoleplayCall>;
+export type CallTranscriptLine = {
+    id: number;
+    speaker: 'agent' | 'consumer' | 'system';
+    text: string;
+};
 
-function initialsOf(name: string): string {
+/**
+ * Everything the call screen shows, from either the live AI call or the
+ * practice-without-mic mock.
+ */
+export type CallView = {
+    lead: Lead;
+    level: Level;
+    quirk: string | null;
+    patience: number;
+    maxPatience: number;
+    elapsedSeconds: number;
+    statusLabel: string;
+    isOver: boolean;
+    isObjectionOpen: boolean;
+    transcript: CallTranscriptLine[];
+    scriptStep: number;
+};
+
+export function initialsOf(name: string): string {
     return name
         .split(' ')
         .map((part) => part[0])
@@ -41,82 +48,12 @@ function formatDuration(totalSeconds: number): string {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
-export function CallScreen({
-    persona,
-    agentName,
-    call,
-    onWrapUp,
-}: {
-    persona: Persona;
-    agentName: string;
-    call: RoleplayCall;
-    onWrapUp: () => void;
-}) {
-    const isOver = call.endReason !== null;
-    const isObjectionOpen = call.openObjections.length > 0 && !isOver;
-
-    const endAndWrapUp = () => {
-        call.endCall();
-        onWrapUp();
-    };
-
-    return (
-        <div className="flex flex-col gap-4">
-            <CallBar
-                persona={persona}
-                patience={call.patience}
-                currentStep={call.currentStep}
-                isOver={isOver}
-                onEnd={endAndWrapUp}
-                onWrapUp={onWrapUp}
-            />
-
-            <div className="grid items-start gap-4 lg:grid-cols-[20rem_1fr_22rem]">
-                <ScriptTracker
-                    currentStep={call.currentStep}
-                    lead={persona.lead}
-                    agentName={agentName}
-                />
-
-                <Conversation
-                    persona={persona}
-                    agentName={agentName}
-                    call={call}
-                    isObjectionOpen={isObjectionOpen}
-                    onEnd={endAndWrapUp}
-                    onWrapUp={onWrapUp}
-                />
-
-                <RebuttalsPanel
-                    disabled={isOver}
-                    isObjectionOpen={isObjectionOpen}
-                    onRead={call.readRebuttal}
-                />
-            </div>
-        </div>
-    );
-}
-
-function CallBar({
-    persona,
-    patience,
-    currentStep,
-    isOver,
-    onEnd,
-    onWrapUp,
-}: {
-    persona: Persona;
-    patience: number;
-    currentStep: number;
-    isOver: boolean;
-    onEnd: () => void;
-    onWrapUp: () => void;
-}) {
+/** A one-second ticker for calls that don't track their own time. */
+export function useElapsedSeconds(isRunning: boolean): number {
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
-    const progress = Math.min(currentStep / SCRIPT_SECTIONS.length, 1) * 100;
 
     useEffect(() => {
-        if (isOver) {
+        if (!isRunning) {
             return;
         }
 
@@ -126,7 +63,64 @@ function CallBar({
         );
 
         return () => clearInterval(interval);
-    }, [isOver]);
+    }, [isRunning]);
+
+    return elapsedSeconds;
+}
+
+export function CallScreen({
+    view,
+    agentName,
+    barActions,
+    footer,
+    conversationNote,
+    onReadRebuttal,
+    onScriptStepChange,
+}: {
+    view: CallView;
+    agentName: string;
+    /** Buttons on the right of the call bar (mute, end call, wrap up). */
+    barActions: ReactNode;
+    /** The action row under the transcript. */
+    footer: ReactNode;
+    conversationNote: string;
+    /** Mock only: reading a rebuttal out loud. */
+    onReadRebuttal?: (rebuttal: Rebuttal, lineIndex: number) => void;
+    /** Live only: the trainee moves the teleprompter themselves. */
+    onScriptStepChange?: (step: number) => void;
+}) {
+    return (
+        <div className="flex flex-col gap-4">
+            <CallBar view={view} actions={barActions} />
+
+            <div className="grid items-start gap-4 lg:grid-cols-[20rem_1fr_22rem]">
+                <ScriptTracker
+                    currentStep={view.scriptStep}
+                    lead={view.lead}
+                    agentName={agentName}
+                    onStepChange={view.isOver ? undefined : onScriptStepChange}
+                />
+
+                <Conversation
+                    view={view}
+                    agentName={agentName}
+                    note={conversationNote}
+                    footer={footer}
+                />
+
+                <RebuttalsPanel
+                    disabled={view.isOver}
+                    isObjectionOpen={view.isObjectionOpen && !view.isOver}
+                    onRead={onReadRebuttal}
+                />
+            </div>
+        </div>
+    );
+}
+
+function CallBar({ view, actions }: { view: CallView; actions: ReactNode }) {
+    const { scriptSections } = useRoleplayContent();
+    const progress = Math.min(view.scriptStep / scriptSections.length, 1) * 100;
 
     return (
         <Card
@@ -139,42 +133,42 @@ function CallBar({
                 <div className="flex min-w-0 items-center gap-3">
                     <div className="relative">
                         <div className="flex size-12 items-center justify-center rounded-full bg-white/15 text-sm font-bold ring-2 ring-white/30">
-                            {initialsOf(persona.lead.name)}
+                            {initialsOf(view.lead.name)}
                         </div>
                         <span
                             className={cn(
                                 'absolute right-0 bottom-0 size-3.5 rounded-full ring-2 ring-[#5a4177]',
-                                isOver ? 'bg-white/50' : 'bg-emerald-400',
+                                view.isOver ? 'bg-white/50' : 'bg-emerald-400',
                             )}
                         />
                     </div>
                     <div className="min-w-0">
                         <p className="truncate text-lg font-semibold">
-                            {persona.lead.name}
+                            {view.lead.name}
                         </p>
                         <p className="text-sm text-white/70">
-                            {persona.lead.state} · {persona.lead.zip}
+                            {view.lead.state} · {view.lead.zip}
                         </p>
                     </div>
                 </div>
 
                 <div className="flex flex-col">
                     <span className="text-xs tracking-wide text-white/60 uppercase">
-                        {isOver ? 'Call ended' : 'On call'}
+                        {view.statusLabel}
                     </span>
                     <span className="font-mono text-lg font-semibold tabular-nums">
-                        {formatDuration(elapsedSeconds)}
+                        {formatDuration(view.elapsedSeconds)}
                     </span>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
                     <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">
-                        Level {persona.level.level} · {persona.level.name}
+                        Level {view.level.level} · {view.level.name}
                     </span>
-                    {persona.quirk && (
+                    {view.quirk && (
                         <span className="flex items-center gap-1.5 rounded-full bg-[#f598ff]/25 px-3 py-1 text-xs font-medium">
                             <Sparkles className="size-3" />
-                            {persona.quirk}
+                            {view.quirk}
                         </span>
                     )}
                 </div>
@@ -182,32 +176,15 @@ function CallBar({
                 <div className="ml-auto flex flex-wrap items-center gap-4">
                     <div className="flex flex-col gap-1">
                         <span className="text-xs tracking-wide text-white/60 uppercase">
-                            Patience {patience}/{persona.patience}
+                            Patience {view.patience}/{view.maxPatience}
                         </span>
                         <PatienceMeter
-                            patience={patience}
-                            max={persona.patience}
+                            patience={view.patience}
+                            max={view.maxPatience}
                         />
                     </div>
 
-                    {isOver ? (
-                        <Button
-                            className="bg-white font-bold text-[#473364] hover:bg-white/90"
-                            onClick={onWrapUp}
-                        >
-                            Wrap up
-                            <ChevronRight />
-                        </Button>
-                    ) : (
-                        <Button
-                            variant="destructive"
-                            className="font-bold"
-                            onClick={onEnd}
-                        >
-                            <PhoneOff />
-                            End call
-                        </Button>
-                    )}
+                    {actions}
                 </div>
             </div>
 
@@ -247,23 +224,17 @@ function PatienceMeter({ patience, max }: { patience: number; max: number }) {
 }
 
 function Conversation({
-    persona,
+    view,
     agentName,
-    call,
-    isObjectionOpen,
-    onEnd,
-    onWrapUp,
+    note,
+    footer,
 }: {
-    persona: Persona;
+    view: CallView;
     agentName: string;
-    call: RoleplayCall;
-    isObjectionOpen: boolean;
-    onEnd: () => void;
-    onWrapUp: () => void;
+    note: string;
+    footer: ReactNode;
 }) {
     const scrollRef = useRef<HTMLDivElement>(null);
-    const isOver = call.endReason !== null;
-    const nextSection = SCRIPT_SECTIONS[call.currentStep];
 
     useEffect(() => {
         const container = scrollRef.current;
@@ -271,7 +242,7 @@ function Conversation({
             top: container.scrollHeight,
             behavior: 'smooth',
         });
-    }, [call.transcript.length]);
+    }, [view.transcript.length]);
 
     return (
         <Card
@@ -283,78 +254,24 @@ function Conversation({
         >
             <div className="flex items-center justify-between gap-2 border-b px-5 py-3">
                 <p className="font-semibold">Conversation</p>
-                <span className="text-muted-foreground text-xs">
-                    Mock call · AI consumer coming soon
-                </span>
+                <span className="text-muted-foreground text-xs">{note}</span>
             </div>
 
             <div
                 ref={scrollRef}
                 className="flex flex-1 flex-col gap-4 overflow-y-auto px-5 py-4"
             >
-                {call.transcript.map((line) => (
+                {view.transcript.map((line) => (
                     <TranscriptBubble
                         key={line.id}
                         line={line}
                         agentInitials={initialsOf(agentName)}
-                        consumerInitials={initialsOf(persona.lead.name)}
+                        consumerInitials={initialsOf(view.lead.name)}
                     />
                 ))}
             </div>
 
-            <div className="bg-muted/40 border-t px-5 py-3">
-                {isOver ? (
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                        <p className="text-muted-foreground text-sm">
-                            {call.endReason === 'hung_up'
-                                ? 'The consumer hung up.'
-                                : 'You ended the call.'}
-                        </p>
-                        <Button className={brandButtonClass} onClick={onWrapUp}>
-                            Wrap up
-                            <ChevronRight />
-                        </Button>
-                    </div>
-                ) : !nextSection ? (
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                        <p className="text-muted-foreground text-sm">
-                            Script complete. Stay quiet while the agent
-                            connects.
-                        </p>
-                        <Button className={brandButtonClass} onClick={onEnd}>
-                            End & code the call
-                            <ChevronRight />
-                        </Button>
-                    </div>
-                ) : (
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                        {isObjectionOpen ? (
-                            <p className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
-                                <TriangleAlert className="size-4 shrink-0" />
-                                Rebut the objection first. Moving on costs
-                                patience.
-                            </p>
-                        ) : (
-                            <p className="text-sm">
-                                <span className="text-muted-foreground">
-                                    Your turn:
-                                </span>{' '}
-                                <span className="font-medium">
-                                    {nextSection.title}
-                                </span>
-                            </p>
-                        )}
-                        <Button
-                            className={cn(!isObjectionOpen && brandButtonClass)}
-                            variant={isObjectionOpen ? 'outline' : 'default'}
-                            onClick={call.readStep}
-                        >
-                            Read step {call.currentStep + 1}
-                            <ChevronRight />
-                        </Button>
-                    </div>
-                )}
-            </div>
+            <div className="bg-muted/40 border-t px-5 py-3">{footer}</div>
         </Card>
     );
 }
@@ -364,7 +281,7 @@ function TranscriptBubble({
     agentInitials,
     consumerInitials,
 }: {
-    line: TranscriptLine;
+    line: CallTranscriptLine;
     agentInitials: string;
     consumerInitials: string;
 }) {

@@ -1,6 +1,12 @@
-import { Check, CornerDownRight } from 'lucide-react';
+import {
+    Check,
+    ChevronLeft,
+    ChevronRight,
+    CornerDownRight,
+} from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { ScriptText } from '@/components/roleplay/script-text';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -8,25 +14,28 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { fillScriptPlaceholders } from '@/hooks/use-roleplay-call';
 import { brandGradientClass } from '@/lib/brand-theme';
-import { SCRIPT_SECTIONS } from '@/lib/roleplay-data';
-import type { Lead } from '@/lib/roleplay-persona';
+import { useRoleplayContent } from '@/lib/roleplay-content';
+import { fillScriptPlaceholders, type Lead } from '@/lib/roleplay-data';
 import { cn } from '@/lib/utils';
 
 /**
  * The script as a vertical stepper. Finished steps collapse to their title;
- * the current step opens in place with its lines and answer branches.
+ * the current step opens in place with its lines and answer branches. On a
+ * live call it's a teleprompter the trainee advances with Back / Next.
  */
 export function ScriptTracker({
     currentStep,
     lead,
     agentName,
+    onStepChange,
 }: {
     currentStep: number;
     lead: Lead;
     agentName: string;
+    onStepChange?: (step: number) => void;
 }) {
+    const { scriptSections } = useRoleplayContent();
     const scrollRef = useRef<HTMLDivElement>(null);
 
     /**
@@ -60,13 +69,35 @@ export function ScriptTracker({
                 <CardDescription>
                     Read it exactly as written. Stress the highlighted words.
                 </CardDescription>
+                {onStepChange && (
+                    <div className="mt-2 flex gap-2">
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={currentStep === 0}
+                            onClick={() => onStepChange(currentStep - 1)}
+                        >
+                            <ChevronLeft />
+                            Back
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={currentStep >= scriptSections.length}
+                            onClick={() => onStepChange(currentStep + 1)}
+                        >
+                            Next
+                            <ChevronRight />
+                        </Button>
+                    </div>
+                )}
             </CardHeader>
             <CardContent ref={scrollRef} className="overflow-y-auto">
                 <ol className="flex flex-col">
-                    {SCRIPT_SECTIONS.map((section, index) => {
+                    {scriptSections.map((section, index) => {
                         const isDone = index < currentStep;
                         const isCurrent = index === currentStep;
-                        const isLast = index === SCRIPT_SECTIONS.length - 1;
+                        const isLast = index === scriptSections.length - 1;
 
                         return (
                             <li
@@ -133,7 +164,7 @@ export function ScriptTracker({
                     })}
                 </ol>
 
-                {currentStep >= SCRIPT_SECTIONS.length && (
+                {currentStep >= scriptSections.length && (
                     <p className="text-muted-foreground mt-4 rounded-lg border border-dashed p-3 text-center text-sm">
                         Script complete. End the call and code it.
                     </p>
@@ -152,7 +183,7 @@ function CurrentStep({
     lead: Lead;
     agentName: string;
 }) {
-    const section = SCRIPT_SECTIONS[sectionIndex];
+    const section = useRoleplayContent().scriptSections[sectionIndex];
 
     return (
         <div className="flex flex-col gap-3 rounded-lg border border-[#f598ff]/40 bg-[#f598ff]/5 p-3 text-sm leading-relaxed">

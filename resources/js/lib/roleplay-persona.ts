@@ -1,22 +1,13 @@
 import {
-    DQ_TRAPS,
-    LEVELS,
-    OBJECTIONS,
-    QUIRK_MIN_LEVEL,
-    QUIRKS,
     startingPatience,
     type DifficultyLevel,
     type DqTrap,
+    type Lead,
     type Level,
     type Objection,
     type Outcome,
+    type RoleplayContent,
 } from '@/lib/roleplay-data';
-
-export type Lead = {
-    name: string;
-    state: string;
-    zip: string;
-};
 
 export type Persona = {
     level: Level;
@@ -27,6 +18,12 @@ export type Persona = {
     outcome: Outcome;
     dqTrap: DqTrap | null;
 };
+
+/**
+ * Practice-without-mic persona, built in the browser. Live calls build the
+ * persona server-side (`App\Services\RoleplayPersonaGenerator`) so the
+ * outcome stays hidden; this mock has no such need.
+ */
 
 /**
  * Mock dialer lead info so the script's (Customer Name), (state) and
@@ -94,7 +91,9 @@ export function consumerLineFor(objection: Objection, level: number): string {
 }
 
 function drawOutcome(level: Level): Outcome {
-    const outcomes = Object.entries(level.outcomeMix) as [Outcome, number][];
+    const outcomes = (
+        Object.entries(level.outcomeMix) as [Outcome, number][]
+    ).filter(([, percent]) => percent > 0);
 
     return weightedSample(outcomes, 1, ([, percent]) => percent)[0][0];
 }
@@ -105,9 +104,14 @@ function drawOutcome(level: Level): Outcome {
  * those unlocked at the level, a quirk at level 2+, and an outcome drawn from
  * the level's Transfer / DQ / DNC mix (with a DQ trap when it's DQ).
  */
-export function generatePersona(levelNumber: DifficultyLevel): Persona {
-    const level = LEVELS.find((candidate) => candidate.level === levelNumber)!;
-    const unlocked = OBJECTIONS.filter(
+export function generatePersona(
+    content: RoleplayContent,
+    levelNumber: DifficultyLevel,
+): Persona {
+    const level = content.levels.find(
+        (candidate) => candidate.level === levelNumber,
+    )!;
+    const unlocked = content.objections.filter(
         (objection) => objection.minLevel <= levelNumber,
     );
     const [min, max] = level.objectionRange;
@@ -122,8 +126,9 @@ export function generatePersona(levelNumber: DifficultyLevel): Persona {
             randomInt(min, max),
             (objection) => objection.weight,
         ),
-        quirk: levelNumber >= QUIRK_MIN_LEVEL ? pick(QUIRKS) : null,
+        quirk:
+            levelNumber >= content.quirkMinLevel ? pick(content.quirks) : null,
         outcome,
-        dqTrap: outcome === 'dq' ? pick(DQ_TRAPS) : null,
+        dqTrap: outcome === 'dq' ? pick(content.dqTraps) : null,
     };
 }

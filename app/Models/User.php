@@ -127,4 +127,12 @@ class User extends Authenticatable implements PasskeyUser
     {
         return $this->hasMany(CourseExamAttempt::class);
     }
+
+    /**
+     * @return HasMany<RoleplaySession, $this>
+     */
+    public function roleplaySessions(): HasMany
+    {
+        return $this->hasMany(RoleplaySession::class);
+    }
 }

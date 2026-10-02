@@ -17,19 +17,61 @@ import {
 } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import type { EndReason } from '@/hooks/use-roleplay-call';
+import { useRoleplayContent } from '@/lib/roleplay-content';
 import {
-    COMPLIANCE_GUIDELINES,
-    DISPOSITIONS,
     OUTCOME_DISPOSITION,
     OUTCOME_LABELS,
-    SCRIPT_SECTIONS,
-    rebuttalFor,
     type Objection,
 } from '@/lib/roleplay-data';
 import type { Persona } from '@/lib/roleplay-persona';
 import { brandButtonClass, brandSelectedClass } from '@/lib/brand-theme';
 import { cn } from '@/lib/utils';
 
+/**
+ * The disposition choices, as the script's Dispositions list.
+ */
+export function DispositionGrid({
+    selectedId,
+    correctId,
+    disabled,
+    onSelect,
+}: {
+    selectedId: string | null;
+    /** Highlighted once known. */
+    correctId: string | null;
+    disabled: boolean;
+    onSelect: (dispositionId: string) => void;
+}) {
+    const { dispositions } = useRoleplayContent();
+
+    return (
+        <CardContent className="grid gap-2 sm:grid-cols-2">
+            {dispositions.map((disposition) => (
+                <button
+                    key={disposition.id}
+                    type="button"
+                    disabled={disabled}
+                    onClick={() => onSelect(disposition.id)}
+                    className={cn(
+                        'rounded-lg border p-3 text-left text-sm transition-colors enabled:hover:border-[#e6cdf7]',
+                        selectedId === disposition.id && brandSelectedClass,
+                        disposition.id === correctId && 'border-emerald-500',
+                    )}
+                >
+                    <p className="font-semibold">{disposition.name}</p>
+                    <p className="text-muted-foreground">
+                        {disposition.description}
+                    </p>
+                </button>
+            ))}
+        </CardContent>
+    );
+}
+
+/**
+ * Practice-without-mic wrap-up: graded in the browser, with a compliance
+ * self-check.
+ */
 export function WrapUp({
     persona,
     endReason,
@@ -45,9 +87,11 @@ export function WrapUp({
     onRetry: () => void;
     onChangeLevel: () => void;
 }) {
+    const { complianceGuidelines, dispositions, scriptSections } =
+        useRoleplayContent();
     const [dispositionId, setDispositionId] = useState<string | null>(null);
     const correctDispositionId = OUTCOME_DISPOSITION[persona.outcome];
-    const correctDisposition = DISPOSITIONS.find(
+    const correctDisposition = dispositions.find(
         (disposition) => disposition.id === correctDispositionId,
     )!;
     const isCorrect =
@@ -64,29 +108,14 @@ export function WrapUp({
                             : 'Pick the disposition this call should be coded as.'}
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-2 sm:grid-cols-2">
-                    {DISPOSITIONS.map((disposition) => (
-                        <button
-                            key={disposition.id}
-                            type="button"
-                            disabled={dispositionId !== null}
-                            onClick={() => setDispositionId(disposition.id)}
-                            className={cn(
-                                'rounded-lg border p-3 text-left text-sm transition-colors enabled:hover:border-[#e6cdf7]',
-                                dispositionId === disposition.id &&
-                                    brandSelectedClass,
-                                dispositionId !== null &&
-                                    disposition.id === correctDispositionId &&
-                                    'border-emerald-500',
-                            )}
-                        >
-                            <p className="font-semibold">{disposition.name}</p>
-                            <p className="text-muted-foreground">
-                                {disposition.description}
-                            </p>
-                        </button>
-                    ))}
-                </CardContent>
+                <DispositionGrid
+                    selectedId={dispositionId}
+                    correctId={
+                        dispositionId === null ? null : correctDispositionId
+                    }
+                    disabled={dispositionId !== null}
+                    onSelect={setDispositionId}
+                />
             </Card>
 
             <div className="flex flex-col gap-4">
@@ -133,7 +162,7 @@ export function WrapUp({
                                     Script steps read
                                 </p>
                                 <p className="text-muted-foreground">
-                                    {stepsRead} of {SCRIPT_SECTIONS.length}
+                                    {stepsRead} of {scriptSections.length}
                                 </p>
                             </div>
 
@@ -161,10 +190,7 @@ export function WrapUp({
                                                 </Badge>
                                             </div>
                                             <p className="text-muted-foreground mt-1 text-xs">
-                                                {
-                                                    rebuttalFor(objection)
-                                                        .lines[0]
-                                                }
+                                                {objection.rebuttal.lines[0]}
                                             </p>
                                         </div>
                                     ))
@@ -195,7 +221,7 @@ export function WrapUp({
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-3 text-sm">
-                        {COMPLIANCE_GUIDELINES.map((guideline, index) => (
+                        {complianceGuidelines.map((guideline, index) => (
                             <label
                                 key={guideline}
                                 htmlFor={`guideline-${index}`}

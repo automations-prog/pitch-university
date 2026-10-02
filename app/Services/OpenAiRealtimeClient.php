@@ -29,9 +29,14 @@ class OpenAiRealtimeClient
      * open a WebRTC connection to the Realtime API, without ever exposing
      * the real API key client-side.
      *
+     * `$session` is merged into the session config, so callers can bake in
+     * instructions, tools and turn detection server-side instead of sending
+     * them from the browser.
+     *
+     * @param  array<string, mixed>  $session
      * @return array<string, mixed>
      */
-    public function createEphemeralSession(?string $voice = null): array
+    public function createEphemeralSession(?string $voice = null, array $session = []): array
     {
         return $this->request()
             ->post('https://api.openai.com/v1/realtime/client_secrets', [
@@ -42,7 +47,7 @@ class OpenAiRealtimeClient
                     'anchor' => 'created_at',
                     'seconds' => 300,
                 ],
-                'session' => [
+                'session' => array_replace_recursive([
                     'type' => 'realtime',
                     'model' => $this->model,
                     'audio' => [
@@ -50,7 +55,7 @@ class OpenAiRealtimeClient
                             'voice' => $voice ?? $this->voice,
                         ],
                     ],
-                ],
+                ], $session),
             ])
             ->throw()
             ->json() ?? [];

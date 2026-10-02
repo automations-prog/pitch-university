@@ -1,15 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
 import {
-    SCRIPT_SECTIONS,
-    rebuttalFor,
+    TRANSFER_ASK_SECTION,
+    fillScriptPlaceholders,
     type Objection,
     type Rebuttal,
+    type ScriptSection,
 } from '@/lib/roleplay-data';
-import {
-    consumerLineFor,
-    type Lead,
-    type Persona,
-} from '@/lib/roleplay-persona';
+import { consumerLineFor, type Persona } from '@/lib/roleplay-persona';
 
 export type TranscriptSpeaker = 'agent' | 'consumer' | 'system';
 
@@ -24,44 +21,24 @@ export type EndReason = 'agent' | 'hung_up';
 /** DQ traps that surface at the opening (no Parts A & B) vs. Work / VA. */
 const OPENING_DQ_TRAPS = new Set(['no_part_b', 'medicaid_only']);
 
-const TRANSFER_ASK_STEP = SCRIPT_SECTIONS.findIndex(
-    (section) => section.id === 'transfer_ask',
-);
-const WORK_VA_STEP = SCRIPT_SECTIONS.findIndex(
-    (section) => section.id === 'work_va',
-);
-
-/**
- * Replaces the script's placeholders with the mock lead's details and the
- * trainee's name.
- */
-export function fillScriptPlaceholders(
-    text: string,
-    lead: Lead,
-    agentName: string,
-): string {
-    const firstName = lead.name.split(' ')[0];
-
-    return text
-        .replace(/\(Customer'?s? Name\)/gi, firstName)
-        .replace(/\(state\)/gi, lead.state)
-        .replace(/\(zip code\)/gi, lead.zip)
-        .replace(/_{3,}/g, agentName);
-}
+const WORK_VA_SECTION = 'work_va_insurance';
 
 /**
  * Assigns each drawn objection to the script step it's raised after.
  * `transfer_no` is always raised at the transfer ask; the rest land on a
  * random step before it.
  */
-function scheduleObjections(objections: Objection[]): Map<number, Objection[]> {
+function scheduleObjections(
+    objections: Objection[],
+    transferAskStep: number,
+): Map<number, Objection[]> {
     const schedule = new Map<number, Objection[]>();
 
     objections.forEach((objection) => {
         const step =
             objection.id === 'transfer_no'
-                ? TRANSFER_ASK_STEP
-                : Math.floor(Math.random() * TRANSFER_ASK_STEP);
+                ? transferAskStep
+                : Math.floor(Math.random() * transferAskStep);
 
         schedule.set(step, [...(schedule.get(step) ?? []), objection]);
     });
@@ -70,18 +47,28 @@ function scheduleObjections(objections: Objection[]): Map<number, Objection[]> {
 }
 
 /**
- * Mock call engine for the UI-only roleplay: no AI yet. The trainee reads
- * each script step, the "consumer" answers with the persona's scheduled
- * objections, and unanswered objections cost patience.
+ * Practice-without-mic call engine: no AI. The trainee reads each script
+ * step, the "consumer" answers with the persona's scheduled objections, and
+ * unanswered objections cost patience.
  */
-export function useRoleplayCall(persona: Persona, agentName: string) {
+export function useRoleplayCall(
+    persona: Persona,
+    agentName: string,
+    scriptSections: ScriptSection[],
+) {
+    const transferAskStep = scriptSections.findIndex(
+        (section) => section.id === TRANSFER_ASK_SECTION,
+    );
+    const workVaStep = scriptSections.findIndex(
+        (section) => section.id === WORK_VA_SECTION,
+    );
     const schedule = useMemo(
-        () => scheduleObjections(persona.objections),
-        [persona],
+        () => scheduleObjections(persona.objections, transferAskStep),
+        [persona, transferAskStep],
     );
     const dncStep = useMemo(
-        () => Math.floor(Math.random() * TRANSFER_ASK_STEP),
-        [persona],
+        () => Math.floor(Math.random() * transferAskStep),
+        [persona, transferAskStep],
     );
 
     const [transcript, setTranscript] = useState<TranscriptLine[]>(() => [
@@ -110,11 +97,11 @@ export function useRoleplayCall(persona: Persona, agentName: string) {
     );
 
     const readStep = useCallback(() => {
-        if (endReason || currentStep >= SCRIPT_SECTIONS.length) {
+        if (endReason || currentStep >= scriptSections.length) {
             return;
         }
 
-        const section = SCRIPT_SECTIONS[currentStep];
+        const section = scriptSections[currentStep];
         const lines: Omit<TranscriptLine, 'id'>[] = section.lines.map(
             (line) => ({
                 speaker: 'agent',
@@ -144,7 +131,7 @@ export function useRoleplayCall(persona: Persona, agentName: string) {
             trap !== null &&
             (OPENING_DQ_TRAPS.has(trap.id)
                 ? currentStep === 0
-                : currentStep === WORK_VA_STEP);
+                : currentStep === workVaStep);
 
         if (revealsTrap) {
             lines.push({
@@ -184,6 +171,8 @@ export function useRoleplayCall(persona: Persona, agentName: string) {
         patience,
         persona,
         schedule,
+        scriptSections,
+        workVaStep,
     ]);
 
     /**
@@ -209,8 +198,7 @@ export function useRoleplayCall(persona: Persona, agentName: string) {
 
             setOpenObjections((current) => {
                 const answered = current.find(
-                    (objection) =>
-                        rebuttalFor(objection).title === rebuttal.title,
+                    (objection) => objection.rebuttal.title === rebuttal.title,
                 );
 
                 return current.filter((objection) => objection !== answered);

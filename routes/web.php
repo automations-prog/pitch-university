@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LicenseController;
+use App\Http\Controllers\RoleplayCallController;
+use App\Http\Controllers\RoleplayController;
 use App\Http\Controllers\ScreeningCallController;
 use App\Http\Controllers\ScreeningResponseController;
 use App\Http\Controllers\TrainingController;
@@ -36,7 +38,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('{track}/{module}/quiz', [TrainingController::class, 'submitQuiz'])->name('quiz.store');
         });
 
-    Route::inertia('roleplay', 'roleplay/index')->name('roleplay.index');
+    Route::prefix('roleplay')->name('roleplay.')->group(function () {
+        Route::get('/', [RoleplayController::class, 'index'])->name('index');
+        Route::post('sessions', [RoleplayController::class, 'store'])->middleware('throttle:roleplay-sessions')->name('sessions.store');
+        Route::get('sessions/{roleplaySession}', [RoleplayController::class, 'show'])->name('sessions.show');
+        Route::get('sessions/{roleplaySession}/recording', [RoleplayController::class, 'recording'])->name('sessions.recording');
+        Route::post('sessions/{roleplaySession}/call', [RoleplayCallController::class, 'session'])->name('call.session');
+        Route::post('sessions/{roleplaySession}/call/complete', [RoleplayCallController::class, 'complete'])->name('call.complete');
+    });
 
     Route::get('licenses', [LicenseController::class, 'index'])->name('licenses.index');
     Route::get('licenses/{license}', [LicenseController::class, 'show'])->name('licenses.show');
