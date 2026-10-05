@@ -69,6 +69,22 @@ export type TrackOverviewRow = {
     not_started: number;
     in_progress: number;
     completed: number;
+    certified: number;
+};
+
+export type DashboardTab = 'overview' | 'training' | 'screening';
+
+export type DashboardTodo = {
+    key: string;
+    type: 'review' | 'remind' | 'start';
+    title: string;
+    description: string;
+    screening_response_id: number | null;
+};
+
+export type DashboardTodos = {
+    items: DashboardTodo[];
+    total: number;
 };
 
 export type ScreeningOverview = {

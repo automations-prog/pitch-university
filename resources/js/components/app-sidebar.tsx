@@ -1,14 +1,14 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, usePoll } from '@inertiajs/react';
 import {
     Award,
     ClipboardCheck,
-    FileBarChart,
+    FileText,
     GraduationCap,
     Headphones,
-    LayoutGrid,
+    House,
     ShieldCheck,
     Target,
-    ToggleRight,
+    ToggleLeft,
     Users,
 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
@@ -33,7 +33,7 @@ import { index as verticalTrainingIndex } from '@/routes/admin/vertical-training
 import { index as myLicensesIndex } from '@/routes/licenses';
 import { index as roleplayIndex } from '@/routes/roleplay';
 import { index as trainingIndex } from '@/routes/training';
-import type { NavItem } from '@/types';
+import type { NavGroup } from '@/types';
 
 /**
  * Licensing ("Licensing" for admins, "My Licenses" for agents) is hidden from
@@ -41,76 +41,102 @@ import type { NavItem } from '@/types';
  */
 const SHOW_LICENSING = false;
 
-export function AppSidebar() {
-    const { auth } = usePage().props;
+const SCREENING_BADGE_POLL_MS = 30_000;
 
-    const mainNavItems: NavItem[] = [
+export function AppSidebar() {
+    const { auth, screeningAwaitingReview } = usePage().props;
+    const isAdmin = auth.user.role === 'admin';
+
+    // Keep the screening badge current while candidates finish AI calls.
+    usePoll(
+        SCREENING_BADGE_POLL_MS,
+        { only: ['screeningAwaitingReview'] },
+        { autoStart: isAdmin },
+    );
+
+    const navGroups: NavGroup[] = [
         {
-            title: 'Dashboard',
-            href: dashboard(),
-            icon: LayoutGrid,
+            items: [{ title: 'Home', href: dashboard(), icon: House }],
         },
-        ...((auth.user.course_tracks_count ?? 0) > 0
-            ? [
-                  {
-                      title: 'My Training',
-                      href: trainingIndex(),
-                      icon: GraduationCap,
-                  },
-              ]
-            : []),
         {
-            title: 'Roleplay',
-            href: roleplayIndex(),
-            icon: Headphones,
+            label: 'Learning',
+            items: [
+                ...((auth.user.course_tracks_count ?? 0) > 0
+                    ? [
+                          {
+                              title: 'My Training',
+                              href: trainingIndex(),
+                              icon: GraduationCap,
+                          },
+                      ]
+                    : []),
+                ...(isAdmin
+                    ? [
+                          {
+                              title: 'Training Tracks',
+                              href: trainingTracksIndex(),
+                              icon: ToggleLeft,
+                          },
+                          {
+                              title: 'Vertical Training',
+                              href: verticalTrainingIndex(),
+                              icon: Target,
+                          },
+                      ]
+                    : []),
+                {
+                    title: 'Roleplay',
+                    href: roleplayIndex(),
+                    icon: Headphones,
+                },
+                ...(SHOW_LICENSING && auth.user.licenses_count > 0
+                    ? [
+                          {
+                              title: 'My Licenses',
+                              href: myLicensesIndex(),
+                              icon: Award,
+                          },
+                      ]
+                    : []),
+            ],
         },
-        ...(SHOW_LICENSING && auth.user.licenses_count > 0
-            ? [
-                  {
-                      title: 'My Licenses',
-                      href: myLicensesIndex(),
-                      icon: Award,
-                  },
-              ]
-            : []),
-        ...(auth.user.role === 'admin'
-            ? [
-                  ...(SHOW_LICENSING
-                      ? [
-                            {
-                                title: 'Licensing',
-                                href: licensingIndex(),
-                                icon: ShieldCheck,
-                            },
-                        ]
-                      : []),
-                  {
-                      title: 'Training Tracks',
-                      href: trainingTracksIndex(),
-                      icon: ToggleRight,
-                  },
-                  {
-                      title: 'Vertical Training',
-                      href: verticalTrainingIndex(),
-                      icon: Target,
-                  },
-                  {
-                      title: 'Screening',
-                      href: screeningIndex(),
-                      icon: ClipboardCheck,
-                  },
-                  {
-                      title: 'Users',
-                      href: usersIndex(),
-                      icon: Users,
-                  },
-                  {
-                      title: 'Reports',
-                      href: reportsIndex(),
-                      icon: FileBarChart,
-                  },
-              ]
-            : []),
+        {
+            label: 'Hiring & Team',
+            items: isAdmin
+                ? [
+                      {
+                          title: 'Screening',
+                          href: screeningIndex(),
+                          icon: ClipboardCheck,
+                          badge: screeningAwaitingReview
+                              ? `${screeningAwaitingReview} new`
+                              : null,
+                          badgeHref: screeningIndex({
+                              query: { status: 'awaiting_review' },
+                          }),
+                      },
+                      {
+                          title: 'Users',
+                          href: usersIndex(),
+                          icon: Users,
+                      },
+                      {
+                          title: 'Reports',
+                          href: reportsIndex(),
+                          icon: FileText,
+                      },
+                      ...(SHOW_LICENSING
+                          ? [
+                                {
+                                    title: 'Licensing',
+                                    href: licensingIndex(),
+                                    icon: ShieldCheck,
+                                },
+                            ]
+                          : []),
+                  ]
+                : [],
+        },
     ];
 
     return (
@@ -128,7 +154,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain groups={navGroups} />
             </SidebarContent>
 
             <SidebarFooter>

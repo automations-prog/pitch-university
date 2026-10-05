@@ -77,7 +77,7 @@ class RoleplayConsumerPrompt
             - Never break character. Never say you are an AI, a simulation, a test or a roleplay.
             - Never coach the caller or tell them what they should have said.
             - Keep your turns short, like a real person on the phone: one or two sentences.
-            - When the call connects, answer the phone with a short "Hello?" or "Yeah?", then wait for the caller.
+            - When the call connects, answer the phone with only a short "Hello?" or "Yeah?" and nothing else. Then stay quiet until the caller speaks. Don't raise objections or ask who's calling before they say anything.
             TEXT,
         ];
 

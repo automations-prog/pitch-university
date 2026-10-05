@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { xsrfHeader } from '@/lib/csrf';
+import { playRingback, remoteAudioPlayback } from '@/lib/ringback';
 import {
     complete as completeCall,
     session as createCallSession,
@@ -44,6 +45,14 @@ const INTERRUPT_INSTRUCTION =
     'Interrupt the candidate immediately, mid-sentence, and say exactly: "Hey, I gotta run in like ten seconds — quick, why should I keep talking to you?" Say nothing else. Do not soften it or explain yourself.';
 
 const INTERRUPT_DELAY_MS = 10_000;
+
+/**
+ * The candidate's mic is held until the opening line has played, so they
+ * can't talk over it or have the VAD cut it off. The opening line is long,
+ * so the fallback (in case the playback-finished event never arrives) is
+ * generous.
+ */
+const GREETING_MIC_HOLD_MAX_MS = 15_000;
 
 /**
  * The `response.audio_transcript.done`-style event this watch starts on
@@ -134,7 +143,13 @@ const CANDIDATE_TRANSCRIPT_EVENTS = new Set([
     'conversation.item.audio_transcription.completed',
 ]);
 
-export type CallPhase = 'idle' | 'connecting' | 'active' | 'ended' | 'error';
+export type CallPhase =
+    | 'idle'
+    | 'connecting'
+    | 'ringing'
+    | 'active'
+    | 'ended'
+    | 'error';
 
 export type TranscriptEntry = {
     role: 'assistant' | 'candidate';
@@ -173,8 +188,19 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
     const elapsedIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
         null,
     );
+    const stopRingbackRef = useRef<(() => void) | null>(null);
+    const greetingMicTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+        null,
+    );
+    /**
+     * Until the opening line has played, the mic is detached from the call
+     * (the track itself stays enabled; muting is separate).
+     */
+    const heldMicRef = useRef<{
+        sender: RTCRtpSender;
+        track: MediaStreamTrack;
+    } | null>(null);
     const endingRef = useRef(false);
-    const initialResponseSentRef = useRef(false);
     const callInProgressRef = useRef(false);
     const recordingTypeRef = useRef<{ mimeType: string; extension: string }>({
         mimeType: 'audio/webm',
@@ -186,6 +212,23 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
         if (dataChannelRef.current?.readyState === 'open') {
             dataChannelRef.current.send(JSON.stringify(event));
         }
+    }, []);
+
+    /** Puts the candidate's mic back on the call once the opening line is done. */
+    const releaseMic = useCallback(() => {
+        const heldMic = heldMicRef.current;
+
+        if (!heldMic) {
+            return;
+        }
+        heldMicRef.current = null;
+
+        if (greetingMicTimeoutRef.current) {
+            clearTimeout(greetingMicTimeoutRef.current);
+            greetingMicTimeoutRef.current = null;
+        }
+
+        void heldMic.sender.replaceTrack(heldMic.track);
     }, []);
 
     const armInterruptTimer = useCallback(() => {
@@ -223,16 +266,12 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
                 return;
             }
 
+            // WebRTC only: the AI's audio finished playing (or was cut).
             if (
-                (type === 'session.updated' || type === 'session.created') &&
-                !initialResponseSentRef.current
+                type === 'output_audio_buffer.stopped' ||
+                type === 'output_audio_buffer.cleared'
             ) {
-                // Fallback in case the primary attempt (sent immediately
-                // after `session.update`, see the data channel `open`
-                // handler) somehow didn't land — guarded by the same ref so
-                // this never double-fires.
-                initialResponseSentRef.current = true;
-                sendEvent({ type: 'response.create' });
+                releaseMic();
                 return;
             }
 
@@ -270,7 +309,7 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [armInterruptTimer, sendEvent],
+        [armInterruptTimer, releaseMic],
     );
 
     const cleanup = useCallback(() => {
@@ -278,10 +317,17 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
             clearTimeout(interruptTimeoutRef.current);
             interruptTimeoutRef.current = null;
         }
-        if (hangupTimeoutRef.current) {
-            clearTimeout(hangupTimeoutRef.current);
-            hangupTimeoutRef.current = null;
+        for (const timeout of [
+            hangupTimeoutRef,
+            greetingMicTimeoutRef,
+        ]) {
+            if (timeout.current) {
+                clearTimeout(timeout.current);
+                timeout.current = null;
+            }
         }
+        stopRingbackRef.current?.();
+        stopRingbackRef.current = null;
         if (hangupWatchIntervalRef.current) {
             clearInterval(hangupWatchIntervalRef.current);
             hangupWatchIntervalRef.current = null;
@@ -311,7 +357,7 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
         remoteAudioElRef.current?.remove();
         remoteAudioElRef.current = null;
 
-        initialResponseSentRef.current = false;
+        heldMicRef.current = null;
         pitchArmedRef.current = false;
         callInProgressRef.current = false;
         wiredRemoteStreamIdRef.current = null;
@@ -497,12 +543,22 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
             const pc = new RTCPeerConnection();
             peerConnectionRef.current = pc;
 
-            localStream
-                .getTracks()
-                .forEach((track) => pc.addTrack(track, localStream));
+            localStream.getTracks().forEach((track) => {
+                const sender = pc.addTrack(track, localStream);
 
+                // Held off the call until the opening line has played, so
+                // the candidate can't talk over it or have the VAD cut it off.
+                if (track.kind === 'audio') {
+                    heldMicRef.current = { sender, track };
+                    void sender.replaceTrack(null);
+                }
+            });
+
+            // Created after the awaits above, so the browser may start it
+            // suspended; the recording needs it running.
             const audioContext = new AudioContext();
             audioContextRef.current = audioContext;
+            void audioContext.resume();
             const destination = audioContext.createMediaStreamDestination();
             audioContext
                 .createMediaStreamSource(localStream)
@@ -510,11 +566,23 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
 
             const remoteAudio = document.createElement('audio');
             remoteAudio.autoplay = true;
+            // The AI's voice must play through this element, not Web Audio:
+            // Chrome's echo cancellation only covers element playback, and
+            // without it the mic picks the AI up as the candidate. Attached
+            // (hidden) so it plays reliably; `cleanup()` removes it.
+            remoteAudio.hidden = true;
+            document.body.appendChild(remoteAudio);
             remoteAudioElRef.current = remoteAudio;
+
+            const remotePlayback = remoteAudioPlayback(
+                remoteAudio,
+                '[realtime-call]',
+            );
 
             pc.ontrack = (trackEvent) => {
                 const remoteStream = trackEvent.streams[0];
                 remoteAudio.srcObject = remoteStream;
+                remotePlayback.play();
 
                 if (wiredRemoteStreamIdRef.current === remoteStream.id) {
                     return;
@@ -574,19 +642,35 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
                     },
                 });
 
-                // Ordered, reliable data channel — the server processes
-                // messages in the order sent, so this is applied after the
-                // update above without needing to wait for confirmation.
-                // (`handleServerEvent` has a same-ref-guarded fallback in
-                // case that assumption ever turns out to be wrong.)
-                initialResponseSentRef.current = true;
-                sendEvent({ type: 'response.create' });
+                // Ring first: it gives the remote audio time to start
+                // flowing, so the opening line isn't clipped, and the
+                // `session.update` above is long applied by pickup.
+                setPhase('ringing');
 
-                recorder.start(1000);
-                setPhase('active');
-                elapsedIntervalRef.current = setInterval(() => {
-                    setElapsedSeconds((seconds) => seconds + 1);
-                }, 1000);
+                const ringback = playRingback();
+                stopRingbackRef.current = ringback.stop;
+
+                void Promise.all([
+                    ringback.finished,
+                    remotePlayback.started,
+                ]).then(() => {
+                    // Ended or torn down while it was ringing.
+                    if (dataChannelRef.current !== dataChannel) {
+                        return;
+                    }
+
+                    recorder.start(1000);
+                    setPhase('active');
+                    elapsedIntervalRef.current = setInterval(() => {
+                        setElapsedSeconds((seconds) => seconds + 1);
+                    }, 1000);
+
+                    sendEvent({ type: 'response.create' });
+                    greetingMicTimeoutRef.current = setTimeout(
+                        releaseMic,
+                        GREETING_MIC_HOLD_MAX_MS,
+                    );
+                });
             });
 
             dataChannel.addEventListener('message', (messageEvent) => {
@@ -627,7 +711,7 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
             );
             setPhase('error');
         }
-    }, [cleanup, handleServerEvent, sendEvent, responseToken]);
+    }, [cleanup, handleServerEvent, releaseMic, sendEvent, responseToken]);
 
     useEffect(() => cleanup, [cleanup]);
 

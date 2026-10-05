@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -31,6 +32,18 @@ class DashboardController extends Controller
      * @var array<int, int>
      */
     private const PER_PAGE_OPTIONS = [10, 25, 50, 100];
+
+    /**
+     * The tabs on the admin dashboard.
+     *
+     * @var array<int, string>
+     */
+    private const TABS = ['overview', 'training', 'screening'];
+
+    /**
+     * The most to-do items listed on the overview tab.
+     */
+    private const TODO_LIMIT = 6;
 
     /**
      * Display the dashboard.
@@ -65,6 +78,16 @@ class DashboardController extends Controller
         $agentsPage->through(fn (User $agent) => $this->agentProgressRow($agent, $report));
         $paginated = $agentsPage->toArray();
 
+        // The overview tab always summarizes every agent, whatever filters
+        // the training tab's agent table currently has applied.
+        $hasAgentFilters = collect(['status', 'license', 'track'])->contains(fn (string $key) => $request->filled($key));
+        $overviewReport = $hasAgentFilters
+            ? new AgentTrainingReport(User::where('role', UserRole::Agent)->pluck('id'))
+            : $report;
+        $overviewTracks = $overviewReport->trackOverview();
+
+        $tab = in_array($request->query('tab'), self::TABS, true) ? $request->query('tab') : self::TABS[0];
+
         $totalAgents = User::where('role', UserRole::Agent)->count();
         $activeAgents = User::where('role', UserRole::Agent)->where('status', UserStatus::Active)->count();
 
@@ -83,12 +106,15 @@ class DashboardController extends Controller
             ],
             'charts' => $this->chartsFor($allFilteredAgents, $allFilteredAgentModels, $activeLicenses),
             'trackOverview' => $report->trackOverview(),
+            'overviewTracks' => $overviewTracks,
+            'todos' => $this->todos($overviewTracks),
             'screenings' => $this->screeningOverview(),
             'licenses' => $activeLicenses,
             'trainings' => $tracks,
             'filters' => [
                 ...$request->only(['status', 'license', 'track']),
                 'per_page' => (string) $perPage,
+                'tab' => $tab,
             ],
             'perPageOptions' => self::PER_PAGE_OPTIONS,
         ]);
@@ -110,6 +136,54 @@ class DashboardController extends Controller
     }
 
     /**
+     * The admin's open tasks, derived from live data so each item clears
+     * itself once the work is done: rate finished screening calls, chase
+     * candidates who haven't taken the AI call, and get assigned agents
+     * started on their tracks.
+     *
+     * @param  Collection<int, array{slug: string, name: string, not_started: int}>  $tracks
+     * @return array{items: Collection<int, array{key: string, type: string, title: string, description: string, screening_response_id: int|null}>, total: int}
+     */
+    private function todos(Collection $tracks): array
+    {
+        $awaitingReview = ScreeningResponse::query()
+            ->whereHas('callLog', fn (Builder $callLog) => $callLog->awaitingReview());
+        $awaitingCall = ScreeningResponse::query()
+            ->whereHas('callLog', fn (Builder $callLog) => $callLog->whereNull('called_at'));
+        $notStartedTracks = $tracks->filter(fn (array $track) => $track['not_started'] > 0);
+
+        $items = collect()
+            ->concat((clone $awaitingReview)->latest('id')->limit(self::TODO_LIMIT)->get(['id', 'full_name'])
+                ->map(fn (ScreeningResponse $response) => [
+                    'key' => "review-{$response->id}",
+                    'type' => 'review',
+                    'title' => "Review {$response->full_name}",
+                    'description' => 'AI screening call is done',
+                    'screening_response_id' => $response->id,
+                ]))
+            ->concat((clone $awaitingCall)->latest('id')->limit(self::TODO_LIMIT)->get(['id', 'full_name'])
+                ->map(fn (ScreeningResponse $response) => [
+                    'key' => "remind-{$response->id}",
+                    'type' => 'remind',
+                    'title' => "Remind {$response->full_name}",
+                    'description' => 'Still needs to take the AI call',
+                    'screening_response_id' => $response->id,
+                ]))
+            ->concat($notStartedTracks->map(fn (array $track) => [
+                'key' => "start-{$track['slug']}",
+                'type' => 'start',
+                'title' => sprintf('Get %d %s started', $track['not_started'], Str::plural('agent', $track['not_started'])),
+                'description' => "{$track['name']} not opened yet",
+                'screening_response_id' => null,
+            ]));
+
+        return [
+            'items' => $items->take(self::TODO_LIMIT)->values(),
+            'total' => $awaitingReview->count() + $awaitingCall->count() + $notStartedTracks->count(),
+        ];
+    }
+
+    /**
      * Where screening candidates are in the funnel: responded, called by the
      * AI voice agent, and rated by an admin, plus the overall gut-check split
      * and the most recent responses.
@@ -120,7 +194,7 @@ class DashboardController extends Controller
     {
         $responses = ScreeningResponse::count();
         $called = CallLog::whereNotNull('called_at')->count();
-        $reviewed = CallLog::whereNotNull('called_at')->whereNotNull('overall_gut_check')->count();
+        $awaitingReview = CallLog::awaitingReview()->count();
 
         $gutCheckCounts = CallLog::whereNotNull('overall_gut_check')
             ->selectRaw('overall_gut_check, count(*) as total')
@@ -132,8 +206,8 @@ class DashboardController extends Controller
                 'responses' => $responses,
                 'called' => $called,
                 'awaiting_call' => $responses - $called,
-                'awaiting_review' => $called - $reviewed,
-                'reviewed' => $reviewed,
+                'awaiting_review' => $awaitingReview,
+                'reviewed' => $called - $awaitingReview,
             ],
             'gut_check' => collect(CallRating::cases())->map(fn (CallRating $rating) => [
                 'name' => $rating->name,

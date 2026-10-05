@@ -36,7 +36,10 @@ class ScreeningController extends Controller
         $perPage = $request->integer('per_page', self::PER_PAGE_OPTIONS[0]);
         $perPage = in_array($perPage, self::PER_PAGE_OPTIONS, true) ? $perPage : self::PER_PAGE_OPTIONS[0];
 
+        $isAwaitingReview = $request->query('status') === 'awaiting_review';
+
         $responses = ScreeningResponse::with('screening')
+            ->when($isAwaitingReview, fn ($query) => $query->whereHas('callLog', fn ($callLog) => $callLog->awaitingReview()))
             ->latest()
             ->paginate($perPage)
             ->withQueryString();
@@ -51,6 +54,7 @@ class ScreeningController extends Controller
             ],
             'filters' => [
                 'per_page' => (string) $perPage,
+                'status' => $isAwaitingReview ? 'awaiting_review' : null,
             ],
             'perPageOptions' => self::PER_PAGE_OPTIONS,
             'voices' => collect(RealtimeVoice::cases())

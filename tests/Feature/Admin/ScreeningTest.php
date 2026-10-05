@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\CallRating;
 use App\Models\Screening;
 use App\Models\ScreeningResponse;
 use App\Models\User;
@@ -22,6 +23,27 @@ test('admins can view the screening index with all responses', function () {
         ->has('responses.links.0.active')
         ->has('responses.meta.current_page')
         ->missing('responses.meta.links'),
+    );
+});
+
+test('the screening index can be filtered to calls awaiting review', function () {
+    $admin = User::factory()->admin()->create();
+    ScreeningResponse::factory()->create();
+    $awaitingReview = ScreeningResponse::factory()->create();
+    $awaitingReview->callLog->update(['called_at' => now()]);
+    ScreeningResponse::factory()->create()->callLog->update(['called_at' => now(), 'overall_gut_check' => CallRating::Yes]);
+
+    $response = $this->actingAs($admin)->get(route('admin.screening.index', ['status' => 'awaiting_review']));
+
+    $response->assertInertia(fn (Assert $page) => $page
+        ->has('responses.data', 1)
+        ->where('responses.data.0.id', $awaitingReview->id)
+        ->where('filters.status', 'awaiting_review'),
+    );
+
+    $this->actingAs($admin)->get(route('admin.screening.index'))->assertInertia(fn (Assert $page) => $page
+        ->has('responses.data', 3)
+        ->where('filters.status', null),
     );
 });
 

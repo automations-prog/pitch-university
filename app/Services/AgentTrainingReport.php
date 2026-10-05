@@ -122,7 +122,7 @@ class AgentTrainingReport
      * How the agents assigned to each track are progressing, with the average
      * of their best quiz score per attempted module.
      *
-     * @return Collection<int, array{slug: string, name: string, has_exam: bool, average_score: int|null, assigned: int, not_started: int, in_progress: int, completed: int}>
+     * @return Collection<int, array{slug: string, name: string, has_exam: bool, average_score: int|null, assigned: int, not_started: int, in_progress: int, completed: int, certified: int}>
      */
     public function trackOverview(): Collection
     {
@@ -144,6 +144,7 @@ class AgentTrainingReport
                 'not_started' => $notStarted,
                 'in_progress' => $agentIds->count() - $notStarted - $completed,
                 'completed' => $completed,
+                'certified' => $statuses->filter(fn (string $status) => $status === 'certified')->count(),
             ];
         })->values();
     }

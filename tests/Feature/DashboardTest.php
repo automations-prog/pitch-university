@@ -435,3 +435,89 @@ test('agents do not see screening data on their dashboard', function () {
         ->get(route('dashboard'))
         ->assertInertia(fn (Assert $page) => $page->missing('screenings'));
 });
+
+test('admins share the count of screening calls awaiting review for the sidebar badge', function () {
+    $admin = User::factory()->admin()->create();
+
+    ScreeningResponse::factory()->create();
+    ScreeningResponse::factory()->count(2)->create()
+        ->each(fn (ScreeningResponse $response) => $response->callLog->update(['called_at' => now()]));
+    ScreeningResponse::factory()->create()->callLog->update(['called_at' => now(), 'overall_gut_check' => CallRating::Yes]);
+
+    $this->actingAs($admin)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
+        ->where('screeningAwaitingReview', 2),
+    );
+});
+
+test('agents do not receive the screening review count', function () {
+    $agent = User::factory()->create();
+
+    ScreeningResponse::factory()->create()->callLog->update(['called_at' => now()]);
+
+    $this->actingAs($agent)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
+        ->where('screeningAwaitingReview', null),
+    );
+});
+
+test('the admin dashboard lists to-dos derived from screenings and unstarted training', function () {
+    $admin = User::factory()->admin()->create();
+
+    $awaitingReview = ScreeningResponse::factory()->create(['full_name' => 'Wesley Vasquez']);
+    $awaitingReview->callLog->update(['called_at' => now()]);
+    $awaitingCall = ScreeningResponse::factory()->create(['full_name' => 'Mufutau Klein']);
+    ScreeningResponse::factory()->create()->callLog->update(['called_at' => now(), 'overall_gut_check' => CallRating::Yes]);
+
+    $track = CourseTrack::factory()->create(['name' => 'Medicare Fronting']);
+    $track->users()->attach(User::factory()->count(2)->create());
+
+    $this->actingAs($admin)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
+        ->where('todos.total', 3)
+        ->where('todos.items', [
+            [
+                'key' => "review-{$awaitingReview->id}",
+                'type' => 'review',
+                'title' => 'Review Wesley Vasquez',
+                'description' => 'AI screening call is done',
+                'screening_response_id' => $awaitingReview->id,
+            ],
+            [
+                'key' => "remind-{$awaitingCall->id}",
+                'type' => 'remind',
+                'title' => 'Remind Mufutau Klein',
+                'description' => 'Still needs to take the AI call',
+                'screening_response_id' => $awaitingCall->id,
+            ],
+            [
+                'key' => "start-{$track->slug}",
+                'type' => 'start',
+                'title' => 'Get 2 agents started',
+                'description' => 'Medicare Fronting not opened yet',
+                'screening_response_id' => null,
+            ],
+        ])
+        ->where('filters.tab', 'overview'),
+    );
+});
+
+test('the overview tracks ignore the agent table filters', function () {
+    $admin = User::factory()->admin()->create();
+    $track = CourseTrack::factory()->create();
+    $track->users()->attach(User::factory()->count(2)->create());
+    $track->users()->attach(User::factory()->inactive()->create());
+
+    $this->actingAs($admin)->get(route('dashboard', ['status' => 'active', 'tab' => 'training']))->assertInertia(fn (Assert $page) => $page
+        ->where('trackOverview.0.assigned', 2)
+        ->where('overviewTracks.0.assigned', 3)
+        ->where('filters.tab', 'training'),
+    );
+});
+
+test('agents do not receive the admin to-dos', function () {
+    $agent = User::factory()->create();
+    ScreeningResponse::factory()->create();
+
+    $this->actingAs($agent)->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page
+        ->missing('todos')
+        ->missing('overviewTracks'),
+    );
+});

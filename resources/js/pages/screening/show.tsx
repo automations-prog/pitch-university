@@ -373,7 +373,9 @@ export default function PublicScreeningShow({
                                 </h1>
                                 {callPhase !== 'active' ? (
                                     <p className="text-sm text-white/70">
-                                        Connecting you to your AI interviewer…
+                                        {callPhase === 'ringing'
+                                            ? 'Ringing your AI interviewer…'
+                                            : 'Connecting you to your AI interviewer…'}
                                     </p>
                                 ) : (
                                     <>

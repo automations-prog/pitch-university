@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enums\LicenseStatus;
+use App\Models\CallLog;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -46,6 +47,9 @@ class HandleInertiaRequests extends Middleware
                 ]),
                 'impersonating' => $request->session()->has(config('laravel-impersonate.session_key')),
             ],
+            'screeningAwaitingReview' => fn (): ?int => $request->user()?->isAdmin()
+                ? CallLog::awaitingReview()->count()
+                : null,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

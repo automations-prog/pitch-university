@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { xsrfHeader } from '@/lib/csrf';
+import { playRingback, remoteAudioPlayback } from '@/lib/ringback';
 import type { RoleplaySessionResult } from '@/lib/roleplay-data';
 import {
     complete as completeCall,
@@ -49,6 +50,9 @@ const MAX_EVENTS = 5_000;
 /** Simulated ringing between clicking Transfer and the specialist joining. */
 const TRANSFER_RING_MS = 3_000;
 
+/** The trainee's mic is held until the greeting has played, or this long at most. */
+const GREETING_MIC_HOLD_MAX_MS = 5_000;
+
 const SPECIALIST_LINE = 'Who am I speaking with?';
 
 const SPECIALIST_JOINS_MESSAGE = `(The caller has transferred you. After a little ringing, a licensed Medicare specialist is now on the line and says: "${SPECIALIST_LINE}" Answer the specialist.)`;
@@ -92,6 +96,7 @@ const AGENT_TRANSCRIPT_EVENTS = new Set([
 export type RoleplayCallPhase =
     | 'idle'
     | 'connecting'
+    | 'ringing'
     | 'active'
     | 'transferring'
     | 'ended'
@@ -195,6 +200,18 @@ export function useRoleplayRealtimeCall({
     const transferTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
         null,
     );
+    const stopRingbackRef = useRef<(() => void) | null>(null);
+    const greetingMicTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+        null,
+    );
+    /**
+     * Until the consumer's greeting has played, the mic is detached from the
+     * call (the track itself stays enabled; muting is separate).
+     */
+    const heldMicRef = useRef<{
+        sender: RTCRtpSender;
+        track: MediaStreamTrack;
+    } | null>(null);
 
     const transcriptRef = useRef<LiveTranscriptLine[]>([]);
     /** When each conversation item started, so lines sort by when they were spoken. */
@@ -342,13 +359,36 @@ export function useRoleplayRealtimeCall({
         }
     }, []);
 
+    /** Puts the trainee's mic back on the call once the greeting is done. */
+    const releaseMic = useCallback(() => {
+        const heldMic = heldMicRef.current;
+
+        if (!heldMic) {
+            return;
+        }
+        heldMicRef.current = null;
+
+        if (greetingMicTimeoutRef.current) {
+            clearTimeout(greetingMicTimeoutRef.current);
+            greetingMicTimeoutRef.current = null;
+        }
+
+        void heldMic.sender.replaceTrack(heldMic.track);
+    }, []);
+
     const cleanup = useCallback(() => {
-        for (const timeout of [hangupTimeoutRef, transferTimeoutRef]) {
+        for (const timeout of [
+            hangupTimeoutRef,
+            transferTimeoutRef,
+            greetingMicTimeoutRef,
+        ]) {
             if (timeout.current) {
                 clearTimeout(timeout.current);
                 timeout.current = null;
             }
         }
+        stopRingbackRef.current?.();
+        stopRingbackRef.current = null;
         for (const interval of [
             elapsedIntervalRef,
             hangupWatchIntervalRef,
@@ -381,6 +421,7 @@ export function useRoleplayRealtimeCall({
         remoteAudioElRef.current = null;
 
         callInProgressRef.current = false;
+        heldMicRef.current = null;
         wiredRemoteStreamIdRef.current = null;
         remoteAnalyserRef.current = null;
         micAnalyserRef.current = null;
@@ -566,6 +607,15 @@ export function useRoleplayRealtimeCall({
                 return;
             }
 
+            // WebRTC only: the consumer's audio finished playing (or was cut).
+            if (
+                type === 'output_audio_buffer.stopped' ||
+                type === 'output_audio_buffer.cleared'
+            ) {
+                releaseMic();
+                return;
+            }
+
             if (type === 'input_audio_buffer.speech_started') {
                 agentSpeechStartRef.current ??= msIntoCall();
                 return;
@@ -654,6 +704,7 @@ export function useRoleplayRealtimeCall({
             handleFunctionCall,
             logEvent,
             msIntoCall,
+            releaseMic,
             secondsIntoCall,
             sendEvent,
         ],
@@ -766,12 +817,22 @@ export function useRoleplayRealtimeCall({
 
             const pc = new RTCPeerConnection();
             peerConnectionRef.current = pc;
-            localStream
-                .getTracks()
-                .forEach((track) => pc.addTrack(track, localStream));
+            localStream.getTracks().forEach((track) => {
+                const sender = pc.addTrack(track, localStream);
 
+                // Held off the call until the greeting has played, so the
+                // trainee can't talk over it or have the VAD cut it off.
+                if (track.kind === 'audio') {
+                    heldMicRef.current = { sender, track };
+                    void sender.replaceTrack(null);
+                }
+            });
+
+            // Created after the awaits above, so the browser may start it
+            // suspended; the recording needs it running.
             const audioContext = new AudioContext();
             audioContextRef.current = audioContext;
+            void audioContext.resume();
             const destination = audioContext.createMediaStreamDestination();
             const micSource = audioContext.createMediaStreamSource(localStream);
             micSource.connect(destination);
@@ -783,11 +844,23 @@ export function useRoleplayRealtimeCall({
 
             const remoteAudio = document.createElement('audio');
             remoteAudio.autoplay = true;
+            // The consumer's voice must play through this element, not Web
+            // Audio: Chrome's echo cancellation only covers element playback,
+            // and without it the mic picks the consumer up as the trainee.
+            // Attached (hidden) so it plays reliably; `cleanup()` removes it.
+            remoteAudio.hidden = true;
+            document.body.appendChild(remoteAudio);
             remoteAudioElRef.current = remoteAudio;
+
+            const remotePlayback = remoteAudioPlayback(
+                remoteAudio,
+                '[roleplay-call]',
+            );
 
             pc.ontrack = (trackEvent) => {
                 const remoteStream = trackEvent.streams[0];
                 remoteAudio.srcObject = remoteStream;
+                remotePlayback.play();
 
                 if (wiredRemoteStreamIdRef.current === remoteStream.id) {
                     return;
@@ -820,18 +893,37 @@ export function useRoleplayRealtimeCall({
             dataChannelRef.current = dataChannel;
 
             dataChannel.addEventListener('open', () => {
-                // The consumer picks up the phone ("Hello?").
-                sendEvent({ type: 'response.create' });
+                setPhase('ringing');
 
-                recorder.start(1000);
-                callStartedAtRef.current = Date.now();
-                eventsRef.current = [];
-                startLevelWatch();
-                setPhase('active');
-                elapsedIntervalRef.current = setInterval(
-                    () => setElapsedSeconds(secondsIntoCall()),
-                    1000,
-                );
+                const ringback = playRingback();
+                stopRingbackRef.current = ringback.stop;
+
+                void Promise.all([
+                    ringback.finished,
+                    remotePlayback.started,
+                ]).then(() => {
+                    // Hung up or torn down while it was ringing.
+                    if (dataChannelRef.current !== dataChannel) {
+                        return;
+                    }
+
+                    recorder.start(1000);
+                    callStartedAtRef.current = Date.now();
+                    eventsRef.current = [];
+                    startLevelWatch();
+                    setPhase('active');
+                    elapsedIntervalRef.current = setInterval(
+                        () => setElapsedSeconds(secondsIntoCall()),
+                        1000,
+                    );
+
+                    // The consumer picks up the phone ("Hello?").
+                    sendEvent({ type: 'response.create' });
+                    greetingMicTimeoutRef.current = setTimeout(
+                        releaseMic,
+                        GREETING_MIC_HOLD_MAX_MS,
+                    );
+                });
             });
 
             dataChannel.addEventListener('message', (messageEvent) => {
@@ -876,6 +968,7 @@ export function useRoleplayRealtimeCall({
     }, [
         cleanup,
         handleServerEvent,
+        releaseMic,
         secondsIntoCall,
         sendEvent,
         sessionId,

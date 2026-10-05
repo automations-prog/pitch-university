@@ -191,6 +191,7 @@ export default function RoleplayIndex({
 const PHASE_LABELS: Record<RoleplayCallPhase, string> = {
     idle: 'Ready to dial',
     connecting: 'Connecting',
+    ringing: 'Ringing',
     active: 'On call',
     transferring: 'Transferring',
     ended: 'Call ended',
@@ -255,7 +256,9 @@ function LiveRoleplaySession({
             conversationNote={
                 call.phase === 'connecting'
                     ? 'Connecting…'
-                    : 'Live call · AI consumer'
+                    : call.phase === 'ringing'
+                      ? 'Ringing…'
+                      : 'Live call · AI consumer'
             }
             onScriptStepChange={isOnCall ? setScriptStep : undefined}
             barActions={
@@ -333,6 +336,14 @@ function LiveFooter({
                 <p className="text-muted-foreground flex items-center gap-2 text-sm">
                     <Spinner />
                     Connecting the call…
+                </p>
+            );
+        case 'ringing':
+            return (
+                <p className="text-muted-foreground flex items-center gap-2 text-sm">
+                    <Spinner />
+                    Ringing {leadName}… wait for them to say hello before you
+                    start.
                 </p>
             );
         case 'error':

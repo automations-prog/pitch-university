@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\CallRating;
 use Database\Factories\CallLogFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -44,6 +45,16 @@ class CallLog extends Model
             'composure_on_pushback' => CallRating::class,
             'overall_gut_check' => CallRating::class,
         ];
+    }
+
+    /**
+     * Calls the AI voice agent has completed that an admin has not rated yet.
+     *
+     * @param  Builder<CallLog>  $query
+     */
+    public function scopeAwaitingReview(Builder $query): void
+    {
+        $query->whereNotNull('called_at')->whereNull('overall_gut_check');
     }
 
     public function screeningResponse(): BelongsTo

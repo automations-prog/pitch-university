@@ -76,6 +76,7 @@ import type {
 
 type Filters = {
     per_page: string;
+    status: 'awaiting_review' | null;
 };
 
 export default function ScreeningIndex({
@@ -208,6 +209,22 @@ export default function ScreeningIndex({
                         New screening
                     </Button>
                 </div>
+
+                {filters.status === 'awaiting_review' && (
+                    <div className="flex items-center justify-between gap-4 rounded-lg border border-amber-300/40 bg-amber-300/10 px-4 py-2 text-sm">
+                        <span className="font-medium">
+                            Showing calls awaiting review
+                        </span>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => applyFilters({ status: null })}
+                        >
+                            Show all
+                        </Button>
+                    </div>
+                )}
 
                 {selectedIds.length > 0 && (
                     <div className="flex items-center justify-between gap-4 rounded-lg border border-[#f598ff]/30 bg-[#f598ff]/10 px-4 py-2 text-sm dark:border-[#f598ff]/20 dark:bg-[#f598ff]/10">
