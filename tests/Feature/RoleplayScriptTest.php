@@ -15,7 +15,7 @@ test('the docs parse into the content the roleplay page depends on', function ()
         ->and($content['objections'])->toHaveCount(24)
         ->and($content['dqTraps'])->toHaveCount(6)
         ->and($content['quirks'])->toHaveCount(17)
-        ->and($content['complianceGuidelines'])->toHaveCount(9)
+        ->and($content['complianceGuidelines'])->toHaveCount(10)
         ->and(array_column($content['dispositions'], 'id'))->toContain('transfer', 'dq', 'dnc')
         ->and($content['levels'][4]['outcomeMix'])->toBe(['transfer' => 61, 'dq' => 14, 'dnc' => 25]);
 });

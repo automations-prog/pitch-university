@@ -24,6 +24,20 @@ const OPENING_DQ_TRAPS = new Set(['no_part_b', 'medicaid_only']);
 const WORK_VA_SECTION = 'work_va_insurance';
 
 /**
+ * How the consumer answers each script step when they have nothing to
+ * object to, by section id, so the chat reads like a conversation.
+ */
+const CONSUMER_REPLIES: Record<string, string> = {
+    opening: 'Yes, I do.',
+    double_confirm_the_card: "Yeah, that's the one.",
+    medicaid: 'No, just Medicare.',
+    state_and_zip: "Yes, that's right.",
+    work_va_insurance: "No, I don't.",
+    ask_for_the_transfer: 'Okay, sure.',
+    cold_transfer: "Oh, it's not bad out today.",
+};
+
+/**
  * Assigns each drawn objection to the script step it's raised after.
  * `transfer_no` is always raised at the transfer ask; the rest land on a
  * random step before it.
@@ -77,6 +91,7 @@ export function useRoleplayCall(
             speaker: 'system',
             text: `Dialing ${persona.lead.name}… the consumer picked up.`,
         },
+        { id: 1, speaker: 'consumer', text: 'Hello?' },
     ]);
     const [currentStep, setCurrentStep] = useState(0);
     const [patience, setPatience] = useState(persona.patience);
@@ -119,19 +134,29 @@ export function useRoleplayCall(
         }
 
         const raised = schedule.get(currentStep) ?? [];
-        raised.forEach((objection) =>
-            lines.push({
-                speaker: 'consumer',
-                text: consumerLineFor(objection, persona.level.level),
-            }),
-        );
-
         const trap = persona.dqTrap;
         const revealsTrap =
             trap !== null &&
             (OPENING_DQ_TRAPS.has(trap.id)
                 ? currentStep === 0
                 : currentStep === workVaStep);
+        const saysDnc = persona.outcome === 'dnc' && currentStep === dncStep;
+
+        // An objection, the DQ truth or a DNC takes the place of the
+        // usual answer.
+        if (raised.length === 0 && !revealsTrap && !saysDnc) {
+            lines.push({
+                speaker: 'consumer',
+                text: CONSUMER_REPLIES[section.id] ?? 'Okay.',
+            });
+        }
+
+        raised.forEach((objection) =>
+            lines.push({
+                speaker: 'consumer',
+                text: consumerLineFor(objection, persona.level.level),
+            }),
+        );
 
         if (revealsTrap) {
             lines.push({
@@ -140,7 +165,7 @@ export function useRoleplayCall(
             });
         }
 
-        if (persona.outcome === 'dnc' && currentStep === dncStep) {
+        if (saysDnc) {
             lines.push({
                 speaker: 'consumer',
                 text: 'Take me off your list and never call me again.',

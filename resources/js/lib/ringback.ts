@@ -12,6 +12,9 @@ const RINGBACK_VOLUME = 0.08;
 /** Longest to wait for the AI's audio to start playing before picking up anyway. */
 export const REMOTE_AUDIO_WAIT_MS = 5_000;
 
+/** How long one ring (tone plus gap) lasts. */
+export const RINGBACK_CYCLE_MS = RINGBACK_TONE_MS + RINGBACK_GAP_MS;
+
 /**
  * Plays a US-style ringback (440 + 480 Hz) on its own short-lived
  * AudioContext, closed once it's done, so the call's context never outputs
@@ -19,11 +22,17 @@ export const REMOTE_AUDIO_WAIT_MS = 5_000;
  * resolves when the ringing ends; `stop()` cuts it short (and never
  * resolves `finished`).
  */
-export function playRingback(): { finished: Promise<void>; stop: () => void } {
+export function playRingback({
+    rings = RINGBACK_RINGS,
+    volume = RINGBACK_VOLUME,
+}: { rings?: number; volume?: number } = {}): {
+    finished: Promise<void>;
+    stop: () => void;
+} {
     const audioContext = new AudioContext();
     void audioContext.resume();
     const startsAt = audioContext.currentTime;
-    const durationMs = RINGBACK_RINGS * (RINGBACK_TONE_MS + RINGBACK_GAP_MS);
+    const durationMs = rings * RINGBACK_CYCLE_MS;
     let timeout: ReturnType<typeof setTimeout> | null = null;
 
     const close = () => {
@@ -32,15 +41,14 @@ export function playRingback(): { finished: Promise<void>; stop: () => void } {
         }
     };
 
-    for (let ring = 0; ring < RINGBACK_RINGS; ring++) {
-        const toneStart =
-            startsAt + (ring * (RINGBACK_TONE_MS + RINGBACK_GAP_MS)) / 1000;
+    for (let ring = 0; ring < rings; ring++) {
+        const toneStart = startsAt + (ring * RINGBACK_CYCLE_MS) / 1000;
         const toneEnd = toneStart + RINGBACK_TONE_MS / 1000;
 
         const gain = audioContext.createGain();
         gain.gain.setValueAtTime(0, toneStart);
-        gain.gain.linearRampToValueAtTime(RINGBACK_VOLUME, toneStart + 0.02);
-        gain.gain.setValueAtTime(RINGBACK_VOLUME, toneEnd - 0.02);
+        gain.gain.linearRampToValueAtTime(volume, toneStart + 0.02);
+        gain.gain.setValueAtTime(volume, toneEnd - 0.02);
         gain.gain.linearRampToValueAtTime(0, toneEnd);
         gain.connect(audioContext.destination);
 
@@ -74,17 +82,18 @@ export function playRingback(): { finished: Promise<void>; stop: () => void } {
 /**
  * Starts the remote audio element explicitly instead of trusting autoplay,
  * which can be blocked or late. Call `play()` from `pc.ontrack`; `started`
- * resolves once it's playing (or failed), or after `REMOTE_AUDIO_WAIT_MS`
- * at most, so the call never stalls on it.
+ * resolves `true` once it's playing, or `false` if the browser blocked it or
+ * nothing played within `REMOTE_AUDIO_WAIT_MS`, so the call never stalls on
+ * it. A blocked element needs `play()` again from a click.
  */
 export function remoteAudioPlayback(
     audioElement: HTMLAudioElement,
     logTag: string,
-): { play: () => void; started: Promise<void> } {
-    let markStarted = () => {};
-    const started = new Promise<void>((resolve) => {
+): { play: () => void; started: Promise<boolean> } {
+    let markStarted: (isPlaying: boolean) => void = () => {};
+    const started = new Promise<boolean>((resolve) => {
         markStarted = resolve;
-        setTimeout(resolve, REMOTE_AUDIO_WAIT_MS);
+        setTimeout(() => resolve(!audioElement.paused), REMOTE_AUDIO_WAIT_MS);
     });
 
     return {
@@ -92,11 +101,12 @@ export function remoteAudioPlayback(
         play: () => {
             audioElement
                 .play()
+                .then(() => markStarted(true))
                 .catch((playError: unknown) => {
                     // eslint-disable-next-line no-console
                     console.error(`${logTag} remote audio blocked`, playError);
-                })
-                .finally(markStarted);
+                    markStarted(false);
+                });
         },
     };
 }

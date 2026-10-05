@@ -6,7 +6,9 @@ import {
     PhoneCall,
     PhoneForwarded,
     PhoneOff,
+    PhoneOutgoing,
     TriangleAlert,
+    Volume2,
 } from 'lucide-react';
 import { useState } from 'react';
 import { CallResult } from '@/components/roleplay/call-result';
@@ -31,6 +33,7 @@ import { useRoleplayCall } from '@/hooks/use-roleplay-call';
 import {
     useRoleplayRealtimeCall,
     type RoleplayCallPhase,
+    type TransferStage,
 } from '@/hooks/use-roleplay-realtime-call';
 import { brandButtonClass } from '@/lib/brand-theme';
 import { xsrfHeader } from '@/lib/csrf';
@@ -284,35 +287,65 @@ function LiveRoleplaySession({
                 )
             }
             footer={
-                <LiveFooter
-                    phase={call.phase}
-                    error={call.error}
-                    leadName={persona.lead.name}
-                    canTransfer={scriptStep >= transferAskStep}
-                    onDial={() => void call.start()}
-                    onTransfer={call.transfer}
-                    onRetry={onRetry}
-                />
+                <div className="flex flex-col gap-3">
+                    {call.audioBlocked && (
+                        <AudioBlockedNotice onEnable={call.enableAudio} />
+                    )}
+                    <LiveFooter
+                        phase={call.phase}
+                        transferStage={call.transferStage}
+                        error={call.error}
+                        leadName={persona.lead.name}
+                        canTransfer={scriptStep >= transferAskStep}
+                        onDial={() => void call.start()}
+                        onTransfer={call.transfer}
+                        onCompleteTransfer={call.completeTransfer}
+                        onRetry={onRetry}
+                    />
+                </div>
             }
         />
     );
 }
 
+/**
+ * The browser blocked the consumer's audio. A click is allowed to start it,
+ * and the consumer only says hello once it plays.
+ */
+function AudioBlockedNotice({ onEnable }: { onEnable: () => void }) {
+    return (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2">
+            <p className="flex items-center gap-2 text-sm">
+                <TriangleAlert className="size-4 shrink-0 text-amber-600" />
+                Your browser blocked the customer's audio.
+            </p>
+            <Button size="sm" className={brandButtonClass} onClick={onEnable}>
+                <Volume2 />
+                Turn on audio
+            </Button>
+        </div>
+    );
+}
+
 function LiveFooter({
     phase,
+    transferStage,
     error,
     leadName,
     canTransfer,
     onDial,
     onTransfer,
+    onCompleteTransfer,
     onRetry,
 }: {
     phase: RoleplayCallPhase;
+    transferStage: TransferStage | null;
     error: string | null;
     leadName: string;
     canTransfer: boolean;
     onDial: () => void;
     onTransfer: () => void;
+    onCompleteTransfer: () => void;
     onRetry: () => void;
 }) {
     const row = 'flex flex-wrap items-center justify-between gap-3';
@@ -361,10 +394,20 @@ function LiveFooter({
             );
         case 'transferring':
             return (
-                <p className="text-muted-foreground text-sm">
-                    Stay quiet while the specialist connects. The call ends once
-                    the consumer answers them.
-                </p>
+                <div className={row}>
+                    <p className="text-muted-foreground text-sm">
+                        {transferStage === 'ringing'
+                            ? "It's ringing. Fluff away and keep them talking until the specialist picks up."
+                            : 'Stay quiet. Complete the transfer once you have heard both parties speak.'}
+                    </p>
+                    <Button
+                        className={brandButtonClass}
+                        onClick={onCompleteTransfer}
+                    >
+                        <PhoneOutgoing />
+                        Complete transfer
+                    </Button>
+                </div>
             );
         default:
             return (

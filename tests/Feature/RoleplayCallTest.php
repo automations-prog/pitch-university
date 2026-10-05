@@ -35,6 +35,23 @@ function fakeClientSecrets(): void
 }
 
 /**
+ * Transfer clicked at 0:40, fluff, the specialist joins, the lead answers,
+ * and the trainee leaves the conference.
+ *
+ * @return list<array<string, mixed>>
+ */
+function completedTransferEvents(): array
+{
+    return [
+        ['type' => 'transfer_clicked', 'at' => 40000],
+        ['type' => 'agent_speech', 'start' => 42000, 'end' => 50000],
+        ['type' => 'specialist_joined', 'at' => 70000],
+        ['type' => 'lead_answered_specialist', 'at' => 74000],
+        ['type' => 'transfer_completed', 'at' => 76000],
+    ];
+}
+
+/**
  * @return array<string, mixed>
  */
 function completePayload(array $overrides = []): array
@@ -60,6 +77,7 @@ function completePayload(array $overrides = []): array
         'events' => json_encode([
             ['type' => 'agent_speech', 'start' => 5000, 'end' => 9000],
             ['type' => 'unknown', 'start' => 1],
+            ...completedTransferEvents(),
         ]),
         ...$overrides,
     ];
@@ -92,7 +110,7 @@ test('starting a session saves a persona and returns only its public part', func
     expect($session->user_id)->toBe($user->id)
         ->and($session->level)->toBe(3)
         ->and($session->persona['patience'])->toBe(7)
-        ->and($session->voice)->not->toBeNull();
+        ->and($session->voice?->gender())->toBe($session->persona['lead']['gender']);
 });
 
 test('starting a session requires a level from 1 to 5', function (mixed $level) {
@@ -125,11 +143,12 @@ test('minting a call session sends the persona prompt, tools and voice to OpenAI
     expect($session->fresh()->started_at)->not->toBeNull();
 
     Http::assertSent(fn ($request) => $request->url() === CLIENT_SECRETS_URL
-        && $request['session']['audio']['output']['voice'] === 'cedar'
+        && $request['session']['audio']['output']['voice'] === 'coral'
         && str_contains($request['session']['instructions'], 'Dorothy Miller')
         && str_contains($request['session']['instructions'], 'Has VA health care')
         && collect($request['session']['tools'])->pluck('name')->all() === ['patience_changed', 'objection_raised', 'objection_resolved', 'hang_up']
-        && $request['session']['audio']['input']['turn_detection']['eagerness'] === 'high');
+        && $request['session']['audio']['input']['turn_detection']['eagerness'] === 'high'
+        && $request['session']['audio']['input']['noise_reduction'] === ['type' => 'near_field']);
 });
 
 test('minting falls back to the configured voice when the session has none', function () {
@@ -192,6 +211,8 @@ test('completing stores the call, grades it and reveals the persona', function (
         'id' => $session->id,
         'passed' => true,
         'expected_outcome' => 'transfer',
+        'correct_disposition' => 'transfer',
+        'correct_reason' => null,
         'disposition' => 'transfer',
     ]);
     expect($response->json('objections.0.id'))->toBe('busy');
@@ -201,7 +222,10 @@ test('completing stores the call, grades it and reveals the persona', function (
         ->and($session->transcript)->toContain('recorded line')
         ->and($session->passed)->toBeTrue()
         ->and($session->score['transfer_clicked_at'])->toBe(40)
-        ->and($session->events)->toBe([['type' => 'agent_speech', 'start' => 5000, 'end' => 9000]])
+        ->and($session->events)->toBe([
+            ['type' => 'agent_speech', 'start' => 5000, 'end' => 9000],
+            ...completedTransferEvents(),
+        ])
         ->and($session->delivery_status)->toBe('pending');
     Storage::disk('local')->assertExists($session->recording_path);
     Queue::assertPushed(GradeRoleplayDelivery::class, fn (GradeRoleplayDelivery $job) => $job->roleplaySession->is($session));

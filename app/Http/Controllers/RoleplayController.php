@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\RealtimeVoice;
 use App\Http\Requests\StoreRoleplaySessionRequest;
 use App\Http\Resources\RoleplaySessionResource;
 use App\Models\RoleplaySession;
@@ -44,13 +43,12 @@ class RoleplayController extends Controller
     {
         $level = (int) $request->validated('level');
         $generated = $generator->generate($level);
-        $voices = RealtimeVoice::cases();
 
         $session = $request->user()->roleplaySessions()->create([
             'level' => $level,
             'persona' => $generated['persona'],
             'expected_outcome' => $generated['outcome'],
-            'voice' => $voices[array_rand($voices)],
+            'voice' => $generated['voice'],
         ]);
 
         return response()->json($session->publicPersona(), 201);

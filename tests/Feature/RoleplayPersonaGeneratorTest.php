@@ -55,3 +55,19 @@ test('quirks start at level 2 and patience is 10 minus the level', function (int
     expect($persona['quirk'] !== null)->toBe($hasQuirk)
         ->and($persona['patience'])->toBe(10 - $level);
 })->with([[1, false], [2, true], [5, true]]);
+
+test('each lead always gets the same voice, matching their gender', function () {
+    $voicesByLead = [];
+
+    foreach (range(1, 200) as $seed) {
+        $generated = seededGenerator($seed)->generate(1);
+        $lead = $generated['persona']['lead'];
+        $voicesByLead[$lead['name']][$generated['voice']->value] = true;
+
+        expect($generated['voice']->gender())->toBe($lead['gender'])
+            ->and($lead)->not->toHaveKey('voice');
+    }
+
+    expect(array_map('count', $voicesByLead))->each->toBe(1)
+        ->and(count($voicesByLead))->toBe(8);
+});

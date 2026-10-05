@@ -23,6 +23,11 @@ class RoleplayDeliveryMetrics
         'objection_resolved' => ['at'],
         'patience_changed' => ['at', 'patience'],
         'transfer_clicked' => ['at'],
+        'specialist_joined' => ['at'],
+        'lead_answered_specialist' => ['at'],
+        'transfer_completed' => ['at'],
+        'agent_talked_on_connect' => ['at'],
+        'consumer_interrupted' => ['at'],
         'agent_loudness' => ['at', 'rms'],
     ];
 
@@ -33,6 +38,9 @@ class RoleplayDeliveryMetrics
 
     /** An agent start this far inside the consumer's audio is a barge-in, not a hand-off. */
     private const int BARGE_IN_MARGIN_MS = 300;
+
+    /** An overlap this close to a logged interruption is the same barge-in. */
+    private const int INTERRUPTION_MATCH_MS = 1500;
 
     /** Fillers kept by the transcription prompt. "like" only counts set off by commas. */
     private const string FILLERS = '/\b(u+m+|u+h+|e+r+m*|you know)\b|,\s*like\s*,/i';
@@ -102,7 +110,7 @@ class RoleplayDeliveryMetrics
             'longest_gap_ms' => $longestGap,
             'gaps_over_threshold' => $gapsOver,
             'gaps_after_objection' => $gapsAfterObjection,
-            'barge_ins' => $this->bargeIns($agentSegments, $consumerSegments),
+            'barge_ins' => $this->bargeIns($agentSegments, $consumerSegments, array_column($this->ofType($events, 'consumer_interrupted'), 'at')),
             'opener_delay_ms' => $this->openerDelay($agentSegments, $consumerSegments),
             'objection_seconds' => $objectionSeconds,
             'unresolved_objections' => $unresolved,
@@ -172,18 +180,30 @@ class RoleplayDeliveryMetrics
     }
 
     /**
+     * Times the agent talked over the consumer: each time the server cut
+     * the consumer off, plus agent starts inside the consumer's audio that
+     * didn't cut them off. A cut ends the consumer's audio almost at once,
+     * so the overlap alone misses most real interruptions.
+     *
      * @param  list<Segment>  $agentSegments
      * @param  list<Segment>  $consumerSegments
+     * @param  list<int>  $interruptedAt
      */
-    private function bargeIns(array $agentSegments, array $consumerSegments): ?int
+    private function bargeIns(array $agentSegments, array $consumerSegments, array $interruptedAt): ?int
     {
-        if ($agentSegments === [] || $consumerSegments === []) {
+        if ($interruptedAt === [] && ($agentSegments === [] || $consumerSegments === [])) {
             return null;
         }
 
-        $count = 0;
+        $count = count($interruptedAt);
 
         foreach ($agentSegments as $agent) {
+            foreach ($interruptedAt as $at) {
+                if (abs($agent['start'] - $at) <= self::INTERRUPTION_MATCH_MS) {
+                    continue 2;
+                }
+            }
+
             foreach ($consumerSegments as $consumer) {
                 if ($agent['start'] > $consumer['start'] + self::BARGE_IN_MARGIN_MS && $agent['start'] < $consumer['end'] - self::BARGE_IN_MARGIN_MS) {
                     $count++;

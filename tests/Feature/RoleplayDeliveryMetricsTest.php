@@ -85,3 +85,17 @@ test('sanitizing drops unknown types and malformed events, and caps the count', 
         ->and(RoleplayDeliveryMetrics::sanitize(array_fill(0, 6000, ['type' => 'transfer_clicked', 'at' => 1])))
         ->toHaveCount(RoleplayDeliveryMetrics::MAX_EVENTS);
 });
+
+test('each time the consumer was cut off counts as a barge-in, without counting the same one twice', function () {
+    $events = RoleplayDeliveryMetrics::sanitize([
+        ['type' => 'consumer_speech', 'start' => 0, 'end' => 4000],
+        ['type' => 'agent_speech', 'start' => 1000, 'end' => 3000],
+        ['type' => 'consumer_interrupted', 'at' => 1400],
+        ['type' => 'consumer_speech', 'start' => 10000, 'end' => 10500],
+        ['type' => 'consumer_interrupted', 'at' => 10600],
+    ]);
+
+    $metrics = (new RoleplayDeliveryMetrics)->compute($events, []);
+
+    expect($metrics['barge_ins'])->toBe(2);
+});

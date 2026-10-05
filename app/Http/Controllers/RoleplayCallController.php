@@ -71,7 +71,12 @@ class RoleplayCallController extends Controller
         $result = $grader->grade($roleplaySession, $transferClickedAt === null ? null : (int) $transferClickedAt);
 
         $roleplaySession->fill([
-            'score' => ['checks' => $result['checks'], 'transfer_clicked_at' => $transferClickedAt],
+            'score' => [
+                'checks' => $result['checks'],
+                'transfer_clicked_at' => $transferClickedAt,
+                'correct_disposition' => $result['correct_disposition'],
+                'correct_reason' => $result['correct_reason'],
+            ],
             'passed' => $result['passed'],
             'delivery_status' => 'pending',
         ])->save();

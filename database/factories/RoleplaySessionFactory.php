@@ -24,14 +24,14 @@ class RoleplaySessionFactory extends Factory
             'user_id' => User::factory(),
             'level' => 2,
             'persona' => [
-                'lead' => ['name' => 'Dorothy Miller', 'state' => 'Florida', 'zip' => '33511'],
+                'lead' => ['name' => 'Dorothy Miller', 'state' => 'Florida', 'zip' => '33511', 'gender' => 'female'],
                 'objections' => ['busy'],
                 'quirk' => 'dog barking the whole call',
                 'patience' => 8,
                 'dq_trap' => null,
             ],
             'expected_outcome' => Outcome::Transfer,
-            'voice' => RealtimeVoice::Cedar,
+            'voice' => RealtimeVoice::Coral,
         ];
     }
 

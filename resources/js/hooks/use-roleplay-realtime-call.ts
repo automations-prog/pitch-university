@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { xsrfHeader } from '@/lib/csrf';
-import { playRingback, remoteAudioPlayback } from '@/lib/ringback';
+import {
+    playRingback,
+    remoteAudioPlayback,
+    RINGBACK_CYCLE_MS,
+} from '@/lib/ringback';
 import type { RoleplaySessionResult } from '@/lib/roleplay-data';
 import {
     complete as completeCall,
@@ -47,8 +51,19 @@ const CONSUMER_SILENCE_HOLD_MS = 600;
 const LOUDNESS_SAMPLE_MS = 1_000;
 const MAX_EVENTS = 5_000;
 
-/** Simulated ringing between clicking Transfer and the specialist joining. */
-const TRANSFER_RING_MS = 3_000;
+/**
+ * Ringing between clicking Transfer and the specialist joining. The
+ * trainee fluffs with the consumer the whole time, as on the floor.
+ */
+const TRANSFER_FLUFF_MS = 30_000;
+const TRANSFER_RING_VOLUME = 0.04;
+
+/** The specialist's pre-recorded "Who am I speaking with?". */
+const SPECIALIST_AUDIO_URL = '/audio/roleplay/specialist-intro.mp3';
+const SPECIALIST_AUDIO_MAX_MS = 6_000;
+
+/** Trainee speech this long while the specialist is on counts as talking over them. */
+const TALK_OVER_HOLD_MS = 800;
 
 /** The trainee's mic is held until the greeting has played, or this long at most. */
 const GREETING_MIC_HOLD_MAX_MS = 5_000;
@@ -67,9 +82,14 @@ const EMPTY_COMMIT_ERROR_CODE = 'input_audio_buffer_commit_empty';
 const AGENT_TRANSCRIPT_FAILED_EVENT =
     'conversation.item.input_audio_transcription.failed';
 
-const SPECIALIST_LINE = 'Who am I speaking with?';
+const SPECIALIST_LINE = 'Hi, who am I speaking with?';
 
-const SPECIALIST_JOINS_MESSAGE = `(The caller has transferred you. After a little ringing, a licensed Medicare specialist is now on the line and says: "${SPECIALIST_LINE}" Answer the specialist.)`;
+const CUT_OFF_SUFFIX = '… (cut off)';
+
+const TRANSFER_STARTED_MESSAGE =
+    "(The caller is transferring you to a Medicare specialist and you can hear it ringing. The specialist hasn't picked up yet. While you wait, chat casually with the caller: answer their small talk in a sentence or two, like the weather or your day. Don't raise new objections and don't hang up.)";
+
+const SPECIALIST_JOINS_MESSAGE = `(A licensed Medicare specialist just picked up and says: "${SPECIALIST_LINE}" Answer the specialist.)`;
 
 const RECORDING_MIME_CANDIDATES: { mimeType: string; extension: string }[] = [
     { mimeType: 'audio/webm;codecs=opus', extension: 'webm' },
@@ -118,6 +138,9 @@ export type RoleplayCallPhase =
 
 export type RoleplayEndReason = 'agent' | 'hung_up';
 
+/** Where a cold transfer is: ringing (fluff), specialist talking, lead answered. */
+export type TransferStage = 'ringing' | 'specialist' | 'answered';
+
 export type LiveTranscriptLine = {
     id: number;
     speaker: 'agent' | 'consumer' | 'system';
@@ -139,7 +162,16 @@ type CallEvent =
           at: number;
       }
     | { type: 'patience_changed'; patience: number; reason: string; at: number }
-    | { type: 'transfer_clicked'; at: number }
+    | {
+          type:
+              | 'transfer_clicked'
+              | 'specialist_joined'
+              | 'lead_answered_specialist'
+              | 'transfer_completed'
+              | 'agent_talked_on_connect'
+              | 'consumer_interrupted';
+          at: number;
+      }
     | { type: 'agent_loudness'; rms: number; at: number };
 
 function rmsOf(
@@ -187,6 +219,10 @@ export function useRoleplayRealtimeCall({
     const [transcript, setTranscript] = useState<LiveTranscriptLine[]>([]);
     const [endReason, setEndReason] = useState<RoleplayEndReason | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [audioBlocked, setAudioBlocked] = useState(false);
+    const [transferStage, setTransferStage] = useState<TransferStage | null>(
+        null,
+    );
 
     const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
     const dataChannelRef = useRef<RTCDataChannel | null>(null);
@@ -198,6 +234,10 @@ export function useRoleplayRealtimeCall({
     const remoteAudioElRef = useRef<HTMLAudioElement | null>(null);
     const remoteAnalyserRef = useRef<AnalyserNode | null>(null);
     const wiredRemoteStreamIdRef = useRef<string | null>(null);
+    const recordingDestinationRef =
+        useRef<MediaStreamAudioDestinationNode | null>(null);
+    const micSenderRef = useRef<RTCRtpSender | null>(null);
+    const specialistAudioRef = useRef<HTMLAudioElement | null>(null);
     const recordingTypeRef = useRef({
         mimeType: 'audio/webm',
         extension: 'webm',
@@ -228,10 +268,29 @@ export function useRoleplayRealtimeCall({
     } | null>(null);
 
     const transcriptRef = useRef<LiveTranscriptLine[]>([]);
+    /** The transcript line each consumer item became, to mark it cut off. */
+    const consumerLineIdsRef = useRef(new Map<string, number>());
+    /** Consumer items whose audio was cut before it finished playing. */
+    const cutOffItemsRef = useRef(new Set<string>());
+    /** The consumer item whose audio is playing now. */
+    const playingItemIdRef = useRef<string | null>(null);
+    /** Set when we cancel the consumer ourselves, so it isn't an interruption. */
+    const cancelledByUsRef = useRef(false);
+    /** A consumer response is being generated, so there's one to cancel. */
+    const responseActiveRef = useRef(false);
     /** When each conversation item started, so lines sort by when they were spoken. */
     const itemStartedAtRef = useRef(new Map<string, number>());
     const transferClickedAtRef = useRef<number | null>(null);
     const awaitingSpecialistReplyRef = useRef(false);
+    /** Between the specialist joining and the lead answering them. */
+    const specialistOnLineRef = useRef(false);
+    /** The greeting waits for the consumer's audio to be unblocked. */
+    const pendingGreetingRef = useRef(false);
+    /**
+     * Whether the consumer has spoken since the trainee's last turn, so a
+     * tool-only response doesn't make them answer twice.
+     */
+    const spokeSinceAgentTurnRef = useRef(false);
     const pendingEndReasonRef = useRef<RoleplayEndReason | null>(null);
     const callInProgressRef = useRef(false);
     /** Trainee turns committed but not yet transcribed, by item id. */
@@ -304,6 +363,8 @@ export function useRoleplayRealtimeCall({
         let loudnessSum = 0;
         let loudnessCount = 0;
         let lastSampleAt = 0;
+        let talkingOverSince: number | null = null;
+        let hasTalkedOver = false;
 
         levelWatchIntervalRef.current = setInterval(() => {
             const now = msIntoCall();
@@ -336,6 +397,24 @@ export function useRoleplayRealtimeCall({
 
             const mic = micAnalyserRef.current;
 
+            // The mic is off the call while the specialist is on, so the
+            // server VAD can't see the trainee talk over them; read it here.
+            if (mic && specialistOnLineRef.current && !hasTalkedOver) {
+                if (rmsOf(mic, micLevels) > SPEECH_RMS_THRESHOLD) {
+                    talkingOverSince ??= now;
+
+                    if (now - talkingOverSince >= TALK_OVER_HOLD_MS) {
+                        hasTalkedOver = true;
+                        logEvent({
+                            type: 'agent_talked_on_connect',
+                            at: talkingOverSince,
+                        });
+                    }
+                } else {
+                    talkingOverSince = null;
+                }
+            }
+
             if (mic && agentSpeechStartRef.current !== null) {
                 loudnessSum += rmsOf(mic, micLevels);
                 loudnessCount++;
@@ -355,7 +434,11 @@ export function useRoleplayRealtimeCall({
     }, [logEvent, msIntoCall]);
 
     const appendLine = useCallback(
-        (speaker: LiveTranscriptLine['speaker'], text: string, at: number) => {
+        (
+            speaker: LiveTranscriptLine['speaker'],
+            text: string,
+            at: number,
+        ): number => {
             const line = {
                 id: transcriptRef.current.length,
                 speaker,
@@ -367,9 +450,35 @@ export function useRoleplayRealtimeCall({
                 (a, b) => a.at - b.at || a.id - b.id,
             );
             setTranscript(transcriptRef.current);
+
+            return line.id;
         },
         [],
     );
+
+    /**
+     * The consumer's audio was cut before the line finished playing. The
+     * transcript arrives whole and early, so mark the line instead of
+     * showing words the trainee never heard as if they had.
+     */
+    const markCutOff = useCallback((itemId: string) => {
+        cutOffItemsRef.current.add(itemId);
+        const lineId = consumerLineIdsRef.current.get(itemId);
+
+        if (lineId === undefined) {
+            return;
+        }
+
+        transcriptRef.current = transcriptRef.current.map((line) =>
+            line.id === lineId && !line.text.endsWith(CUT_OFF_SUFFIX)
+                ? {
+                      ...line,
+                      text: `${line.text.replace(/[.!?]+$/, '')}${CUT_OFF_SUFFIX}`,
+                  }
+                : line,
+        );
+        setTranscript(transcriptRef.current);
+    }, []);
 
     const sendEvent = useCallback((event: Record<string, unknown>) => {
         if (dataChannelRef.current?.readyState === 'open') {
@@ -394,6 +503,43 @@ export function useRoleplayRealtimeCall({
         void heldMic.sender.replaceTrack(heldMic.track);
     }, []);
 
+    /** The consumer picks up the phone ("Hello?"). */
+    const sendGreeting = useCallback(() => {
+        sendEvent({ type: 'response.create' });
+        greetingMicTimeoutRef.current = setTimeout(
+            releaseMic,
+            GREETING_MIC_HOLD_MAX_MS,
+        );
+    }, [releaseMic, sendEvent]);
+
+    /**
+     * Retries the consumer's audio from a click, which browsers allow even
+     * when they blocked autoplay. The greeting waits for this when it has
+     * to, so the "Hello?" is never lost.
+     */
+    const enableAudio = useCallback(() => {
+        const remoteAudio = remoteAudioElRef.current;
+
+        if (!remoteAudio) {
+            return;
+        }
+
+        remoteAudio
+            .play()
+            .then(() => {
+                setAudioBlocked(false);
+
+                if (pendingGreetingRef.current) {
+                    pendingGreetingRef.current = false;
+                    sendGreeting();
+                }
+            })
+            .catch((playError: unknown) => {
+                // eslint-disable-next-line no-console
+                console.error('[roleplay-call] audio still blocked', playError);
+            });
+    }, [sendGreeting]);
+
     const cleanup = useCallback(() => {
         for (const timeout of [
             hangupTimeoutRef,
@@ -407,6 +553,9 @@ export function useRoleplayRealtimeCall({
         }
         stopRingbackRef.current?.();
         stopRingbackRef.current = null;
+        specialistAudioRef.current?.pause();
+        specialistAudioRef.current = null;
+        window.speechSynthesis?.cancel();
         for (const interval of [
             elapsedIntervalRef,
             hangupWatchIntervalRef,
@@ -440,6 +589,14 @@ export function useRoleplayRealtimeCall({
 
         callInProgressRef.current = false;
         heldMicRef.current = null;
+        consumerLineIdsRef.current.clear();
+        cutOffItemsRef.current.clear();
+        playingItemIdRef.current = null;
+        cancelledByUsRef.current = false;
+        micSenderRef.current = null;
+        recordingDestinationRef.current = null;
+        specialistOnLineRef.current = false;
+        pendingGreetingRef.current = false;
         pendingTranscriptsRef.current.clear();
         awaitingFinalCommitRef.current = false;
         wiredRemoteStreamIdRef.current = null;
@@ -686,6 +843,7 @@ export function useRoleplayRealtimeCall({
                 typeof event.item_id === 'string' ? event.item_id : null;
 
             if (type === 'input_audio_buffer.committed' && itemId) {
+                spokeSinceAgentTurnRef.current = false;
                 awaitingFinalCommitRef.current = false;
                 pendingTranscriptsRef.current.add(itemId);
                 itemStartedAtRef.current.set(itemId, secondsIntoCall());
@@ -715,7 +873,31 @@ export function useRoleplayRealtimeCall({
 
             // Once the call is ending, only the trainee's last transcripts
             // matter; anything the consumer starts saying was never heard.
-            if (endingRef.current && !(type && AGENT_TRANSCRIPT_EVENTS.has(type))) {
+            if (
+                endingRef.current &&
+                !(type && AGENT_TRANSCRIPT_EVENTS.has(type))
+            ) {
+                return;
+            }
+
+            // The server cut the consumer's audio short because it heard
+            // the trainee (or noise on their mic) start talking.
+            if (type === 'conversation.item.truncated') {
+                // eslint-disable-next-line no-console
+                console.warn('[roleplay-call] consumer cut off', event);
+
+                if (itemId && !cutOffItemsRef.current.has(itemId)) {
+                    markCutOff(itemId);
+                    logEvent({
+                        type: 'consumer_interrupted',
+                        at: msIntoCall(),
+                    });
+                    appendLine(
+                        'system',
+                        'The customer got cut off. You talked, or your mic picked up noise.',
+                        secondsIntoCall(),
+                    );
+                }
                 return;
             }
 
@@ -724,6 +906,29 @@ export function useRoleplayRealtimeCall({
                 type === 'output_audio_buffer.stopped' ||
                 type === 'output_audio_buffer.cleared'
             ) {
+                const playingItemId = playingItemIdRef.current;
+                playingItemIdRef.current = null;
+
+                // Cut mid-line without a truncation event: still mark it.
+                if (
+                    type === 'output_audio_buffer.cleared' &&
+                    playingItemId &&
+                    !cancelledByUsRef.current &&
+                    !cutOffItemsRef.current.has(playingItemId)
+                ) {
+                    markCutOff(playingItemId);
+                    logEvent({
+                        type: 'consumer_interrupted',
+                        at: msIntoCall(),
+                    });
+                    appendLine(
+                        'system',
+                        'The customer got cut off. You talked, or your mic picked up noise.',
+                        secondsIntoCall(),
+                    );
+                }
+                cancelledByUsRef.current = false;
+
                 releaseMic();
                 return;
             }
@@ -746,10 +951,15 @@ export function useRoleplayRealtimeCall({
             }
 
             if (type === 'response.output_item.added') {
-                const item = event.item as { id?: string } | undefined;
+                const item = event.item as
+                    { id?: string; type?: string } | undefined;
 
                 if (item?.id) {
                     itemStartedAtRef.current.set(item.id, secondsIntoCall());
+
+                    if (item.type === 'message') {
+                        playingItemIdRef.current = item.id;
+                    }
                 }
                 return;
             }
@@ -759,7 +969,14 @@ export function useRoleplayRealtimeCall({
                 return;
             }
 
+            if (type === 'response.created') {
+                responseActiveRef.current = true;
+                return;
+            }
+
             if (type === 'response.done') {
+                responseActiveRef.current = false;
+
                 const output =
                     ((event.response as { output?: { type?: string }[] })
                         ?.output as { type?: string }[] | undefined) ?? [];
@@ -768,9 +985,19 @@ export function useRoleplayRealtimeCall({
                 );
                 const spoke = output.some((item) => item.type === 'message');
 
+                if (spoke) {
+                    spokeSinceAgentTurnRef.current = true;
+                }
+
                 // A tool-only response leaves the model waiting on our
-                // outputs; ask it to carry on unless it just hung up.
-                if (calledTools && !spoke && !pendingEndReasonRef.current) {
+                // outputs; ask it to carry on unless it just hung up or
+                // already answered this turn (that's what made it repeat).
+                if (
+                    calledTools &&
+                    !spoke &&
+                    !spokeSinceAgentTurnRef.current &&
+                    !pendingEndReasonRef.current
+                ) {
                     sendEvent({ type: 'response.create' });
                 }
                 return;
@@ -789,11 +1016,34 @@ export function useRoleplayRealtimeCall({
                 secondsIntoCall();
 
             if (ASSISTANT_TRANSCRIPT_EVENTS.has(type)) {
-                appendLine('consumer', text, at);
+                const lineId = appendLine('consumer', text, at);
+
+                if (itemId) {
+                    consumerLineIdsRef.current.set(itemId, lineId);
+
+                    // Cut off before its transcript arrived.
+                    if (cutOffItemsRef.current.has(itemId)) {
+                        markCutOff(itemId);
+                    }
+                }
+
+                // The consumer is talking but the trainee can't hear it:
+                // the browser paused or blocked the audio. Retry, and ask
+                // for a click if that fails.
+                const remoteAudio = remoteAudioElRef.current;
+
+                if (remoteAudio?.paused) {
+                    remoteAudio.play().catch(() => setAudioBlocked(true));
+                }
 
                 if (awaitingSpecialistReplyRef.current) {
                     awaitingSpecialistReplyRef.current = false;
-                    endAfterConsumerFinishes('agent');
+                    specialistOnLineRef.current = false;
+                    logEvent({
+                        type: 'lead_answered_specialist',
+                        at: msIntoCall(),
+                    });
+                    setTransferStage('answered');
                 }
                 return;
             }
@@ -804,9 +1054,9 @@ export function useRoleplayRealtimeCall({
         },
         [
             appendLine,
-            endAfterConsumerFinishes,
             handleFunctionCall,
             logEvent,
+            markCutOff,
             msIntoCall,
             releaseMic,
             secondsIntoCall,
@@ -834,35 +1084,100 @@ export function useRoleplayRealtimeCall({
     const endCall = useCallback(() => finishCall('agent'), [finishCall]);
 
     /**
-     * Cold transfer: the trainee goes quiet, it rings, then a specialist
-     * asks who they're speaking with. The call ends once the consumer
-     * answers. When Transfer was clicked is sent with the call so grading
-     * can check the consumer said yes first.
+     * Plays the specialist's line to the trainee (an element, so Chrome's
+     * echo cancellation keeps it out of the mic) and into the recording.
+     * The clip is preloaded when Transfer is clicked; the browser's speech
+     * voice only reads the line if it still won't play. Resolves when it's
+     * done.
      */
-    const transfer = useCallback(() => {
-        if (phase !== 'active' || endingRef.current) {
+    const playSpecialistLine = useCallback(
+        () =>
+            new Promise<void>((resolve) => {
+                const speakFallback = () => {
+                    if (!window.speechSynthesis) {
+                        resolve();
+                        return;
+                    }
+
+                    const utterance = new SpeechSynthesisUtterance(
+                        SPECIALIST_LINE,
+                    );
+                    utterance.onend = () => resolve();
+                    utterance.onerror = () => resolve();
+                    window.speechSynthesis.speak(utterance);
+                };
+
+                setTimeout(resolve, SPECIALIST_AUDIO_MAX_MS);
+
+                const clip =
+                    specialistAudioRef.current ??
+                    new Audio(SPECIALIST_AUDIO_URL);
+                specialistAudioRef.current = clip;
+                clip.onended = () => resolve();
+                clip.play().catch((playError: unknown) => {
+                    // eslint-disable-next-line no-console
+                    console.error(
+                        '[roleplay-call] specialist clip failed',
+                        playError,
+                    );
+                    speakFallback();
+                });
+
+                const audioContext = audioContextRef.current;
+                const destination = recordingDestinationRef.current;
+
+                if (audioContext && destination) {
+                    void fetch(SPECIALIST_AUDIO_URL)
+                        .then((response) => response.arrayBuffer())
+                        .then((buffer) => audioContext.decodeAudioData(buffer))
+                        .then((decoded) => {
+                            const source = audioContext.createBufferSource();
+                            source.buffer = decoded;
+                            source.connect(destination);
+                            source.start();
+                        })
+                        .catch(() => {
+                            // The recording just won't have the specialist.
+                        });
+                }
+            }),
+        [],
+    );
+
+    /**
+     * The specialist picks up after the fluff window. The trainee's mic
+     * comes off the call (they should be silent now), the specialist asks
+     * who they're speaking with, and the consumer answers.
+     */
+    const specialistJoins = useCallback(() => {
+        if (endingRef.current) {
             return;
         }
 
-        const at = secondsIntoCall();
-        transferClickedAtRef.current = at;
-        logEvent({ type: 'transfer_clicked', at: msIntoCall() });
-        setPhase('transferring');
-        appendLine('system', 'Transferring… ringing the specialist.', at);
+        stopRingbackRef.current?.();
+        stopRingbackRef.current = null;
+        logEvent({ type: 'specialist_joined', at: msIntoCall() });
+        setTransferStage('specialist');
+        appendLine(
+            'system',
+            `Specialist: “${SPECIALIST_LINE}”`,
+            secondsIntoCall(),
+        );
 
-        localStreamRef.current?.getAudioTracks().forEach((track) => {
-            track.enabled = false;
-        });
-        setMuted(true);
-
-        transferTimeoutRef.current = setTimeout(() => {
-            appendLine(
-                'system',
-                `Specialist: “${SPECIALIST_LINE}”`,
-                secondsIntoCall(),
-            );
-            awaitingSpecialistReplyRef.current = true;
+        void micSenderRef.current?.replaceTrack(null);
+        specialistOnLineRef.current = true;
+        if (responseActiveRef.current) {
+            cancelledByUsRef.current = true;
             sendEvent({ type: 'response.cancel' });
+        }
+
+        void playSpecialistLine().then(() => {
+            if (endingRef.current || awaitingSpecialistReplyRef.current) {
+                return;
+            }
+
+            awaitingSpecialistReplyRef.current = true;
+            spokeSinceAgentTurnRef.current = false;
             sendEvent({
                 type: 'conversation.item.create',
                 item: {
@@ -874,8 +1189,85 @@ export function useRoleplayRealtimeCall({
                 },
             });
             sendEvent({ type: 'response.create' });
-        }, TRANSFER_RING_MS);
-    }, [appendLine, logEvent, msIntoCall, phase, secondsIntoCall, sendEvent]);
+        });
+    }, [
+        appendLine,
+        logEvent,
+        msIntoCall,
+        playSpecialistLine,
+        secondsIntoCall,
+        sendEvent,
+    ]);
+
+    /**
+     * Cold transfer: it rings for `TRANSFER_FLUFF_MS` while the trainee
+     * fluffs with the consumer, then the specialist joins. The trainee
+     * completes the transfer themselves once both have spoken. When
+     * Transfer was clicked is sent with the call so grading can check the
+     * consumer said yes first.
+     */
+    const transfer = useCallback(() => {
+        if (phase !== 'active' || endingRef.current) {
+            return;
+        }
+
+        const at = secondsIntoCall();
+        transferClickedAtRef.current = at;
+        logEvent({ type: 'transfer_clicked', at: msIntoCall() });
+        setPhase('transferring');
+        setTransferStage('ringing');
+        appendLine(
+            'system',
+            'Transferring… ringing the specialist. Keep them talking.',
+            at,
+        );
+
+        sendEvent({
+            type: 'conversation.item.create',
+            item: {
+                type: 'message',
+                role: 'system',
+                content: [
+                    { type: 'input_text', text: TRANSFER_STARTED_MESSAGE },
+                ],
+            },
+        });
+
+        // Load the specialist's clip during the ringing so it's ready.
+        const specialistClip = new Audio(SPECIALIST_AUDIO_URL);
+        specialistClip.preload = 'auto';
+        specialistClip.load();
+        specialistAudioRef.current = specialistClip;
+
+        const ringback = playRingback({
+            rings: Math.ceil(TRANSFER_FLUFF_MS / RINGBACK_CYCLE_MS),
+            volume: TRANSFER_RING_VOLUME,
+        });
+        stopRingbackRef.current = ringback.stop;
+        transferTimeoutRef.current = setTimeout(
+            specialistJoins,
+            TRANSFER_FLUFF_MS,
+        );
+    }, [
+        appendLine,
+        logEvent,
+        msIntoCall,
+        phase,
+        secondsIntoCall,
+        sendEvent,
+        specialistJoins,
+    ]);
+
+    /** "Leave Conference Call": the trainee drops off the transfer. */
+    const completeTransfer = useCallback(() => {
+        if (phase !== 'transferring' || endingRef.current) {
+            return;
+        }
+
+        logEvent({ type: 'transfer_completed', at: msIntoCall() });
+        appendLine('system', 'You left the conference.', secondsIntoCall());
+        finishCall('agent');
+    }, [appendLine, finishCall, logEvent, msIntoCall, phase, secondsIntoCall]);
 
     const start = useCallback(async () => {
         if (callInProgressRef.current) {
@@ -889,8 +1281,15 @@ export function useRoleplayRealtimeCall({
         try {
             // Mic first: the permission prompt can take a while, and the
             // ephemeral key is short-lived.
+            // Explicit, so a browser default can't turn them off: echo of
+            // the consumer or room noise reads as the trainee talking and
+            // cuts the consumer off mid-sentence.
             const localStream = await navigator.mediaDevices.getUserMedia({
-                audio: true,
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true,
+                },
             });
             localStreamRef.current = localStream;
 
@@ -927,6 +1326,7 @@ export function useRoleplayRealtimeCall({
                 // Held off the call until the greeting has played, so the
                 // trainee can't talk over it or have the VAD cut it off.
                 if (track.kind === 'audio') {
+                    micSenderRef.current = sender;
                     heldMicRef.current = { sender, track };
                     void sender.replaceTrack(null);
                 }
@@ -938,6 +1338,7 @@ export function useRoleplayRealtimeCall({
             audioContextRef.current = audioContext;
             void audioContext.resume();
             const destination = audioContext.createMediaStreamDestination();
+            recordingDestinationRef.current = destination;
             const micSource = audioContext.createMediaStreamSource(localStream);
             micSource.connect(destination);
 
@@ -1005,7 +1406,7 @@ export function useRoleplayRealtimeCall({
                 void Promise.all([
                     ringback.finished,
                     remotePlayback.started,
-                ]).then(() => {
+                ]).then(([, isPlaying]) => {
                     // Hung up or torn down while it was ringing.
                     if (dataChannelRef.current !== dataChannel) {
                         return;
@@ -1021,12 +1422,13 @@ export function useRoleplayRealtimeCall({
                         1000,
                     );
 
-                    // The consumer picks up the phone ("Hello?").
-                    sendEvent({ type: 'response.create' });
-                    greetingMicTimeoutRef.current = setTimeout(
-                        releaseMic,
-                        GREETING_MIC_HOLD_MAX_MS,
-                    );
+                    // Only say hello once the trainee can hear it.
+                    if (isPlaying) {
+                        sendGreeting();
+                    } else {
+                        pendingGreetingRef.current = true;
+                        setAudioBlocked(true);
+                    }
                 });
             });
 
@@ -1072,9 +1474,8 @@ export function useRoleplayRealtimeCall({
     }, [
         cleanup,
         handleServerEvent,
-        releaseMic,
         secondsIntoCall,
-        sendEvent,
+        sendGreeting,
         sessionId,
         startLevelWatch,
     ]);
@@ -1140,10 +1541,14 @@ export function useRoleplayRealtimeCall({
         transcript,
         endReason,
         error,
+        audioBlocked,
+        transferStage,
         start,
+        enableAudio,
         toggleMute,
         endCall,
         transfer,
+        completeTransfer,
         complete,
     };
 }

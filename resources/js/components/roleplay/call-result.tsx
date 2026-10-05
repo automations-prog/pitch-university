@@ -69,9 +69,11 @@ export function CallResult({
         }
     };
 
-    const correctId = result?.expected_outcome
-        ? OUTCOME_DISPOSITION[result.expected_outcome]
-        : null;
+    const correctId =
+        result?.correct_disposition ??
+        (result?.expected_outcome
+            ? OUTCOME_DISPOSITION[result.expected_outcome]
+            : null);
 
     return (
         <div className="grid gap-4 lg:grid-cols-[1fr_24rem]">
@@ -134,7 +136,9 @@ export function ResultCard({
     const { dispositions } = useRoleplayContent();
     const outcome = result.expected_outcome ?? 'transfer';
     const correctDisposition = dispositions.find(
-        (disposition) => disposition.id === OUTCOME_DISPOSITION[outcome],
+        (disposition) =>
+            disposition.id ===
+            (result.correct_disposition ?? OUTCOME_DISPOSITION[outcome]),
     );
 
     return (
@@ -149,13 +153,19 @@ export function ResultCard({
                     {result.passed ? 'Call passed' : 'Call failed'}
                 </CardTitle>
                 <CardDescription>
-                    This consumer should have ended as{' '}
-                    <span className="text-foreground font-medium">
-                        {OUTCOME_LABELS[outcome]}
-                    </span>
-                    {correctDisposition &&
-                        ` — coded as ${correctDisposition.name}`}
-                    .
+                    {result.correct_reason ? (
+                        result.correct_reason
+                    ) : (
+                        <>
+                            This consumer should have ended as{' '}
+                            <span className="text-foreground font-medium">
+                                {OUTCOME_LABELS[outcome]}
+                            </span>
+                            {correctDisposition &&
+                                ` — coded as ${correctDisposition.name}`}
+                            .
+                        </>
+                    )}
                 </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-4 text-sm">

@@ -3,11 +3,31 @@
 use App\Models\RoleplaySession;
 use App\Services\RoleplayGrader;
 
-function gradedCall(array $attributes = [], ?array $transcript = null, ?int $transferClickedAt = 40): array
+/**
+ * A clean cold transfer: clicked at 0:40, fluffed while it rang, the
+ * specialist joined at 1:10, the lead answered, then the trainee left.
+ * Override an entry with `null` to drop it.
+ *
+ * @return list<array<string, mixed>>
+ */
+function cleanHandoffEvents(array $overrides = []): array
+{
+    return array_values(array_filter([
+        'clicked' => ['type' => 'transfer_clicked', 'at' => 40_000],
+        'fluff' => ['type' => 'agent_speech', 'start' => 42_000, 'end' => 50_000],
+        'joined' => ['type' => 'specialist_joined', 'at' => 70_000],
+        'answered' => ['type' => 'lead_answered_specialist', 'at' => 74_000],
+        'completed' => ['type' => 'transfer_completed', 'at' => 76_000],
+        ...$overrides,
+    ]));
+}
+
+function gradedCall(array $attributes = [], ?array $transcript = null, ?int $transferClickedAt = 40, ?array $events = null): array
 {
     $session = RoleplaySession::factory()->make([
         'disposition' => 'transfer',
         'end_reason' => 'agent',
+        'events' => $events ?? cleanHandoffEvents(),
         'transcript' => implode("\n", $transcript ?? [
             "[0:05] agent: I'm with America's Health on a recorded line. You DO still have your Medicare Parts A and B, correct?",
             '[0:12] agent: And JUST to double confirm, that IS the red, white and blue card, correct?',
@@ -21,7 +41,7 @@ function gradedCall(array $attributes = [], ?array $transcript = null, ?int $tra
 
     $result = (new RoleplayGrader)->grade($session, $transferClickedAt);
 
-    return [$result['passed'], array_column($result['checks'], 'passed', 'key')];
+    return [$result['passed'], array_column($result['checks'], 'passed', 'key'), $result['correct_disposition']];
 }
 
 test('a compliant call with the right disposition and a transfer yes passes every check', function () {
@@ -79,3 +99,88 @@ test('a benefit claim without may or maybe fails the hedging check', function ()
 
     expect($checks['may_maybe'])->toBeFalse();
 });
+
+test('completing the transfer before the lead answers the specialist fails the call', function (array $overrides) {
+    [$passed, $checks] = gradedCall(events: cleanHandoffEvents($overrides));
+
+    expect($passed)->toBeFalse()->and($checks['completed_after_both_spoke'])->toBeFalse();
+})->with([
+    'left before the answer' => [['completed' => ['type' => 'transfer_completed', 'at' => 72_000]]],
+    'left during the ringing' => [['joined' => null, 'answered' => null, 'completed' => ['type' => 'transfer_completed', 'at' => 50_000]]],
+    'never left the conference' => [['completed' => null]],
+]);
+
+test('the fluff check needs enough talking while the transfer rings', function () {
+    [, $checks] = gradedCall(events: cleanHandoffEvents([
+        'fluff' => ['type' => 'agent_speech', 'start' => 42_000, 'end' => 44_000],
+    ]));
+
+    expect($checks['fluffed'])->toBeFalse();
+});
+
+test('talking once the specialist joins fails the silence check', function () {
+    [, $checks] = gradedCall(events: cleanHandoffEvents([
+        'talked' => ['type' => 'agent_talked_on_connect', 'at' => 71_000],
+    ]));
+
+    expect($checks['silent_on_connect'])->toBeFalse();
+});
+
+test('a second busy after the rebuttal makes Not Interested the correct code', function (string $disposition, bool $shouldPass) {
+    [$passed, $checks, $correct] = gradedCall(
+        ['disposition' => $disposition],
+        transferClickedAt: null,
+        events: [
+            ['type' => 'objection_raised', 'id' => 'busy', 'at' => 6_000],
+            ['type' => 'agent_speech', 'start' => 8_000, 'end' => 12_000],
+            ['type' => 'objection_raised', 'id' => 'busy', 'at' => 14_000],
+        ],
+    );
+
+    expect($correct)->toBe('not_interested')
+        ->and($passed)->toBe($shouldPass)
+        ->and($checks['transfer_permission'])->toBeNull()
+        ->and($checks['completed_after_both_spoke'])->toBeNull();
+})->with([
+    'coded not interested' => ['not_interested', true],
+    'coded transfer' => ['transfer', false],
+]);
+
+test('a repeated busy is caught from the transcript when the objection was not logged', function () {
+    [, , $correct] = gradedCall(transcript: [
+        "[0:03] consumer: I'm busy right now, call me back later.",
+        "[0:05] agent: Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+        "[0:10] consumer: I told you, I can't talk right now.",
+    ], events: []);
+
+    expect($correct)->toBe('not_interested');
+});
+
+test('a busy objection said only once keeps the persona outcome', function () {
+    [, , $correct] = gradedCall(events: [
+        ['type' => 'objection_raised', 'id' => 'busy', 'at' => 6_000],
+        ['type' => 'agent_speech', 'start' => 8_000, 'end' => 12_000],
+    ]);
+
+    expect($correct)->toBe('transfer');
+});
+
+test('asking not to be called makes DNC the correct code', function (string $line) {
+    [, , $correct] = gradedCall(transcript: ["[0:10] consumer: {$line}"]);
+
+    expect($correct)->toBe('dnc');
+})->with([
+    'Stop calling me.',
+    "Take me off your list, I'm serious.",
+    "Don't call me ever again or I'll get a lawyer.",
+]);
+
+test('swearing, complaining about calls or asking for a call back is not a DNC', function (string $line) {
+    [, , $correct] = gradedCall(transcript: ["[0:10] consumer: {$line}"]);
+
+    expect($correct)->toBe('transfer');
+})->with([
+    'Why the hell are you calling me?',
+    "This is the 16th telemarketing call I've had today and I am so sick of it.",
+    "Don't call me back later, just make it quick.",
+]);

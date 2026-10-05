@@ -1,6 +1,6 @@
 # Medicare Script (verbatim — source: "Medicare Scripting" Google Doc)
 
-Bosses' decision 2026-09-14: teach this script exactly as written. Revised 2026-09-16 with Nate's grammar and transfer-ask updates.
+Bosses' decision 2026-09-14: teach this script exactly as written. Revised 2026-09-16 with Nate's grammar and transfer-ask updates. Revised 2026-10-06 with the trainer's busy-objection rule (Compliance Guidelines).
 
 ## Opening
 
@@ -109,6 +109,7 @@ I understand, but these new benefits JUST became available, so your current plan
 - Stop talking once the agent connects; they will usually ask who they're speaking with. Once the lead responds, complete the transfer process. Remember, we are doing 'cold transfers' only!
 - May and maybe are your best friends! Make sure you ALWAYS say may or maybe when mentioning something the lead may qualify for!
 - Stick to the script. Going off script and freestyling is where compliance is broken the most. Stay scripted.
+- Busy / call me back: rebut once. If they say busy again, end the call and code as Not Interested.
 
 # Definitions (from the doc)
 

@@ -126,6 +126,10 @@ export type RoleplaySessionResult = {
     disposition: string | null;
     passed: boolean | null;
     expected_outcome?: Outcome;
+    /** The disposition id the call should have been coded as. */
+    correct_disposition?: string;
+    /** Why it differs from the persona's outcome, when it does. */
+    correct_reason?: string | null;
     end_reason?: 'agent' | 'hung_up';
     checks?: GradingCheck[];
     delivery_status?: DeliveryStatus | null;

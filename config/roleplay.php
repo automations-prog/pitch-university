@@ -31,4 +31,20 @@ return [
         'grader_model' => env('OPENAI_GRADER_MODEL', 'gpt-5-mini'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Cold transfer
+    |--------------------------------------------------------------------------
+    |
+    | The transfer rings for 30 seconds (`TRANSFER_FLUFF_MS` in
+    | use-roleplay-realtime-call.ts) while the trainee fluffs with the
+    | consumer. This is how much of that they must spend talking to pass
+    | the fluff check.
+    |
+    */
+
+    'transfer' => [
+        'fluff_min_ms' => 5000,
+    ],
+
 ];

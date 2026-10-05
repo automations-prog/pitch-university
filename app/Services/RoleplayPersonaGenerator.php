@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\Outcome;
+use App\Enums\RealtimeVoice;
 use Random\Randomizer;
 
 /**
@@ -16,19 +17,21 @@ class RoleplayPersonaGenerator
 {
     /**
      * Mock dialer leads so the script's (Customer Name), (state) and
-     * (zip code) placeholders have something to read back.
+     * (zip code) placeholders have something to read back. Each lead keeps
+     * one voice of their gender, so a name always sounds the same; marin
+     * and cedar, OpenAI's steadiest voices, go to the first two.
      *
-     * @var list<array{name: string, state: string, zip: string}>
+     * @var list<array{name: string, state: string, zip: string, gender: 'male'|'female', voice: string}>
      */
     private const array LEADS = [
-        ['name' => 'Dorothy Miller', 'state' => 'Florida', 'zip' => '33511'],
-        ['name' => 'Harold Jenkins', 'state' => 'Ohio', 'zip' => '43204'],
-        ['name' => 'Linda Carter', 'state' => 'Texas', 'zip' => '75217'],
-        ['name' => 'Robert Hayes', 'state' => 'Georgia', 'zip' => '30906'],
-        ['name' => 'Barbara Nguyen', 'state' => 'Arizona', 'zip' => '85308'],
-        ['name' => 'James Walker', 'state' => 'North Carolina', 'zip' => '27406'],
-        ['name' => 'Patricia Moore', 'state' => 'Pennsylvania', 'zip' => '19143'],
-        ['name' => 'Charles Robinson', 'state' => 'Michigan', 'zip' => '48219'],
+        ['name' => 'Dorothy Miller', 'state' => 'Florida', 'zip' => '33511', 'gender' => 'female', 'voice' => 'marin'],
+        ['name' => 'Harold Jenkins', 'state' => 'Ohio', 'zip' => '43204', 'gender' => 'male', 'voice' => 'cedar'],
+        ['name' => 'Linda Carter', 'state' => 'Texas', 'zip' => '75217', 'gender' => 'female', 'voice' => 'coral'],
+        ['name' => 'Robert Hayes', 'state' => 'Georgia', 'zip' => '30906', 'gender' => 'male', 'voice' => 'ash'],
+        ['name' => 'Barbara Nguyen', 'state' => 'Arizona', 'zip' => '85308', 'gender' => 'female', 'voice' => 'sage'],
+        ['name' => 'James Walker', 'state' => 'North Carolina', 'zip' => '27406', 'gender' => 'male', 'voice' => 'echo'],
+        ['name' => 'Patricia Moore', 'state' => 'Pennsylvania', 'zip' => '19143', 'gender' => 'female', 'voice' => 'shimmer'],
+        ['name' => 'Charles Robinson', 'state' => 'Michigan', 'zip' => '48219', 'gender' => 'male', 'voice' => 'verse'],
     ];
 
     private readonly Randomizer $randomizer;
@@ -47,7 +50,7 @@ class RoleplayPersonaGenerator
     }
 
     /**
-     * @return array{outcome: Outcome, persona: array{lead: array{name: string, state: string, zip: string}, objections: list<string>, quirk: string|null, patience: int, dq_trap: array{id: string, hidden_truth: string}|null}}
+     * @return array{outcome: Outcome, voice: RealtimeVoice, persona: array{lead: array{name: string, state: string, zip: string, gender: 'male'|'female'}, objections: list<string>, quirk: string|null, patience: int, dq_trap: array{id: string, hidden_truth: string}|null}}
      */
     public function generate(int $level): array
     {
@@ -76,10 +79,14 @@ class RoleplayPersonaGenerator
 
         $trap = $outcome === Outcome::Dq ? $this->pick($content['dqTraps']) : null;
 
+        ['voice' => $voice] = $lead = $this->pick(self::LEADS);
+        unset($lead['voice']);
+
         return [
             'outcome' => $outcome,
+            'voice' => RealtimeVoice::from($voice),
             'persona' => [
-                'lead' => $this->pick(self::LEADS),
+                'lead' => $lead,
                 'objections' => array_column($objections, 'id'),
                 'quirk' => $level >= RoleplayScript::QUIRK_MIN_LEVEL ? $this->pick($content['quirks']) : null,
                 'patience' => self::startingPatience($level),

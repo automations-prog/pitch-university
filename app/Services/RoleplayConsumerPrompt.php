@@ -35,6 +35,10 @@ class RoleplayConsumerPrompt
                         'type' => 'semantic_vad',
                         'eagerness' => $session->level >= 4 ? 'high' : 'medium',
                     ],
+                    // Room noise or the consumer's own voice echoing into
+                    // the mic read as the trainee talking, which cut the
+                    // consumer off mid-sentence. Filtered before the VAD.
+                    'noise_reduction' => ['type' => 'near_field'],
                     // A disfluent prompt nudges transcription to keep the
                     // trainee's "um"s and "uh"s, which delivery scoring
                     // counts. Verify on a live call; see AI_CALL_PLAN §9.1.
@@ -59,24 +63,27 @@ class RoleplayConsumerPrompt
             $this->answersSection($lead, $persona['dq_trap']),
             $this->outcomeSection($session->expected_outcome),
             <<<'TEXT'
-            # Swearing
-            Swearing by itself is just how you talk when you're annoyed. It is not a request to stop calling. Only ask to be taken off the list if your outcome below says so.
+            # Swearing, complaints and do-not-call
+            Swearing, or complaining about how many calls you get, is just how you talk when you're annoyed. It is not a request to stop calling.
+            Asking to stop is different: telling the caller to stop calling you or never call again, to take you off their list or put you on the do-not-call list, or threatening them (a lawsuit, reporting them). Only do any of that if your outcome below says so. Otherwise never say it, however annoyed you get.
             TEXT,
             $this->patienceSection($persona['patience']),
             <<<'TEXT'
             # The transfer
-            Near the end the caller will ask you to give a Medicare specialist a few minutes. Answer that question clearly with a yes or a no, in your own words. If a message says a specialist has joined the line and asks who they're speaking with, answer with your full name and nothing else.
+            Near the end the caller will ask you to give a Medicare specialist a few minutes. Answer that question clearly with a yes or a no, in your own words. While the transfer rings, the caller will make small talk: chat back casually in a sentence or two, and don't raise new objections. If a message says a specialist has joined the line and asks who they're speaking with, answer with your full name and nothing else.
 
             # Tools
-            - Call `objection_raised` with the objection id the moment you voice one of your objections, and `objection_resolved` once the caller has answered it well enough that you move on.
+            - Call `objection_raised` with the objection id every time you voice one of your objections, including when you repeat one, and `objection_resolved` once the caller has answered it well enough that you move on.
             - Call `patience_changed` every time your patience goes down, with the new value and a few words on why.
             - Call `hang_up` only when your patience hits zero, right after you say a short goodbye line.
-            Tool calls are silent. Never mention them out loud.
+            Always say your line first, then call any tools in that same response. Never respond with only a tool call. Tool calls are silent. Never mention them out loud.
 
             # Rules
             - Never break character. Never say you are an AI, a simulation, a test or a roleplay.
             - Never coach the caller or tell them what they should have said.
             - Keep your turns short, like a real person on the phone: one or two sentences.
+            - Never repeat a line you already said. Once an objection has been handled, don't bring it back.
+            - Keep the same voice the whole call: the same pitch, accent, age and way of speaking you started with. Show annoyance, confusion or yelling through your words and pace, never by switching to a different-sounding voice. Don't imitate anyone else's voice.
             - When the call connects, answer the phone with only a short "Hello?" or "Yeah?" and nothing else. Then stay quiet until the caller speaks. Don't raise objections or ask who's calling before they say anything.
             TEXT,
         ];
@@ -163,7 +170,7 @@ class RoleplayConsumerPrompt
             return "# Objections\nYou have no particular objections. Go along with the call once you understand what it's about.";
         }
 
-        $lines = ["# Objections\nRaise these naturally over the call, one at a time, in your own words. Each line is how someone like you says it. Push back again if the caller ignores you or answers with the wrong thing."];
+        $lines = ["# Objections\nRaise these naturally over the call, one at a time, in your own words. Each line is how someone like you says it. If the caller ignores an objection or answers it with the wrong thing, push back once more in different words. Once they answer it with the right rebuttal, drop it and move on."];
 
         foreach ($objectionIds as $id) {
             $objection = $this->script->objection($id);
@@ -204,7 +211,7 @@ class RoleplayConsumerPrompt
         $goal = match ($outcome) {
             Outcome::Transfer => 'Once your objections have been handled well, agree to wait for the specialist when asked.',
             Outcome::Dq => 'Answer the qualifying questions truthfully, including your hidden truth, so the caller has to recognize you don\'t qualify.',
-            Outcome::Dnc => 'At some point in the call, firmly tell the caller to stop calling you and take you off their list. If they keep going after that, lose patience fast.',
+            Outcome::Dnc => 'At some point in the call, firmly tell the caller to stop calling you and to take you off their list, in those words. If they keep going after that, lose patience fast.',
         };
 
         return "# How this call should go\n{$goal}";

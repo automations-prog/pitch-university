@@ -33,6 +33,11 @@ class RoleplaySessionResource extends JsonResource
             'passed' => $this->passed,
             $this->mergeWhen($isEnded, fn (): array => [
                 'expected_outcome' => $this->expected_outcome,
+                // What the consumer did can change the right code (a
+                // second busy, a DNC request); older calls only have the
+                // persona's outcome.
+                'correct_disposition' => $this->score['correct_disposition'] ?? $this->expected_outcome->value,
+                'correct_reason' => $this->score['correct_reason'] ?? null,
                 'end_reason' => $this->end_reason,
                 'checks' => $this->score['checks'] ?? [],
                 'delivery_status' => $this->delivery_status,
