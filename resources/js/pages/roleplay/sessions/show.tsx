@@ -78,7 +78,8 @@ export default function RoleplaySessionShow({
 
 function Transcript({ transcript }: { transcript: string }) {
     const lines = transcript
-        .split('\n')
+        // Older calls were stored with CRLF line breaks.
+        .split(/\r?\n/)
         .map((line) => TRANSCRIPT_LINE.exec(line))
         .filter((match) => match !== null);
 

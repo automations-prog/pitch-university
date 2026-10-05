@@ -53,6 +53,20 @@ const TRANSFER_RING_MS = 3_000;
 /** The trainee's mic is held until the greeting has played, or this long at most. */
 const GREETING_MIC_HOLD_MAX_MS = 5_000;
 
+/**
+ * After End call, how long the connection stays open for the trainee's
+ * last words to be transcribed. Transcription lands a beat after each turn
+ * is committed, so tearing down at once dropped the final line.
+ */
+const FINAL_TRANSCRIPT_WAIT_MS = 2_000;
+const FINAL_TRANSCRIPT_POLL_MS = 100;
+
+/** The error OpenAI sends when the final commit finds nothing new to transcribe. */
+const EMPTY_COMMIT_ERROR_CODE = 'input_audio_buffer_commit_empty';
+
+const AGENT_TRANSCRIPT_FAILED_EVENT =
+    'conversation.item.input_audio_transcription.failed';
+
 const SPECIALIST_LINE = 'Who am I speaking with?';
 
 const SPECIALIST_JOINS_MESSAGE = `(The caller has transferred you. After a little ringing, a licensed Medicare specialist is now on the line and says: "${SPECIALIST_LINE}" Answer the specialist.)`;
@@ -220,6 +234,10 @@ export function useRoleplayRealtimeCall({
     const awaitingSpecialistReplyRef = useRef(false);
     const pendingEndReasonRef = useRef<RoleplayEndReason | null>(null);
     const callInProgressRef = useRef(false);
+    /** Trainee turns committed but not yet transcribed, by item id. */
+    const pendingTranscriptsRef = useRef(new Set<string>());
+    /** The final commit sent on End call, until OpenAI answers it. */
+    const awaitingFinalCommitRef = useRef(false);
     const endingRef = useRef(false);
 
     const eventsRef = useRef<CallEvent[]>([]);
@@ -422,14 +440,42 @@ export function useRoleplayRealtimeCall({
 
         callInProgressRef.current = false;
         heldMicRef.current = null;
+        pendingTranscriptsRef.current.clear();
+        awaitingFinalCommitRef.current = false;
         wiredRemoteStreamIdRef.current = null;
         remoteAnalyserRef.current = null;
         micAnalyserRef.current = null;
     }, []);
 
     /**
+     * Resolves once the final commit is answered and every committed
+     * trainee turn has its transcript, or after `FINAL_TRANSCRIPT_WAIT_MS`.
+     */
+    const waitForFinalTranscripts = useCallback(
+        () =>
+            new Promise<void>((resolve) => {
+                const startedAt = Date.now();
+                const poll = setInterval(() => {
+                    const isSettled =
+                        !awaitingFinalCommitRef.current &&
+                        pendingTranscriptsRef.current.size === 0;
+
+                    if (
+                        isSettled ||
+                        Date.now() - startedAt >= FINAL_TRANSCRIPT_WAIT_MS
+                    ) {
+                        clearInterval(poll);
+                        resolve();
+                    }
+                }, FINAL_TRANSCRIPT_POLL_MS);
+            }),
+        [],
+    );
+
+    /**
      * Stops the call and keeps the recording in memory until the trainee
-     * codes the call.
+     * codes the call. The connection stays open a moment longer so the
+     * trainee's last words still get transcribed.
      */
     const finishCall = useCallback(
         (reason: RoleplayEndReason) => {
@@ -440,25 +486,43 @@ export function useRoleplayRealtimeCall({
 
             flushSpeech();
 
-            const finish = () => {
+            // Nothing more is heard or said: silence both directions, then
+            // commit whatever the trainee said since their last turn.
+            localStreamRef.current?.getAudioTracks().forEach((track) => {
+                track.enabled = false;
+            });
+            if (remoteAudioElRef.current) {
+                remoteAudioElRef.current.muted = true;
+            }
+            if (dataChannelRef.current?.readyState === 'open') {
+                awaitingFinalCommitRef.current = true;
+                sendEvent({ type: 'input_audio_buffer.commit' });
+            }
+
+            const recordingStopped = new Promise<void>((resolve) => {
+                const recorder = recorderRef.current;
+
+                if (recorder && recorder.state !== 'inactive') {
+                    recorder.onstop = () => resolve();
+                    recorder.stop();
+                } else {
+                    resolve();
+                }
+            });
+
+            void Promise.all([
+                recordingStopped,
+                waitForFinalTranscripts(),
+            ]).then(() => {
                 recordingRef.current = new Blob(recordedChunksRef.current, {
                     type: recordingTypeRef.current.mimeType,
                 });
                 cleanup();
                 setEndReason(reason);
                 setPhase('ended');
-            };
-
-            const recorder = recorderRef.current;
-
-            if (recorder && recorder.state !== 'inactive') {
-                recorder.onstop = finish;
-                recorder.stop();
-            } else {
-                finish();
-            }
+            });
         },
-        [cleanup, flushSpeech],
+        [cleanup, flushSpeech, sendEvent, waitForFinalTranscripts],
     );
 
     /**
@@ -602,8 +666,56 @@ export function useRoleplayRealtimeCall({
             }
 
             if (type === 'error') {
+                const code = (event.error as { code?: string } | undefined)
+                    ?.code;
+
+                if (awaitingFinalCommitRef.current) {
+                    awaitingFinalCommitRef.current = false;
+
+                    if (code === EMPTY_COMMIT_ERROR_CODE) {
+                        return;
+                    }
+                }
+
                 // eslint-disable-next-line no-console
                 console.error('[roleplay-call] server error', event);
+                return;
+            }
+
+            const itemId =
+                typeof event.item_id === 'string' ? event.item_id : null;
+
+            if (type === 'input_audio_buffer.committed' && itemId) {
+                awaitingFinalCommitRef.current = false;
+                pendingTranscriptsRef.current.add(itemId);
+                itemStartedAtRef.current.set(itemId, secondsIntoCall());
+                return;
+            }
+
+            if (type === AGENT_TRANSCRIPT_FAILED_EVENT) {
+                if (itemId) {
+                    pendingTranscriptsRef.current.delete(itemId);
+                }
+                // eslint-disable-next-line no-console
+                console.warn('[roleplay-call] transcription failed', event);
+                appendLine(
+                    'agent',
+                    '(inaudible)',
+                    (itemId === null
+                        ? undefined
+                        : itemStartedAtRef.current.get(itemId)) ??
+                        secondsIntoCall(),
+                );
+                return;
+            }
+
+            if (type && AGENT_TRANSCRIPT_EVENTS.has(type) && itemId) {
+                pendingTranscriptsRef.current.delete(itemId);
+            }
+
+            // Once the call is ending, only the trainee's last transcripts
+            // matter; anything the consumer starts saying was never heard.
+            if (endingRef.current && !(type && AGENT_TRANSCRIPT_EVENTS.has(type))) {
                 return;
             }
 
@@ -630,14 +742,6 @@ export function useRoleplayRealtimeCall({
                     });
                     agentSpeechStartRef.current = null;
                 }
-                return;
-            }
-
-            const itemId =
-                typeof event.item_id === 'string' ? event.item_id : null;
-
-            if (type === 'input_audio_buffer.committed' && itemId) {
-                itemStartedAtRef.current.set(itemId, secondsIntoCall());
                 return;
             }
 
@@ -736,7 +840,7 @@ export function useRoleplayRealtimeCall({
      * can check the consumer said yes first.
      */
     const transfer = useCallback(() => {
-        if (phase !== 'active') {
+        if (phase !== 'active' || endingRef.current) {
             return;
         }
 

@@ -3,6 +3,7 @@
 use App\Jobs\GradeRoleplayDelivery;
 use App\Models\RoleplaySession;
 use App\Models\User;
+use App\Services\RoleplayGrader;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -204,6 +205,23 @@ test('completing stores the call, grades it and reveals the persona', function (
         ->and($session->delivery_status)->toBe('pending');
     Storage::disk('local')->assertExists($session->recording_path);
     Queue::assertPushed(GradeRoleplayDelivery::class, fn (GradeRoleplayDelivery $job) => $job->roleplaySession->is($session));
+});
+
+test('completing stores a CRLF transcript with plain line breaks so every line parses', function () {
+    Storage::fake('local');
+    Queue::fake([GradeRoleplayDelivery::class]);
+    $session = RoleplaySession::factory()->started()->create();
+    $transcript = str_replace("\n", "\r\n", completePayload()['transcript']);
+
+    $response = $this->actingAs($session->user)
+        ->post(route('roleplay.call.complete', $session), completePayload(['transcript' => $transcript]));
+
+    $response->assertOk();
+    $response->assertJson(['passed' => true]);
+
+    $session->refresh();
+    expect($session->transcript)->not->toContain("\r")
+        ->and(app(RoleplayGrader::class)->parseTranscript($session->transcript))->toHaveCount(11);
 });
 
 test('completing rejects an event log that isn\'t JSON', function () {

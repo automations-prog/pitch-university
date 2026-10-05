@@ -22,6 +22,19 @@ class StoreRoleplayCallRequest extends FormRequest
     }
 
     /**
+     * Browsers send multipart text fields with CRLF line breaks; store the
+     * transcript with plain LF so every `[m:ss] role: text` line parses.
+     */
+    protected function prepareForValidation(): void
+    {
+        if (is_string($this->input('transcript'))) {
+            $this->merge([
+                'transcript' => str_replace(["\r\n", "\r"], "\n", $this->input('transcript')),
+            ]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
