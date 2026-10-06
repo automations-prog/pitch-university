@@ -19,7 +19,8 @@ class RoleplayPersonaGenerator
      * Mock dialer leads so the script's (Customer Name), (state) and
      * (zip code) placeholders have something to read back. Each lead keeps
      * one voice of their gender, so a name always sounds the same; marin
-     * and cedar, OpenAI's steadiest voices, go to the first two.
+     * and cedar, OpenAI's steadiest voices, go to the first two. Only
+     * plainly gendered voices are used (no alloy or sage).
      *
      * @var list<array{name: string, state: string, zip: string, gender: 'male'|'female', voice: string}>
      */
@@ -28,7 +29,7 @@ class RoleplayPersonaGenerator
         ['name' => 'Harold Jenkins', 'state' => 'Ohio', 'zip' => '43204', 'gender' => 'male', 'voice' => 'cedar'],
         ['name' => 'Linda Carter', 'state' => 'Texas', 'zip' => '75217', 'gender' => 'female', 'voice' => 'coral'],
         ['name' => 'Robert Hayes', 'state' => 'Georgia', 'zip' => '30906', 'gender' => 'male', 'voice' => 'ash'],
-        ['name' => 'Barbara Nguyen', 'state' => 'Arizona', 'zip' => '85308', 'gender' => 'female', 'voice' => 'sage'],
+        ['name' => 'Barbara Nguyen', 'state' => 'Arizona', 'zip' => '85308', 'gender' => 'female', 'voice' => 'marin'],
         ['name' => 'James Walker', 'state' => 'North Carolina', 'zip' => '27406', 'gender' => 'male', 'voice' => 'echo'],
         ['name' => 'Patricia Moore', 'state' => 'Pennsylvania', 'zip' => '19143', 'gender' => 'female', 'voice' => 'shimmer'],
         ['name' => 'Charles Robinson', 'state' => 'Michigan', 'zip' => '48219', 'gender' => 'male', 'voice' => 'verse'],

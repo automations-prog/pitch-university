@@ -58,7 +58,7 @@ class RoleplayConsumerPrompt
         $lead = $persona['lead'];
 
         $sections = [
-            $this->identity($lead, $level, $persona['quirk']),
+            $this->identity($lead, $level, $persona['quirk'], $session->consumerGender()),
             $this->objectionsSection($persona['objections'], $session->level),
             $this->answersSection($lead, $persona['dq_trap']),
             $this->outcomeSection($session->expected_outcome),
@@ -144,8 +144,9 @@ class RoleplayConsumerPrompt
     /**
      * @param  array{name: string, state: string, zip: string}  $lead
      * @param  array{level: int, name: string, temperament: string}  $level
+     * @param  'male'|'female'|null  $gender
      */
-    private function identity(array $lead, array $level, ?string $quirk): string
+    private function identity(array $lead, array $level, ?string $quirk, ?string $gender): string
     {
         $text = <<<TEXT
         # Who you are
@@ -153,6 +154,12 @@ class RoleplayConsumerPrompt
 
         Temperament: {$level['temperament']}.
         TEXT;
+
+        if ($gender !== null) {
+            [$person, $other] = $gender === 'female' ? ['woman', 'man'] : ['man', 'woman'];
+
+            $text .= "\nYou are a {$person}. Always sound like an older {$person}: speak in a {$person}'s natural voice and pitch the whole call, and never sound like a {$other}.";
+        }
 
         if ($quirk !== null) {
             $text .= "\nQuirk: {$quirk}. Let it show throughout the call.";

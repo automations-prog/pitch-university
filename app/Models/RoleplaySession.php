@@ -82,4 +82,37 @@ class RoleplaySession extends Model
             'patience' => $this->persona['patience'],
         ];
     }
+
+    /**
+     * The lead's gender, falling back to the stored voice's for personas
+     * saved without one.
+     *
+     * @return 'male'|'female'|null
+     */
+    public function consumerGender(): ?string
+    {
+        $gender = $this->persona['lead']['gender'] ?? null;
+
+        return in_array($gender, ['male', 'female'], true) ? $gender : $this->voice?->gender();
+    }
+
+    /**
+     * The voice the consumer speaks in, always plainly of the lead's
+     * gender: a stored voice of the other gender, one that could pass for
+     * either, or none, is replaced with that gender's default.
+     */
+    public function consumerVoice(): ?RealtimeVoice
+    {
+        $gender = $this->consumerGender();
+
+        if ($gender === null) {
+            return $this->voice;
+        }
+
+        if ($this->voice?->gender() === $gender && $this->voice->isClearlyGendered()) {
+            return $this->voice;
+        }
+
+        return RealtimeVoice::defaultFor($gender);
+    }
 }

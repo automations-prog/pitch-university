@@ -317,10 +317,7 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
             clearTimeout(interruptTimeoutRef.current);
             interruptTimeoutRef.current = null;
         }
-        for (const timeout of [
-            hangupTimeoutRef,
-            greetingMicTimeoutRef,
-        ]) {
+        for (const timeout of [hangupTimeoutRef, greetingMicTimeoutRef]) {
             if (timeout.current) {
                 clearTimeout(timeout.current);
                 timeout.current = null;
@@ -520,11 +517,14 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
             });
             localStreamRef.current = localStream;
 
-            const sessionResponse = await fetch(createCallSession.url(responseToken), {
-                method: 'POST',
-                headers: xsrfHeader(),
-                credentials: 'same-origin',
-            });
+            const sessionResponse = await fetch(
+                createCallSession.url(responseToken),
+                {
+                    method: 'POST',
+                    headers: xsrfHeader(),
+                    credentials: 'same-origin',
+                },
+            );
 
             if (!sessionResponse.ok) {
                 const body = await sessionResponse.text().catch(() => '');
@@ -576,13 +576,14 @@ export function useRealtimeCall({ token: responseToken }: { token: string }) {
 
             const remotePlayback = remoteAudioPlayback(
                 remoteAudio,
+                pc,
                 '[realtime-call]',
             );
 
             pc.ontrack = (trackEvent) => {
                 const remoteStream = trackEvent.streams[0];
                 remoteAudio.srcObject = remoteStream;
-                remotePlayback.play();
+                remotePlayback.play(trackEvent.track);
 
                 if (wiredRemoteStreamIdRef.current === remoteStream.id) {
                     return;

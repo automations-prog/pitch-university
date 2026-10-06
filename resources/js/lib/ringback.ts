@@ -79,33 +79,117 @@ export function playRingback({
     };
 }
 
+/** How often to check whether the AI's audio packets are arriving yet. */
+const REMOTE_AUDIO_POLL_MS = 100;
+
+/**
+ * Whether the AI's audio is really reaching the browser: the call is
+ * connected, the track has unmuted (it stays muted until packets arrive)
+ * and the receiver has counted inbound audio packets.
+ */
+async function isRemoteAudioArriving(
+    peerConnection: RTCPeerConnection,
+    track: MediaStreamTrack,
+): Promise<boolean> {
+    if (
+        peerConnection.connectionState !== 'connected' ||
+        track.readyState !== 'live' ||
+        track.muted
+    ) {
+        return false;
+    }
+
+    const stats = await peerConnection.getStats(track).catch(() => null);
+    let hasPackets = false;
+
+    stats?.forEach(
+        (report: {
+            type?: string;
+            kind?: string;
+            packetsReceived?: number;
+        }) => {
+            if (
+                report.type === 'inbound-rtp' &&
+                report.kind === 'audio' &&
+                (report.packetsReceived ?? 0) > 0
+            ) {
+                hasPackets = true;
+            }
+        },
+    );
+
+    return hasPackets;
+}
+
 /**
  * Starts the remote audio element explicitly instead of trusting autoplay,
  * which can be blocked or late. Call `play()` from `pc.ontrack`; `started`
- * resolves `true` once it's playing, or `false` if the browser blocked it or
- * nothing played within `REMOTE_AUDIO_WAIT_MS`, so the call never stalls on
- * it. A blocked element needs `play()` again from a click.
+ * resolves `true` once the element is playing and the AI's audio packets
+ * are actually arriving (a playing element alone can still be silent, which
+ * lost the "Hello?"), or `false` if the browser blocked it. After
+ * `REMOTE_AUDIO_WAIT_MS` it settles on whether the element plays, so the
+ * call never stalls on it. A blocked element needs `play()` again from a
+ * click.
  */
 export function remoteAudioPlayback(
     audioElement: HTMLAudioElement,
+    peerConnection: RTCPeerConnection,
     logTag: string,
-): { play: () => void; started: Promise<boolean> } {
+): { play: (track: MediaStreamTrack) => void; started: Promise<boolean> } {
     let markStarted: (isPlaying: boolean) => void = () => {};
+    let isSettled = false;
+    let poll: ReturnType<typeof setInterval> | null = null;
+
+    const settle = (isPlaying: boolean, reason: string) => {
+        if (isSettled) {
+            return;
+        }
+        isSettled = true;
+
+        if (poll) {
+            clearInterval(poll);
+            poll = null;
+        }
+
+        if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.debug(`${logTag} remote audio ready`, {
+                isPlaying,
+                reason,
+            });
+        }
+
+        markStarted(isPlaying);
+    };
+
     const started = new Promise<boolean>((resolve) => {
         markStarted = resolve;
-        setTimeout(() => resolve(!audioElement.paused), REMOTE_AUDIO_WAIT_MS);
+        setTimeout(
+            () => settle(!audioElement.paused, 'timed out'),
+            REMOTE_AUDIO_WAIT_MS,
+        );
     });
 
     return {
         started,
-        play: () => {
+        play: (track) => {
             audioElement
                 .play()
-                .then(() => markStarted(true))
+                .then(() => {
+                    poll ??= setInterval(() => {
+                        void isRemoteAudioArriving(peerConnection, track).then(
+                            (isArriving) => {
+                                if (isArriving) {
+                                    settle(true, 'packets arriving');
+                                }
+                            },
+                        );
+                    }, REMOTE_AUDIO_POLL_MS);
+                })
                 .catch((playError: unknown) => {
                     // eslint-disable-next-line no-console
                     console.error(`${logTag} remote audio blocked`, playError);
-                    markStarted(false);
+                    settle(false, 'blocked');
                 });
         },
     };

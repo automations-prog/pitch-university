@@ -184,3 +184,12 @@ test('swearing, complaining about calls or asking for a call back is not a DNC',
     "This is the 16th telemarketing call I've had today and I am so sick of it.",
     "Don't call me back later, just make it quick.",
 ]);
+
+test('the script rebuttals about other people qualifying pass the hedging check', function () {
+    [, $checks] = gradedCall(transcript: [
+        "[0:20] agent: I understand, but MANY people are finding out RIGHT now that they ACTUALLY qualify for WAY more than they're receiving.",
+        "[0:30] agent: Oh, you probably spoke with one of our small competitors. The difference is WE work with over 25 different health insurance providers, so people ARE finding that with US, they qualify for WAY more benefits than they're receiving.",
+    ]);
+
+    expect($checks['may_maybe'])->toBeTrue();
+});

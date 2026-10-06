@@ -65,8 +65,23 @@ const SPECIALIST_AUDIO_MAX_MS = 6_000;
 /** Trainee speech this long while the specialist is on counts as talking over them. */
 const TALK_OVER_HOLD_MS = 800;
 
-/** The trainee's mic is held until the greeting has played, or this long at most. */
-const GREETING_MIC_HOLD_MAX_MS = 5_000;
+/**
+ * The trainee's mic is held until a greeting has been heard, or this long
+ * at most (long enough for the retries below).
+ */
+const GREETING_MIC_HOLD_MAX_MS = 15_000;
+
+/**
+ * The "Hello?" transcript arrives whether or not its audio played, so the
+ * greeting is checked against the consumer's audio level and asked for
+ * again when nothing was heard: the first try plus two retries.
+ */
+const GREETING_MAX_ATTEMPTS = 3;
+const GREETING_WATCH_INTERVAL_MS = 50;
+/** After the greeting's audio stops, for the last of it to reach the analyser. */
+const GREETING_STOPPED_TAIL_MS = 300;
+/** After the greeting's response is done, in case its audio never starts or stops. */
+const GREETING_DONE_GRACE_MS = 3_000;
 
 /**
  * After End call, how long the connection stays open for the trainee's
@@ -286,6 +301,23 @@ export function useRoleplayRealtimeCall({
     const specialistOnLineRef = useRef(false);
     /** The greeting waits for the consumer's audio to be unblocked. */
     const pendingGreetingRef = useRef(false);
+    /** The greeting being played, until it's been heard (or given up on). */
+    const greetingRef = useRef<{
+        attempt: number;
+        itemId: string | null;
+        wasHeard: boolean;
+        /** Whether the consumer's audio level could be read at all. */
+        couldMeasure: boolean;
+        peakRms: number;
+    } | null>(null);
+    const greetingWatchIntervalRef = useRef<ReturnType<
+        typeof setInterval
+    > | null>(null);
+    const greetingCheckTimeoutRef = useRef<ReturnType<
+        typeof setTimeout
+    > | null>(null);
+    /** Greetings that were never heard, whose transcript lines are dropped. */
+    const discardedItemsRef = useRef(new Set<string>());
     /**
      * Whether the consumer has spoken since the trainee's last turn, so a
      * tool-only response doesn't make them answer twice.
@@ -503,14 +535,177 @@ export function useRoleplayRealtimeCall({
         void heldMic.sender.replaceTrack(heldMic.track);
     }, []);
 
+    const removeLine = useCallback((lineId: number) => {
+        transcriptRef.current = transcriptRef.current.filter(
+            (line) => line.id !== lineId,
+        );
+        setTranscript(transcriptRef.current);
+    }, []);
+
+    const stopGreetingWatch = useCallback(() => {
+        if (greetingWatchIntervalRef.current) {
+            clearInterval(greetingWatchIntervalRef.current);
+            greetingWatchIntervalRef.current = null;
+        }
+
+        if (greetingCheckTimeoutRef.current) {
+            clearTimeout(greetingCheckTimeoutRef.current);
+            greetingCheckTimeoutRef.current = null;
+        }
+    }, []);
+
+    /** Whether the consumer's audio is playing out of the element. */
+    const isRemoteAudioPlaying = useCallback(() => {
+        const remoteAudio = remoteAudioElRef.current;
+
+        return !!remoteAudio && !remoteAudio.paused && !remoteAudio.muted;
+    }, []);
+
+    /**
+     * Samples the consumer's audio level while the greeting plays. Without
+     * a running AudioContext the level can't be read, and the greeting
+     * counts as heard if the element is playing.
+     */
+    const startGreetingWatch = useCallback(() => {
+        if (greetingWatchIntervalRef.current) {
+            return;
+        }
+
+        const levels = new Uint8Array(512);
+
+        greetingWatchIntervalRef.current = setInterval(() => {
+            const greeting = greetingRef.current;
+            const analyser = remoteAnalyserRef.current;
+            const audioContext = audioContextRef.current;
+
+            if (!greeting || !analyser || audioContext?.state !== 'running') {
+                if (audioContext?.state === 'suspended') {
+                    void audioContext.resume();
+                }
+                return;
+            }
+
+            greeting.couldMeasure = true;
+            const rms = rmsOf(analyser, levels);
+            greeting.peakRms = Math.max(greeting.peakRms, rms);
+
+            if (rms > SPEECH_RMS_THRESHOLD && isRemoteAudioPlaying()) {
+                greeting.wasHeard = true;
+            }
+        }, GREETING_WATCH_INTERVAL_MS);
+    }, [isRemoteAudioPlaying]);
+
     /** The consumer picks up the phone ("Hello?"). */
     const sendGreeting = useCallback(() => {
+        greetingRef.current = {
+            attempt: (greetingRef.current?.attempt ?? 0) + 1,
+            itemId: null,
+            wasHeard: false,
+            couldMeasure: false,
+            peakRms: 0,
+        };
+        startGreetingWatch();
         sendEvent({ type: 'response.create' });
-        greetingMicTimeoutRef.current = setTimeout(
+        greetingMicTimeoutRef.current ??= setTimeout(
             releaseMic,
             GREETING_MIC_HOLD_MAX_MS,
         );
-    }, [releaseMic, sendEvent]);
+    }, [releaseMic, sendEvent, startGreetingWatch]);
+
+    /**
+     * Once the greeting has played: the mic goes on if it was heard.
+     * Otherwise it's taken back out of the conversation (and the chat) and
+     * asked for again, and after the last try the trainee is asked to turn
+     * the audio on, which greets again.
+     */
+    const checkGreeting = useCallback(() => {
+        if (greetingCheckTimeoutRef.current) {
+            clearTimeout(greetingCheckTimeoutRef.current);
+            greetingCheckTimeoutRef.current = null;
+        }
+
+        const greeting = greetingRef.current;
+
+        // Wait for whatever is still being said to finish.
+        if (!greeting || endingRef.current || responseActiveRef.current) {
+            return;
+        }
+
+        const wasHeard =
+            greeting.wasHeard ||
+            (!greeting.couldMeasure && isRemoteAudioPlaying());
+
+        if (import.meta.env.DEV) {
+            // eslint-disable-next-line no-console
+            console.debug('[roleplay-call] greeting checked', {
+                ...greeting,
+                wasHeard,
+                isRemoteAudioPlaying: isRemoteAudioPlaying(),
+                audioContextState: audioContextRef.current?.state,
+            });
+        }
+
+        if (wasHeard) {
+            greetingRef.current = null;
+            stopGreetingWatch();
+            releaseMic();
+            return;
+        }
+
+        // eslint-disable-next-line no-console
+        console.warn('[roleplay-call] greeting was not heard', {
+            attempt: greeting.attempt,
+            peakRms: greeting.peakRms,
+        });
+
+        if (greeting.itemId) {
+            discardedItemsRef.current.add(greeting.itemId);
+            sendEvent({
+                type: 'conversation.item.delete',
+                item_id: greeting.itemId,
+            });
+
+            const lineId = consumerLineIdsRef.current.get(greeting.itemId);
+
+            if (lineId !== undefined) {
+                removeLine(lineId);
+            }
+        }
+
+        if (greeting.attempt < GREETING_MAX_ATTEMPTS) {
+            remoteAudioElRef.current?.play().catch(() => {
+                // The next check finds it still silent.
+            });
+            sendGreeting();
+            return;
+        }
+
+        greetingRef.current = null;
+        stopGreetingWatch();
+        pendingGreetingRef.current = true;
+        setAudioBlocked(true);
+    }, [
+        isRemoteAudioPlaying,
+        releaseMic,
+        removeLine,
+        sendEvent,
+        sendGreeting,
+        stopGreetingWatch,
+    ]);
+
+    const scheduleGreetingCheck = useCallback(
+        (delayMs: number) => {
+            if (greetingCheckTimeoutRef.current) {
+                clearTimeout(greetingCheckTimeoutRef.current);
+            }
+
+            greetingCheckTimeoutRef.current = setTimeout(
+                checkGreeting,
+                delayMs,
+            );
+        },
+        [checkGreeting],
+    );
 
     /**
      * Retries the consumer's audio from a click, which browsers allow even
@@ -524,6 +719,7 @@ export function useRoleplayRealtimeCall({
             return;
         }
 
+        void audioContextRef.current?.resume();
         remoteAudio
             .play()
             .then(() => {
@@ -545,6 +741,7 @@ export function useRoleplayRealtimeCall({
             hangupTimeoutRef,
             transferTimeoutRef,
             greetingMicTimeoutRef,
+            greetingCheckTimeoutRef,
         ]) {
             if (timeout.current) {
                 clearTimeout(timeout.current);
@@ -560,6 +757,7 @@ export function useRoleplayRealtimeCall({
             elapsedIntervalRef,
             hangupWatchIntervalRef,
             levelWatchIntervalRef,
+            greetingWatchIntervalRef,
         ]) {
             if (interval.current) {
                 clearInterval(interval.current);
@@ -597,6 +795,8 @@ export function useRoleplayRealtimeCall({
         recordingDestinationRef.current = null;
         specialistOnLineRef.current = false;
         pendingGreetingRef.current = false;
+        greetingRef.current = null;
+        discardedItemsRef.current.clear();
         pendingTranscriptsRef.current.clear();
         awaitingFinalCommitRef.current = false;
         wiredRemoteStreamIdRef.current = null;
@@ -929,7 +1129,12 @@ export function useRoleplayRealtimeCall({
                 }
                 cancelledByUsRef.current = false;
 
-                releaseMic();
+                // The mic stays off until a greeting has been heard.
+                if (greetingRef.current) {
+                    scheduleGreetingCheck(GREETING_STOPPED_TAIL_MS);
+                } else {
+                    releaseMic();
+                }
                 return;
             }
 
@@ -952,13 +1157,18 @@ export function useRoleplayRealtimeCall({
 
             if (type === 'response.output_item.added') {
                 const item = event.item as
-                    { id?: string; type?: string } | undefined;
+                    | { id?: string; type?: string }
+                    | undefined;
 
                 if (item?.id) {
                     itemStartedAtRef.current.set(item.id, secondsIntoCall());
 
                     if (item.type === 'message') {
                         playingItemIdRef.current = item.id;
+
+                        if (greetingRef.current) {
+                            greetingRef.current.itemId ??= item.id;
+                        }
                     }
                 }
                 return;
@@ -989,6 +1199,11 @@ export function useRoleplayRealtimeCall({
                     spokeSinceAgentTurnRef.current = true;
                 }
 
+                // Backstop for a greeting whose audio never starts or stops.
+                if (greetingRef.current && !greetingCheckTimeoutRef.current) {
+                    scheduleGreetingCheck(GREETING_DONE_GRACE_MS);
+                }
+
                 // A tool-only response leaves the model waiting on our
                 // outputs; ask it to carry on unless it just hung up or
                 // already answered this turn (that's what made it repeat).
@@ -1016,6 +1231,11 @@ export function useRoleplayRealtimeCall({
                 secondsIntoCall();
 
             if (ASSISTANT_TRANSCRIPT_EVENTS.has(type)) {
+                // A greeting that was never heard, transcribed late.
+                if (itemId && discardedItemsRef.current.has(itemId)) {
+                    return;
+                }
+
                 const lineId = appendLine('consumer', text, at);
 
                 if (itemId) {
@@ -1059,6 +1279,7 @@ export function useRoleplayRealtimeCall({
             markCutOff,
             msIntoCall,
             releaseMic,
+            scheduleGreetingCheck,
             secondsIntoCall,
             sendEvent,
         ],
@@ -1359,13 +1580,14 @@ export function useRoleplayRealtimeCall({
 
             const remotePlayback = remoteAudioPlayback(
                 remoteAudio,
+                pc,
                 '[roleplay-call]',
             );
 
             pc.ontrack = (trackEvent) => {
                 const remoteStream = trackEvent.streams[0];
                 remoteAudio.srcObject = remoteStream;
-                remotePlayback.play();
+                remotePlayback.play(trackEvent.track);
 
                 if (wiredRemoteStreamIdRef.current === remoteStream.id) {
                     return;

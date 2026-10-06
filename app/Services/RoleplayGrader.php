@@ -308,18 +308,23 @@ class RoleplayGrader
     }
 
     /**
-     * Every agent line that tells the lead they qualify or are entitled
-     * must hedge with "may" or "maybe".
+     * Every sentence that tells the lead they qualify or are entitled must
+     * hedge with "may" or "maybe". Claims about other people, like the
+     * script's "MANY people ... ACTUALLY qualify" rebuttal, don't need to.
      *
      * @param  list<Line>  $agent
      */
     private function hedgesBenefitClaims(array $agent): bool
     {
         foreach ($agent as $line) {
-            $text = $this->normalize($line['text']);
+            foreach (preg_split('/[.!?]+/', $this->normalize($line['text'])) ?: [] as $sentence) {
+                $isAboutTheLead = (bool) preg_match('/\b(you|youre|your)\b/', $sentence);
 
-            if (preg_match('/\b(qualify|qualifies|entitled|eligible)\b/', $text) && ! preg_match('/\bmay(be)?\b/', $text)) {
-                return false;
+                if ($isAboutTheLead
+                    && preg_match('/\b(qualify|qualifies|entitled|eligible)\b/', $sentence)
+                    && ! preg_match('/\bmay(be)?\b/', $sentence)) {
+                    return false;
+                }
             }
         }
 

@@ -33,7 +33,7 @@ class RoleplayCallController extends Controller
         abort_if($claimed === 0, 409);
 
         return response()->json($client->createEphemeralSession(
-            $roleplaySession->voice?->value,
+            $roleplaySession->consumerVoice()?->value,
             $prompt->sessionConfig($roleplaySession),
         ));
     }

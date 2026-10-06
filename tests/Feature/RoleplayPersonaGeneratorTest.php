@@ -65,6 +65,7 @@ test('each lead always gets the same voice, matching their gender', function () 
         $voicesByLead[$lead['name']][$generated['voice']->value] = true;
 
         expect($generated['voice']->gender())->toBe($lead['gender'])
+            ->and($generated['voice']->isClearlyGendered())->toBeTrue()
             ->and($lead)->not->toHaveKey('voice');
     }
 

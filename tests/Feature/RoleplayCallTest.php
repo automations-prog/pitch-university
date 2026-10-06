@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RealtimeVoice;
 use App\Jobs\GradeRoleplayDelivery;
 use App\Models\RoleplaySession;
 use App\Models\User;
@@ -145,20 +146,50 @@ test('minting a call session sends the persona prompt, tools and voice to OpenAI
     Http::assertSent(fn ($request) => $request->url() === CLIENT_SECRETS_URL
         && $request['session']['audio']['output']['voice'] === 'coral'
         && str_contains($request['session']['instructions'], 'Dorothy Miller')
+        && str_contains($request['session']['instructions'], 'You are a woman.')
         && str_contains($request['session']['instructions'], 'Has VA health care')
         && collect($request['session']['tools'])->pluck('name')->all() === ['patience_changed', 'objection_raised', 'objection_resolved', 'hang_up']
         && $request['session']['audio']['input']['turn_detection']['eagerness'] === 'high'
         && $request['session']['audio']['input']['noise_reduction'] === ['type' => 'near_field']);
 });
 
-test('minting falls back to the configured voice when the session has none', function () {
+test('minting uses a voice of the lead\'s gender when the session has none', function () {
     config(['services.openai.realtime_voice' => 'verse']);
     fakeClientSecrets();
     $session = RoleplaySession::factory()->create(['voice' => null]);
 
     $this->actingAs($session->user)->postJson(route('roleplay.call.session', $session))->assertOk();
 
-    Http::assertSent(fn ($request) => $request['session']['audio']['output']['voice'] === 'verse');
+    Http::assertSent(fn ($request) => $request['session']['audio']['output']['voice'] === 'marin'
+        && str_contains($request['session']['instructions'], 'You are a woman.'));
+});
+
+test('minting replaces a voice that could pass for either gender', function (RealtimeVoice $voice) {
+    fakeClientSecrets();
+    $session = RoleplaySession::factory()->create(['voice' => $voice]);
+
+    $this->actingAs($session->user)->postJson(route('roleplay.call.session', $session))->assertOk();
+
+    Http::assertSent(fn ($request) => $request['session']['audio']['output']['voice'] === 'marin');
+})->with([RealtimeVoice::Sage, RealtimeVoice::Alloy]);
+
+test('minting never gives a lead a voice of the other gender', function () {
+    fakeClientSecrets();
+    $session = RoleplaySession::factory()->create([
+        'persona' => [
+            'lead' => ['name' => 'Harold Jenkins', 'state' => 'Ohio', 'zip' => '43204', 'gender' => 'male'],
+            'objections' => ['busy'],
+            'quirk' => null,
+            'patience' => 8,
+            'dq_trap' => null,
+        ],
+        'voice' => RealtimeVoice::Coral,
+    ]);
+
+    $this->actingAs($session->user)->postJson(route('roleplay.call.session', $session))->assertOk();
+
+    Http::assertSent(fn ($request) => $request['session']['audio']['output']['voice'] === 'cedar'
+        && str_contains($request['session']['instructions'], 'You are a man.'));
 });
 
 test('a session can only be minted once', function () {
