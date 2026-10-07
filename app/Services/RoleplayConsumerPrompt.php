@@ -35,9 +35,13 @@ class RoleplayConsumerPrompt
                         'type' => 'semantic_vad',
                         'eagerness' => $session->level >= 4 ? 'high' : 'medium',
                         // Any mic noise the VAD took for speech cut the
-                        // consumer off. The page cuts them off itself once
-                        // the trainee's voice is held long enough.
+                        // consumer off. They now keep talking when talked
+                        // over, as on a real call; the page logs it.
                         'interrupt_response' => false,
+                        // The VAD also ends "turns" on noise, which the
+                        // consumer answered. The page asks for a reply only
+                        // when the trainee's mic shows real speech.
+                        'create_response' => false,
                     ],
                     // Room noise or the consumer's own voice echoing into
                     // the mic read as the trainee talking, which cut the

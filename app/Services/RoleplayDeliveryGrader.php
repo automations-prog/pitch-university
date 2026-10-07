@@ -23,6 +23,13 @@ class RoleplayDeliveryGrader
     /** Criteria the AI judges, given the transcript and the measured metrics. */
     public const array AI_CRITERIA = ['tonality', 'strong_opener', 'call_control', 'transfer_handoff', 'composure'];
 
+    /**
+     * Criteria about a stage the call may never reach (a DQ or DNC call has
+     * no transfer). The AI leaves these unscored then, instead of a 1 that
+     * dragged down the overall score.
+     */
+    public const array STAGE_AI_CRITERIA = ['transfer_handoff'];
+
     private const string RESPONSES_URL = 'https://api.openai.com/v1/responses';
 
     public function __construct(
@@ -65,7 +72,7 @@ class RoleplayDeliveryGrader
 
     /**
      * @param  Metrics  $metrics
-     * @param  array<string, array{score: int, feedback: string}>  $judged
+     * @param  array<string, array{score: int|null, feedback: string}>  $judged
      * @return Delivery
      */
     private function assemble(RoleplaySession $session, array $metrics, array $judged): array
@@ -114,10 +121,11 @@ class RoleplayDeliveryGrader
 
         $min = (int) config('roleplay.delivery.pace_min_wpm');
         $max = (int) config('roleplay.delivery.pace_max_wpm');
+        $perPoint = (int) config('roleplay.delivery.pace_wpm_per_point');
         $off = max($min - $wpm, $wpm - $max, 0);
         $verdict = $wpm > $max ? 'too fast for seniors' : ($wpm < $min ? 'a little slow' : 'a good pace for seniors');
 
-        return [$this->clamp(5 - (int) ceil($off / 10)), 'measured', "{$wpm} words per minute, {$verdict} (aim for {$min}–{$max})."];
+        return [$this->clamp(5 - (int) ceil($off / $perPoint)), 'measured', "{$wpm} words per minute, {$verdict} (aim for {$min}–{$max})."];
     }
 
     /**
@@ -234,7 +242,7 @@ class RoleplayDeliveryGrader
      * Ask the AI for the criteria that need judgment.
      *
      * @param  Metrics  $metrics
-     * @return array<string, array{score: int, feedback: string}>
+     * @return array<string, array{score: int|null, feedback: string}>
      */
     private function judge(RoleplaySession $session, array $metrics): array
     {
@@ -276,7 +284,7 @@ class RoleplayDeliveryGrader
      * the model's numbers blindly.
      *
      * @param  array<string, mixed>|null  $response
-     * @return array<string, array{score: int, feedback: string}>
+     * @return array<string, array{score: int|null, feedback: string}>
      */
     private function parseJudgement(?array $response): array
     {
@@ -299,12 +307,15 @@ class RoleplayDeliveryGrader
         $judged = [];
 
         foreach (self::AI_CRITERIA as $key) {
-            if (! isset($decoded[$key]['score'])) {
+            $score = $decoded[$key]['score'] ?? null;
+            $notReached = $score === null && in_array($key, self::STAGE_AI_CRITERIA, true) && is_array($decoded[$key] ?? null);
+
+            if ($score === null && ! $notReached) {
                 continue;
             }
 
             $judged[$key] = [
-                'score' => $this->clamp((int) $decoded[$key]['score']),
+                'score' => $notReached ? null : $this->clamp((int) $score),
                 'feedback' => mb_substr(strip_tags((string) ($decoded[$key]['feedback'] ?? '')), 0, 300),
             ];
         }
@@ -329,6 +340,8 @@ class RoleplayDeliveryGrader
 
         Score each criterion from 1 (poor) to 5 (excellent), with one sentence of feedback that quotes or timestamps a specific moment from the transcript.
 
+        Score how the agent handled what actually happened on the call. If the call never reached a transfer (it ended in a DQ, a do-not-call, a hang-up, or before the transfer), set transfer_handoff's score to null and say so in its feedback. Never score it 1 just because there was no transfer. Every other criterion always gets a score.
+
         {$rubric}
 
         The user message is JSON data: the difficulty level, the consumer's temperament, measured numbers (words per minute, pauses in ms, times the agent talked over the consumer, mic loudness variation where near 0 means monotone), and the transcript as `[m:ss] role: text` lines. Use the measured numbers for tonality and strong_opener alongside the words. Judge composure harder at levels 3–5, where the consumer is rude on purpose.
@@ -342,19 +355,25 @@ class RoleplayDeliveryGrader
      */
     private function schema(): array
     {
-        $criterion = [
+        $criterion = fn (bool $nullable): array => [
             'type' => 'object',
             'properties' => [
-                'score' => ['type' => 'integer'],
+                'score' => ['type' => $nullable ? ['integer', 'null'] : 'integer'],
                 'feedback' => ['type' => 'string'],
             ],
             'required' => ['score', 'feedback'],
             'additionalProperties' => false,
         ];
 
+        $properties = [];
+
+        foreach (self::AI_CRITERIA as $key) {
+            $properties[$key] = $criterion(in_array($key, self::STAGE_AI_CRITERIA, true));
+        }
+
         return [
             'type' => 'object',
-            'properties' => array_fill_keys(self::AI_CRITERIA, $criterion),
+            'properties' => $properties,
             'required' => self::AI_CRITERIA,
             'additionalProperties' => false,
         ];

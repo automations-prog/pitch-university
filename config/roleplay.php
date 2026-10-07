@@ -14,9 +14,12 @@ return [
     */
 
     'delivery' => [
-        // Words per minute while the agent is speaking. Seniors need it clear.
+        // Words per minute while the agent is speaking. Seniors need it clear,
+        // but confident top reps run fast, so the top end is generous. Each
+        // this many wpm outside the range costs one point.
         'pace_min_wpm' => 130,
-        'pace_max_wpm' => 160,
+        'pace_max_wpm' => 185,
+        'pace_wpm_per_point' => 15,
 
         // Silence between the consumer finishing and the agent starting.
         'dead_air_ms' => 3000,

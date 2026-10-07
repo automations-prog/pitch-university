@@ -99,21 +99,36 @@ const AGENT_TRANSCRIPT_FAILED_EVENT =
 
 const SPECIALIST_LINE = 'Hi, who am I speaking with?';
 
-const CUT_OFF_SUFFIX = '… (cut off)';
-
-const CUT_OFF_MESSAGE = 'The customer got cut off. You talked over them.';
-
 /**
- * The server VAD no longer interrupts the consumer (`interrupt_response`
- * is off): a call-floor mic hears noise the VAD takes for speech. Once it
- * hears the trainee start, the mic must be this loud for this long in
- * total before the consumer is cut off; a quiet stretch this long resets
- * it, so coughs, typing and chatter nearby don't add up.
+ * The consumer is never cut off (`interrupt_response` is off): they keep
+ * talking when the trainee talks over them, as on a real call. It still
+ * counts as talking over them once the mic is this loud for this long in
+ * total; a quiet stretch this long resets it, so coughs, typing and
+ * chatter nearby don't add up.
  */
 const BARGE_IN_RMS_THRESHOLD = 0.05;
 const BARGE_IN_HOLD_MS = 600;
 const BARGE_IN_QUIET_RESET_MS = 400;
-const BARGE_IN_WATCH_INTERVAL_MS = 50;
+
+/**
+ * The consumer only answers turns that were real speech (`create_response`
+ * is off): the VAD also ends "turns" on a click, a breath or room noise,
+ * which got transcribed as "Good." or "Oh." and answered. A turn counts
+ * once the mic was above this level for this long in total; anything less
+ * is deleted from the conversation and the transcript.
+ *
+ * The VAD's speech_started reaches the page well after the trainee starts,
+ * often after a short "Hello?" is over, so the mic is sampled all call
+ * and each turn is checked from this long before speech_started arrived.
+ */
+const AGENT_TURN_RMS_THRESHOLD = 0.02;
+const AGENT_TURN_MIN_LOUD_MS = 200;
+const AGENT_TURN_LOOKBACK_MS = 1_500;
+const AGENT_TURN_WATCH_INTERVAL_MS = 50;
+
+/** Tags the replies we ask for, so an error can be traced back to one. */
+const REPLY_EVENT_ID_PREFIX = 'reply_';
+const ACTIVE_RESPONSE_ERROR_CODE = 'conversation_already_has_active_response';
 
 const TRANSFER_STARTED_MESSAGE =
     "(The caller is transferring you to a Medicare specialist and you can hear it ringing. The specialist hasn't picked up yet. While you wait, chat casually with the caller: answer their small talk in a sentence or two, like the weather or your day. Don't raise new objections and don't hang up.)";
@@ -303,11 +318,18 @@ export function useRoleplayRealtimeCall({
     const cutOffItemsRef = useRef(new Set<string>());
     /** The consumer item whose audio is playing now. */
     const playingItemIdRef = useRef<string | null>(null);
-    /** When the playing item's audio started, to truncate it where it was cut. */
-    const playbackStartedAtRef = useRef<number | null>(null);
-    const bargeInWatchIntervalRef = useRef<ReturnType<
+    /** Samples the trainee's mic for as long as the VAD hears them. */
+    const agentTurnWatchIntervalRef = useRef<ReturnType<
         typeof setInterval
     > | null>(null);
+    /** When (ms into the call) the trainee's mic was loud, oldest first. */
+    const micLoudAtRef = useRef<number[]>([]);
+    /** When speech_started arrived for the trainee's current turn. */
+    const agentTurnStartedAtRef = useRef<number | null>(null);
+    /** Whether the trainee's last turn was real speech, not noise. */
+    const agentTurnIsSpeechRef = useRef(true);
+    /** A turn ended while the consumer was still answering; reply after. */
+    const replyPendingRef = useRef(false);
     /** Set when we cancel the consumer ourselves, so it isn't an interruption. */
     const cancelledByUsRef = useRef(false);
     /** A consumer response is being generated, so there's one to cancel. */
@@ -466,6 +488,19 @@ export function useRoleplayRealtimeCall({
                 }
             }
 
+            if (mic) {
+                const loudAt = micLoudAtRef.current;
+
+                if (rmsOf(mic, micLevels) > AGENT_TURN_RMS_THRESHOLD) {
+                    loudAt.push(now);
+                }
+
+                // A turn is checked back to its start; a minute is plenty.
+                while (loudAt.length > 0 && loudAt[0] < now - 60_000) {
+                    loudAt.shift();
+                }
+            }
+
             if (mic && agentSpeechStartRef.current !== null) {
                 loudnessSum += rmsOf(mic, micLevels);
                 loudnessCount++;
@@ -508,27 +543,12 @@ export function useRoleplayRealtimeCall({
     );
 
     /**
-     * The consumer's audio was cut before the line finished playing. The
-     * transcript arrives whole and early, so mark the line instead of
-     * showing words the trainee never heard as if they had.
+     * The consumer's audio was cut before the line finished playing, or the
+     * trainee talked over it. Recorded so the same one isn't counted
+     * twice; the transcript line is left as it is.
      */
     const markCutOff = useCallback((itemId: string) => {
         cutOffItemsRef.current.add(itemId);
-        const lineId = consumerLineIdsRef.current.get(itemId);
-
-        if (lineId === undefined) {
-            return;
-        }
-
-        transcriptRef.current = transcriptRef.current.map((line) =>
-            line.id === lineId && !line.text.endsWith(CUT_OFF_SUFFIX)
-                ? {
-                      ...line,
-                      text: `${line.text.replace(/[.!?]+$/, '')}${CUT_OFF_SUFFIX}`,
-                  }
-                : line,
-        );
-        setTranscript(transcriptRef.current);
     }, []);
 
     const sendEvent = useCallback((event: Record<string, unknown>) => {
@@ -580,92 +600,111 @@ export function useRoleplayRealtimeCall({
         return !!remoteAudio && !remoteAudio.paused && !remoteAudio.muted;
     }, []);
 
-    const stopBargeInWatch = useCallback(() => {
-        if (bargeInWatchIntervalRef.current) {
-            clearInterval(bargeInWatchIntervalRef.current);
-            bargeInWatchIntervalRef.current = null;
+    const stopAgentTurnWatch = useCallback(() => {
+        if (agentTurnWatchIntervalRef.current) {
+            clearInterval(agentTurnWatchIntervalRef.current);
+            agentTurnWatchIntervalRef.current = null;
         }
     }, []);
 
-    /** The trainee talked over the consumer: stop their line where it is. */
-    const interruptConsumer = useCallback(
+    /**
+     * Whether the turn that just ended was the trainee talking, from how
+     * long their mic was loud since shortly before it started.
+     */
+    const isAgentTurnSpeech = useCallback((): boolean => {
+        const startedAt = agentTurnStartedAtRef.current;
+
+        // Can't measure the mic, or missed the start: trust the VAD.
+        if (!micAnalyserRef.current || startedAt === null) {
+            return true;
+        }
+
+        const since = startedAt - AGENT_TURN_LOOKBACK_MS;
+        const loudSamples = micLoudAtRef.current.filter(
+            (at) => at >= since,
+        ).length;
+
+        return loudSamples * LEVEL_WATCH_INTERVAL_MS >= AGENT_TURN_MIN_LOUD_MS;
+    }, []);
+
+    /**
+     * The trainee talked over the consumer, who keeps talking. Logged once
+     * per line for the barge-in score.
+     */
+    const recordTalkOver = useCallback(
         (itemId: string) => {
             markCutOff(itemId);
             logEvent({ type: 'consumer_interrupted', at: msIntoCall() });
-            appendLine('system', CUT_OFF_MESSAGE, secondsIntoCall());
-
-            if (responseActiveRef.current) {
-                sendEvent({ type: 'response.cancel' });
-            }
-            sendEvent({ type: 'output_audio_buffer.clear' });
-            sendEvent({
-                type: 'conversation.item.truncate',
-                item_id: itemId,
-                content_index: 0,
-                audio_end_ms:
-                    playbackStartedAtRef.current === null
-                        ? 0
-                        : Date.now() - playbackStartedAtRef.current,
-            });
         },
-        [
-            appendLine,
-            logEvent,
-            markCutOff,
-            msIntoCall,
-            secondsIntoCall,
-            sendEvent,
-        ],
+        [logEvent, markCutOff, msIntoCall],
     );
 
     /**
-     * The server VAD heard the trainee start while the consumer talks.
-     * Only cut the consumer off once the mic shows sustained speech.
+     * The server VAD heard the trainee start: counts it as talking over the
+     * consumer once the trainee is loud for long enough.
      */
-    const startBargeInWatch = useCallback(() => {
-        const itemId = playingItemIdRef.current;
+    const startAgentTurnWatch = useCallback(() => {
+        stopAgentTurnWatch();
         const mic = micAnalyserRef.current;
 
-        if (
-            bargeInWatchIntervalRef.current ||
-            !itemId ||
-            !mic ||
-            cutOffItemsRef.current.has(itemId) ||
-            !isRemoteAudioPlaying()
-        ) {
+        if (!mic) {
             return;
         }
 
         const levels = new Uint8Array(512);
-        let loudMs = 0;
-        let quietMs = 0;
+        let talkOverLoudMs = 0;
+        let talkOverQuietMs = 0;
 
-        bargeInWatchIntervalRef.current = setInterval(() => {
+        agentTurnWatchIntervalRef.current = setInterval(() => {
+            const rms = rmsOf(mic, levels);
+            const itemId = playingItemIdRef.current;
+
             if (
-                playingItemIdRef.current !== itemId ||
-                cutOffItemsRef.current.has(itemId)
+                !itemId ||
+                cutOffItemsRef.current.has(itemId) ||
+                !isRemoteAudioPlaying()
             ) {
-                stopBargeInWatch();
+                talkOverLoudMs = 0;
+                talkOverQuietMs = 0;
                 return;
             }
 
-            if (rmsOf(mic, levels) > BARGE_IN_RMS_THRESHOLD) {
-                loudMs += BARGE_IN_WATCH_INTERVAL_MS;
-                quietMs = 0;
+            if (rms > BARGE_IN_RMS_THRESHOLD) {
+                talkOverLoudMs += AGENT_TURN_WATCH_INTERVAL_MS;
+                talkOverQuietMs = 0;
             } else {
-                quietMs += BARGE_IN_WATCH_INTERVAL_MS;
+                talkOverQuietMs += AGENT_TURN_WATCH_INTERVAL_MS;
 
-                if (quietMs >= BARGE_IN_QUIET_RESET_MS) {
-                    loudMs = 0;
+                if (talkOverQuietMs >= BARGE_IN_QUIET_RESET_MS) {
+                    talkOverLoudMs = 0;
                 }
             }
 
-            if (loudMs >= BARGE_IN_HOLD_MS) {
-                stopBargeInWatch();
-                interruptConsumer(itemId);
+            if (talkOverLoudMs >= BARGE_IN_HOLD_MS) {
+                talkOverLoudMs = 0;
+                recordTalkOver(itemId);
             }
-        }, BARGE_IN_WATCH_INTERVAL_MS);
-    }, [interruptConsumer, isRemoteAudioPlaying, stopBargeInWatch]);
+        }, AGENT_TURN_WATCH_INTERVAL_MS);
+    }, [isRemoteAudioPlaying, recordTalkOver, stopAgentTurnWatch]);
+
+    /**
+     * Asks the consumer to answer the trainee, after the line they're on
+     * if they're still answering.
+     */
+    const requestReply = useCallback(() => {
+        if (responseActiveRef.current) {
+            replyPendingRef.current = true;
+            return;
+        }
+
+        // Set now, not on `response.created`, so a second turn in between
+        // waits instead of asking twice.
+        responseActiveRef.current = true;
+        sendEvent({
+            type: 'response.create',
+            event_id: `${REPLY_EVENT_ID_PREFIX}${Date.now()}`,
+        });
+    }, [sendEvent]);
 
     /**
      * Samples the consumer's audio level while the greeting plays. Without
@@ -864,7 +903,7 @@ export function useRoleplayRealtimeCall({
             hangupWatchIntervalRef,
             levelWatchIntervalRef,
             greetingWatchIntervalRef,
-            bargeInWatchIntervalRef,
+            agentTurnWatchIntervalRef,
         ]) {
             if (interval.current) {
                 clearInterval(interval.current);
@@ -897,8 +936,11 @@ export function useRoleplayRealtimeCall({
         consumerLineIdsRef.current.clear();
         cutOffItemsRef.current.clear();
         playingItemIdRef.current = null;
-        playbackStartedAtRef.current = null;
         cancelledByUsRef.current = false;
+        micLoudAtRef.current = [];
+        agentTurnStartedAtRef.current = null;
+        agentTurnIsSpeechRef.current = true;
+        replyPendingRef.current = false;
         micSenderRef.current = null;
         recordingDestinationRef.current = null;
         specialistOnLineRef.current = false;
@@ -1131,8 +1173,21 @@ export function useRoleplayRealtimeCall({
             }
 
             if (type === 'error') {
-                const code = (event.error as { code?: string } | undefined)
-                    ?.code;
+                const error = event.error as
+                    | { code?: string; event_id?: string }
+                    | undefined;
+                const code = error?.code;
+
+                // A reply we asked for was refused: don't stay marked as
+                // answering, or the consumer would never answer again. If
+                // they already are, answer once that response is done.
+                if (error?.event_id?.startsWith(REPLY_EVENT_ID_PREFIX)) {
+                    if (code === ACTIVE_RESPONSE_ERROR_CODE) {
+                        replyPendingRef.current = true;
+                    } else {
+                        responseActiveRef.current = false;
+                    }
+                }
 
                 if (awaitingFinalCommitRef.current) {
                     awaitingFinalCommitRef.current = false;
@@ -1151,10 +1206,31 @@ export function useRoleplayRealtimeCall({
                 typeof event.item_id === 'string' ? event.item_id : null;
 
             if (type === 'input_audio_buffer.committed' && itemId) {
-                spokeSinceAgentTurnRef.current = false;
                 awaitingFinalCommitRef.current = false;
+
+                // Noise, not the trainee: the consumer never hears it.
+                // (End call's final commit is kept; nobody answers it.)
+                if (!endingRef.current && !agentTurnIsSpeechRef.current) {
+                    discardedItemsRef.current.add(itemId);
+                    sendEvent({
+                        type: 'conversation.item.delete',
+                        item_id: itemId,
+                    });
+                    return;
+                }
+
+                spokeSinceAgentTurnRef.current = false;
                 pendingTranscriptsRef.current.add(itemId);
                 itemStartedAtRef.current.set(itemId, secondsIntoCall());
+
+                if (!endingRef.current && !pendingEndReasonRef.current) {
+                    requestReply();
+                }
+                return;
+            }
+
+            // A noise turn, transcribed (or not) after it was deleted.
+            if (itemId && discardedItemsRef.current.has(itemId)) {
                 return;
             }
 
@@ -1188,8 +1264,8 @@ export function useRoleplayRealtimeCall({
                 return;
             }
 
-            // The consumer's audio was cut short; normally by us, when the
-            // trainee talked over them (already marked), so not logged twice.
+            // The consumer's audio was cut short (not by the VAD, which no
+            // longer interrupts them); counted once with any talk-over.
             if (type === 'conversation.item.truncated') {
                 // eslint-disable-next-line no-console
                 console.warn('[roleplay-call] consumer cut off', event);
@@ -1200,14 +1276,7 @@ export function useRoleplayRealtimeCall({
                         type: 'consumer_interrupted',
                         at: msIntoCall(),
                     });
-                    appendLine('system', CUT_OFF_MESSAGE, secondsIntoCall());
                 }
-                return;
-            }
-
-            // WebRTC only: the consumer's audio started playing.
-            if (type === 'output_audio_buffer.started') {
-                playbackStartedAtRef.current = Date.now();
                 return;
             }
 
@@ -1218,8 +1287,6 @@ export function useRoleplayRealtimeCall({
             ) {
                 const playingItemId = playingItemIdRef.current;
                 playingItemIdRef.current = null;
-                playbackStartedAtRef.current = null;
-                stopBargeInWatch();
 
                 // Cut mid-line without a truncation event: still mark it.
                 if (
@@ -1233,7 +1300,6 @@ export function useRoleplayRealtimeCall({
                         type: 'consumer_interrupted',
                         at: msIntoCall(),
                     });
-                    appendLine('system', CUT_OFF_MESSAGE, secondsIntoCall());
                 }
                 cancelledByUsRef.current = false;
 
@@ -1248,21 +1314,28 @@ export function useRoleplayRealtimeCall({
 
             if (type === 'input_audio_buffer.speech_started') {
                 agentSpeechStartRef.current ??= msIntoCall();
-                startBargeInWatch();
+                agentTurnStartedAtRef.current ??= msIntoCall();
+                startAgentTurnWatch();
                 return;
             }
 
             if (type === 'input_audio_buffer.speech_stopped') {
-                stopBargeInWatch();
+                stopAgentTurnWatch();
+                agentTurnIsSpeechRef.current = isAgentTurnSpeech();
+                agentTurnStartedAtRef.current = null;
 
-                if (agentSpeechStartRef.current !== null) {
+                // Noise isn't the trainee talking, for delivery scoring too.
+                if (
+                    agentSpeechStartRef.current !== null &&
+                    agentTurnIsSpeechRef.current
+                ) {
                     logEvent({
                         type: 'agent_speech',
                         start: agentSpeechStartRef.current,
                         end: msIntoCall(),
                     });
-                    agentSpeechStartRef.current = null;
                 }
+                agentSpeechStartRef.current = null;
                 return;
             }
 
@@ -1315,6 +1388,19 @@ export function useRoleplayRealtimeCall({
                     scheduleGreetingCheck(GREETING_DONE_GRACE_MS);
                 }
 
+                // The trainee spoke while the consumer was answering.
+                if (replyPendingRef.current) {
+                    replyPendingRef.current = false;
+
+                    if (
+                        !pendingEndReasonRef.current &&
+                        !specialistOnLineRef.current
+                    ) {
+                        requestReply();
+                        return;
+                    }
+                }
+
                 // A tool-only response leaves the model waiting on our
                 // outputs; ask it to carry on unless it just hung up or
                 // already answered this turn (that's what made it repeat).
@@ -1324,7 +1410,7 @@ export function useRoleplayRealtimeCall({
                     !spokeSinceAgentTurnRef.current &&
                     !pendingEndReasonRef.current
                 ) {
-                    sendEvent({ type: 'response.create' });
+                    requestReply();
                 }
                 return;
             }
@@ -1351,11 +1437,6 @@ export function useRoleplayRealtimeCall({
 
                 if (itemId) {
                     consumerLineIdsRef.current.set(itemId, lineId);
-
-                    // Cut off before its transcript arrived.
-                    if (cutOffItemsRef.current.has(itemId)) {
-                        markCutOff(itemId);
-                    }
                 }
 
                 // The consumer is talking but the trainee can't hear it:
@@ -1392,9 +1473,11 @@ export function useRoleplayRealtimeCall({
             releaseMic,
             scheduleGreetingCheck,
             secondsIntoCall,
+            isAgentTurnSpeech,
+            requestReply,
             sendEvent,
-            startBargeInWatch,
-            stopBargeInWatch,
+            startAgentTurnWatch,
+            stopAgentTurnWatch,
         ],
     );
 

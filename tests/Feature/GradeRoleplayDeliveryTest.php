@@ -75,6 +75,46 @@ test('AI scores outside 1 to 5 are clamped', function (int $returned, int $saved
     expect(collect($session->fresh()->delivery['criteria'])->firstWhere('key', 'tonality')['score'])->toBe($saved);
 })->with([[99, 5], [-3, 1]]);
 
+test('a call that never reached a transfer leaves the handoff unscored and out of the overall', function () {
+    fakeGraderReply([...aiScores(4), 'transfer_handoff' => ['score' => null, 'feedback' => 'The call ended in a DQ, so there was no transfer.']]);
+    $session = gradableSession();
+
+    GradeRoleplayDelivery::dispatchSync($session);
+
+    $delivery = $session->fresh()->delivery;
+    $criteria = collect($delivery['criteria'])->keyBy('key');
+    $scores = $criteria->pluck('score')->filter(fn (?int $score): bool => $score !== null);
+
+    expect($criteria['transfer_handoff'])->toMatchArray(['score' => null, 'source' => 'ai', 'feedback' => 'The call ended in a DQ, so there was no transfer.'])
+        ->and($delivery['overall'])->toBe(round($scores->sum() / $scores->count(), 1));
+});
+
+test('only the stage criteria may come back unscored', function () {
+    fakeGraderReply([...aiScores(4), 'tonality' => ['score' => null, 'feedback' => 'No idea.']]);
+    $session = gradableSession();
+
+    GradeRoleplayDelivery::dispatchSync($session);
+
+    expect(collect($session->fresh()->delivery['criteria'])->firstWhere('key', 'tonality'))
+        ->toMatchArray(['score' => null, 'feedback' => 'Not scored: the AI review did not finish.']);
+
+    Http::assertSent(fn (Request $request) => $request['text']['format']['schema']['properties']['transfer_handoff']['properties']['score']['type'] === ['integer', 'null']
+        && $request['text']['format']['schema']['properties']['tonality']['properties']['score']['type'] === 'integer');
+});
+
+test('pace allows confident fast talkers and loses a point per 15 wpm outside the range', function (int $wpm, int $score) {
+    fakeGraderReply(aiScores(4));
+    $session = gradableSession();
+    $session->update([
+        'transcript' => '[0:01] agent: '.trim(str_repeat('word ', $wpm)),
+        'events' => [['type' => 'agent_speech', 'start' => 0, 'end' => 60_000]],
+    ]);
+
+    GradeRoleplayDelivery::dispatchSync($session);
+
+    expect(collect($session->fresh()->delivery['criteria'])->firstWhere('key', 'pace')['score'])->toBe($score);
+})->with([[175, 5], [185, 5], [200, 4], [230, 2], [120, 4]]);
+
 test('when the AI review fails the measured criteria are still saved', function () {
     Http::fake([RESPONSES_URL => Http::response([], 500)]);
     $session = gradableSession();
