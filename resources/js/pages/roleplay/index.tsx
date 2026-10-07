@@ -219,6 +219,7 @@ function LiveRoleplaySession({
     const { levels, scriptSections } = useRoleplayContent();
     const call = useRoleplayRealtimeCall({
         sessionId: persona.id,
+        level: persona.level,
         startingPatience: persona.patience,
     });
     const [scriptStep, setScriptStep] = useState(0);

@@ -150,9 +150,8 @@ test('minting a call session sends the persona prompt, tools and voice to OpenAI
         && str_contains($request['session']['instructions'], 'You are a woman.')
         && str_contains($request['session']['instructions'], 'Has VA health care')
         && collect($request['session']['tools'])->pluck('name')->all() === ['patience_changed', 'objection_raised', 'objection_resolved', 'hang_up']
-        && $request['session']['audio']['input']['turn_detection']['eagerness'] === 'high'
-        && $request['session']['audio']['input']['turn_detection']['interrupt_response'] === false
-        && $request['session']['audio']['input']['turn_detection']['create_response'] === false
+        && array_key_exists('turn_detection', $request['session']['audio']['input'])
+        && $request['session']['audio']['input']['turn_detection'] === null
         && $request['session']['audio']['input']['noise_reduction'] === ['type' => 'near_field']);
 });
 

@@ -28,24 +28,16 @@ class RoleplayConsumerPrompt
             'tool_choice' => 'auto',
             'audio' => [
                 'input' => [
-                    // Same setting the screening call landed on after live
-                    // testing; levels 4–5 use `high` so the consumer
-                    // interrupts, matching their temperament.
-                    'turn_detection' => [
-                        'type' => 'semantic_vad',
-                        'eagerness' => $session->level >= 4 ? 'high' : 'medium',
-                        // Any mic noise the VAD took for speech cut the
-                        // consumer off. They now keep talking when talked
-                        // over, as on a real call; the page logs it.
-                        'interrupt_response' => false,
-                        // The VAD also ends "turns" on noise, which the
-                        // consumer answered. The page asks for a reply only
-                        // when the trainee's mic shows real speech.
-                        'create_response' => false,
-                    ],
+                    // Off: on WebRTC, OpenAI's turn detection cleared the
+                    // consumer's audio whenever it took any sound on the
+                    // trainee's mic for speech, even with
+                    // `interrupt_response` off. The page finds the
+                    // trainee's turns from the mic level and asks for each
+                    // reply itself (`use-roleplay-realtime-call.ts`).
+                    'turn_detection' => null,
                     // Room noise or the consumer's own voice echoing into
-                    // the mic read as the trainee talking, which cut the
-                    // consumer off mid-sentence. Filtered before the VAD.
+                    // the mic read as the trainee talking. Filtered before
+                    // transcription.
                     'noise_reduction' => ['type' => 'near_field'],
                     // A disfluent prompt nudges transcription to keep the
                     // trainee's "um"s and "uh"s, which delivery scoring

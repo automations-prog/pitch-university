@@ -19,10 +19,11 @@ import {
  * `use-realtime-call.ts` (the screening call); see the notes there. What's
  * different:
  *
- * - The prompt, tools and turn detection are minted into the session
- *   server-side (`RoleplayConsumerPrompt`), so this sends no
- *   `session.update`. The persona's outcome and DQ trap never ship with
- *   the page.
+ * - The prompt and tools are minted into the session server-side
+ *   (`RoleplayConsumerPrompt`), so this sends no `session.update`. The
+ *   persona's outcome and DQ trap never ship with the page.
+ * - OpenAI's turn detection is off: the page finds the trainee's turns
+ *   from the mic level, commits them and asks for each reply itself.
  * - The model reports patience and objections through function calls,
  *   answered with `function_call_output` so it keeps going.
  * - Nothing is uploaded when the call ends. The trainee codes the call
@@ -43,7 +44,8 @@ const HANGUP_SAFETY_TIMEOUT_MS = 20_000;
 /**
  * Delivery scoring (AI_CALL_PLAN §9) needs when each side was talking.
  * The consumer's speech is read off the remote audio level (independent of
- * event names); the agent's from the server VAD's speech_started/stopped.
+ * event names); the agent's from the page's own turn detection (see
+ * `AGENT_TURN_RMS_THRESHOLD`).
  */
 const LEVEL_WATCH_INTERVAL_MS = 100;
 const SPEECH_RMS_THRESHOLD = 0.02;
@@ -100,31 +102,39 @@ const AGENT_TRANSCRIPT_FAILED_EVENT =
 const SPECIALIST_LINE = 'Hi, who am I speaking with?';
 
 /**
- * The consumer is never cut off (`interrupt_response` is off): they keep
- * talking when the trainee talks over them, as on a real call. It still
- * counts as talking over them once the mic is this loud for this long in
- * total; a quiet stretch this long resets it, so coughs, typing and
- * chatter nearby don't add up.
+ * OpenAI's turn detection is off (`turn_detection: null`): on WebRTC it
+ * cleared the consumer's audio the moment it took any sound on the
+ * trainee's mic for speech, even with `interrupt_response` off. The page
+ * finds the trainee's turns from the mic level instead, so the consumer is
+ * never cut off and noise never reaches the model.
+ *
+ * A turn starts once the mic is above the threshold for `START_MS` (a
+ * quiet stretch of `START_QUIET_RESET_MS` resets that), and ends after
+ * `END_SILENCE_MS` of quiet. It's committed and answered only if the mic
+ * was loud for `MIN_LOUD_MS` in total; anything less was noise and is
+ * cleared. While the trainee is quiet, the buffer is cleared every
+ * `IDLE_CLEAR_MS` so room noise doesn't pile up into their next turn.
+ */
+const AGENT_TURN_RMS_THRESHOLD = 0.02;
+const AGENT_TURN_START_MS = 200;
+const AGENT_TURN_START_QUIET_RESET_MS = 300;
+const AGENT_TURN_END_SILENCE_MS = 800;
+/** Levels 4–5 answer sooner, so the consumer feels pushier. */
+const PUSHY_AGENT_TURN_END_SILENCE_MS = 500;
+const PUSHY_MIN_LEVEL = 4;
+const AGENT_TURN_MIN_LOUD_MS = 300;
+const AGENT_TURN_IDLE_CLEAR_MS = 2_000;
+const AGENT_TURN_WATCH_INTERVAL_MS = 50;
+
+/**
+ * The trainee talking over the consumer, who keeps talking, as on a real
+ * call. It counts once the mic is this loud for this long in total; a
+ * quiet stretch this long resets it, so coughs, typing and chatter nearby
+ * don't add up.
  */
 const BARGE_IN_RMS_THRESHOLD = 0.05;
 const BARGE_IN_HOLD_MS = 600;
 const BARGE_IN_QUIET_RESET_MS = 400;
-
-/**
- * The consumer only answers turns that were real speech (`create_response`
- * is off): the VAD also ends "turns" on a click, a breath or room noise,
- * which got transcribed as "Good." or "Oh." and answered. A turn counts
- * once the mic was above this level for this long in total; anything less
- * is deleted from the conversation and the transcript.
- *
- * The VAD's speech_started reaches the page well after the trainee starts,
- * often after a short "Hello?" is over, so the mic is sampled all call
- * and each turn is checked from this long before speech_started arrived.
- */
-const AGENT_TURN_RMS_THRESHOLD = 0.02;
-const AGENT_TURN_MIN_LOUD_MS = 200;
-const AGENT_TURN_LOOKBACK_MS = 1_500;
-const AGENT_TURN_WATCH_INTERVAL_MS = 50;
 
 /** Tags the replies we ask for, so an error can be traced back to one. */
 const REPLY_EVENT_ID_PREFIX = 'reply_';
@@ -250,9 +260,11 @@ function parseArguments(raw: string | undefined): Record<string, unknown> {
 
 export function useRoleplayRealtimeCall({
     sessionId,
+    level,
     startingPatience,
 }: {
     sessionId: number;
+    level: number;
     startingPatience: number;
 }) {
     const [phase, setPhase] = useState<RoleplayCallPhase>('idle');
@@ -318,16 +330,17 @@ export function useRoleplayRealtimeCall({
     const cutOffItemsRef = useRef(new Set<string>());
     /** The consumer item whose audio is playing now. */
     const playingItemIdRef = useRef<string | null>(null);
-    /** Samples the trainee's mic for as long as the VAD hears them. */
+    /** Samples the trainee's mic all call to find their turns. */
     const agentTurnWatchIntervalRef = useRef<ReturnType<
         typeof setInterval
     > | null>(null);
-    /** When (ms into the call) the trainee's mic was loud, oldest first. */
-    const micLoudAtRef = useRef<number[]>([]);
-    /** When speech_started arrived for the trainee's current turn. */
-    const agentTurnStartedAtRef = useRef<number | null>(null);
-    /** Whether the trainee's last turn was real speech, not noise. */
-    const agentTurnIsSpeechRef = useRef(true);
+    /** The trainee's turn in progress, if they're talking. */
+    const agentTurnRef = useRef<{
+        loudMs: number;
+        lastLoudAt: number;
+    } | null>(null);
+    /** The mic is off the call for good (the specialist joined). */
+    const micOffCallRef = useRef(false);
     /** A turn ended while the consumer was still answering; reply after. */
     const replyPendingRef = useRef(false);
     /** Set when we cancel the consumer ourselves, so it isn't an interruption. */
@@ -488,19 +501,6 @@ export function useRoleplayRealtimeCall({
                 }
             }
 
-            if (mic) {
-                const loudAt = micLoudAtRef.current;
-
-                if (rmsOf(mic, micLevels) > AGENT_TURN_RMS_THRESHOLD) {
-                    loudAt.push(now);
-                }
-
-                // A turn is checked back to its start; a minute is plenty.
-                while (loudAt.length > 0 && loudAt[0] < now - 60_000) {
-                    loudAt.shift();
-                }
-            }
-
             if (mic && agentSpeechStartRef.current !== null) {
                 loudnessSum += rmsOf(mic, micLevels);
                 loudnessCount++;
@@ -608,26 +608,6 @@ export function useRoleplayRealtimeCall({
     }, []);
 
     /**
-     * Whether the turn that just ended was the trainee talking, from how
-     * long their mic was loud since shortly before it started.
-     */
-    const isAgentTurnSpeech = useCallback((): boolean => {
-        const startedAt = agentTurnStartedAtRef.current;
-
-        // Can't measure the mic, or missed the start: trust the VAD.
-        if (!micAnalyserRef.current || startedAt === null) {
-            return true;
-        }
-
-        const since = startedAt - AGENT_TURN_LOOKBACK_MS;
-        const loudSamples = micLoudAtRef.current.filter(
-            (at) => at >= since,
-        ).length;
-
-        return loudSamples * LEVEL_WATCH_INTERVAL_MS >= AGENT_TURN_MIN_LOUD_MS;
-    }, []);
-
-    /**
      * The trainee talked over the consumer, who keeps talking. Logged once
      * per line for the barge-in score.
      */
@@ -640,8 +620,38 @@ export function useRoleplayRealtimeCall({
     );
 
     /**
-     * The server VAD heard the trainee start: counts it as talking over the
-     * consumer once the trainee is loud for long enough.
+     * Ends the trainee's turn: real speech is committed (and answered once
+     * it's transcribed), noise is cleared so the model never hears it.
+     */
+    const endAgentTurn = useCallback(() => {
+        const turn = agentTurnRef.current;
+        agentTurnRef.current = null;
+
+        if (!turn) {
+            return;
+        }
+
+        const startedAt = agentSpeechStartRef.current;
+        agentSpeechStartRef.current = null;
+
+        if (turn.loudMs < AGENT_TURN_MIN_LOUD_MS) {
+            sendEvent({ type: 'input_audio_buffer.clear' });
+            return;
+        }
+
+        if (startedAt !== null) {
+            logEvent({
+                type: 'agent_speech',
+                start: startedAt,
+                end: turn.lastLoudAt,
+            });
+        }
+        sendEvent({ type: 'input_audio_buffer.commit' });
+    }, [logEvent, sendEvent]);
+
+    /**
+     * Finds the trainee's turns from their mic level, all call, and counts
+     * it as talking over the consumer once they're loud for long enough.
      */
     const startAgentTurnWatch = useCallback(() => {
         stopAgentTurnWatch();
@@ -652,11 +662,75 @@ export function useRoleplayRealtimeCall({
         }
 
         const levels = new Uint8Array(512);
+        const endSilenceMs =
+            level >= PUSHY_MIN_LEVEL
+                ? PUSHY_AGENT_TURN_END_SILENCE_MS
+                : AGENT_TURN_END_SILENCE_MS;
+        let startLoudMs = 0;
+        let startQuietMs = 0;
+        let firstLoudAt: number | null = null;
+        let quietSince: number | null = null;
         let talkOverLoudMs = 0;
         let talkOverQuietMs = 0;
 
         agentTurnWatchIntervalRef.current = setInterval(() => {
+            const now = msIntoCall();
+
+            // Not on the call yet (greeting), or no longer (specialist).
+            if (
+                endingRef.current ||
+                heldMicRef.current !== null ||
+                micOffCallRef.current
+            ) {
+                endAgentTurn();
+                startLoudMs = 0;
+                firstLoudAt = null;
+                return;
+            }
+
             const rms = rmsOf(mic, levels);
+            const isLoud = rms > AGENT_TURN_RMS_THRESHOLD;
+            const turn = agentTurnRef.current;
+
+            if (turn) {
+                if (isLoud) {
+                    turn.loudMs += AGENT_TURN_WATCH_INTERVAL_MS;
+                    turn.lastLoudAt = now;
+                } else if (now - turn.lastLoudAt >= endSilenceMs) {
+                    endAgentTurn();
+                    quietSince = now;
+                }
+            } else if (isLoud) {
+                firstLoudAt ??= now;
+                startLoudMs += AGENT_TURN_WATCH_INTERVAL_MS;
+                startQuietMs = 0;
+                quietSince = null;
+
+                if (startLoudMs >= AGENT_TURN_START_MS) {
+                    agentTurnRef.current = {
+                        loudMs: startLoudMs,
+                        lastLoudAt: now,
+                    };
+                    agentSpeechStartRef.current = firstLoudAt;
+                    startLoudMs = 0;
+                    firstLoudAt = null;
+                }
+            } else {
+                startQuietMs += AGENT_TURN_WATCH_INTERVAL_MS;
+
+                if (startQuietMs >= AGENT_TURN_START_QUIET_RESET_MS) {
+                    startLoudMs = 0;
+                    firstLoudAt = null;
+                }
+
+                quietSince ??= now;
+
+                if (now - quietSince >= AGENT_TURN_IDLE_CLEAR_MS) {
+                    sendEvent({ type: 'input_audio_buffer.clear' });
+                    quietSince = now;
+                }
+            }
+
             const itemId = playingItemIdRef.current;
 
             if (
@@ -685,7 +759,15 @@ export function useRoleplayRealtimeCall({
                 recordTalkOver(itemId);
             }
         }, AGENT_TURN_WATCH_INTERVAL_MS);
-    }, [isRemoteAudioPlaying, recordTalkOver, stopAgentTurnWatch]);
+    }, [
+        endAgentTurn,
+        isRemoteAudioPlaying,
+        level,
+        msIntoCall,
+        recordTalkOver,
+        sendEvent,
+        stopAgentTurnWatch,
+    ]);
 
     /**
      * Asks the consumer to answer the trainee, after the line they're on
@@ -937,9 +1019,8 @@ export function useRoleplayRealtimeCall({
         cutOffItemsRef.current.clear();
         playingItemIdRef.current = null;
         cancelledByUsRef.current = false;
-        micLoudAtRef.current = [];
-        agentTurnStartedAtRef.current = null;
-        agentTurnIsSpeechRef.current = true;
+        agentTurnRef.current = null;
+        micOffCallRef.current = false;
         replyPendingRef.current = false;
         micSenderRef.current = null;
         recordingDestinationRef.current = null;
@@ -990,21 +1071,26 @@ export function useRoleplayRealtimeCall({
                 return;
             }
             endingRef.current = true;
-
-            flushSpeech();
+            stopAgentTurnWatch();
 
             // Nothing more is heard or said: silence both directions, then
-            // commit whatever the trainee said since their last turn.
+            // commit the turn the trainee was in the middle of, if any.
             localStreamRef.current?.getAudioTracks().forEach((track) => {
                 track.enabled = false;
             });
             if (remoteAudioElRef.current) {
                 remoteAudioElRef.current.muted = true;
             }
-            if (dataChannelRef.current?.readyState === 'open') {
-                awaitingFinalCommitRef.current = true;
-                sendEvent({ type: 'input_audio_buffer.commit' });
+            if (
+                dataChannelRef.current?.readyState === 'open' &&
+                agentTurnRef.current
+            ) {
+                awaitingFinalCommitRef.current =
+                    agentTurnRef.current.loudMs >= AGENT_TURN_MIN_LOUD_MS;
+                endAgentTurn();
             }
+
+            flushSpeech();
 
             const recordingStopped = new Promise<void>((resolve) => {
                 const recorder = recorderRef.current;
@@ -1029,7 +1115,13 @@ export function useRoleplayRealtimeCall({
                 setPhase('ended');
             });
         },
-        [cleanup, flushSpeech, sendEvent, waitForFinalTranscripts],
+        [
+            cleanup,
+            endAgentTurn,
+            flushSpeech,
+            stopAgentTurnWatch,
+            waitForFinalTranscripts,
+        ],
     );
 
     /**
@@ -1207,18 +1299,6 @@ export function useRoleplayRealtimeCall({
 
             if (type === 'input_audio_buffer.committed' && itemId) {
                 awaitingFinalCommitRef.current = false;
-
-                // Noise, not the trainee: the consumer never hears it.
-                // (End call's final commit is kept; nobody answers it.)
-                if (!endingRef.current && !agentTurnIsSpeechRef.current) {
-                    discardedItemsRef.current.add(itemId);
-                    sendEvent({
-                        type: 'conversation.item.delete',
-                        item_id: itemId,
-                    });
-                    return;
-                }
-
                 spokeSinceAgentTurnRef.current = false;
                 pendingTranscriptsRef.current.add(itemId);
                 itemStartedAtRef.current.set(itemId, secondsIntoCall());
@@ -1226,11 +1306,6 @@ export function useRoleplayRealtimeCall({
                 if (!endingRef.current && !pendingEndReasonRef.current) {
                     requestReply();
                 }
-                return;
-            }
-
-            // A noise turn, transcribed (or not) after it was deleted.
-            if (itemId && discardedItemsRef.current.has(itemId)) {
                 return;
             }
 
@@ -1309,33 +1384,6 @@ export function useRoleplayRealtimeCall({
                 } else {
                     releaseMic();
                 }
-                return;
-            }
-
-            if (type === 'input_audio_buffer.speech_started') {
-                agentSpeechStartRef.current ??= msIntoCall();
-                agentTurnStartedAtRef.current ??= msIntoCall();
-                startAgentTurnWatch();
-                return;
-            }
-
-            if (type === 'input_audio_buffer.speech_stopped') {
-                stopAgentTurnWatch();
-                agentTurnIsSpeechRef.current = isAgentTurnSpeech();
-                agentTurnStartedAtRef.current = null;
-
-                // Noise isn't the trainee talking, for delivery scoring too.
-                if (
-                    agentSpeechStartRef.current !== null &&
-                    agentTurnIsSpeechRef.current
-                ) {
-                    logEvent({
-                        type: 'agent_speech',
-                        start: agentSpeechStartRef.current,
-                        end: msIntoCall(),
-                    });
-                }
-                agentSpeechStartRef.current = null;
                 return;
             }
 
@@ -1473,11 +1521,8 @@ export function useRoleplayRealtimeCall({
             releaseMic,
             scheduleGreetingCheck,
             secondsIntoCall,
-            isAgentTurnSpeech,
             requestReply,
             sendEvent,
-            startAgentTurnWatch,
-            stopAgentTurnWatch,
         ],
     );
 
@@ -1582,6 +1627,7 @@ export function useRoleplayRealtimeCall({
         );
 
         void micSenderRef.current?.replaceTrack(null);
+        micOffCallRef.current = true;
         specialistOnLineRef.current = true;
         if (responseActiveRef.current) {
             cancelledByUsRef.current = true;
@@ -1834,6 +1880,7 @@ export function useRoleplayRealtimeCall({
                     callStartedAtRef.current = Date.now();
                     eventsRef.current = [];
                     startLevelWatch();
+                    startAgentTurnWatch();
                     setPhase('active');
                     elapsedIntervalRef.current = setInterval(
                         () => setElapsedSeconds(secondsIntoCall()),
@@ -1895,6 +1942,7 @@ export function useRoleplayRealtimeCall({
         secondsIntoCall,
         sendGreeting,
         sessionId,
+        startAgentTurnWatch,
         startLevelWatch,
     ]);
 
