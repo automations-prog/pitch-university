@@ -32,6 +32,14 @@ test('each objection resolves to the rebuttal the doc quotes from the script', f
         ->and($script->objection('who_are_you')['consumerLines'][3])->toBe('Why the f*** are you calling me?');
 });
 
+test('the trainer-set objection weights override the call data', function () {
+    $script = new RoleplayScript;
+
+    expect($script->objection('already_have_it')['weight'])->toBe(300)
+        ->and($script->objection('already_have_it')['consumerLines'])->toContain('I get the U Card with United.')
+        ->and($script->objection('what_benefits')['weight'])->toBe(20);
+});
+
 test('the parser fails loudly when a heading it depends on is renamed', function (string $file, string $from, string $to) {
     $directory = storage_path('framework/testing/roleplay-'.uniqid());
     File::copyDirectory(base_path('ai-roleplay'), $directory);

@@ -11,16 +11,20 @@ greatest-hits reel.
   meets it; the loss rate buys extra reps on the objections that actually cost money.
 - **Min level** — the difficulty tier this objection unlocks at.
 
+Two weights are set by the training team rather than the formula: `already_have_it` is raised to 300 (it's the
+objection reps face most, usually at the very first Parts A and B question, and training hammers it), and
+`what_benefits` is cut to 20 (the call data overcounts it; it rarely comes up as a real objection on the phone).
+
 Note what the data says: `transfer_no` (refusing the transfer) is only the 10th most common objection but kills
 **28.3%** of the calls it appears in, and plain `not_interested` kills 24%. The two highest-frequency ones
 (`already_have_it`, `what_benefits`) are nearly harmless. That gap is why weight is not just frequency.
 
 |   # | id                        | What the consumer means                              | Seen % | Lost % | Weight | Min level |
 | --: | ------------------------- | ---------------------------------------------------- | -----: | -----: | -----: | --------: |
-|   1 | `already_have_it`         | I've already got it                                  |   16.3 |    3.5 |    168 |         1 |
+|   1 | `already_have_it`         | I've already got it                                  |   16.3 |    3.5 |    300 |         1 |
 |   2 | `busy`                    | I'm busy / call me back                              |    8.3 |   14.9 |    105 |         1 |
 |   3 | `dont_want_change`        | I don't want to change / I like my plan              |    8.2 |    4.9 |     89 |         2 |
-|   4 | `what_benefits`           | What benefits? What's the card for?                  |    7.8 |    0.6 |     79 |         1 |
+|   4 | `what_benefits`           | What benefits? What's the card for?                  |    7.8 |    0.6 |     20 |         1 |
 |   5 | `who_are_you`             | Who are you with? / Why are you calling me?          |    7.1 |    1.0 |     72 |         1 |
 |   6 | `never_received_card`     | I never got any card                                 |    6.9 |    0.0 |     69 |         1 |
 |   7 | `doubts_eligibility`      | I don't think I qualify for that                     |    6.6 |    4.2 |     72 |         1 |
@@ -51,12 +55,16 @@ script file — never hardcoded), and what the two model agents say in their own
 
 ### `already_have_it` — I've already got it
 
-_Seen on 16.3% of real calls · loses 3.5% of them · draw weight 168 · unlocks at level 1_
+_Seen on 16.3% of real calls · loses 3.5% of them · draw weight 300 · unlocks at level 1_
 
 **Consumer says (level 1 → 5):**
 
 - “I already have that card.”
 - “I already get all that stuff.”
+- “I get my OTC card with Humana.”
+- “I already signed up with Aetna for 2026.”
+- “I get the U Card with United.”
+- “I get the Flex Card with Humana.”
 
 **Official rebuttal (script):** Oh no, I understand. We were just calling about the increases. There have been some NEW allowances and NEW increases that have JUST become available.
 
@@ -101,7 +109,7 @@ _Seen on 8.2% of real calls · loses 4.9% of them · draw weight 89 · unlocks a
 
 ### `what_benefits` — What benefits? What's the card for?
 
-_Seen on 7.8% of real calls · loses 0.6% of them · draw weight 79 · unlocks at level 1_
+_Seen on 7.8% of real calls · loses 0.6% of them · draw weight 20 · unlocks at level 1_
 
 **Consumer says (level 1 → 5):**
 

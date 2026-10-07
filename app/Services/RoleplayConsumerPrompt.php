@@ -190,10 +190,18 @@ class RoleplayConsumerPrompt
                 continue;
             }
 
-            $phrasing = self::consumerLineFor($objection['consumerLines'], $level);
-            $when = $id === 'transfer_no' ? ' Raise this one only when they ask you to give the specialist a few minutes.' : '';
+            // Reps hear "I already got it" with all kinds of carriers and
+            // cards, so this one offers every phrasing instead of one per level.
+            $phrasing = $id === 'already_have_it'
+                ? 'Say one of these, picking one carrier and card and sticking with it: '.implode(' / ', array_map(fn (string $line): string => "\"{$line}\"", $objection['consumerLines']))
+                : 'Say something like: "'.self::consumerLineFor($objection['consumerLines'], $level).'"';
+            $when = match ($id) {
+                'transfer_no' => ' Raise this one only when they ask you to give the specialist a few minutes.',
+                'already_have_it' => ' Raise this one right when the caller first asks if you still have Medicare Parts A and B. If they ask again after answering it, confirm you have Parts A and B.',
+                default => '',
+            };
 
-            $lines[] = "- `{$id}`: {$objection['meaning']}. Say something like: \"{$phrasing}\"{$when}";
+            $lines[] = "- `{$id}`: {$objection['meaning']}. {$phrasing}{$when}";
         }
 
         return implode("\n", $lines);

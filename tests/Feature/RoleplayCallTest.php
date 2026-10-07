@@ -4,6 +4,7 @@ use App\Enums\RealtimeVoice;
 use App\Jobs\GradeRoleplayDelivery;
 use App\Models\RoleplaySession;
 use App\Models\User;
+use App\Services\RoleplayConsumerPrompt;
 use App\Services\RoleplayGrader;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -152,6 +153,21 @@ test('minting a call session sends the persona prompt, tools and voice to OpenAI
         && $request['session']['audio']['input']['turn_detection']['eagerness'] === 'high'
         && $request['session']['audio']['input']['turn_detection']['interrupt_response'] === false
         && $request['session']['audio']['input']['noise_reduction'] === ['type' => 'near_field']);
+});
+
+test('the consumer raises "I already got it" at the Parts A and B question with any carrier line', function () {
+    $session = RoleplaySession::factory()->create([
+        'level' => 1,
+        'persona' => [...RoleplaySession::factory()->raw()['persona'], 'objections' => ['already_have_it', 'busy']],
+    ]);
+
+    $instructions = app(RoleplayConsumerPrompt::class)->instructions($session);
+
+    expect($instructions)
+        ->toContain('Raise this one right when the caller first asks if you still have Medicare Parts A and B.')
+        ->toContain('"I get my OTC card with Humana." / "I already signed up with Aetna for 2026."')
+        ->toContain('"I get the Flex Card with Humana."')
+        ->toContain('- `busy`: I\'m busy / call me back. Say something like: "');
 });
 
 test('minting uses a voice of the lead\'s gender when the session has none', function () {
