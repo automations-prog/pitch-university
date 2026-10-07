@@ -34,6 +34,10 @@ class RoleplayConsumerPrompt
                     'turn_detection' => [
                         'type' => 'semantic_vad',
                         'eagerness' => $session->level >= 4 ? 'high' : 'medium',
+                        // Any mic noise the VAD took for speech cut the
+                        // consumer off. The page cuts them off itself once
+                        // the trainee's voice is held long enough.
+                        'interrupt_response' => false,
                     ],
                     // Room noise or the consumer's own voice echoing into
                     // the mic read as the trainee talking, which cut the

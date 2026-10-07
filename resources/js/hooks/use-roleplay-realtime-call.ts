@@ -101,6 +101,20 @@ const SPECIALIST_LINE = 'Hi, who am I speaking with?';
 
 const CUT_OFF_SUFFIX = '… (cut off)';
 
+const CUT_OFF_MESSAGE = 'The customer got cut off. You talked over them.';
+
+/**
+ * The server VAD no longer interrupts the consumer (`interrupt_response`
+ * is off): a call-floor mic hears noise the VAD takes for speech. Once it
+ * hears the trainee start, the mic must be this loud for this long in
+ * total before the consumer is cut off; a quiet stretch this long resets
+ * it, so coughs, typing and chatter nearby don't add up.
+ */
+const BARGE_IN_RMS_THRESHOLD = 0.05;
+const BARGE_IN_HOLD_MS = 600;
+const BARGE_IN_QUIET_RESET_MS = 400;
+const BARGE_IN_WATCH_INTERVAL_MS = 50;
+
 const TRANSFER_STARTED_MESSAGE =
     "(The caller is transferring you to a Medicare specialist and you can hear it ringing. The specialist hasn't picked up yet. While you wait, chat casually with the caller: answer their small talk in a sentence or two, like the weather or your day. Don't raise new objections and don't hang up.)";
 
@@ -289,6 +303,11 @@ export function useRoleplayRealtimeCall({
     const cutOffItemsRef = useRef(new Set<string>());
     /** The consumer item whose audio is playing now. */
     const playingItemIdRef = useRef<string | null>(null);
+    /** When the playing item's audio started, to truncate it where it was cut. */
+    const playbackStartedAtRef = useRef<number | null>(null);
+    const bargeInWatchIntervalRef = useRef<ReturnType<
+        typeof setInterval
+    > | null>(null);
     /** Set when we cancel the consumer ourselves, so it isn't an interruption. */
     const cancelledByUsRef = useRef(false);
     /** A consumer response is being generated, so there's one to cancel. */
@@ -561,6 +580,93 @@ export function useRoleplayRealtimeCall({
         return !!remoteAudio && !remoteAudio.paused && !remoteAudio.muted;
     }, []);
 
+    const stopBargeInWatch = useCallback(() => {
+        if (bargeInWatchIntervalRef.current) {
+            clearInterval(bargeInWatchIntervalRef.current);
+            bargeInWatchIntervalRef.current = null;
+        }
+    }, []);
+
+    /** The trainee talked over the consumer: stop their line where it is. */
+    const interruptConsumer = useCallback(
+        (itemId: string) => {
+            markCutOff(itemId);
+            logEvent({ type: 'consumer_interrupted', at: msIntoCall() });
+            appendLine('system', CUT_OFF_MESSAGE, secondsIntoCall());
+
+            if (responseActiveRef.current) {
+                sendEvent({ type: 'response.cancel' });
+            }
+            sendEvent({ type: 'output_audio_buffer.clear' });
+            sendEvent({
+                type: 'conversation.item.truncate',
+                item_id: itemId,
+                content_index: 0,
+                audio_end_ms:
+                    playbackStartedAtRef.current === null
+                        ? 0
+                        : Date.now() - playbackStartedAtRef.current,
+            });
+        },
+        [
+            appendLine,
+            logEvent,
+            markCutOff,
+            msIntoCall,
+            secondsIntoCall,
+            sendEvent,
+        ],
+    );
+
+    /**
+     * The server VAD heard the trainee start while the consumer talks.
+     * Only cut the consumer off once the mic shows sustained speech.
+     */
+    const startBargeInWatch = useCallback(() => {
+        const itemId = playingItemIdRef.current;
+        const mic = micAnalyserRef.current;
+
+        if (
+            bargeInWatchIntervalRef.current ||
+            !itemId ||
+            !mic ||
+            cutOffItemsRef.current.has(itemId) ||
+            !isRemoteAudioPlaying()
+        ) {
+            return;
+        }
+
+        const levels = new Uint8Array(512);
+        let loudMs = 0;
+        let quietMs = 0;
+
+        bargeInWatchIntervalRef.current = setInterval(() => {
+            if (
+                playingItemIdRef.current !== itemId ||
+                cutOffItemsRef.current.has(itemId)
+            ) {
+                stopBargeInWatch();
+                return;
+            }
+
+            if (rmsOf(mic, levels) > BARGE_IN_RMS_THRESHOLD) {
+                loudMs += BARGE_IN_WATCH_INTERVAL_MS;
+                quietMs = 0;
+            } else {
+                quietMs += BARGE_IN_WATCH_INTERVAL_MS;
+
+                if (quietMs >= BARGE_IN_QUIET_RESET_MS) {
+                    loudMs = 0;
+                }
+            }
+
+            if (loudMs >= BARGE_IN_HOLD_MS) {
+                stopBargeInWatch();
+                interruptConsumer(itemId);
+            }
+        }, BARGE_IN_WATCH_INTERVAL_MS);
+    }, [interruptConsumer, isRemoteAudioPlaying, stopBargeInWatch]);
+
     /**
      * Samples the consumer's audio level while the greeting plays. Without
      * a running AudioContext the level can't be read, and the greeting
@@ -758,6 +864,7 @@ export function useRoleplayRealtimeCall({
             hangupWatchIntervalRef,
             levelWatchIntervalRef,
             greetingWatchIntervalRef,
+            bargeInWatchIntervalRef,
         ]) {
             if (interval.current) {
                 clearInterval(interval.current);
@@ -790,6 +897,7 @@ export function useRoleplayRealtimeCall({
         consumerLineIdsRef.current.clear();
         cutOffItemsRef.current.clear();
         playingItemIdRef.current = null;
+        playbackStartedAtRef.current = null;
         cancelledByUsRef.current = false;
         micSenderRef.current = null;
         recordingDestinationRef.current = null;
@@ -1080,8 +1188,8 @@ export function useRoleplayRealtimeCall({
                 return;
             }
 
-            // The server cut the consumer's audio short because it heard
-            // the trainee (or noise on their mic) start talking.
+            // The consumer's audio was cut short; normally by us, when the
+            // trainee talked over them (already marked), so not logged twice.
             if (type === 'conversation.item.truncated') {
                 // eslint-disable-next-line no-console
                 console.warn('[roleplay-call] consumer cut off', event);
@@ -1092,12 +1200,14 @@ export function useRoleplayRealtimeCall({
                         type: 'consumer_interrupted',
                         at: msIntoCall(),
                     });
-                    appendLine(
-                        'system',
-                        'The customer got cut off. You talked, or your mic picked up noise.',
-                        secondsIntoCall(),
-                    );
+                    appendLine('system', CUT_OFF_MESSAGE, secondsIntoCall());
                 }
+                return;
+            }
+
+            // WebRTC only: the consumer's audio started playing.
+            if (type === 'output_audio_buffer.started') {
+                playbackStartedAtRef.current = Date.now();
                 return;
             }
 
@@ -1108,6 +1218,8 @@ export function useRoleplayRealtimeCall({
             ) {
                 const playingItemId = playingItemIdRef.current;
                 playingItemIdRef.current = null;
+                playbackStartedAtRef.current = null;
+                stopBargeInWatch();
 
                 // Cut mid-line without a truncation event: still mark it.
                 if (
@@ -1121,11 +1233,7 @@ export function useRoleplayRealtimeCall({
                         type: 'consumer_interrupted',
                         at: msIntoCall(),
                     });
-                    appendLine(
-                        'system',
-                        'The customer got cut off. You talked, or your mic picked up noise.',
-                        secondsIntoCall(),
-                    );
+                    appendLine('system', CUT_OFF_MESSAGE, secondsIntoCall());
                 }
                 cancelledByUsRef.current = false;
 
@@ -1140,10 +1248,13 @@ export function useRoleplayRealtimeCall({
 
             if (type === 'input_audio_buffer.speech_started') {
                 agentSpeechStartRef.current ??= msIntoCall();
+                startBargeInWatch();
                 return;
             }
 
             if (type === 'input_audio_buffer.speech_stopped') {
+                stopBargeInWatch();
+
                 if (agentSpeechStartRef.current !== null) {
                     logEvent({
                         type: 'agent_speech',
@@ -1282,6 +1393,8 @@ export function useRoleplayRealtimeCall({
             scheduleGreetingCheck,
             secondsIntoCall,
             sendEvent,
+            startBargeInWatch,
+            stopBargeInWatch,
         ],
     );
 
