@@ -29,6 +29,8 @@ class RoleplayDeliveryMetrics
         'agent_talked_on_connect' => ['at'],
         'consumer_interrupted' => ['at'],
         'agent_loudness' => ['at', 'rms'],
+        // Whether the consumer's "Hello?" was heard, to diagnose silent greetings.
+        'greeting_checked' => ['at', 'attempt', 'heard', 'heard_ms', 'peak_rms'],
     ];
 
     public const int MAX_EVENTS = 5000;
@@ -70,7 +72,7 @@ class RoleplayDeliveryMetrics
                     continue 2;
                 }
 
-                $kept[$field] = $field === 'rms' ? (float) $event[$field] : max(0, (int) $event[$field]);
+                $kept[$field] = str_ends_with($field, 'rms') ? (float) $event[$field] : max(0, (int) $event[$field]);
             }
 
             if (in_array($type, ['objection_raised', 'objection_resolved'], true)) {

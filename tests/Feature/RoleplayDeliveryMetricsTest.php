@@ -86,6 +86,16 @@ test('sanitizing drops unknown types and malformed events, and caps the count', 
         ->toHaveCount(RoleplayDeliveryMetrics::MAX_EVENTS);
 });
 
+test('greeting checks are kept so silent greetings can be diagnosed', function () {
+    $events = RoleplayDeliveryMetrics::sanitize([
+        ['type' => 'greeting_checked', 'at' => 900, 'attempt' => 1, 'heard' => 0, 'heard_ms' => 50, 'peak_rms' => 0.0213, 'extra' => 'dropped'],
+    ]);
+
+    expect($events)->toBe([
+        ['type' => 'greeting_checked', 'at' => 900, 'attempt' => 1, 'heard' => 0, 'heard_ms' => 50, 'peak_rms' => 0.0213],
+    ]);
+});
+
 test('each time the consumer was cut off counts as a barge-in, without counting the same one twice', function () {
     $events = RoleplayDeliveryMetrics::sanitize([
         ['type' => 'consumer_speech', 'start' => 0, 'end' => 4000],

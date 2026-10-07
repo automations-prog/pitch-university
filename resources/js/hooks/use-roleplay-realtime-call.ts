@@ -84,6 +84,18 @@ const GREETING_WATCH_INTERVAL_MS = 50;
 const GREETING_STOPPED_TAIL_MS = 300;
 /** After the greeting's response is done, in case its audio never starts or stops. */
 const GREETING_DONE_GRACE_MS = 3_000;
+/**
+ * The greeting counts as heard once the consumer's audio was above the
+ * speech level for this long in total; a single 50ms blip used to pass.
+ */
+const GREETING_MIN_HEARD_MS = 200;
+/**
+ * The ringback plays on its own AudioContext, closed when it ends, and a
+ * headset or speaker can take a moment to wake back up for the consumer's
+ * audio. "Hello?" is short enough to be lost entirely in that gap, so the
+ * pick-up waits this long after the ringing ends.
+ */
+const GREETING_WARMUP_MS = 700;
 
 /**
  * After End call, how long the connection stays open for the trainee's
@@ -226,7 +238,15 @@ type CallEvent =
               | 'consumer_interrupted';
           at: number;
       }
-    | { type: 'agent_loudness'; rms: number; at: number };
+    | { type: 'agent_loudness'; rms: number; at: number }
+    | {
+          type: 'greeting_checked';
+          at: number;
+          attempt: number;
+          heard: number;
+          heard_ms: number;
+          peak_rms: number;
+      };
 
 function rmsOf(
     analyser: AnalyserNode,
@@ -359,11 +379,17 @@ export function useRoleplayRealtimeCall({
     const greetingRef = useRef<{
         attempt: number;
         itemId: string | null;
-        wasHeard: boolean;
+        /** How long the consumer's audio was above the speech level. */
+        heardMs: number;
         /** Whether the consumer's audio level could be read at all. */
         couldMeasure: boolean;
         peakRms: number;
+        /** Its transcript, held back until the greeting has been heard. */
+        transcript: { text: string; at: number } | null;
     } | null>(null);
+    const greetingWarmupTimeoutRef = useRef<ReturnType<
+        typeof setTimeout
+    > | null>(null);
     const greetingWatchIntervalRef = useRef<ReturnType<
         typeof setInterval
     > | null>(null);
@@ -817,7 +843,7 @@ export function useRoleplayRealtimeCall({
             greeting.peakRms = Math.max(greeting.peakRms, rms);
 
             if (rms > SPEECH_RMS_THRESHOLD && isRemoteAudioPlaying()) {
-                greeting.wasHeard = true;
+                greeting.heardMs += GREETING_WATCH_INTERVAL_MS;
             }
         }, GREETING_WATCH_INTERVAL_MS);
     }, [isRemoteAudioPlaying]);
@@ -827,9 +853,10 @@ export function useRoleplayRealtimeCall({
         greetingRef.current = {
             attempt: (greetingRef.current?.attempt ?? 0) + 1,
             itemId: null,
-            wasHeard: false,
+            heardMs: 0,
             couldMeasure: false,
             peakRms: 0,
+            transcript: null,
         };
         startGreetingWatch();
         sendEvent({ type: 'response.create' });
@@ -840,10 +867,12 @@ export function useRoleplayRealtimeCall({
     }, [releaseMic, sendEvent, startGreetingWatch]);
 
     /**
-     * Once the greeting has played: the mic goes on if it was heard.
-     * Otherwise it's taken back out of the conversation (and the chat) and
-     * asked for again, and after the last try the trainee is asked to turn
-     * the audio on, which greets again.
+     * Once the greeting has played: if it was heard, its line goes into the
+     * chat and the mic goes on. Otherwise it's taken back out of the
+     * conversation and asked for again, and after the last try the trainee
+     * is asked to turn the audio on, which greets again. A level that
+     * couldn't be read counts as not heard: the context is resumed and the
+     * greeting retried rather than assumed.
      */
     const checkGreeting = useCallback(() => {
         if (greetingCheckTimeoutRef.current) {
@@ -859,8 +888,16 @@ export function useRoleplayRealtimeCall({
         }
 
         const wasHeard =
-            greeting.wasHeard ||
-            (!greeting.couldMeasure && isRemoteAudioPlaying());
+            greeting.couldMeasure && greeting.heardMs >= GREETING_MIN_HEARD_MS;
+
+        logEvent({
+            type: 'greeting_checked',
+            at: msIntoCall(),
+            attempt: greeting.attempt,
+            heard: wasHeard ? 1 : 0,
+            heard_ms: greeting.heardMs,
+            peak_rms: Number(greeting.peakRms.toFixed(4)),
+        });
 
         if (import.meta.env.DEV) {
             // eslint-disable-next-line no-console
@@ -875,8 +912,24 @@ export function useRoleplayRealtimeCall({
         if (wasHeard) {
             greetingRef.current = null;
             stopGreetingWatch();
+
+            if (greeting.transcript && greeting.itemId) {
+                consumerLineIdsRef.current.set(
+                    greeting.itemId,
+                    appendLine(
+                        'consumer',
+                        greeting.transcript.text,
+                        greeting.transcript.at,
+                    ),
+                );
+            }
+
             releaseMic();
             return;
+        }
+
+        if (!greeting.couldMeasure) {
+            void audioContextRef.current?.resume();
         }
 
         // eslint-disable-next-line no-console
@@ -912,7 +965,10 @@ export function useRoleplayRealtimeCall({
         pendingGreetingRef.current = true;
         setAudioBlocked(true);
     }, [
+        appendLine,
         isRemoteAudioPlaying,
+        logEvent,
+        msIntoCall,
         releaseMic,
         removeLine,
         sendEvent,
@@ -969,6 +1025,7 @@ export function useRoleplayRealtimeCall({
             transferTimeoutRef,
             greetingMicTimeoutRef,
             greetingCheckTimeoutRef,
+            greetingWarmupTimeoutRef,
         ]) {
             if (timeout.current) {
                 clearTimeout(timeout.current);
@@ -1481,10 +1538,18 @@ export function useRoleplayRealtimeCall({
                     return;
                 }
 
-                const lineId = appendLine('consumer', text, at);
+                const greeting = greetingRef.current;
 
-                if (itemId) {
-                    consumerLineIdsRef.current.set(itemId, lineId);
+                // The transcript lands before the audio plays; the
+                // greeting's line waits until it's been heard.
+                if (greeting && itemId && greeting.itemId === itemId) {
+                    greeting.transcript = { text, at };
+                } else {
+                    const lineId = appendLine('consumer', text, at);
+
+                    if (itemId) {
+                        consumerLineIdsRef.current.set(itemId, lineId);
+                    }
                 }
 
                 // The consumer is talking but the trainee can't hear it:
@@ -1887,9 +1952,16 @@ export function useRoleplayRealtimeCall({
                         1000,
                     );
 
-                    // Only say hello once the trainee can hear it.
+                    // Only say hello once the trainee can hear it, and the
+                    // output has had a moment to wake up after the ring.
                     if (isPlaying) {
-                        sendGreeting();
+                        greetingWarmupTimeoutRef.current = setTimeout(() => {
+                            greetingWarmupTimeoutRef.current = null;
+
+                            if (!endingRef.current) {
+                                sendGreeting();
+                            }
+                        }, GREETING_WARMUP_MS);
                     } else {
                         pendingGreetingRef.current = true;
                         setAudioBlocked(true);
