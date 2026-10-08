@@ -1,0 +1,434 @@
+{
+    "id": "aca_script",
+    "title": "The Script, Line by Line",
+    "summary": "Every required step in order, why each one exists, and the two that get skipped most on real calls.",
+    "est_minutes": 26,
+    "badge": {
+        "id": "badge_aca_script",
+        "name": "On Script",
+        "icon": "📜"
+    },
+    "lessons": [
+        {
+            "id": "as_1",
+            "title": "The opening",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Four things have to happen in your first fifteen seconds: the right person, your company name, the recorded-line disclosure, and what the call is about. Miss any one and the call is non-compliant before you have asked a single question.</p>"
+                },
+                {
+                    "type": "script",
+                    "title": "Opening",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Hey, am I speaking with (Customer's Name)?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Yeah, who's this?"
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "This is (your name) with America's Health on a recorded line."
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "I am calling because it shows you didn't get your subsidy allowances from the ACA program."
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(Let them respond)"
+                        }
+                    ]
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "\"On a recorded line\" is not optional",
+                    "html": "<p>4.4% of real transferred calls never said it. It takes a second and it protects you more than it protects anyone else.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>If your script shows <strong>Health Benefit Guide</strong> or <strong>Benefit Link</strong> in the DBA field, use that name instead. Nothing else about the script changes.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Which part of the opening is most often rushed on real calls?",
+                    "choices": [
+                        "The consumer's name",
+                        "The ACA mention",
+                        "The company name and recorded line, delivered as one run-on sentence",
+                        "The greeting"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "On 31% of calls the company name and recorded line are said without pausing for any response. Slow down and let them register it."
+                }
+            ]
+        },
+        {
+            "id": "as_2",
+            "title": "State, then the first coverage check",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "script",
+                    "title": "Verification",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Are you still living in (STATE) to receive it?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Yes."
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "And everything is still up to date — you have no Medicare, no Medicaid and no work insurance, correct?"
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(WAIT for the answer. This is the question the whole call turns on.)"
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "So let's see what we could do for you."
+                        }
+                    ]
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Wait for the answer",
+                    "html": "<p>On about a quarter of real calls the agent asks a required question and keeps talking. The dialer records it as asked. It verified nothing, and if that consumer turns out to have Medicaid, the transfer is wasted and the call is a compliance problem.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>The state matters because the licensed agent has to be licensed <em>in that state</em>. If they have moved, you need the new state before anything else — and that is a script line, not an improvisation.</p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "Wrong state",
+                    "response": "That could be the issue. What state can I get you help in? (edit and save on the Call Info page)",
+                    "coach_note": "Get the correct state, then carry on with the verification. It is an easy save."
+                },
+                {
+                    "type": "check",
+                    "question": "The consumer answers “I think so” when you ask about Medicare, Medicaid or work insurance. What do you do?",
+                    "choices": [
+                        "Treat it as a no and continue",
+                        "Treat it as a yes and disqualify",
+                        "Transfer and let the licensed agent sort it out",
+                        "Keep asking until you get a clear yes or no"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "“I think so” is not an answer. Use the “I don't know what I have” rebuttal to walk them through it, and if you still can't establish it, DQ."
+                }
+            ]
+        },
+        {
+            "id": "as_3",
+            "title": "Age, and why 19",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>You confirm the consumer is <strong>over the age of 19</strong>. It sits inside the double-confirm line:</p>"
+                },
+                {
+                    "type": "script",
+                    "title": "Age and double confirmation",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "You did say no Medicare, Medicaid or work insurance, and confirming you are over the age of 19?"
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(WAIT for the answer)"
+                        }
+                    ]
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Under 19 is a DNC, not a DQ",
+                    "html": "<p>Anyone under 19 goes on the do-not-call list. That is a different outcome from a disqualification, and coding it wrong is a miscode.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>This step was skipped or rushed on <strong>23.8%</strong> of real transferred calls — and “no age question” was one of the two most common findings when QA reviewed calls by hand. It is the single easiest step to get right.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer tells you they are 18. What is the outcome?",
+                    "choices": [
+                        "DNC",
+                        "DQ",
+                        "Transfer anyway — they're close enough",
+                        "Call Back when they turn 19"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Under 19 is a do-not-call, not a disqualification."
+                }
+            ]
+        },
+        {
+            "id": "as_4",
+            "title": "The double-confirm — the most skipped step on the floor",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>The script asks for no Medicare, Medicaid or work insurance <strong>twice</strong>. Once early, once again right before you ask to transfer.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "A third of transfers never got it",
+                    "html": "<p><strong>33.8%</strong> of real transferred calls skipped the second confirmation entirely. It is the most commonly missed requirement on the campaign, by a wide margin.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>It exists because of how people answer the phone. The first time you ask, they are still working out who you are and they answer on autopilot. The second time, they are actually listening — and a meaningful number of consumers correct themselves: <em>“wait, I do have Medicaid actually”</em>, <em>“my wife's work covers me”</em>.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Rolling it into one sentence does not count",
+                    "html": "<p>“No Medicare, Medicaid or work insurance and over 19, correct?” asked once is <strong>not</strong> a double confirmation. QA flags it, and so does the simulator. The second check has to be its own separate ask, after the first one was answered.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Which of these counts as a valid double confirmation?",
+                    "choices": [
+                        "Asking at the start, then asking again as its own separate question before the transfer",
+                        "Asking once, slowly and clearly",
+                        "Asking about Medicare first and Medicaid later",
+                        "Saying “no Medicare, Medicaid, work insurance, over 19, correct?” once"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Two separate asks, each with an answer. Combining everything into one sentence fails."
+                }
+            ]
+        },
+        {
+            "id": "as_5",
+            "title": "Consent, then the conference",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "script",
+                    "title": "The transfer ask",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Okay, so you verified everything. I'll quickly get the senior agent on the line and see what assistance you may receive, okay?"
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(MUST SAY OKAY — wait for it)"
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "You may hear the phone ring while I add them — I'm still right here with you."
+                        }
+                    ]
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "16.5% of transfers had no consent",
+                    "html": "<p>Almost all of them at the handoff, and the transcripts show the same shape every time: the agent asks “okay?” and clicks conference in the same breath. The words are there. The pause isn't.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Silence is not consent. Talking over your question is not consent. They have to say okay.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "You ask “…see what assistance you may receive, okay?” and the consumer says nothing. What now?",
+                    "choices": [
+                        "Conference them in — they didn't object",
+                        "Ask again and wait for a yes",
+                        "Disposition as Not Interested",
+                        "Start the script over"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "No answer is not consent. Ask again, wait, and only then conference."
+                }
+            ]
+        },
+        {
+            "id": "as_6",
+            "title": "The warm handoff",
+            "est_minutes": 3,
+            "blocks": [
+                {
+                    "type": "script",
+                    "title": "Handoff",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Hi, I have (Customer's Name) from (STATE), please take the call."
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(Wait until the agent and the client are speaking, then disconnect)"
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Two things make this a <em>warm</em> handoff: you <strong>name the state</strong>, and you <strong>wait</strong> until you hear them talking to each other. Drop early and it is not a completed transfer.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "The one step the floor is already good at",
+                    "html": "<p>93.9% of real calls do the handoff properly. It is the strongest step on the board — worth knowing that the habit is already there.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "When can you disconnect?",
+                    "choices": [
+                        "As soon as the agent picks up",
+                        "After you say the client's name",
+                        "After thirty seconds",
+                        "Once you hear the agent and the client speaking to each other"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Wait for both voices. That is what makes it warm, and what makes it a Transfer rather than a Hung-Up Transfer."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "as_q1",
+                "question": "What must be in your first few sentences?",
+                "choices": [
+                    "Your name only",
+                    "The subsidy amount",
+                    "The consumer's income",
+                    "Company name and that the call is recorded"
+                ],
+                "answer_index": 3,
+                "explanation": "Approved company name plus the recorded-line disclosure, every call.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "as_q2",
+                "question": "How many times is coverage confirmed?",
+                "choices": [
+                    "Twice, as two separate asks",
+                    "Once",
+                    "Three times",
+                    "Only if they sound unsure"
+                ],
+                "answer_index": 0,
+                "explanation": "Two separate confirmations. Combining them into one sentence does not count.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "as_q3",
+                "question": "What age do you confirm?",
+                "choices": [
+                    "18+",
+                    "21+",
+                    "19+",
+                    "No age check"
+                ],
+                "answer_index": 2,
+                "explanation": "Over the age of 19. Under 19 is a DNC.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "as_q4",
+                "question": "Which step is skipped most often on real transferred calls?",
+                "choices": [
+                    "The warm handoff",
+                    "The state confirmation",
+                    "The second coverage confirmation",
+                    "The greeting"
+                ],
+                "answer_index": 2,
+                "explanation": "33.8% of transferred calls skipped it — the most missed requirement on the campaign.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "as_q5",
+                "question": "The consumer says nothing after your transfer ask. What is that?",
+                "choices": [
+                    "Consent",
+                    "Not consent — ask again",
+                    "A Dead Air disposition",
+                    "A reason to DQ"
+                ],
+                "answer_index": 1,
+                "explanation": "Verbal consent means they say okay.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "as_q6",
+                "question": "What makes a handoff warm?",
+                "choices": [
+                    "Naming the state and waiting until agent and client are speaking",
+                    "Being friendly",
+                    "Staying on the whole call",
+                    "Telling them an agent will call back"
+                ],
+                "answer_index": 0,
+                "explanation": "Name the state, wait for both voices, then drop.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "as_q7",
+                "question": "You forgot the recorded-line disclosure and the consumer is ready to transfer. What do you do?",
+                "choices": [
+                    "Transfer — they're ready",
+                    "Do not transfer; the call is non-compliant without it",
+                    "Say it after the transfer",
+                    "Ask the licensed agent to say it"
+                ],
+                "answer_index": 1,
+                "explanation": "If a required step is missed, do not transfer.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "as_q8",
+                "question": "The consumer has moved to a different state. What happens?",
+                "choices": [
+                    "DQ them",
+                    "Transfer to the original state's agent",
+                    "Disposition as Wrong Number",
+                    "Get the correct state and continue"
+                ],
+                "answer_index": 3,
+                "explanation": "Get the new state — the licensed agent has to match it.",
+                "tags": [
+                    "script"
+                ]
+            }
+        ]
+    }
+}

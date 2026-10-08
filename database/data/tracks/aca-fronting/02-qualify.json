@@ -1,0 +1,342 @@
+{
+    "id": "aca_qualify",
+    "title": "Who Qualifies, Who Doesn't",
+    "summary": "The two groups you can transfer, the nine disqualifiers, SSDI versus SSI, and the Marketplace check when a consumer names a carrier.",
+    "est_minutes": 22,
+    "badge": {
+        "id": "badge_aca_qualify",
+        "name": "Qualifier",
+        "icon": "✅"
+    },
+    "lessons": [
+        {
+            "id": "aq_1",
+            "title": "The two groups you CAN transfer",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>This part is short, because there are only two:</p><ol><li>Consumers who <strong>already have ACA / Marketplace insurance</strong></li><li>Consumers with <strong>no insurance at all</strong></li></ol><p>That is the entire list. Anything else needs checking, and most of it is a disqualifier.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Why Marketplace consumers still count",
+                    "html": "<p>Having a Marketplace plan does not mean they are getting everything available to them. That is exactly the rebuttal: new benefits have come out that they may not be receiving yet.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Which consumer can be transferred?",
+                    "choices": [
+                        "One with Medicaid",
+                        "One with a Marketplace plan already",
+                        "One with retiree coverage from a former employer",
+                        "One with VA health care"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Marketplace already, or nothing at all. Everything else on that list is a DQ."
+                }
+            ]
+        },
+        {
+            "id": "aq_2",
+            "title": "The nine disqualifiers",
+            "est_minutes": 7,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>If the consumer has any of these, they cannot be transferred. Learn them cold — transferring a disqualified consumer is the worst outcome on this campaign.</p><ol><li>Medicare</li><li>Medicaid</li><li>Work insurance or spousal work insurance</li><li>Military or veterans insurance (VA)</li><li>Private insurance or spousal private insurance</li><li>State insurance</li><li>Disability insurance (SSDI / SSD)</li><li>Non-US citizens</li><li>Native insurance</li></ol>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "They tell you they have Medicare, Medicaid, work or military insurance",
+                    "response": "Unfortunately at this time you would not be qualified. Have a wonderful day!",
+                    "coach_note": "Say it warmly and end the call. Do not argue, do not try to find a way around it, do not keep pitching. Disposition as DQ."
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "A DQ is a correct outcome, not a failure",
+                    "html": "<p>Catching a disqualifier and reading the DQ line is a <strong>good call</strong>. You will be graded on reaching the right outcome, not on transferring everyone. Transferring a DQ is what counts against you.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer says their husband's job provides their insurance. What is this?",
+                    "choices": [
+                        "A DQ — spousal work insurance is on the list",
+                        "Fine — spousal coverage does not count",
+                        "Fine if the plan is through the Marketplace",
+                        "A DNC"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Work insurance includes spousal work insurance. Read the DQ line and disposition as DQ."
+                }
+            ]
+        },
+        {
+            "id": "aq_3",
+            "title": "SSDI versus SSI — the one that catches people",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>These two sound almost identical and mean different things for your call.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<table><tr><th></th><th>What it is</th><th>On your call</th></tr><tr><td><strong>SSDI / SSD</strong></td><td>Social Security Disability Insurance</td><td><strong>DQ</strong></td></tr><tr><td><strong>SSI</strong></td><td>Supplemental Security Income</td><td><strong>Continue</strong>, as long as there is no Medicare, Medicaid or work insurance</td></tr></table>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "If you are not sure which one they said",
+                    "html": "<p>Do not guess, and do not interrogate them. Go back to the question that actually decides it: <em>“you're still not receiving Medicare, Medicaid or work insurance, correct?”</em> That answer is what qualifies or disqualifies them.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer mentions they get SSI. What do you do?",
+                    "choices": [
+                        "DQ immediately",
+                        "Transfer without verifying anything else",
+                        "Continue, as long as they have no Medicare, Medicaid or work insurance",
+                        "Ask them how much SSI they receive"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "SSI is not a disqualifier. SSDI is. And you never ask about amounts."
+                }
+            ]
+        },
+        {
+            "id": "aq_4",
+            "title": "When they name a carrier, or don't know what they have",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Consumers often name an insurance company rather than a programme: Blue Cross Blue Shield, Oscar, Ambetter, Anthem, UnitedHealthcare. None of those names tell you what you need to know, because those companies sell Marketplace plans <em>and</em> other plans.</p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "They name an insurance you are not familiar with",
+                    "response": "It is through the Marketplace, correct?",
+                    "coach_note": "This one question decides the call. YES — proceed with the transfer. NO, or they cannot confirm it is Marketplace — disposition as DQ."
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "I'm not sure if I have Medicare or Medicaid",
+                    "response": "Do you receive a red, white or blue card?",
+                    "coach_note": "The red, white and blue card is the Medicare card. If YES, that is a DQ."
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "I don't know what I have",
+                    "response": "I can help you figure it out. Medicare is usually for folks over the age of 65, it comes with a red, white, and blue card. Medicaid, you would have had to apply and get approved for. And work insurance is provided by your employer, you'd see that deducted off your paycheque. You have none of those, right?",
+                    "coach_note": "Walk them through it calmly. If they still cannot tell you after this, DQ and move on — do not transfer someone whose coverage you could not establish."
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Unsure is not a yes",
+                    "html": "<p>If you cannot confirm the plan is through the Marketplace, the answer is DQ. “Probably” and “I think so” are not confirmations.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer says they have Ambetter. What must you do before transferring?",
+                    "choices": [
+                        "Nothing — Ambetter is a Marketplace carrier",
+                        "Ask whether the plan is through the Marketplace and get a clear yes",
+                        "DQ them — any named carrier is a DQ",
+                        "Ask how much they pay each month"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Carriers sell both Marketplace and non-Marketplace plans. You must confirm it is Marketplace, and an unclear answer means DQ."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "aq_q1",
+                "question": "Which two groups can be transferred?",
+                "choices": [
+                    "Medicare or Medicaid holders",
+                    "Anyone 19 or older",
+                    "Veterans and their spouses",
+                    "Consumers with Marketplace insurance, or with no insurance at all"
+                ],
+                "answer_index": 3,
+                "explanation": "Marketplace already, or nothing at all.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aq_q2",
+                "question": "How many disqualifiers are on the DQ list?",
+                "choices": [
+                    "Nine",
+                    "Five",
+                    "Seven",
+                    "Twelve"
+                ],
+                "answer_index": 0,
+                "explanation": "Nine: Medicare, Medicaid, work, military/VA, private, state, SSDI/SSD, non-citizens, native insurance.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aq_q3",
+                "question": "SSDI on an ACA call is…",
+                "choices": [
+                    "Fine — continue",
+                    "A DQ",
+                    "A DNC",
+                    "Only a DQ if they also have Medicaid"
+                ],
+                "answer_index": 1,
+                "explanation": "SSDI/SSD is a disqualifier. SSI is not.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aq_q4",
+                "question": "SSI on an ACA call is…",
+                "choices": [
+                    "A DQ",
+                    "A DNC",
+                    "Fine — continue if there is no Medicare, Medicaid or work insurance",
+                    "A wrong number"
+                ],
+                "answer_index": 2,
+                "explanation": "SSI is not a disqualifier.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aq_q5",
+                "question": "A consumer has VA health care. What is the outcome?",
+                "choices": [
+                    "Transfer",
+                    "DNC",
+                    "Call Back",
+                    "DQ"
+                ],
+                "answer_index": 3,
+                "explanation": "Military and veterans insurance is on the DQ list.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aq_q6",
+                "question": "A consumer names UnitedHealthcare. What is your next line?",
+                "choices": [
+                    "“It is through the Marketplace, correct?”",
+                    "“That's great, let me transfer you.”",
+                    "“How much do you pay for that?”",
+                    "“Unfortunately you would not be qualified.”"
+                ],
+                "answer_index": 0,
+                "explanation": "Named carriers require the Marketplace check before you proceed.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aq_q7",
+                "question": "The consumer cannot confirm whether their plan is through the Marketplace. What do you do?",
+                "choices": [
+                    "Transfer anyway and let the agent sort it out",
+                    "Disposition as Not Interested",
+                    "Disposition as DQ",
+                    "Schedule a callback so they can check"
+                ],
+                "answer_index": 2,
+                "explanation": "If it cannot be confirmed as Marketplace, it is a DQ.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aq_q8",
+                "question": "What does a red, white and blue card tell you?",
+                "choices": [
+                    "They have Medicaid",
+                    "They have Medicare — a DQ",
+                    "They have a Marketplace plan",
+                    "They have work insurance"
+                ],
+                "answer_index": 1,
+                "explanation": "The red, white and blue card is the Medicare card, so it is a DQ.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aq_q9",
+                "question": "Is reading the DQ line and ending the call a bad outcome for you?",
+                "choices": [
+                    "Yes — every call should end in a transfer",
+                    "Only if the consumer was friendly",
+                    "No — a correctly caught DQ is a correct outcome",
+                    "Yes — you should try two more rebuttals first"
+                ],
+                "answer_index": 2,
+                "explanation": "Catching a DQ correctly is a good call. Transferring one is the failure.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aq_q10",
+                "question": "A consumer says their state gives them their health coverage. What is that?",
+                "choices": [
+                    "Marketplace — transfer",
+                    "Medicaid only if they are over 65",
+                    "Not relevant to the call",
+                    "State insurance — a DQ"
+                ],
+                "answer_index": 3,
+                "explanation": "State insurance is on the DQ list.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aq_q11",
+                "question": "What is the correct DQ line?",
+                "choices": [
+                    "“You don't qualify, goodbye.”",
+                    "“Unfortunately at this time you would not be qualified. Have a wonderful day!”",
+                    "“I'll put you on our do not call list.”",
+                    "“Let me get my manager.”"
+                ],
+                "answer_index": 1,
+                "explanation": "Warm, brief, and then end the call. Do not keep pitching.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "aq_q12",
+                "question": "A consumer's spouse has private insurance that covers them both. What is the outcome?",
+                "choices": [
+                    "DQ",
+                    "Transfer",
+                    "Continue if the spouse's plan is cheap",
+                    "DNC"
+                ],
+                "answer_index": 0,
+                "explanation": "Spousal private insurance is on the DQ list.",
+                "tags": [
+                    "qualifying"
+                ]
+            }
+        ]
+    }
+}

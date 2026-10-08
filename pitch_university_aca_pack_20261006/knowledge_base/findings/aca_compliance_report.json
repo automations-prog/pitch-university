@@ -1,0 +1,896 @@
+{
+ "all": {
+  "calls": 3981,
+  "violations": {
+   "transferred_without_consent": {
+    "n": 656,
+    "pct": 16.5,
+    "by_context": {
+     "handoff": 643,
+     "pitch": 13
+    },
+    "examples": [
+     {
+      "quote": "So I'm going to go ahead and get us transferred over, okay?",
+      "why": "Consumer said 'I don't want to' and never agreed, yet transfer occurred",
+      "context": "handoff"
+     },
+     {
+      "quote": "I'm going to bring them on now. We're going to hear some ringing. As soon as they answer, I'll introduce you to them, okay?",
+      "why": "Agent conferenced in the licensed agent without the consumer agreeing to a transfer.",
+      "context": "handoff"
+     },
+     {
+      "quote": "now, you will hear a ring in a second as I'm literally on the line to make sure you actually do get squared away",
+      "why": "agent conferenced in the licensed agent without the consumer agreeing to a transfer",
+      "context": "pitch"
+     },
+     {
+      "quote": "I'm going to bring my senior age on the line with us and they'll tell you when you may start to receive your benefits.",
+      "why": "consumer never agreed to the transfer before the conference happened",
+      "context": "handoff"
+     },
+     {
+      "quote": "Okay. I'm just gathering some information. So before I let them on, it's going to be short and easy call. Just one moment here.",
+      "why": "Consumer never agreed to be transferred before the conference",
+      "context": "handoff"
+     },
+     {
+      "quote": "Hey, how's it going? I have Justin here. He's in Mississippi. Please take over and help him out today.",
+      "why": "Conferenced in the advisor without the consumer agreeing to a transfer",
+      "context": "handoff"
+     }
+    ]
+   },
+   "wrong_company_name": {
+    "n": 578,
+    "pct": 14.5,
+    "by_context": {
+     "pitch": 564,
+     "handoff": 12,
+     "hold_small_talk": 1,
+     "verification": 1
+    },
+    "examples": [
+     {
+      "quote": "This is Michelle with America Health Unrecorded Line.",
+      "why": "Said \"America Health\" instead of approved \"America's Health\"",
+      "context": "pitch"
+     },
+     {
+      "quote": "it's Ronisha from American Health",
+      "why": "\"American Health\" is not an approved company name",
+      "context": "pitch"
+     },
+     {
+      "quote": "It's Frank on a recorded line. I'm with American Health.",
+      "why": "\"American Health\" is not an approved company name",
+      "context": "pitch"
+     },
+     {
+      "quote": "Okay, so this is La Brea with American Health on the recording line.",
+      "why": "\"American Health\" is not an approved company name",
+      "context": "pitch"
+     },
+     {
+      "quote": "This is Mike Merrick's health recorded line.",
+      "why": "Not one of the approved company names",
+      "context": "pitch"
+     },
+     {
+      "quote": "This is Mike Merrick's help recorded line.",
+      "why": "Not one of the approved company names",
+      "context": "pitch"
+     }
+    ]
+   },
+   "forbidden_financial_word": {
+    "n": 324,
+    "pct": 8.1,
+    "by_context": {
+     "hold_small_talk": 190,
+     "pitch": 84,
+     "verification": 41,
+     "handoff": 8,
+     "other": 1
+    },
+    "examples": [
+     {
+      "quote": "It seems so rigged everything, you know, whenever there's money involved, something bad's gonna happen.",
+      "why": "said forbidden word \"money\"",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "that's why we're so good at Olympics because, you know, well, they'll put the money into it",
+      "why": "said forbidden word \"money\"",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "that's the problem with us is that kids got to have money to play any sport",
+      "why": "said forbidden word \"money\"",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "The government puts in money to them",
+      "why": "said forbidden word \"money\"",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "they'll also let you know exactly how much they are and when you may receive those as well",
+      "why": "says forbidden phrase 'how much'",
+      "context": "pitch"
+     },
+     {
+      "quote": "it ended up hitting my card for like a bunch of money",
+      "why": "says forbidden word 'money'",
+      "context": "hold_small_talk"
+     }
+    ]
+   },
+   "no_recorded_line": {
+    "n": 174,
+    "pct": 4.4,
+    "by_context": {
+     "pitch": 169,
+     "hold_small_talk": 1,
+     "verification": 3,
+     "other": 1
+    },
+    "examples": [
+     {
+      "quote": "Hi, this is (agent) with America's Health, and I'm calling you in regards to your subsidy allowance through the Affordable Care Act.",
+      "why": "Agent never disclosed the call was on a recorded line",
+      "context": "pitch"
+     },
+     {
+      "quote": "Hey, this is (agent) with America's Healthline and I'm calling you in regards to your subsidy allowance through the Affordable Care Act.",
+      "why": "Agent never disclosed the call was on a recorded line",
+      "context": "pitch"
+     },
+     {
+      "quote": "This is Michelle at the American Health center court line.",
+      "why": "agent never states the call is recorded",
+      "context": "pitch"
+     },
+     {
+      "quote": "this is (agent) with America's Health, and this call is in regards to your subsidy allowance through the aca",
+      "why": "Agent never disclosed the call was on a recorded line",
+      "context": "pitch"
+     },
+     {
+      "quote": "This is Leah, and I'm with America's Health Record Alliance.",
+      "why": "Agent never disclosed the call was on a recorded line",
+      "context": "pitch"
+     },
+     {
+      "quote": "this is (agent) with America's Health, and I'm calling you in regards to your subsidy allowance through the Affordable Care Act",
+      "why": "Agent never disclosed the call was on a recorded line",
+      "context": "pitch"
+     }
+    ]
+   },
+   "forbidden_household_word": {
+    "n": 133,
+    "pct": 3.3,
+    "by_context": {
+     "hold_small_talk": 130,
+     "pitch": 3
+    },
+    "examples": [
+     {
+      "quote": "So what's not fun, actually, this year is the electricity bills. The electricity bill I just got, I kid you not, $350.",
+      "why": "agent said forbidden word 'bills'",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "I'm telling you, they just don't know the bills.",
+      "why": "agent said forbidden word 'bills'",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "I was able to pay my rent two weeks early this week or this. Yeah, I paid it two weeks ago, so. Just kind of wanted to get it out of the way so I can budget better.",
+      "why": "agent said forbidden household word 'rent'",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "If they weren't trying to get take an arm and a leg from me when I walk in the grocery store, I would be a lot happier.",
+      "why": "agent said forbidden word 'grocery'",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "Someone that could pay the bills, right?",
+      "why": "agent said forbidden word 'bills'",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "Listen, because I got that light bill in the middle",
+      "why": "Agent said forbidden word 'bill'",
+      "context": "hold_small_talk"
+     }
+    ]
+   },
+   "promise_will_get": {
+    "n": 130,
+    "pct": 3.3,
+    "by_context": {
+     "pitch": 95,
+     "hold_small_talk": 19,
+     "verification": 4,
+     "handoff": 12
+    },
+    "examples": [
+     {
+      "quote": "No, we're not. Because after that, you'll be removed.",
+      "why": "Stated as fact that consumer will be removed from the list",
+      "context": "pitch"
+     },
+     {
+      "quote": "did they let you know what benefits you would be receiving?",
+      "why": "states receipt of benefits as settled fact without hedging",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "to make sure you actually do get squared away",
+      "why": "States as fact the consumer will get the benefit",
+      "context": "pitch"
+     },
+     {
+      "quote": "That's because I'm literally on the line to make sure that you actually do get squared away.",
+      "why": "states as fact the consumer will get it",
+      "context": "pitch"
+     },
+     {
+      "quote": "That's because I'm literally on the line to make sure you do get squared away.",
+      "why": "states as fact the consumer will receive the outcome",
+      "context": "pitch"
+     },
+     {
+      "quote": "We're just making sure that you get the maximum benefits for your state. So the up you're going to get an update on those new benefits.",
+      "why": "states as fact the consumer will get maximum benefits",
+      "context": "pitch"
+     }
+    ]
+   },
+   "promise_qualify_eligible": {
+    "n": 96,
+    "pct": 2.4,
+    "by_context": {
+     "verification": 4,
+     "pitch": 67,
+     "handoff": 17,
+     "hold_small_talk": 8
+    },
+    "examples": [
+     {
+      "quote": "So you are older than 19 to qualify for this. Correct.",
+      "why": "states qualification as settled fact",
+      "context": "verification"
+     },
+     {
+      "quote": "Your agent and I will actually go over everything you're eligible for under the subsidy.",
+      "why": "states eligibility as settled fact",
+      "context": "pitch"
+     },
+     {
+      "quote": "stay on the line to make sure you actually do get squared away for everything you're eligible.",
+      "why": "states eligibility as settled fact before self-correcting",
+      "context": "pitch"
+     },
+     {
+      "quote": "you're getting every single benefit that you're qualified for",
+      "why": "states qualification and receipt of benefits as settled fact",
+      "context": "handoff"
+     },
+     {
+      "quote": "I'll actually be on the line to make sure your agent and I go over everything you're eligible for",
+      "why": "states eligibility as settled fact",
+      "context": "pitch"
+     },
+     {
+      "quote": "your agent and I will go over everything you're eligible for under the subsidy allowance",
+      "why": "states eligibility as settled fact",
+      "context": "pitch"
+     }
+    ]
+   },
+   "guaranteed_outcome": {
+    "n": 37,
+    "pct": 0.9,
+    "by_context": {
+     "pitch": 21,
+     "hold_small_talk": 15,
+     "handoff": 1
+    },
+    "examples": [
+     {
+      "quote": "I agree, absolutely. And so we can definitely provide you with that.",
+      "why": "'definitely' attached to promised deliverable",
+      "context": "pitch"
+     },
+     {
+      "quote": "Okay, well, we'll definitely be able to help you out.",
+      "why": "guarantees help with 'definitely'",
+      "context": "pitch"
+     },
+     {
+      "quote": "I said, sorry to hear that. We'll definitely be able to help you out.",
+      "why": "repeats guaranteed benefit promise",
+      "context": "pitch"
+     },
+     {
+      "quote": "Yeah, definitely, because we'll definitely help you out.",
+      "why": "\"definitely\" attached to receiving benefits",
+      "context": "pitch"
+     },
+     {
+      "quote": "so we'll definitely help you out as well with those additional benefits",
+      "why": "guarantees additional benefits",
+      "context": "pitch"
+     },
+     {
+      "quote": "They'll be giving you all the details, (customer), for sure.",
+      "why": "'for sure' attached to the outcome",
+      "context": "hold_small_talk"
+     }
+    ]
+   },
+   "rude_to_consumer": {
+    "n": 12,
+    "pct": 0.3,
+    "by_context": {
+     "hold_small_talk": 4,
+     "pitch": 5,
+     "verification": 1,
+     "other": 1,
+     "handoff": 1
+    },
+    "examples": [
+     {
+      "quote": "Okay, shut up. Answer the call. Shut up, shut up.",
+      "why": "Agent said \"shut up\" on the live line with the consumer",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "You don't need nothing. Who doesn't need anything? Come on, man. I don't understand. Alexa, you're extremely wealthy.",
+      "why": "Agent mocks the consumer sarcastically after her response",
+      "context": "pitch"
+     },
+     {
+      "quote": "I didn't ask you to speak with. You already said I have the wrong number.",
+      "why": "Agent responded curtly and dismissively to the consumer",
+      "context": "pitch"
+     },
+     {
+      "quote": "You dumb.",
+      "why": "Agent insulted the consumer during hold small talk.",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "Are you not comfortable speaking English?",
+      "why": "Insulting remark about the consumer's language ability",
+      "context": "verification"
+     },
+     {
+      "quote": "You have no clue? Well, the thing is, unfortunately, sure, we can't. We can't assist you if you don't know. Right. That's a problem.",
+      "why": "Condescending tone toward consumer's confusion",
+      "context": "pitch"
+     }
+    ]
+   },
+   "pitched_past_dnc": {
+    "n": 5,
+    "pct": 0.1,
+    "by_context": {
+     "pitch": 5
+    },
+    "examples": [
+     {
+      "quote": "Oh, no, that wasn't us. That wasn't us. We're not calling for that. This is in regards to your free subsidies. We want to see which ones you may qualify for and get them out to you.",
+      "why": "Consumer said \"Stop calling me\" and the agent rebutted and continued pitching",
+      "context": "pitch"
+     },
+     {
+      "quote": "So, (customer), we can go ahead and bring my senior agent on the line so we can see what benefits may be available for you",
+      "why": "consumer said \"quit calling my phone\" and agent continued pitching",
+      "context": "pitch"
+     },
+     {
+      "quote": "Yeah, but you know that's why we're calling you, right? Because I'm showing you have the marketplace insurance. It just looks like you did not receive the subsidy allowance that comes along with it th",
+      "why": "Consumer asked to be taken off the list and the agent rebutted and continued pitching",
+      "context": "pitch"
+     },
+     {
+      "quote": "I didn't say this was a subsidy insurance, ma'. Am. I said it was subsidy allowance. This is the relief being sent out to those who don't receive any Medicare, Medicaid or work insurance. Is that stil",
+      "why": "Consumer asked to be taken off the list and agent rebutted and continued pitching",
+      "context": "pitch"
+     },
+     {
+      "quote": "Oh, they do, though. So I'm a little bit confused as why, again, you're feeling the way how you feel. Because they are calling to assist people with their subsidies, and it is an actual thing.",
+      "why": "Consumer asked to be taken off the list and the agent kept rebutting and pitching.",
+      "context": "pitch"
+     }
+    ]
+   }
+  },
+  "dropped_by_verification": {
+   "hedged_approved_language": 93,
+   "quote_not_in_transcript": 5,
+   "consumer_said_it": 1
+  },
+  "company_names_heard": {
+   "america's health": 3239,
+   "american health": 228,
+   "america health": 79,
+   "america's help": 55,
+   "americans health": 38,
+   "the marcus house": 21,
+   "american's health": 20,
+   "america's house": 19
+  }
+ },
+ "bad": {
+  "calls": 30,
+  "violations": {
+   "transferred_without_consent": {
+    "n": 6,
+    "pct": 20.0,
+    "by_context": {
+     "handoff": 6
+    },
+    "examples": [
+     {
+      "quote": "So we will let you onto the line with the license coordinator.",
+      "why": "transfer completed without consumer agreeing to it",
+      "context": "handoff"
+     },
+     {
+      "quote": "I have Floyd here. He's in the state of Texas. Please take over.",
+      "why": "conferenced the consumer to another party without asking consent",
+      "context": "handoff"
+     },
+     {
+      "quote": "So you're going to hear a few rings and then I'll introduce you so they can go over the on with you. Okay.",
+      "why": "consumer never agreed to the transfer before it occurred",
+      "context": "handoff"
+     },
+     {
+      "quote": "One second here. I'm just gonna grab one of my senior advisors, gonna help us out with that.",
+      "why": "Consumer never agreed to being transferred before the conference",
+      "context": "handoff"
+     },
+     {
+      "quote": "All right. Here's the ringing on the line.",
+      "why": "agent conferenced in the licensed coordinator without the consumer agreeing to a transfer",
+      "context": "handoff"
+     },
+     {
+      "quote": "A coordinator will connect now to quickly finish the assistance.",
+      "why": "consumer never agreed to the transfer before it occurred",
+      "context": "handoff"
+     }
+    ]
+   },
+   "no_recorded_line": {
+    "n": 3,
+    "pct": 10.0,
+    "by_context": {
+     "pitch": 2,
+     "other": 1
+    },
+    "examples": [
+     {
+      "quote": "So we will let you onto the line with the license coordinator.",
+      "why": "agent never disclosed the call was recorded",
+      "context": "pitch"
+     },
+     {
+      "quote": "Oh, you're fine. I had. I had a feeling something happened, so that's why I gave you a call back, so no worries.",
+      "why": "agent never disclosed the call was on a recorded line",
+      "context": "other"
+     },
+     {
+      "quote": "So we will let you onto the line with the license coordinator.",
+      "why": "agent never disclosed the call was on a recorded line",
+      "context": "pitch"
+     }
+    ]
+   },
+   "wrong_company_name": {
+    "n": 3,
+    "pct": 10.0,
+    "by_context": {
+     "handoff": 2,
+     "pitch": 1
+    },
+    "examples": [
+     {
+      "quote": "Okay. So thank you for calling Ema Marketing.",
+      "why": "Named a company other than the approved America's Health / Health Benefit Guide / Benefit Link.",
+      "context": "handoff"
+     },
+     {
+      "quote": "Okay. So thank you for calling Ema Marketing.",
+      "why": "Named a company other than the approved America's Health / Health Benefit Guide / Benefit Link",
+      "context": "handoff"
+     },
+     {
+      "quote": "It's Michelle with America Health recorded line.",
+      "why": "Said 'America Health' instead of approved 'America's Health'",
+      "context": "pitch"
+     }
+    ]
+   }
+  },
+  "dropped_by_verification": {
+   "hedged_approved_language": 1
+  },
+  "company_names_heard": {
+   "america's health": 26,
+   "(none heard)": 3,
+   "america health": 1
+  }
+ },
+ "model": {
+  "calls": 1326,
+  "violations": {
+   "transferred_without_consent": {
+    "n": 342,
+    "pct": 25.8,
+    "by_context": {
+     "handoff": 335,
+     "pitch": 7
+    },
+    "examples": [
+     {
+      "quote": "Alrighty. They're joining in with you and I now. I'll remain on the line with you.",
+      "why": "conferenced in a third party without asking the consumer's okay to transfer",
+      "context": "handoff"
+     },
+     {
+      "quote": "Well, they're joining in with you and I now. They have your status.",
+      "why": "agent conferenced in the licensed agent without asking consumer's okay to transfer",
+      "context": "handoff"
+     },
+     {
+      "quote": "Hi, (customer), it's a pleasure to hear your voice once more. I have (customer) Basie coming out of Florida. Can you assist?",
+      "why": "conferenced in a third party without the consumer agreeing to a transfer",
+      "context": "handoff"
+     },
+     {
+      "quote": "Hello. Thank you for calling. My name is David Clark. Oh, hi, David. This is Cheryl. And I also have (customer) Diaz out of Texas.",
+      "why": "Agent conferenced in a third party without ever asking the consumer's okay to transfer",
+      "context": "handoff"
+     },
+     {
+      "quote": "What I'm going to do is pull one of our seniors to open your file just so I don't misquote your allowance.",
+      "why": "conferenced in another agent without consumer agreeing to transfer",
+      "context": "handoff"
+     },
+     {
+      "quote": "This is Cheryl, and I also have (customer) Jenkins out of Texas. Can you take our call?",
+      "why": "conferenced the call without consumer agreeing to a transfer",
+      "context": "handoff"
+     }
+    ]
+   },
+   "forbidden_financial_word": {
+    "n": 223,
+    "pct": 16.8,
+    "by_context": {
+     "hold_small_talk": 34,
+     "pitch": 174,
+     "verification": 13,
+     "handoff": 2
+    },
+    "examples": [
+     {
+      "quote": "You can get more for your money out there.",
+      "why": "agent said forbidden word 'money'",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "this was meant to be a follow up call with you going over mailing in active status",
+      "why": "used forbidden word 'mailing'",
+      "context": "pitch"
+     },
+     {
+      "quote": "As long as you're comfortable with, you know, receiving the mail there, I'm okay.",
+      "why": "says forbidden word 'mail'",
+      "context": "pitch"
+     },
+     {
+      "quote": "this was a follow up call meant to go over mailing and active status",
+      "why": "used forbidden word 'mailing'",
+      "context": "pitch"
+     },
+     {
+      "quote": "this was meant to be a follow up call with you going over mailing and active status",
+      "why": "says 'mailing' (mail), a forbidden financial word",
+      "context": "pitch"
+     },
+     {
+      "quote": "this was a follow up call meant to go over mailing and active status",
+      "why": "used forbidden word 'mailing'",
+      "context": "pitch"
+     }
+    ]
+   },
+   "promise_will_get": {
+    "n": 39,
+    "pct": 2.9,
+    "by_context": {
+     "pitch": 30,
+     "verification": 2,
+     "hold_small_talk": 4,
+     "handoff": 3
+    },
+    "examples": [
+     {
+      "quote": "Correct. So this allowance was federally released for January 1st of this year and it was specifically funded for people who are under 65 not receiving any other type of government aid or assistance l",
+      "why": "Affirmed as fact that the consumer is supposed to get an allowance",
+      "context": "pitch"
+     },
+     {
+      "quote": "You're still able to receive your allowance.",
+      "why": "states receipt of allowance as settled fact without hedging",
+      "context": "pitch"
+     },
+     {
+      "quote": "Yes, sir.",
+      "why": "Confirmed as fact that consumer is going to get benefits",
+      "context": "pitch"
+     },
+     {
+      "quote": "So let me just make sure you get the right benefits here.",
+      "why": "States as fact the consumer will get benefits rather than may receive",
+      "context": "pitch"
+     },
+     {
+      "quote": "And you are over the age of 19 to receive yours when we send them out, Correct?",
+      "why": "states as fact the subsidies will be sent out",
+      "context": "verification"
+     },
+     {
+      "quote": "So we'll make it as quick as we can, and we'll get them out, see if you qualify.",
+      "why": "states as fact the subsidies will be sent out",
+      "context": "pitch"
+     }
+    ]
+   },
+   "forbidden_household_word": {
+    "n": 31,
+    "pct": 2.3,
+    "by_context": {
+     "hold_small_talk": 30,
+     "pitch": 1
+    },
+    "examples": [
+     {
+      "quote": "I don't like sit the stoplight at the grocery store line at all.",
+      "why": "agent said forbidden word 'grocery'",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "We had a Jenkins grocery store on MLK in Sarasota, Florida.",
+      "why": "agent said forbidden word 'grocery'",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "It does. Bills come. It's like every paycheck there's a bill. I think that I'm going to have a paycheck without one. Nope. Big bills all the time.",
+      "why": "agent said forbidden word 'bills'",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "it's nice. I have to say. It is nice. And it's good on gas, but, you know, gas is through the roof now, so that doesn't matter.",
+      "why": "agent said forbidden word 'gas'",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "But their gas is. Is affordable. More affordable than anywhere else.",
+      "why": "agent said forbidden word 'gas'",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "That's where I drive and get my gas all of the time.",
+      "why": "agent said forbidden word 'gas'",
+      "context": "hold_small_talk"
+     }
+    ]
+   },
+   "wrong_company_name": {
+    "n": 19,
+    "pct": 1.4,
+    "by_context": {
+     "pitch": 17,
+     "other": 1,
+     "handoff": 1
+    },
+    "examples": [
+     {
+      "quote": "I reached out with American Health reported line",
+      "why": "\"American Health\" is not an approved company name",
+      "context": "pitch"
+     },
+     {
+      "quote": "this is (agent). I work for Ameri Coast Health",
+      "why": "Not an approved company name",
+      "context": "pitch"
+     },
+     {
+      "quote": "this is (agent) on a recorded line with America's elf",
+      "why": "not an approved company name",
+      "context": "pitch"
+     },
+     {
+      "quote": "My name is Sarah with American Health.",
+      "why": "'American Health' is not an approved company name",
+      "context": "pitch"
+     },
+     {
+      "quote": "This is Cheryl on a recorded line with America Sales.",
+      "why": "Introduced with 'America Sales', not an approved company name",
+      "context": "pitch"
+     },
+     {
+      "quote": "this is (agent) on a recorded line with America Fells",
+      "why": "Not an approved company name",
+      "context": "pitch"
+     }
+    ]
+   },
+   "promise_qualify_eligible": {
+    "n": 15,
+    "pct": 1.1,
+    "by_context": {
+     "pitch": 10,
+     "handoff": 4,
+     "hold_small_talk": 1
+    },
+    "examples": [
+     {
+      "quote": "Just so make sure you get the highest benefits you're entitled to.",
+      "why": "States entitlement to benefits as settled fact",
+      "context": "pitch"
+     },
+     {
+      "quote": "we would love to see which ones you qualify for",
+      "why": "states qualification as settled fact rather than hedged 'may be eligible'",
+      "context": "pitch"
+     },
+     {
+      "quote": "your benefits coordinator will over what you qualify for",
+      "why": "states qualification as settled fact",
+      "context": "pitch"
+     },
+     {
+      "quote": "I'm just gonna ask you questions here so I can get you qualified for your subsidy",
+      "why": "states qualification as a settled outcome rather than hedged",
+      "context": "handoff"
+     },
+     {
+      "quote": "Well, you fully qualify.",
+      "why": "states qualification as settled fact",
+      "context": "pitch"
+     },
+     {
+      "quote": "And tell you exactly which ones you qualify for.",
+      "why": "states qualification as settled fact",
+      "context": "pitch"
+     }
+    ]
+   },
+   "no_recorded_line": {
+    "n": 12,
+    "pct": 0.9,
+    "by_context": {
+     "pitch": 12
+    },
+    "examples": [
+     {
+      "quote": "My name is Sarah. I'm calling from Americas Health and we do the free subsidy and benefit allowances that are through Affordable Care Act.",
+      "why": "Agent never disclosed the call was on a recorded line",
+      "context": "pitch"
+     },
+     {
+      "quote": "My name is Sarah. I work for America's Health Rental Line.",
+      "why": "Agent never disclosed the call was on a recorded line",
+      "context": "pitch"
+     },
+     {
+      "quote": "Hi, (customer). Yeah, we had a bad connection. I'm sorry about that.",
+      "why": "agent never disclosed the call was on a recorded line",
+      "context": "pitch"
+     },
+     {
+      "quote": "My name is Harley. I'm with America's Health Recorded Fund.",
+      "why": "Agent never states the call is on a recorded line",
+      "context": "pitch"
+     },
+     {
+      "quote": "Hi, (customer). I reached out with America's Health Report at night and my call was in regards to your subsidy allowance provided through the Affordable Care act, which I do see you still haven't recei",
+      "why": "Agent never disclosed the call was on a recorded line",
+      "context": "pitch"
+     },
+     {
+      "quote": "Good afternoon. You're speaking with (customer) Hill. I was calling for Cortes Coles.",
+      "why": "agent never disclosed the call was on a recorded line",
+      "context": "pitch"
+     }
+    ]
+   },
+   "guaranteed_outcome": {
+    "n": 2,
+    "pct": 0.2,
+    "by_context": {
+     "pitch": 1,
+     "hold_small_talk": 1
+    },
+    "examples": [
+     {
+      "quote": "Okay, well, we're definitely going to see.",
+      "why": "'definitely' attached to obtaining benefits",
+      "context": "pitch"
+     },
+     {
+      "quote": "Yeah, I know it's been a very hot year for sure.",
+      "why": "casual use, not tied to benefits",
+      "context": "hold_small_talk"
+     }
+    ]
+   },
+   "rude_to_consumer": {
+    "n": 2,
+    "pct": 0.2,
+    "by_context": {
+     "other": 1,
+     "pitch": 1
+    },
+    "examples": [
+     {
+      "quote": "Say she's still vulnerable. You can tell.",
+      "why": "demeaning remark about the consumer on the line",
+      "context": "other"
+     },
+     {
+      "quote": "You sound younger than some of these black people in their 20s.",
+      "why": "Racially charged, inappropriate remark to the consumer",
+      "context": "pitch"
+     }
+    ]
+   },
+   "mentioned_pitch_perfect": {
+    "n": 2,
+    "pct": 0.2,
+    "by_context": {
+     "hold_small_talk": 2
+    },
+    "examples": [
+     {
+      "quote": "You can go on. Indeed. And look up Pitch Perfect. They're hiring.",
+      "why": "Named Pitch Perfect Solutions on the call",
+      "context": "hold_small_talk"
+     },
+     {
+      "quote": "And whenever you call Pitch Perfect, you get in touch with them.",
+      "why": "Second mention of Pitch Perfect",
+      "context": "hold_small_talk"
+     }
+    ]
+   }
+  },
+  "dropped_by_verification": {
+   "hedged_approved_language": 133
+  },
+  "company_names_heard": {
+   "america's health": 1290,
+   "america's health center": 5,
+   "americas health": 3,
+   "america's health recorded fund": 3,
+   "american health": 2,
+   "america sales": 2,
+   "ameri coast health": 1,
+   "the health (garbled - no clear company name given)": 1
+  }
+ },
+ "_cost_usd": 55.97
+}

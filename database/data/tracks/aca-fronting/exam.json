@@ -1,0 +1,529 @@
+{
+    "title": "Final Exam",
+    "sections": {
+        "product": {
+            "title": "Product Quiz",
+            "pass_pct": 80,
+            "draw": 20,
+            "pool": [
+                {
+                    "id": "fx_aca_1",
+                    "question": "The Affordable Care Act is also known as all of these EXCEPT:",
+                    "choices": [
+                        "Obamacare",
+                        "The Marketplace",
+                        "HealthCare.gov",
+                        "Medicare Advantage"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Medicare Advantage is a Medicare product and a DQ on this campaign.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_aca_2",
+                    "question": "Which consumer CAN be transferred?",
+                    "choices": [
+                        "Has Medicaid",
+                        "Has no insurance at all",
+                        "Has VA health care",
+                        "Has retiree coverage"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "No insurance at all, or Marketplace already.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_aca_3",
+                    "question": "A consumer has SSDI. What is the outcome?",
+                    "choices": [
+                        "Transfer",
+                        "DNC",
+                        "DQ",
+                        "Call Back"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "SSDI/SSD is a disqualifier. SSI is not.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_aca_4",
+                    "question": "A consumer has SSI and no other coverage. What is the outcome?",
+                    "choices": [
+                        "DQ",
+                        "DNC",
+                        "Wrong Number",
+                        "Continue toward a transfer"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "SSI is not a disqualifier.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_aca_5",
+                    "question": "How many times must you confirm no Medicare, Medicaid or work insurance?",
+                    "choices": [
+                        "Once",
+                        "Three times",
+                        "Twice",
+                        "Only if they sound unsure"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "A first confirmation and a double confirmation before the transfer ask.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_aca_6",
+                    "question": "What age must you confirm?",
+                    "choices": [
+                        "18 or older",
+                        "21 or older",
+                        "19 or older",
+                        "No age check is required"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Confirm they are over the age of 19. Under 19 is a DNC.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_aca_7",
+                    "question": "Which sentence is compliant?",
+                    "choices": [
+                        "“You qualify for the subsidy.”",
+                        "“You will receive help with your premium.”",
+                        "“We'll see what assistance you may receive.”",
+                        "“I guarantee you'll get something.”"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "“May” is the required framing. The others are promises.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_aca_8",
+                    "question": "Which is a forbidden word?",
+                    "choices": [
+                        "Mortgage",
+                        "Subsidy",
+                        "Allowance",
+                        "Coordinator"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Mortgage is on the household expense list.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_aca_9",
+                    "question": "Which is a forbidden word?",
+                    "choices": [
+                        "Prequalify",
+                        "Marketplace",
+                        "Affordable Care Act",
+                        "Licensed agent"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Prequalify is on the financial list.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_aca_10",
+                    "question": "A consumer names Anthem as their insurer. What must you establish?",
+                    "choices": [
+                        "Their monthly premium",
+                        "Whether they have had it more than a year",
+                        "Their deductible",
+                        "Whether the plan is through the Marketplace"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Named carriers require the Marketplace check. Unclear means DQ.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_aca_11",
+                    "question": "What is the default company name?",
+                    "choices": [
+                        "Pitch Perfect Solutions",
+                        "America's Health",
+                        "Benefit Link always",
+                        "HealthCare.gov"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "America's Health unless the DBA field shows Health Benefit Guide or Benefit Link.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_aca_12",
+                    "question": "When may you mention Pitch Perfect Solutions on a call?",
+                    "choices": [
+                        "If asked directly",
+                        "Never",
+                        "On inbound calls",
+                        "If a manager approves"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Never on a call.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_aca_13",
+                    "question": "A hang-up after the consumer acknowledged their name is coded as:",
+                    "choices": [
+                        "Dead Air",
+                        "Not Interested",
+                        "Wrong Number",
+                        "Robo"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Acknowledgement then hang-up is always Not Interested.",
+                    "tags": [
+                        "dispositions"
+                    ]
+                },
+                {
+                    "id": "fx_aca_14",
+                    "question": "The client hangs up after you hit conference:",
+                    "choices": [
+                        "Not Interested",
+                        "Conference Ending",
+                        "Call Back",
+                        "Hung-Up Transfer"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Hung-Up Transfer.",
+                    "tags": [
+                        "dispositions"
+                    ]
+                },
+                {
+                    "id": "fx_aca_15",
+                    "question": "The agent line rings twice and shows “Conference Ended”:",
+                    "choices": [
+                        "No Agent",
+                        "Call Back",
+                        "Dead Air",
+                        "Conference Ending, with no callback scheduled"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Read the closing line, code Conference Ending, do not schedule a callback.",
+                    "tags": [
+                        "dispositions"
+                    ]
+                },
+                {
+                    "id": "fx_aca_16",
+                    "question": "No Agent may only be used:",
+                    "choices": [
+                        "Whenever an agent does not answer",
+                        "After the first failed conference",
+                        "When the consumer asks for a callback",
+                        "On the 3rd and last callback after 3 calls at least 20 minutes apart"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Only on the 3rd and last callback, following the full rules.",
+                    "tags": [
+                        "dispositions"
+                    ]
+                },
+                {
+                    "id": "fx_aca_17",
+                    "question": "A consumer swears at you but does not ask you to stop calling:",
+                    "choices": [
+                        "Rebut and continue",
+                        "DNC",
+                        "Hang up",
+                        "Transfer immediately"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Swearing is an objection, not a do-not-call request.",
+                    "tags": [
+                        "dispositions"
+                    ]
+                },
+                {
+                    "id": "fx_aca_18",
+                    "question": "A consumer says “don't ever call me again”:",
+                    "choices": [
+                        "Rebut once, then continue",
+                        "Code Not Interested",
+                        "Read the DNC disclaimer, end the call, code DNC",
+                        "Ask them why"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Do not rebuttal a do-not-call request.",
+                    "tags": [
+                        "dispositions"
+                    ]
+                },
+                {
+                    "id": "fx_aca_19",
+                    "question": "You get the client's voicemail:",
+                    "choices": [
+                        "Leave a brief message",
+                        "Do not leave a voicemail",
+                        "Leave the recorded-line disclosure",
+                        "Leave a callback number"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Never leave a voicemail.",
+                    "tags": [
+                        "dispositions"
+                    ]
+                },
+                {
+                    "id": "fx_aca_20",
+                    "question": "Which is NOT one of the ten required compliance steps?",
+                    "choices": [
+                        "Ask the client's annual income",
+                        "State that the call is recorded",
+                        "Confirm the client's state",
+                        "Get verbal consent to transfer"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "You never ask about income — it is also a forbidden word.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_aca_21",
+                    "question": "What counts as verbal consent?",
+                    "choices": [
+                        "The client saying okay",
+                        "Silence",
+                        "The client not objecting",
+                        "The client answering your previous question"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "They must say okay.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_aca_22",
+                    "question": "A consumer asks what they will actually receive. Who answers that?",
+                    "choices": [
+                        "The licensed agent after the transfer",
+                        "You, from the script",
+                        "The consumer's current insurer",
+                        "A manager"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Amounts and specifics belong to the licensed agent.",
+                    "tags": [
+                        "role"
+                    ]
+                },
+                {
+                    "id": "fx_aca_23",
+                    "question": "A consumer with a red, white and blue card is:",
+                    "choices": [
+                        "Qualified",
+                        "Disqualified — that is the Medicare card",
+                        "Qualified if they also have Marketplace",
+                        "A DNC"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "The red, white and blue card means Medicare, which is a DQ.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_aca_24",
+                    "question": "A warm handoff means:",
+                    "choices": [
+                        "Clicking conference and dropping off",
+                        "Telling the client an agent will call them",
+                        "Introducing the client and waiting until the agent and client are speaking",
+                        "Staying on the whole agent call"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Introduce, then wait to hear them both speaking before disconnecting.",
+                    "tags": [
+                        "script"
+                    ]
+                }
+            ]
+        },
+        "script": {
+            "title": "Script Quiz",
+            "pass_pct": 80,
+            "draw": 8,
+            "pool": [
+                {
+                    "id": "fx_acascript_1",
+                    "question": "What are the first four things that must happen on every call?",
+                    "choices": [
+                        "Correct person, company name, recorded line, the ACA mention",
+                        "Name, state, age, consent",
+                        "Greeting, small talk, name, pitch",
+                        "Recorded line, income, state, age"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Those four come before any verification.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_acascript_2",
+                    "question": "How many separate coverage confirmations does the script require?",
+                    "choices": [
+                        "Two",
+                        "One",
+                        "Three",
+                        "Four"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Two separate asks, each answered.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_acascript_3",
+                    "question": "“No Medicare, Medicaid or work insurance and over 19, correct?” asked once is…",
+                    "choices": [
+                        "A valid double confirmation",
+                        "Not a valid double confirmation",
+                        "Better than two asks",
+                        "Only valid at level 1"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Rolled-together confirmations do not count.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_acascript_4",
+                    "question": "What must the warm handoff include?",
+                    "choices": [
+                        "The consumer's age",
+                        "The subsidy amount",
+                        "The consumer's income",
+                        "The consumer's state"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Name the state so the licensed agent matches it.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_acascript_5",
+                    "question": "When can you disconnect from the conference?",
+                    "choices": [
+                        "When the agent answers",
+                        "Once the agent and client are speaking",
+                        "After you say the client's name",
+                        "Immediately"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Wait for both voices.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_acascript_6",
+                    "question": "A consumer says nothing after your transfer ask. That is…",
+                    "choices": [
+                        "Not consent",
+                        "Consent",
+                        "A Dead Air disposition",
+                        "A DQ"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "They must say okay.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_acascript_7",
+                    "question": "Under-19 consumers are…",
+                    "choices": [
+                        "DQ",
+                        "Transferable with a parent",
+                        "DNC",
+                        "Call Back"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Under 19 is a do-not-call.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_acascript_8",
+                    "question": "Where does every rebuttal end?",
+                    "choices": [
+                        "With an apology",
+                        "With the transfer ask",
+                        "Back at the verification question",
+                        "With the subsidy explanation"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Acknowledge, answer, return — ending on a question.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_acascript_9",
+                    "question": "A consumer names a carrier you don't recognise. You must…",
+                    "choices": [
+                        "DQ immediately",
+                        "Transfer",
+                        "Ask what they pay",
+                        "Confirm the plan is through the Marketplace"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Unconfirmed Marketplace means DQ.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_acascript_10",
+                    "question": "Which step do agents skip most on real calls?",
+                    "choices": [
+                        "The handoff",
+                        "The second coverage confirmation",
+                        "The greeting",
+                        "The state"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "33.8% of transferred calls skipped it.",
+                    "tags": [
+                        "script"
+                    ]
+                }
+            ]
+        }
+    }
+}

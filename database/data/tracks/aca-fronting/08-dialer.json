@@ -1,0 +1,377 @@
+{
+    "id": "aca_dialer",
+    "title": "The Convoso Dialer",
+    "summary": "Logging in, your status, the agent screen, the transfer and conference flow, dispositioning, and the scheduled callback process.",
+    "est_minutes": 22,
+    "badge": {
+        "id": "badge_aca_dialer",
+        "name": "Dialer Ready",
+        "icon": "☎️"
+    },
+    "lessons": [
+        {
+            "id": "adl_1",
+            "title": "Logging in and your status",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Use Google Chrome",
+                    "html": "<p>Convoso is supported in Chrome. Other browsers cause audio problems that look like dialer faults and waste your shift.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Sign in with your email and password, then the pop-up asks for two things:</p><ul><li><strong>Campaign:</strong> ACA Outbound</li><li><strong>Status:</strong> Available or Break</li></ul><p>Then click Login. <strong>Check the campaign every time.</strong> The wrong campaign means the wrong leads and the wrong script.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>You are <strong>either Available or Break, at all times</strong> — nothing else. Available means you are taking calls. Break means you are not.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Allow audio permissions",
+                    "html": "<p>The browser will ask. Allow it. If you skip this, calls connect and you hear nothing.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Logging out:</strong> set your status to Break in the top right corner first, then select Logout at the very bottom.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "You're about to log out for the day. What comes first?",
+                    "choices": [
+                        "Click Logout",
+                        "Set your status to Break, then Logout",
+                        "Disposition your last call then close the tab",
+                        "Change campaign"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Break first, then Logout at the bottom."
+                }
+            ]
+        },
+        {
+            "id": "adl_2",
+            "title": "The agent screen",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p><strong>Top left</strong> — your call status: waiting for a call, or wrapping up. On a live call this shows the consumer's full name and a running timer.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Top right</strong> — two buttons that matter:</p><ul><li><strong>Blue Transfer button:</strong> brings the conference tab back up</li><li><strong>Red Wrap Up button:</strong> ends a call</li></ul>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Top left icons</strong> — the folder is the CRM (agent callbacks and history tabs). The phone icon is the dial pad, which is where you press 1 when a recording asks you to.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Left sidebar</strong> — Availability lets you change your status <em>before</em> a call lands, which matters because you cannot change the main status while you are on an active call. Below it are the dispositions.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Dispositioning ends the call",
+                    "html": "<p>Selecting a disposition hangs up. Make sure you are finished before you click, and code it as what it actually was.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Two tabs:</strong> the Script tab holds your script and the conference transfer button. The Contact tab holds the consumer's information.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Where is the conference transfer button?",
+                    "choices": [
+                        "The Contact tab",
+                        "The left sidebar",
+                        "The dial pad",
+                        "The Script tab"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "On the Script tab, alongside your script."
+                }
+            ]
+        },
+        {
+            "id": "adl_3",
+            "title": "The transfer and conference flow",
+            "est_minutes": 6,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Once every verification is complete and the consumer has said okay:</p><ol><li>Click the <strong>conference transfer button</strong> on the Script tab.</li><li>Fluff while it rings — you are still on the line with the consumer.</li><li>When the licensed agent answers, complete the warm handoff: <em>“Hi, I have (name) from (STATE), please take the call.”</em></li><li>Click the <strong>blue Transfer button</strong> to bring the conference page back, then <strong>Leave Conference Call</strong>.</li><li>Disposition the call.</li></ol>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Forgot the name or state mid-transfer?",
+                    "html": "<p>Select the little X in the top right corner to get back to the consumer's details. Better than guessing, and far better than handing over without the state.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>If the consumer hangs up during the transfer:</strong> hit the red circle X on the licensed agent's line first, then disposition as Hung-Up Transfer.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>If you need to drop both lines:</strong> select both red circle X's, then disposition.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>If you hit the red Wrap Up button</strong> during a conference, “Three way call in progress” appears. Select Leave Conference Call and disposition as normal.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "The consumer hangs up right after you conference the licensed agent in. What's the sequence?",
+                    "choices": [
+                        "Disposition immediately as Not Interested",
+                        "Leave both lines open and wait",
+                        "Hit the red X on the agent's line, then disposition as Hung-Up Transfer",
+                        "Click the blue Transfer button and try again"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Clear the licensed agent's line first, then code it Hung-Up Transfer."
+                }
+            ]
+        },
+        {
+            "id": "adl_4",
+            "title": "Scheduled callbacks — No Agent protocol only",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "This is not a general tool",
+                    "html": "<p>The scheduled callback process in the bottom left is <strong>only</strong> for the No Agent protocol. It is not for consumers who ask to be called later — that is the Call Back disposition.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>To schedule one:</p><ol><li>Bottom left corner — select the time zone (<strong>your</strong> time zone)</li><li>Select the time: <strong>20+ minutes later</strong></li><li><strong>Personal callback</strong> books it back to you. <strong>System callback</strong> sends it to whoever is available at that time.</li><li>Select the light blue Callback disposition — the call is then coded and scheduled together.</li></ol>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Twenty minutes later a pop-up appears in the bottom right reminding you.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Missed it?</strong> Set your status to Break, find it under the Callbacks tab, select the consumer's name tab, then the green phone icon beside their name on the Contact tab. The call dials out.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Remember what No Agent actually requires",
+                    "html": "<p>Three calls total, at least 20 minutes apart, following the full callback rules — and only on the third and last one do you use the No Agent disposition.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer asks you to call them back tomorrow. What do you use?",
+                    "choices": [
+                        "The Call Back disposition",
+                        "The scheduled callback process",
+                        "The No Agent disposition",
+                        "A personal callback for tomorrow"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "The scheduled callback process is only for the No Agent protocol. A consumer's request is a Call Back."
+                }
+            ]
+        },
+        {
+            "id": "adl_5",
+            "title": "Reporting miscodes",
+            "est_minutes": 2,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>If you code a call wrong, report it. Keep it simple and clear for QA — no spaces, no dashes, no brackets, no long paragraphs:</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><code>12345678910 NA CBS DONE</code><br><code>12345678910 AM change to DA</code></p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>If you would rather not post it in the channel, message privately. What matters is that it gets corrected, not where it is said.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Why this matters",
+                    "html": "<p>Cross-checking the dialer log against recordings on 4,000 calls found a handful coded one way and recorded another. A small number — and every one of them was found because the data could be checked. Clean coding keeps everyone's numbers honest, including yours.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "What's the right way to report a miscode?",
+                    "choices": [
+                        "A long message explaining what happened",
+                        "Call your manager",
+                        "The number and the correction, kept simple",
+                        "Re-dial the consumer and fix it"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Number, then the correction. Simple and clear for QA."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "adl_q1",
+                "question": "Which browser should you use?",
+                "choices": [
+                    "Safari",
+                    "Firefox",
+                    "Any browser",
+                    "Google Chrome"
+                ],
+                "answer_index": 3,
+                "explanation": "Chrome. Other browsers cause audio problems.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "adl_q2",
+                "question": "Which campaign do you select at login?",
+                "choices": [
+                    "ACA Inbound",
+                    "ACA Outbound",
+                    "Whichever is default",
+                    "Marketplace"
+                ],
+                "answer_index": 1,
+                "explanation": "ACA Outbound — check it every time.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "adl_q3",
+                "question": "What are the only two statuses you should use?",
+                "choices": [
+                    "Available and Lunch",
+                    "Available and Break",
+                    "Ready and Wrap",
+                    "Online and Away"
+                ],
+                "answer_index": 1,
+                "explanation": "Available or Break, at all times.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "adl_q4",
+                "question": "Where is the conference transfer button?",
+                "choices": [
+                    "Contact tab",
+                    "Script tab",
+                    "Left sidebar",
+                    "Dial pad"
+                ],
+                "answer_index": 1,
+                "explanation": "On the Script tab.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "adl_q5",
+                "question": "What does selecting a disposition do?",
+                "choices": [
+                    "Ends the call",
+                    "Saves a note",
+                    "Pauses the dialer",
+                    "Opens the CRM"
+                ],
+                "answer_index": 0,
+                "explanation": "Dispositioning ends the call.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "adl_q6",
+                "question": "After the warm handoff, what's the sequence?",
+                "choices": [
+                    "Blue Transfer button, Leave Conference Call, then disposition",
+                    "Hit red Wrap Up immediately",
+                    "Just close the tab",
+                    "Disposition first, then leave"
+                ],
+                "answer_index": 0,
+                "explanation": "Blue Transfer brings the conference page back, then leave, then code it.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "adl_q7",
+                "question": "The consumer hangs up during the transfer. First action?",
+                "choices": [
+                    "Disposition as Not Interested",
+                    "Blue Transfer button",
+                    "Red circle X on the licensed agent's line",
+                    "Wrap Up"
+                ],
+                "answer_index": 2,
+                "explanation": "Clear the agent's line, then code Hung-Up Transfer.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "adl_q8",
+                "question": "The scheduled callback process is for…",
+                "choices": [
+                    "The No Agent protocol only",
+                    "Any consumer who asks for a callback",
+                    "End of shift",
+                    "Inbound calls"
+                ],
+                "answer_index": 0,
+                "explanation": "No Agent protocol only. A consumer's request is the Call Back disposition.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "adl_q9",
+                "question": "How far out do you set a scheduled callback?",
+                "choices": [
+                    "5 minutes",
+                    "An hour",
+                    "20+ minutes",
+                    "Next day"
+                ],
+                "answer_index": 2,
+                "explanation": "At least 20 minutes later.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "adl_q10",
+                "question": "Personal callback versus system callback?",
+                "choices": [
+                    "Personal goes to anyone available",
+                    "They're identical",
+                    "System is for managers",
+                    "Personal comes back to you; system goes to whoever is available"
+                ],
+                "answer_index": 3,
+                "explanation": "Personal returns to you, system goes to whoever is free.",
+                "tags": [
+                    "operations"
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,401 @@
+{
+    "id": "aca_compliance",
+    "title": "Compliance & Forbidden Words",
+    "summary": "The ten required steps on every call, the promise rules, the forbidden-word lists, and the company-name rule.",
+    "est_minutes": 28,
+    "badge": {
+        "id": "badge_aca_compliance",
+        "name": "Compliance Clean",
+        "icon": "🛡️"
+    },
+    "lessons": [
+        {
+            "id": "ac_1",
+            "title": "Every call means every call",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Compliance is not something you do on the good calls. It applies to:</p><ul><li>Every outbound call</li><li>Every inbound call</li><li>Accidental hang-ups and immediate callbacks</li><li>Every scheduled callback</li></ul><p><strong>Every call means every single call. No exceptions.</strong></p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "The callback trap",
+                    "html": "<p>The most commonly skipped call is the one where you already spoke to the person ten minutes ago. It feels silly to re-introduce yourself and re-verify. Do it anyway. A callback with no recorded-line disclosure and no re-verification is a non-compliant call, no matter what happened on the first one.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>All calls are recorded for quality and compliance. That is not a threat — it is the reason the disclosure exists, and it is why doing it properly protects you.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "You called a consumer, got cut off, and call straight back. What do you do?",
+                    "choices": [
+                        "Run the compliance steps again on the new call",
+                        "Pick up where you left off — you already did compliance",
+                        "Skip the recorded line notice because they already heard it",
+                        "Transfer immediately since they were already verified"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Accidental hang-ups and immediate callbacks are full calls. Every step runs again."
+                }
+            ]
+        },
+        {
+            "id": "ac_2",
+            "title": "The ten required steps",
+            "est_minutes": 7,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>These ten are required before you are allowed to click conference. Missing one means you do not transfer the call.</p><ol><li>Confirm you have the correct client on the line</li><li>Use an approved company name only</li><li>State that the call is recorded</li><li>Explain the programme clearly — assistance, subsidy, benefits or allowance <strong>through the Affordable Care Act</strong></li><li>Confirm they do NOT have Medicare, Medicaid or work insurance</li><li>Confirm they are 19 or older</li><li>Confirm the client's state</li><li>Double-confirm: no Medicare, no Medicaid, no work insurance</li><li>Get verbal consent to transfer — they must say okay</li><li>Complete a warm handoff</li></ol>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Do not click conference early",
+                    "html": "<p>If any step is missed, do not transfer the call. Clicking conference before the steps are done is the one mistake that turns a good call into a compliance problem you cannot undo.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Step 9 catches people. <strong>Verbal consent means they actually say okay.</strong> Silence is not consent. Talking over your question is not consent. Ask, wait, and hear it.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Which step is NOT on the required list?",
+                    "choices": [
+                        "State that the call is recorded",
+                        "Ask for the consumer's annual income",
+                        "Confirm they are 19 or older",
+                        "Get verbal consent to transfer"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "You never ask about income. Income and amounts belong to the licensed agent, and “income” is a forbidden word."
+                }
+            ]
+        },
+        {
+            "id": "ac_3",
+            "title": "Never promise anything",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>You do not know what any consumer will receive, and saying that you do is the fastest way to lose your seat. Three phrases are banned outright:</p><ul><li>“You <strong>will</strong> get…”</li><li>“You <strong>qualify</strong>”</li><li>“You're <strong>eligible</strong>”</li></ul><p>And no guaranteed outcomes of any kind.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "The word that keeps you safe",
+                    "html": "<p><strong>MAY.</strong> “What you <em>may</em> qualify for.” “When you <em>may</em> expect to receive that help.” “Benefits you <em>may</em> not be receiving as of yet.”</p><p>One word, and the sentence goes from a promise to the truth.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Listen to the difference:</p><p>❌ “You qualify for a subsidy and you'll get help with your premium.”<br>✅ “I'll get the senior agent on the line and see what assistance you may receive, okay?”</p><p>The second one is the script. The first one is an invented promise, and the consumer remembers it.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Which sentence is compliant?",
+                    "choices": [
+                        "“You're eligible for the government subsidy.”",
+                        "“You will receive assistance this year.”",
+                        "“I guarantee the agent can help you.”",
+                        "“We'll see what assistance you may receive.”"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "“May receive” is the approved framing. The other three are promises."
+                }
+            ]
+        },
+        {
+            "id": "ac_4",
+            "title": "The forbidden words",
+            "est_minutes": 6,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>These words create compliance risk because they make an insurance call sound like a financial offer. Do not use them, and do not repeat them back when a consumer uses them.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Financial words:</strong> money, cash, cheque, cards, calculate, total, income, how much, amount, mail, prequalify.</p><p><strong>Household expense words:</strong> bills, gas, grocery, rent, mortgage.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "The echo trap",
+                    "html": "<p>A consumer asks: “Is this money for my groceries?” The natural human reply is “no, it's not money for groceries” — and you have just said both forbidden words on a recorded line.</p><p>Answer without the echo: <em>“That's confidential between you and the licensed agent — they'll go over it with you. Now, you still don't receive any Medicare, Medicaid or work insurance, correct?”</em></p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>This is also why the call is <strong>only about health insurance</strong>. Not financial help, not reimbursements, not household support, not cost-of-living help. If a consumer tries to pull the call in that direction, acknowledge and redirect to your verification.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer asks: “How much money is it?” What is the best reply?",
+                    "choices": [
+                        "“It depends how much money you make.”",
+                        "“I can't tell you the amount of money, sorry.”",
+                        "“Usually a few hundred, but it varies.”",
+                        "“That's confidential between you and the licensed agent. You still don't have Medicare, Medicaid or work insurance, correct?”"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "The only reply that avoids repeating money and amount, and gets you back to the verification."
+                }
+            ]
+        },
+        {
+            "id": "ac_5",
+            "title": "Company name, recorded line, and what is never said",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Your company name is <strong>America's Health</strong> — unless the script on your screen shows a different approved name in the DBA field, which will be <strong>Health Benefit Guide</strong> or <strong>Benefit Link</strong>. If you do not see one of those, use America's Health.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Only the name changes",
+                    "html": "<p>The DBA field changes the company name you introduce with. It does not change a single other word of your script.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Never mention Pitch Perfect Solutions on a call.</strong> Not the name, not the location, not who you really work for. The consumer-facing name is the approved one on your screen.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>And the recorded line disclosure is not optional, in any version of the opening: <em>“this is _______ with America's Health on a recorded line.”</em> Leave it out and the call is non-compliant from the first sentence, no matter how well the rest goes.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Your script shows “Benefit Link” in the DBA field. What do you say?",
+                    "choices": [
+                        "Benefit Link, and the rest of the script is unchanged",
+                        "America's Health, because that is the real company",
+                        "Pitch Perfect Solutions",
+                        "Both names, so the consumer has the full picture"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Use the approved name shown on the script. Everything else stays the same."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "ac_q1",
+                "question": "Compliance applies to which calls?",
+                "choices": [
+                    "Outbound only",
+                    "Outbound and inbound only",
+                    "Only calls that reach a transfer",
+                    "Every call, including accidental hang-ups, immediate callbacks and scheduled callbacks"
+                ],
+                "answer_index": 3,
+                "explanation": "Every call means every single call. No exceptions.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q2",
+                "question": "How many required compliance steps are there before you can transfer?",
+                "choices": [
+                    "Ten",
+                    "Five",
+                    "Seven",
+                    "Twelve"
+                ],
+                "answer_index": 0,
+                "explanation": "Ten, ending with verbal consent and a warm handoff.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q3",
+                "question": "Which of these is a banned promise?",
+                "choices": [
+                    "“What you may qualify for”",
+                    "“Let's see what we could do for you”",
+                    "“You're eligible”",
+                    "“Benefits you may not be receiving as of yet”"
+                ],
+                "answer_index": 2,
+                "explanation": "“You're eligible”, “you qualify” and “you will get” are all banned. Use “may”.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q4",
+                "question": "Which word keeps your phrasing compliant?",
+                "choices": [
+                    "Will",
+                    "May",
+                    "Guaranteed",
+                    "Approved"
+                ],
+                "answer_index": 1,
+                "explanation": "“May” turns a promise into the truth.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q5",
+                "question": "Which of these is a forbidden word on an ACA call?",
+                "choices": [
+                    "Subsidy",
+                    "Marketplace",
+                    "Coordinator",
+                    "Grocery"
+                ],
+                "answer_index": 3,
+                "explanation": "Grocery is on the household expense list. Subsidy and Marketplace are approved.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q6",
+                "question": "A consumer asks if the subsidy will help pay their rent. What do you do?",
+                "choices": [
+                    "Redirect to the licensed agent without repeating the word, then return to your verification",
+                    "Say yes, it can help with rent",
+                    "Say “no, it won't help with rent”",
+                    "Tell them to ask the agent about their mortgage instead"
+                ],
+                "answer_index": 0,
+                "explanation": "Never echo a forbidden word back, even to deny it. Redirect and get back on script.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q7",
+                "question": "What is the default company name?",
+                "choices": [
+                    "Pitch Perfect Solutions",
+                    "HealthCare.gov",
+                    "America's Health",
+                    "The Marketplace"
+                ],
+                "answer_index": 2,
+                "explanation": "America's Health, unless the script's DBA field shows Health Benefit Guide or Benefit Link.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q8",
+                "question": "Your script shows “Health Benefit Guide” in the DBA field. What changes?",
+                "choices": [
+                    "Only the company name you introduce with",
+                    "The whole script changes",
+                    "You skip the recorded line notice",
+                    "You must mention both company names"
+                ],
+                "answer_index": 0,
+                "explanation": "Only the company name changes. The script stays identical.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q9",
+                "question": "When may you mention Pitch Perfect Solutions on a call?",
+                "choices": [
+                    "When the consumer asks who you really work for",
+                    "Never",
+                    "When a manager asks you to",
+                    "When the consumer threatens to report you"
+                ],
+                "answer_index": 1,
+                "explanation": "Never mention it on a call, for any reason.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q10",
+                "question": "What counts as verbal consent to transfer?",
+                "choices": [
+                    "The consumer says okay",
+                    "The consumer goes quiet",
+                    "The consumer did not object",
+                    "The consumer answered your last verification"
+                ],
+                "answer_index": 0,
+                "explanation": "They must actually say okay. Silence is not consent.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q11",
+                "question": "You realise you forgot to confirm the state, and the consumer is agreeable. What do you do?",
+                "choices": [
+                    "Transfer — they already said okay",
+                    "Let the licensed agent get the state",
+                    "Confirm the state before you click conference",
+                    "Disposition as No Agent"
+                ],
+                "answer_index": 2,
+                "explanation": "Every step must be complete before conference. If a step is missed, do not transfer.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q12",
+                "question": "Why must you say “through the Affordable Care Act” in your intro?",
+                "choices": [
+                    "It sounds more official",
+                    "It makes consumers trust you",
+                    "It is optional but recommended",
+                    "It is a required part of the approved programme explanation"
+                ],
+                "answer_index": 3,
+                "explanation": "It is required — step 4 of the ten.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q13",
+                "question": "This call is about…",
+                "choices": [
+                    "Health insurance and help with bills",
+                    "Health insurance only",
+                    "Any government assistance available",
+                    "Household support for low-income families"
+                ],
+                "answer_index": 1,
+                "explanation": "Only health insurance. No financial help, reimbursements, household or cost-of-living framing.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ac_q14",
+                "question": "A consumer says “so how much cash do I get?” Which reply is compliant?",
+                "choices": [
+                    "“The cash amount depends on your income.”",
+                    "“That's a great question for the licensed agent. You still don't receive Medicare, Medicaid or work insurance, correct?”",
+                    "“It's not cash.”",
+                    "“I can calculate that for you.”"
+                ],
+                "answer_index": 1,
+                "explanation": "No echo, no amount, no calculating — redirect and return to the verification.",
+                "tags": [
+                    "compliance"
+                ]
+            }
+        ]
+    }
+}

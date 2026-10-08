@@ -1,0 +1,3669 @@
+{
+ "vertical": "aca",
+ "title": "Pitch University: ACA",
+ "modules": [
+  {
+   "id": "aca_101",
+   "title": "The ACA & Your Role",
+   "summary": "What the Affordable Care Act actually is, what the subsidy means, how ACA differs from Medicare, and exactly what your job on the call is.",
+   "est_minutes": 25,
+   "badge": {
+    "id": "badge_aca_101",
+    "name": "ACA Basics",
+    "icon": "☂️"
+   },
+   "lessons": [
+    {
+     "id": "a101_1",
+     "title": "Your job on this call",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Welcome to Pitch University. Before you take a single live call, you are going to learn the product, the rules, the script, and how to handle people who are not happy to hear from you.</p><p>Start with the most important thing: <strong>what your job actually is</strong>.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>You are a <strong>fronter</strong>. Your job is to find out whether the person on the phone <em>may</em> be able to get help through the Affordable Care Act, and if they can, to get them talking to a licensed agent in their state.</p><p>That is the whole job. Four things decide it: their state, whether they have Medicare, Medicaid or work insurance, their age, and whether they agree to be transferred.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "What you never do",
+       "html": "<p>You never sell anything. You never enrol anyone. You never tell someone what they will get or how much. You are not licensed to do any of that, and the licensed agent is the only person who can answer those questions.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Think of it as a handoff, not a sale. You verify, you get permission, you introduce them to the licensed agent, and you make sure both people are talking before you drop off. A clean handoff is a good call.</p>"
+      },
+      {
+       "type": "check",
+       "question": "What is a fronter's job on an ACA call?",
+       "choices": [
+        "Enrol the consumer in a Marketplace plan",
+        "Tell the consumer how much subsidy they will receive",
+        "Verify a few details and get the consumer to a licensed agent in their state",
+        "Collect income information so the agent can calculate a subsidy"
+       ],
+       "answer_index": 2,
+       "explanation": "You verify, get verbal consent, and complete a warm handoff. Everything about amounts and enrolment belongs to the licensed agent."
+      }
+     ]
+    },
+    {
+     "id": "a101_2",
+     "title": "What the ACA actually is",
+     "est_minutes": 6,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>The <strong>Affordable Care Act</strong> is the law that created the health insurance Marketplace. You will hear people call the same thing by different names, and all of them mean the Marketplace:</p><ul><li>ACA</li><li>Obamacare</li><li>The Marketplace</li><li>HealthCare.gov</li></ul><p>When a consumer says any of those words, they are talking about what you are calling about.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Through the Marketplace, people who do not have other coverage can get health insurance, and the government helps with the cost. That help is what the script calls the <strong>subsidy</strong>.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Say it the approved way",
+       "html": "<p>Our approved terms are: subsidy assistance, subsidy benefits, subsidy incentives, subsidy support, government subsidy, free subsidy, health subsidy, government subsidy allowance.</p><p>And you must say <strong>“through the Affordable Care Act”</strong> in your intro. That is what makes the call legitimate and clear.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Notice what the subsidy is <em>not</em>. It is not a cheque, not a card, not cash, not help with groceries or bills. It is help with health insurance. The moment a call drifts into money or household expenses, it has gone somewhere it is not allowed to go. You will cover that in detail in the Compliance module.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer says: “Oh, is this the Obamacare thing?” What is true?",
+       "choices": [
+        "Obamacare is a different programme from the ACA",
+        "Obamacare, the ACA, the Marketplace and HealthCare.gov are all the same thing",
+        "Obamacare was replaced by the Marketplace in 2026",
+        "You should say you have never heard of Obamacare"
+       ],
+       "answer_index": 1,
+       "explanation": "They are all names for the same thing. Nothing to correct — keep moving through your verifications."
+      }
+     ]
+    },
+    {
+     "id": "a101_3",
+     "title": "ACA is not Medicare — the rule is inverted",
+     "est_minutes": 6,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>If you have worked a Medicare campaign, unlearn the reflex. The two products qualify people in <strong>opposite</strong> directions.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<table><tr><th></th><th>Medicare campaign</th><th>ACA campaign</th></tr><tr><td><strong>You want</strong></td><td>People who HAVE Medicare Parts A &amp; B</td><td>People who have NO Medicare, NO Medicaid, NO work insurance</td></tr><tr><td><strong>Medicare means</strong></td><td>Qualified</td><td>Disqualified</td></tr><tr><td><strong>Typical age</strong></td><td>65+</td><td>19 to 64</td></tr></table>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "The single most expensive mistake",
+       "html": "<p>Transferring someone who has Medicare, Medicaid or work insurance. They cannot be helped, the licensed agent's time is wasted, and the call is a compliance problem. On this campaign, coverage is a disqualifier.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>This is also why you confirm it <strong>twice</strong>. Once early, and once again right before you ask to transfer. People answer quickly the first time without really thinking, and often correct themselves on the second pass. That second confirmation is not padding — it is the check that catches the mistake.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer tells you they have Medicare Parts A and B. What are they on an ACA call?",
+       "choices": [
+        "Qualified — Parts A and B are what we want",
+        "Disqualified — transfer is not possible",
+        "Qualified only if they also have Medicaid",
+        "Qualified if they are over 65"
+       ],
+       "answer_index": 1,
+       "explanation": "On ACA, Medicare is a DQ. The opposite of the Medicare campaign."
+      }
+     ]
+    },
+    {
+     "id": "a101_4",
+     "title": "What you may and may not say the subsidy is",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Consumers will push you on this constantly: <em>what is it, how much is it, is it a card, is it money?</em> You are not dodging them when you decline to answer — you genuinely are not the person who can answer, and guessing is what gets agents fired.</p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "What is the subsidy?",
+       "response": "Great question — there's so many benefits and incentives available, it's different for everyone. It depends on your specific situation, your wants and your needs. Once I confirm what I have, the worker in your area can provide the options they may have available for you. Let's finish this part first, you're still living in (STATE) with no active Medicare, Medicaid, or Work Insurance correct?",
+       "coach_note": "Answer the spirit of the question, then go straight back to your verification. Notice the rebuttal ends with a question — that is what keeps you in control of the call."
+      },
+      {
+       "type": "rebuttal",
+       "objection": "Is it money, cash, a cheque, a card? Will it help with my bills?",
+       "response": "Since it's confidential between the licensed agent and yourself, once I verify everything you can go ahead and ask the licensed agent. Now, do you still not receive any Medicare, Medicaid or work insurance?",
+       "coach_note": "Do not repeat the words they used. Do not confirm or deny that it is money. Hand the question to the licensed agent and get back on script."
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Every rebuttal ends the same way",
+       "html": "<p>Acknowledge, answer briefly, then return to: <strong>still in (STATE), still no Medicare, Medicaid or work insurance?</strong></p><p>That loop is the whole rhythm of this campaign. If you learn nothing else today, learn that.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer asks whether the subsidy is money they can spend on groceries. What do you say?",
+       "choices": [
+        "Confirm that it can help with groceries",
+        "Tell them it is roughly a few hundred dollars",
+        "Tell them it is confidential between them and the licensed agent, then go back to verifying",
+        "Tell them you are not allowed to talk to them about it and end the call"
+       ],
+       "answer_index": 2,
+       "explanation": "You redirect to the licensed agent and return to your verification. You never confirm what it is, and never repeat money or household words back to them."
+      }
+     ]
+    },
+    {
+     "id": "a101_5",
+     "title": "Who you are calling",
+     "est_minutes": 3,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>These are working-age adults, 19 to 64, who are listed as having no Medicare, Medicaid or employer coverage. Many are uninsured right now. Some already have a Marketplace plan and do not realise new options may be available.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Expect people at work, in the car, with kids in the background, people who have had several calls like this already today, and people who are sure this is a scam. None of that means the call is over. All of it is covered by a rebuttal you are going to learn.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "You are calling for a reason",
+       "html": "<p>These are not random numbers. They came to us as people who may qualify. That is literally the rebuttal: “I do have you here for a reason.” Say it like you mean it, because it is true.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Which consumer is a fit for this campaign?",
+       "choices": [
+        "A 70-year-old with Medicare Parts A and B",
+        "A 34-year-old with insurance through her employer",
+        "A 45-year-old with no insurance at all",
+        "A 60-year-old with VA health care"
+       ],
+       "answer_index": 2,
+       "explanation": "No insurance at all is exactly who this is for. Marketplace already is also fine. Medicare, work insurance and VA are all DQs."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "aca101_q1",
+      "question": "What is the mission of an ACA fronter?",
+      "choices": [
+       "Enrol consumers in a Marketplace plan over the phone",
+       "Verify a few details and connect the consumer to a licensed agent in their state",
+       "Calculate how much subsidy the consumer will receive",
+       "Collect income and household details for the application"
+      ],
+      "answer_index": 1,
+      "explanation": "You verify, get consent, and hand off. Enrolment and amounts belong to the licensed agent.",
+      "tags": [
+       "role"
+      ]
+     },
+     {
+      "id": "aca101_q2",
+      "question": "Which of these is NOT another name for the ACA?",
+      "choices": [
+       "Obamacare",
+       "The Marketplace",
+       "HealthCare.gov",
+       "Medicare Part C"
+      ],
+      "answer_index": 3,
+      "explanation": "Medicare Part C is a Medicare Advantage plan — a different programme entirely, and a DQ on this campaign.",
+      "tags": [
+       "product"
+      ]
+     },
+     {
+      "id": "aca101_q3",
+      "question": "On an ACA call, a consumer with work insurance is…",
+      "choices": [
+       "Qualified",
+       "Disqualified",
+       "Qualified if the employer plan is cheap",
+       "Qualified if they also have Medicaid"
+      ],
+      "answer_index": 1,
+      "explanation": "Any employer or spousal work coverage is a DQ.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aca101_q4",
+      "question": "Why do you confirm “no Medicare, Medicaid or work insurance” twice?",
+      "choices": [
+       "To fill time while the system loads",
+       "Because the first answer is often quick and careless, and people correct themselves on the second pass",
+       "Because the dialer requires two entries",
+       "To make the call sound longer and more official"
+      ],
+      "answer_index": 1,
+      "explanation": "The double confirmation is the check that catches the mistake. It is required on every call.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "aca101_q5",
+      "question": "Which phrase MUST appear in your intro?",
+      "choices": [
+       "“through the Affordable Care Act”",
+       "“this is a limited time offer”",
+       "“you have been pre-approved”",
+       "“this is a government agency”"
+      ],
+      "answer_index": 0,
+      "explanation": "Saying “through the Affordable Care Act” is a required part of the approved intro.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "aca101_q6",
+      "question": "A consumer asks: “How much am I going to get?” What is the right move?",
+      "choices": [
+       "Give them a rough range so they stay interested",
+       "Tell them it depends on income and ask what they earn",
+       "Tell them it is confidential between them and the licensed agent, then return to your verification",
+       "Tell them nobody knows and end the call"
+      ],
+      "answer_index": 2,
+      "explanation": "Amounts belong to the licensed agent. Redirect and go straight back to state and coverage.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "aca101_q7",
+      "question": "Which is an approved way to describe what you are calling about?",
+      "choices": [
+       "Your free money from the government",
+       "Your subsidy assistance through the Affordable Care Act",
+       "Your grocery and utility allowance",
+       "Your cash benefit card"
+      ],
+      "answer_index": 1,
+      "explanation": "Subsidy assistance through the ACA is on the approved list. The others use forbidden words.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "aca101_q8",
+      "question": "What age range does this campaign generally serve?",
+      "choices": [
+       "65 and older",
+       "19 to 64",
+       "18 and older, any age",
+       "Any age with a disability"
+      ],
+      "answer_index": 1,
+      "explanation": "ACA is for working-age adults. 19+ is the age you confirm, and most consumers above 65 will have Medicare.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aca101_q9",
+      "question": "A consumer already has a Marketplace plan. What do you do?",
+      "choices": [
+       "Disqualify them — they already have coverage",
+       "Continue — Marketplace consumers can be transferred",
+       "Transfer them without any verification",
+       "Tell them to call HealthCare.gov themselves"
+      ],
+      "answer_index": 1,
+      "explanation": "Already having Marketplace is one of the two groups you CAN transfer. You still complete every verification.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aca101_q10",
+      "question": "After a rebuttal, where should you always end up?",
+      "choices": [
+       "Asking for their income",
+       "Back at your verification — state and no Medicare, Medicaid or work insurance",
+       "Asking whether they want to be called back later",
+       "Explaining the subsidy in more detail"
+      ],
+      "answer_index": 1,
+      "explanation": "Acknowledge, answer briefly, then loop back to the verification. That rhythm runs the whole campaign.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "aca101_q11",
+      "question": "Who answers the consumer's questions about what they will actually receive?",
+      "choices": [
+       "You, from the script",
+       "The licensed agent after the transfer",
+       "The consumer's insurance company",
+       "Nobody — it is a secret"
+      ],
+      "answer_index": 1,
+      "explanation": "The licensed agent. Your job is to get them there.",
+      "tags": [
+       "role"
+      ]
+     },
+     {
+      "id": "aca101_q12",
+      "question": "What makes a call a good call?",
+      "choices": [
+       "It lasted a long time",
+       "The consumer agreed to be transferred and you completed a warm handoff with every step done",
+       "You convinced the consumer to give you their income",
+       "You got the consumer to admit they have Medicare"
+      ],
+      "answer_index": 1,
+      "explanation": "Verified, consented, warm handoff, every compliance step complete.",
+      "tags": [
+       "role"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "aca_qualify",
+   "title": "Who Qualifies, Who Doesn't",
+   "summary": "The two groups you can transfer, the nine disqualifiers, SSDI versus SSI, and the Marketplace check when a consumer names a carrier.",
+   "est_minutes": 22,
+   "badge": {
+    "id": "badge_aca_qualify",
+    "name": "Qualifier",
+    "icon": "✅"
+   },
+   "lessons": [
+    {
+     "id": "aq_1",
+     "title": "The two groups you CAN transfer",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>This part is short, because there are only two:</p><ol><li>Consumers who <strong>already have ACA / Marketplace insurance</strong></li><li>Consumers with <strong>no insurance at all</strong></li></ol><p>That is the entire list. Anything else needs checking, and most of it is a disqualifier.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Why Marketplace consumers still count",
+       "html": "<p>Having a Marketplace plan does not mean they are getting everything available to them. That is exactly the rebuttal: new benefits have come out that they may not be receiving yet.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Which consumer can be transferred?",
+       "choices": [
+        "One with Medicaid",
+        "One with a Marketplace plan already",
+        "One with retiree coverage from a former employer",
+        "One with VA health care"
+       ],
+       "answer_index": 1,
+       "explanation": "Marketplace already, or nothing at all. Everything else on that list is a DQ."
+      }
+     ]
+    },
+    {
+     "id": "aq_2",
+     "title": "The nine disqualifiers",
+     "est_minutes": 7,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>If the consumer has any of these, they cannot be transferred. Learn them cold — transferring a disqualified consumer is the worst outcome on this campaign.</p><ol><li>Medicare</li><li>Medicaid</li><li>Work insurance or spousal work insurance</li><li>Military or veterans insurance (VA)</li><li>Private insurance or spousal private insurance</li><li>State insurance</li><li>Disability insurance (SSDI / SSD)</li><li>Non-US citizens</li><li>Native insurance</li></ol>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "They tell you they have Medicare, Medicaid, work or military insurance",
+       "response": "Unfortunately at this time you would not be qualified. Have a wonderful day!",
+       "coach_note": "Say it warmly and end the call. Do not argue, do not try to find a way around it, do not keep pitching. Disposition as DQ."
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "A DQ is a correct outcome, not a failure",
+       "html": "<p>Catching a disqualifier and reading the DQ line is a <strong>good call</strong>. You will be graded on reaching the right outcome, not on transferring everyone. Transferring a DQ is what counts against you.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer says their husband's job provides their insurance. What is this?",
+       "choices": [
+        "Fine — spousal coverage does not count",
+        "A DQ — spousal work insurance is on the list",
+        "Fine if the plan is through the Marketplace",
+        "A DNC"
+       ],
+       "answer_index": 1,
+       "explanation": "Work insurance includes spousal work insurance. Read the DQ line and disposition as DQ."
+      }
+     ]
+    },
+    {
+     "id": "aq_3",
+     "title": "SSDI versus SSI — the one that catches people",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>These two sound almost identical and mean different things for your call.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<table><tr><th></th><th>What it is</th><th>On your call</th></tr><tr><td><strong>SSDI / SSD</strong></td><td>Social Security Disability Insurance</td><td><strong>DQ</strong></td></tr><tr><td><strong>SSI</strong></td><td>Supplemental Security Income</td><td><strong>Continue</strong>, as long as there is no Medicare, Medicaid or work insurance</td></tr></table>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "If you are not sure which one they said",
+       "html": "<p>Do not guess, and do not interrogate them. Go back to the question that actually decides it: <em>“you're still not receiving Medicare, Medicaid or work insurance, correct?”</em> That answer is what qualifies or disqualifies them.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer mentions they get SSI. What do you do?",
+       "choices": [
+        "DQ immediately",
+        "Continue, as long as they have no Medicare, Medicaid or work insurance",
+        "Transfer without verifying anything else",
+        "Ask them how much SSI they receive"
+       ],
+       "answer_index": 1,
+       "explanation": "SSI is not a disqualifier. SSDI is. And you never ask about amounts."
+      }
+     ]
+    },
+    {
+     "id": "aq_4",
+     "title": "When they name a carrier, or don't know what they have",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Consumers often name an insurance company rather than a programme: Blue Cross Blue Shield, Oscar, Ambetter, Anthem, UnitedHealthcare. None of those names tell you what you need to know, because those companies sell Marketplace plans <em>and</em> other plans.</p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "They name an insurance you are not familiar with",
+       "response": "It is through the Marketplace, correct?",
+       "coach_note": "This one question decides the call. YES — proceed with the transfer. NO, or they cannot confirm it is Marketplace — disposition as DQ."
+      },
+      {
+       "type": "rebuttal",
+       "objection": "I'm not sure if I have Medicare or Medicaid",
+       "response": "Do you receive a red, white or blue card?",
+       "coach_note": "The red, white and blue card is the Medicare card. If YES, that is a DQ."
+      },
+      {
+       "type": "rebuttal",
+       "objection": "I don't know what I have",
+       "response": "I can help you figure it out. Medicare is usually for folks over the age of 65, it comes with a red, white, and blue card. Medicaid, you would have had to apply and get approved for. And work insurance is provided by your employer, you'd see that deducted off your paycheque. You have none of those, right?",
+       "coach_note": "Walk them through it calmly. If they still cannot tell you after this, DQ and move on — do not transfer someone whose coverage you could not establish."
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Unsure is not a yes",
+       "html": "<p>If you cannot confirm the plan is through the Marketplace, the answer is DQ. “Probably” and “I think so” are not confirmations.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer says they have Ambetter. What must you do before transferring?",
+       "choices": [
+        "Nothing — Ambetter is a Marketplace carrier",
+        "Ask whether the plan is through the Marketplace and get a clear yes",
+        "DQ them — any named carrier is a DQ",
+        "Ask how much they pay each month"
+       ],
+       "answer_index": 1,
+       "explanation": "Carriers sell both Marketplace and non-Marketplace plans. You must confirm it is Marketplace, and an unclear answer means DQ."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "aq_q1",
+      "question": "Which two groups can be transferred?",
+      "choices": [
+       "Medicare or Medicaid holders",
+       "Consumers with Marketplace insurance, or with no insurance at all",
+       "Anyone 19 or older",
+       "Veterans and their spouses"
+      ],
+      "answer_index": 1,
+      "explanation": "Marketplace already, or nothing at all.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aq_q2",
+      "question": "How many disqualifiers are on the DQ list?",
+      "choices": [
+       "Five",
+       "Seven",
+       "Nine",
+       "Twelve"
+      ],
+      "answer_index": 2,
+      "explanation": "Nine: Medicare, Medicaid, work, military/VA, private, state, SSDI/SSD, non-citizens, native insurance.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aq_q3",
+      "question": "SSDI on an ACA call is…",
+      "choices": [
+       "A DQ",
+       "Fine — continue",
+       "A DNC",
+       "Only a DQ if they also have Medicaid"
+      ],
+      "answer_index": 0,
+      "explanation": "SSDI/SSD is a disqualifier. SSI is not.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aq_q4",
+      "question": "SSI on an ACA call is…",
+      "choices": [
+       "A DQ",
+       "Fine — continue if there is no Medicare, Medicaid or work insurance",
+       "A DNC",
+       "A wrong number"
+      ],
+      "answer_index": 1,
+      "explanation": "SSI is not a disqualifier.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aq_q5",
+      "question": "A consumer has VA health care. What is the outcome?",
+      "choices": [
+       "Transfer",
+       "DQ",
+       "DNC",
+       "Call Back"
+      ],
+      "answer_index": 1,
+      "explanation": "Military and veterans insurance is on the DQ list.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aq_q6",
+      "question": "A consumer names UnitedHealthcare. What is your next line?",
+      "choices": [
+       "“That's great, let me transfer you.”",
+       "“It is through the Marketplace, correct?”",
+       "“How much do you pay for that?”",
+       "“Unfortunately you would not be qualified.”"
+      ],
+      "answer_index": 1,
+      "explanation": "Named carriers require the Marketplace check before you proceed.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aq_q7",
+      "question": "The consumer cannot confirm whether their plan is through the Marketplace. What do you do?",
+      "choices": [
+       "Transfer anyway and let the agent sort it out",
+       "Disposition as DQ",
+       "Disposition as Not Interested",
+       "Schedule a callback so they can check"
+      ],
+      "answer_index": 1,
+      "explanation": "If it cannot be confirmed as Marketplace, it is a DQ.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aq_q8",
+      "question": "What does a red, white and blue card tell you?",
+      "choices": [
+       "They have Medicaid",
+       "They have Medicare — a DQ",
+       "They have a Marketplace plan",
+       "They have work insurance"
+      ],
+      "answer_index": 1,
+      "explanation": "The red, white and blue card is the Medicare card, so it is a DQ.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aq_q9",
+      "question": "Is reading the DQ line and ending the call a bad outcome for you?",
+      "choices": [
+       "Yes — every call should end in a transfer",
+       "No — a correctly caught DQ is a correct outcome",
+       "Only if the consumer was friendly",
+       "Yes — you should try two more rebuttals first"
+      ],
+      "answer_index": 1,
+      "explanation": "Catching a DQ correctly is a good call. Transferring one is the failure.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aq_q10",
+      "question": "A consumer says their state gives them their health coverage. What is that?",
+      "choices": [
+       "Marketplace — transfer",
+       "State insurance — a DQ",
+       "Medicaid only if they are over 65",
+       "Not relevant to the call"
+      ],
+      "answer_index": 1,
+      "explanation": "State insurance is on the DQ list.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "aq_q11",
+      "question": "What is the correct DQ line?",
+      "choices": [
+       "“You don't qualify, goodbye.”",
+       "“Unfortunately at this time you would not be qualified. Have a wonderful day!”",
+       "“I'll put you on our do not call list.”",
+       "“Let me get my manager.”"
+      ],
+      "answer_index": 1,
+      "explanation": "Warm, brief, and then end the call. Do not keep pitching.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "aq_q12",
+      "question": "A consumer's spouse has private insurance that covers them both. What is the outcome?",
+      "choices": [
+       "Transfer",
+       "DQ",
+       "Continue if the spouse's plan is cheap",
+       "DNC"
+      ],
+      "answer_index": 1,
+      "explanation": "Spousal private insurance is on the DQ list.",
+      "tags": [
+       "qualifying"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "aca_script",
+   "title": "The Script, Line by Line",
+   "summary": "Every required step in order, why each one exists, and the two that get skipped most on real calls.",
+   "est_minutes": 26,
+   "badge": {
+    "id": "badge_aca_script",
+    "name": "On Script",
+    "icon": "📜"
+   },
+   "lessons": [
+    {
+     "id": "as_1",
+     "title": "The opening",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Four things have to happen in your first fifteen seconds: the right person, your company name, the recorded-line disclosure, and what the call is about. Miss any one and the call is non-compliant before you have asked a single question.</p>"
+      },
+      {
+       "type": "script",
+       "title": "Opening",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Hey, am I speaking with (Customer's Name)?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Yeah, who's this?"
+        },
+        {
+         "speaker": "agent",
+         "text": "This is (your name) with America's Health on a recorded line."
+        },
+        {
+         "speaker": "agent",
+         "text": "I am calling because it shows you didn't get your subsidy allowances from the ACA program."
+        },
+        {
+         "speaker": "note",
+         "text": "(Let them respond)"
+        }
+       ]
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "\"On a recorded line\" is not optional",
+       "html": "<p>4.4% of real transferred calls never said it. It takes a second and it protects you more than it protects anyone else.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>If your script shows <strong>Health Benefit Guide</strong> or <strong>Benefit Link</strong> in the DBA field, use that name instead. Nothing else about the script changes.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Which part of the opening is most often rushed on real calls?",
+       "choices": [
+        "The consumer's name",
+        "The company name and recorded line, delivered as one run-on sentence",
+        "The ACA mention",
+        "The greeting"
+       ],
+       "answer_index": 1,
+       "explanation": "On 31% of calls the company name and recorded line are said without pausing for any response. Slow down and let them register it."
+      }
+     ]
+    },
+    {
+     "id": "as_2",
+     "title": "State, then the first coverage check",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "script",
+       "title": "Verification",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Are you still living in (STATE) to receive it?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Yes."
+        },
+        {
+         "speaker": "agent",
+         "text": "And everything is still up to date — you have no Medicare, no Medicaid and no work insurance, correct?"
+        },
+        {
+         "speaker": "note",
+         "text": "(WAIT for the answer. This is the question the whole call turns on.)"
+        },
+        {
+         "speaker": "agent",
+         "text": "So let's see what we could do for you."
+        }
+       ]
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Wait for the answer",
+       "html": "<p>On about a quarter of real calls the agent asks a required question and keeps talking. The dialer records it as asked. It verified nothing, and if that consumer turns out to have Medicaid, the transfer is wasted and the call is a compliance problem.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>The state matters because the licensed agent has to be licensed <em>in that state</em>. If they have moved, you need the new state before anything else — and that is a script line, not an improvisation.</p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "Wrong state",
+       "response": "That could be the issue. What state can I get you help in? (edit and save on the Call Info page)",
+       "coach_note": "Get the correct state, then carry on with the verification. It is an easy save."
+      },
+      {
+       "type": "check",
+       "question": "The consumer answers “I think so” when you ask about Medicare, Medicaid or work insurance. What do you do?",
+       "choices": [
+        "Treat it as a no and continue",
+        "Treat it as a yes and disqualify",
+        "Keep asking until you get a clear yes or no",
+        "Transfer and let the licensed agent sort it out"
+       ],
+       "answer_index": 2,
+       "explanation": "“I think so” is not an answer. Use the “I don't know what I have” rebuttal to walk them through it, and if you still can't establish it, DQ."
+      }
+     ]
+    },
+    {
+     "id": "as_3",
+     "title": "Age, and why 19",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>You confirm the consumer is <strong>over the age of 19</strong>. It sits inside the double-confirm line:</p>"
+      },
+      {
+       "type": "script",
+       "title": "Age and double confirmation",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "You did say no Medicare, Medicaid or work insurance, and confirming you are over the age of 19?"
+        },
+        {
+         "speaker": "note",
+         "text": "(WAIT for the answer)"
+        }
+       ]
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Under 19 is a DNC, not a DQ",
+       "html": "<p>Anyone under 19 goes on the do-not-call list. That is a different outcome from a disqualification, and coding it wrong is a miscode.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>This step was skipped or rushed on <strong>23.8%</strong> of real transferred calls — and “no age question” was one of the two most common findings when QA reviewed calls by hand. It is the single easiest step to get right.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer tells you they are 18. What is the outcome?",
+       "choices": [
+        "DQ",
+        "DNC",
+        "Transfer anyway — they're close enough",
+        "Call Back when they turn 19"
+       ],
+       "answer_index": 1,
+       "explanation": "Under 19 is a do-not-call, not a disqualification."
+      }
+     ]
+    },
+    {
+     "id": "as_4",
+     "title": "The double-confirm — the most skipped step on the floor",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>The script asks for no Medicare, Medicaid or work insurance <strong>twice</strong>. Once early, once again right before you ask to transfer.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "A third of transfers never got it",
+       "html": "<p><strong>33.8%</strong> of real transferred calls skipped the second confirmation entirely. It is the most commonly missed requirement on the campaign, by a wide margin.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>It exists because of how people answer the phone. The first time you ask, they are still working out who you are and they answer on autopilot. The second time, they are actually listening — and a meaningful number of consumers correct themselves: <em>“wait, I do have Medicaid actually”</em>, <em>“my wife's work covers me”</em>.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Rolling it into one sentence does not count",
+       "html": "<p>“No Medicare, Medicaid or work insurance and over 19, correct?” asked once is <strong>not</strong> a double confirmation. QA flags it, and so does the simulator. The second check has to be its own separate ask, after the first one was answered.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Which of these counts as a valid double confirmation?",
+       "choices": [
+        "Asking once, slowly and clearly",
+        "Asking at the start, then asking again as its own separate question before the transfer",
+        "Asking about Medicare first and Medicaid later",
+        "Saying “no Medicare, Medicaid, work insurance, over 19, correct?” once"
+       ],
+       "answer_index": 1,
+       "explanation": "Two separate asks, each with an answer. Combining everything into one sentence fails."
+      }
+     ]
+    },
+    {
+     "id": "as_5",
+     "title": "Consent, then the conference",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "script",
+       "title": "The transfer ask",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Okay, so you verified everything. I'll quickly get the senior agent on the line and see what assistance you may receive, okay?"
+        },
+        {
+         "speaker": "note",
+         "text": "(MUST SAY OKAY — wait for it)"
+        },
+        {
+         "speaker": "agent",
+         "text": "You may hear the phone ring while I add them — I'm still right here with you."
+        }
+       ]
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "16.5% of transfers had no consent",
+       "html": "<p>Almost all of them at the handoff, and the transcripts show the same shape every time: the agent asks “okay?” and clicks conference in the same breath. The words are there. The pause isn't.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Silence is not consent. Talking over your question is not consent. They have to say okay.</p>"
+      },
+      {
+       "type": "check",
+       "question": "You ask “…see what assistance you may receive, okay?” and the consumer says nothing. What now?",
+       "choices": [
+        "Conference them in — they didn't object",
+        "Ask again and wait for a yes",
+        "Disposition as Not Interested",
+        "Start the script over"
+       ],
+       "answer_index": 1,
+       "explanation": "No answer is not consent. Ask again, wait, and only then conference."
+      }
+     ]
+    },
+    {
+     "id": "as_6",
+     "title": "The warm handoff",
+     "est_minutes": 3,
+     "blocks": [
+      {
+       "type": "script",
+       "title": "Handoff",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Hi, I have (Customer's Name) from (STATE), please take the call."
+        },
+        {
+         "speaker": "note",
+         "text": "(Wait until the agent and the client are speaking, then disconnect)"
+        }
+       ]
+      },
+      {
+       "type": "text",
+       "html": "<p>Two things make this a <em>warm</em> handoff: you <strong>name the state</strong>, and you <strong>wait</strong> until you hear them talking to each other. Drop early and it is not a completed transfer.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "The one step the floor is already good at",
+       "html": "<p>93.9% of real calls do the handoff properly. It is the strongest step on the board — worth knowing that the habit is already there.</p>"
+      },
+      {
+       "type": "check",
+       "question": "When can you disconnect?",
+       "choices": [
+        "As soon as the agent picks up",
+        "After you say the client's name",
+        "Once you hear the agent and the client speaking to each other",
+        "After thirty seconds"
+       ],
+       "answer_index": 2,
+       "explanation": "Wait for both voices. That is what makes it warm, and what makes it a Transfer rather than a Hung-Up Transfer."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "as_q1",
+      "question": "What must be in your first few sentences?",
+      "choices": [
+       "Your name only",
+       "Company name and that the call is recorded",
+       "The subsidy amount",
+       "The consumer's income"
+      ],
+      "answer_index": 1,
+      "explanation": "Approved company name plus the recorded-line disclosure, every call.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "as_q2",
+      "question": "How many times is coverage confirmed?",
+      "choices": [
+       "Once",
+       "Twice, as two separate asks",
+       "Three times",
+       "Only if they sound unsure"
+      ],
+      "answer_index": 1,
+      "explanation": "Two separate confirmations. Combining them into one sentence does not count.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "as_q3",
+      "question": "What age do you confirm?",
+      "choices": [
+       "18+",
+       "19+",
+       "21+",
+       "No age check"
+      ],
+      "answer_index": 1,
+      "explanation": "Over the age of 19. Under 19 is a DNC.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "as_q4",
+      "question": "Which step is skipped most often on real transferred calls?",
+      "choices": [
+       "The warm handoff",
+       "The state confirmation",
+       "The second coverage confirmation",
+       "The greeting"
+      ],
+      "answer_index": 2,
+      "explanation": "33.8% of transferred calls skipped it — the most missed requirement on the campaign.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "as_q5",
+      "question": "The consumer says nothing after your transfer ask. What is that?",
+      "choices": [
+       "Consent",
+       "Not consent — ask again",
+       "A Dead Air disposition",
+       "A reason to DQ"
+      ],
+      "answer_index": 1,
+      "explanation": "Verbal consent means they say okay.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "as_q6",
+      "question": "What makes a handoff warm?",
+      "choices": [
+       "Being friendly",
+       "Naming the state and waiting until agent and client are speaking",
+       "Staying on the whole call",
+       "Telling them an agent will call back"
+      ],
+      "answer_index": 1,
+      "explanation": "Name the state, wait for both voices, then drop.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "as_q7",
+      "question": "You forgot the recorded-line disclosure and the consumer is ready to transfer. What do you do?",
+      "choices": [
+       "Transfer — they're ready",
+       "Do not transfer; the call is non-compliant without it",
+       "Say it after the transfer",
+       "Ask the licensed agent to say it"
+      ],
+      "answer_index": 1,
+      "explanation": "If a required step is missed, do not transfer.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "as_q8",
+      "question": "The consumer has moved to a different state. What happens?",
+      "choices": [
+       "DQ them",
+       "Get the correct state and continue",
+       "Transfer to the original state's agent",
+       "Disposition as Wrong Number"
+      ],
+      "answer_index": 1,
+      "explanation": "Get the new state — the licensed agent has to match it.",
+      "tags": [
+       "script"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "aca_rebuttals",
+   "title": "Rebuttals That Work",
+   "summary": "The objections real consumers raise, how often each one comes up, the approved answer, and the loop that keeps you in control.",
+   "est_minutes": 30,
+   "badge": {
+    "id": "badge_aca_rebuttals",
+    "name": "Unshakeable",
+    "icon": "🛡"
+   },
+   "lessons": [
+    {
+     "id": "ar_1",
+     "title": "The loop",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Every rebuttal on this campaign has the same three beats:</p><ol><li><strong>Acknowledge</strong> what they said.</li><li><strong>Answer briefly</strong> — one or two sentences, never a speech.</li><li><strong>Go straight back</strong> to your verification: still in (STATE), still no Medicare, Medicaid or work insurance?</li></ol>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "End on a question",
+       "html": "<p>Every approved rebuttal finishes with a question. That is deliberate: whoever asks the last question controls where the call goes next. End on a statement and you hand the call to them.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>These are the objections real consumers actually raise, measured across 4,000 calls:</p>"
+      },
+      {
+       "type": "text",
+       "html": "<table><tr><th>What they say</th><th>How often</th></tr><tr><td>What is the subsidy? What kind of assistance?</td><td>17.4%</td></tr><tr><td>I already have Marketplace / Obamacare</td><td>12.3%</td></tr><tr><td>I need to think about it</td><td>10.6%</td></tr><tr><td>I'm busy / call me back</td><td>8.7%</td></tr><tr><td>I already have that</td><td>7.8%</td></tr><tr><td>I don't know what insurance I have</td><td>7.7%</td></tr><tr><td>Who are you with?</td><td>7.1%</td></tr><tr><td>This is a scam</td><td>4.5%</td></tr></table>"
+      },
+      {
+       "type": "check",
+       "question": "What is the last beat of every rebuttal?",
+       "choices": [
+        "A joke to lighten the mood",
+        "Going back to your verification question",
+        "Asking if they have any other questions",
+        "Explaining the subsidy in more detail"
+       ],
+       "answer_index": 1,
+       "explanation": "Acknowledge, answer briefly, return to the verification — ending on a question."
+      }
+     ]
+    },
+    {
+     "id": "ar_2",
+     "title": "“What is the subsidy?” — the most common question",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Raised on <strong>17.4%</strong> of calls — more than any other objection. They are not being difficult; they genuinely want to know what you are calling about.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Real consumers say it like this: <em>“What is this for?”</em></p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "What is the subsidy?",
+       "response": "Great question — there's so many benefits and incentives available, it's different for everyone. It depends on your specific situation, your wants and your needs. Once I confirm what I have, the worker in your area can provide the options they may have available for you. Let's finish this part first, you're still living in (STATE) with no active Medicare, Medicaid, or Work Insurance correct?",
+       "coach_note": "Answer the spirit of it, then go straight back to the verification. You are not stonewalling — you genuinely are not the person who can give them specifics."
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>A top agent on a real call:</strong> “There are benefits, (customer's name), that's not included in any healthcare plan. Now, which ones you may qualify for, I don't know the local agent is going to be joining in with their status. But they are benefits that you can't just go out and buy.”</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "The trap inside this one",
+       "html": "<p>The follow-up is almost always “is it money?” — raised on 3.3% of calls. Do not repeat their words back. “It's not money for groceries” puts two banned words on a recorded line.</p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "Is it money? A card? Help with bills?",
+       "response": "Since it's confidential between the licensed agent and yourself, once I verify everything you can go ahead and ask the licensed agent. Now, do you still not receive any Medicare, Medicaid or work insurance?",
+       "coach_note": "Redirect to the licensed agent without echoing the word they used, then back to the verification."
+      },
+      {
+       "type": "check",
+       "question": "A consumer asks “is this cash or a card?” What is the compliant answer?",
+       "choices": [
+        "“It's not cash or a card.”",
+        "“It's usually a card.”",
+        "“That's confidential between you and the licensed agent — now, you still don't receive Medicare, Medicaid or work insurance, correct?”",
+        "“I can calculate that for you.”"
+       ],
+       "answer_index": 2,
+       "explanation": "No echo, no guess, straight back to the verification."
+      }
+     ]
+    },
+    {
+     "id": "ar_3",
+     "title": "“I already have insurance”",
+     "est_minutes": 6,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Two different objections that sound identical. “I already have Marketplace” comes up on <strong>12.3%</strong> of calls; the vaguer “I already have that” on <strong>7.8%</strong> — and that second one is handled badly more than any other objection on the board.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>What makes it hard is that the consumer says the same words whether they are qualified or disqualified: <em>“I have insurance.”</em>, <em>“I got Medicaid.”</em></p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "I already have Marketplace / Obamacare / ACA",
+       "response": "And that's why we are calling today — there are new benefits that have come out that you may not be receiving as of yet. Just want to be sure you don't have Medicare, Medicaid or work insurance still, to be able to assist you.",
+       "coach_note": "Marketplace is NOT a disqualifier. Acknowledge it, then confirm there is no Medicare, Medicaid or work insurance."
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>A top agent on a real call:</strong> “All right. Is that through the marketplace?  Okay, that's what I see here. And that's okay. You can have that.”</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "When they name a carrier, one question decides the call",
+       "html": "<p>Blue Cross, Oscar, Ambetter, Anthem, UnitedHealthcare — those companies sell Marketplace plans <em>and</em> other plans. Ask: <strong>“It is through the Marketplace, correct?”</strong> A clear yes and you continue. No, or they can't tell you — that is a DQ.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer says “I've got Ambetter.” What is your next sentence?",
+       "choices": [
+        "“Perfect, let me get you transferred.”",
+        "“It is through the Marketplace, correct?”",
+        "“Unfortunately you wouldn't be qualified.”",
+        "“How much do you pay for that?”"
+       ],
+       "answer_index": 1,
+       "explanation": "Named carriers always need the Marketplace check before you go any further."
+      }
+     ]
+    },
+    {
+     "id": "ar_4",
+     "title": "“I don't know what I have” — and when it becomes a DQ",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Raised on <strong>7.7%</strong> of calls, and it is the second worst-handled objection. Consumers say: <em>“I have no idea.”</em>, <em>“I don't know.”</em></p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "I don't know what I have",
+       "response": "I can help you figure it out. Medicare is usually for folks over the age of 65, it comes with a red, white, and blue card. Medicaid, you would have had to apply and get approved for. And work insurance is provided by your employer, you'd see that deducted off your paycheque. You have none of those, right?",
+       "coach_note": "Walk them through the three, calmly. Most people can answer once you describe what each one looks like."
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "If they still can't tell you, it's a DQ",
+       "html": "<p>Not a transfer and not a guess. If you cannot establish what coverage someone has, the correct outcome is a disqualification. Transferring an unresolved consumer is the mistake this whole campaign is built to avoid.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>The quick test for Medicare: <em>“Do you receive a red, white or blue card?”</em> Yes means Medicare, which means DQ.</p>"
+      },
+      {
+       "type": "check",
+       "question": "After you walk them through all three, the consumer still can't say what they have. What now?",
+       "choices": [
+        "Transfer — the licensed agent can check",
+        "DQ and move on",
+        "Schedule a callback so they can look",
+        "Mark it Dead Air"
+       ],
+       "answer_index": 1,
+       "explanation": "Unresolved coverage is a DQ."
+      }
+     ]
+    },
+    {
+     "id": "ar_5",
+     "title": "Suspicion: scam, caller ID, “how did you get my number”",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>“This is a scam” comes up on <strong>4.5%</strong> of calls, and consumers are blunt about it: <em>“I done filled out 50 applications of the subsidy loan stuff, man. It's starting to sound like a scam to me.”</em></p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "This is a scam / That doesn't sound true",
+       "response": "I get it, Mr./Mrs. (Customer's Name). I completely understand why you'd be cautious, a lot of people feel that way at first. For your peace of mind, I can assure you this is legit, it isn't a scam call. I don't need any personal or financial information from you, so there's nothing here for me to misuse. The purpose is simply to verify whether you still live in (STATE) and currently have no Medicare, Medicaid, or employer coverage. For you to see which benefits you could possibly get, are those details still accurate for you?",
+       "coach_note": "Do not get defensive and do not argue. The strongest line you have is true: you are not asking for personal or financial information."
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>A top agent on a real call:</strong> “No, ma'am, is real. I'm a real person. We have a real company. We do real benefits and subsidy allowances through the Affordable Care Act. That's real. I base my character on my being honest, so I'm honestly telling you what's going on.”</p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "How did you get my information?",
+       "response": "I do have you here for a reason — we are actually only calling those that may qualify for a free subsidy with the Affordable Care Act. Now, you do not receive Medicare or Medicaid or any work insurance, correct?",
+       "coach_note": "Calm and factual: they are on the list because they may qualify. Then straight back to the verification."
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Your best asset here is what you don't need",
+       "html": "<p>You are not asking for a Social Security number, a bank account or a card. Say so. It is the fastest way to defuse a suspicious consumer, and it happens to be true.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer says this sounds like a scam. What is the strongest compliant response?",
+       "choices": [
+        "Insist that it isn't and keep pitching",
+        "Tell them you don't need any personal or financial information, then return to verifying",
+        "Offer to send them proof in the mail",
+        "Tell them to look up the company and call back"
+       ],
+       "answer_index": 1,
+       "explanation": "True, brief, and it goes straight back to the verification."
+      }
+     ]
+    },
+    {
+     "id": "ar_6",
+     "title": "Brush-offs and the ones that end the call",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>“I need to think about it” (10.6%) and “I'm busy” (8.7%) are the two most common brush-offs. Both have the same answer: be quick, be specific, keep moving.</p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "I'm busy / Call me back",
+       "response": "No problem at all, I'll be quick. I just need to confirm if you still live in (STATE) and don't have Medicare, Medicaid, or employer insurance.",
+       "coach_note": "Promise brevity and then actually be brief. The approved line works because it is honest about how little time this takes."
+      },
+      {
+       "type": "rebuttal",
+       "objection": "I'm not interested",
+       "response": "This isn't a matter of interest. The benefits and incentives are provided to help you for living in (STATE) with no active Medicare, Medicaid, or Work Insurance, are these details still up to date for you?",
+       "coach_note": "Notice this does not argue. It reframes: this isn't a matter of interest, it's a check on whether something was missed."
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Where the rebuttals stop",
+       "html": "<p>If the consumer tells you to stop calling, asks to be taken off the list, or threatens you — that is a DNC. Read the disclaimer, end the call, code it DNC. <strong>Do not rebuttal a do-not-call request.</strong></p><p>Swearing on its own is not a do-not-call request. It is an objection. Stay respectful and keep going.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>The DNC line:</strong> “I will add you to our Do Not Call list right away, Ma'am/Sir, you will not get any further calls from our company.”</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer swears at you and says “what is this garbage?” What do you do?",
+       "choices": [
+        "Read the DNC disclaimer",
+        "Rebut the objection and carry on",
+        "Hang up and code Not Interested",
+        "Transfer them quickly before they change their mind"
+       ],
+       "answer_index": 1,
+       "explanation": "Swearing is an objection, not a do-not-call request. Only a stop-calling request or a threat is a DNC."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "ar_q1",
+      "question": "What are the three beats of every rebuttal?",
+      "choices": [
+       "Argue, persuade, close",
+       "Acknowledge, answer briefly, return to the verification",
+       "Apologise, explain, transfer",
+       "Deflect, redirect, re-pitch"
+      ],
+      "answer_index": 1,
+      "explanation": "And it ends on a question, so you keep control.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "ar_q2",
+      "question": "Which objection comes up most often?",
+      "choices": [
+       "This is a scam",
+       "What is the subsidy?",
+       "I'm not interested",
+       "I don't want to change my plan"
+      ],
+      "answer_index": 1,
+      "explanation": "Raised on 17.4% of calls, more than any other.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "ar_q3",
+      "question": "A consumer asks “is it money?”. What must you avoid?",
+      "choices": [
+       "Mentioning the licensed agent",
+       "Repeating the word “money” back to them",
+       "Returning to the verification",
+       "Saying it's confidential"
+      ],
+      "answer_index": 1,
+      "explanation": "Never echo a forbidden word, even to deny it.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ar_q4",
+      "question": "“I already have Marketplace” means…",
+      "choices": [
+       "Disqualified",
+       "Still qualified — keep verifying",
+       "Transfer immediately",
+       "DNC"
+      ],
+      "answer_index": 1,
+      "explanation": "Marketplace is one of the two groups you CAN transfer.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "ar_q5",
+      "question": "A consumer names UnitedHealthcare. What decides the call?",
+      "choices": [
+       "Their monthly premium",
+       "Whether the plan is through the Marketplace",
+       "Whether they like the plan",
+       "How long they've had it"
+      ],
+      "answer_index": 1,
+      "explanation": "A clear yes continues; no or unsure is a DQ.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "ar_q6",
+      "question": "The consumer can't establish what coverage they have. Correct outcome?",
+      "choices": [
+       "Transfer",
+       "DQ",
+       "Call Back",
+       "Not Interested"
+      ],
+      "answer_index": 1,
+      "explanation": "Unresolved coverage is a disqualification.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "ar_q7",
+      "question": "What is your strongest line against a scam accusation?",
+      "choices": [
+       "Our company has been around for years",
+       "You don't need any personal or financial information from them",
+       "You can send them a letter",
+       "They can call the state"
+      ],
+      "answer_index": 1,
+      "explanation": "True, short, and it leads straight back to the verification.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "ar_q8",
+      "question": "A consumer asks to be taken off your list. What do you do?",
+      "choices": [
+       "One more rebuttal first",
+       "Read the DNC disclaimer, end the call, code DNC",
+       "Code Not Interested",
+       "Ask why they want off"
+      ],
+      "answer_index": 1,
+      "explanation": "Never rebuttal a do-not-call request.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ar_q9",
+      "question": "A consumer swears at you but doesn't ask you to stop calling.",
+      "choices": [
+       "DNC",
+       "Rebut and continue",
+       "Hang up",
+       "Transfer immediately"
+      ],
+      "answer_index": 1,
+      "explanation": "Swearing alone is an objection.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ar_q10",
+      "question": "Why does every approved rebuttal end with a question?",
+      "choices": [
+       "To sound friendly",
+       "So the agent keeps control of where the call goes",
+       "Because the script says so",
+       "To fill silence"
+      ],
+      "answer_index": 1,
+      "explanation": "Whoever asks the last question steers the call.",
+      "tags": [
+       "rebuttals"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "aca_compliance",
+   "title": "Compliance & Forbidden Words",
+   "summary": "The ten required steps on every call, the promise rules, the forbidden-word lists, and the company-name rule.",
+   "est_minutes": 28,
+   "badge": {
+    "id": "badge_aca_compliance",
+    "name": "Compliance Clean",
+    "icon": "🛡️"
+   },
+   "lessons": [
+    {
+     "id": "ac_1",
+     "title": "Every call means every call",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Compliance is not something you do on the good calls. It applies to:</p><ul><li>Every outbound call</li><li>Every inbound call</li><li>Accidental hang-ups and immediate callbacks</li><li>Every scheduled callback</li></ul><p><strong>Every call means every single call. No exceptions.</strong></p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "The callback trap",
+       "html": "<p>The most commonly skipped call is the one where you already spoke to the person ten minutes ago. It feels silly to re-introduce yourself and re-verify. Do it anyway. A callback with no recorded-line disclosure and no re-verification is a non-compliant call, no matter what happened on the first one.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>All calls are recorded for quality and compliance. That is not a threat — it is the reason the disclosure exists, and it is why doing it properly protects you.</p>"
+      },
+      {
+       "type": "check",
+       "question": "You called a consumer, got cut off, and call straight back. What do you do?",
+       "choices": [
+        "Pick up where you left off — you already did compliance",
+        "Run the compliance steps again on the new call",
+        "Skip the recorded line notice because they already heard it",
+        "Transfer immediately since they were already verified"
+       ],
+       "answer_index": 1,
+       "explanation": "Accidental hang-ups and immediate callbacks are full calls. Every step runs again."
+      }
+     ]
+    },
+    {
+     "id": "ac_2",
+     "title": "The ten required steps",
+     "est_minutes": 7,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>These ten are required before you are allowed to click conference. Missing one means you do not transfer the call.</p><ol><li>Confirm you have the correct client on the line</li><li>Use an approved company name only</li><li>State that the call is recorded</li><li>Explain the programme clearly — assistance, subsidy, benefits or allowance <strong>through the Affordable Care Act</strong></li><li>Confirm they do NOT have Medicare, Medicaid or work insurance</li><li>Confirm they are 19 or older</li><li>Confirm the client's state</li><li>Double-confirm: no Medicare, no Medicaid, no work insurance</li><li>Get verbal consent to transfer — they must say okay</li><li>Complete a warm handoff</li></ol>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Do not click conference early",
+       "html": "<p>If any step is missed, do not transfer the call. Clicking conference before the steps are done is the one mistake that turns a good call into a compliance problem you cannot undo.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Step 9 catches people. <strong>Verbal consent means they actually say okay.</strong> Silence is not consent. Talking over your question is not consent. Ask, wait, and hear it.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Which step is NOT on the required list?",
+       "choices": [
+        "State that the call is recorded",
+        "Confirm they are 19 or older",
+        "Ask for the consumer's annual income",
+        "Get verbal consent to transfer"
+       ],
+       "answer_index": 2,
+       "explanation": "You never ask about income. Income and amounts belong to the licensed agent, and “income” is a forbidden word."
+      }
+     ]
+    },
+    {
+     "id": "ac_3",
+     "title": "Never promise anything",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>You do not know what any consumer will receive, and saying that you do is the fastest way to lose your seat. Three phrases are banned outright:</p><ul><li>“You <strong>will</strong> get…”</li><li>“You <strong>qualify</strong>”</li><li>“You're <strong>eligible</strong>”</li></ul><p>And no guaranteed outcomes of any kind.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "The word that keeps you safe",
+       "html": "<p><strong>MAY.</strong> “What you <em>may</em> qualify for.” “When you <em>may</em> expect to receive that help.” “Benefits you <em>may</em> not be receiving as of yet.”</p><p>One word, and the sentence goes from a promise to the truth.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Listen to the difference:</p><p>❌ “You qualify for a subsidy and you'll get help with your premium.”<br>✅ “I'll get the senior agent on the line and see what assistance you may receive, okay?”</p><p>The second one is the script. The first one is an invented promise, and the consumer remembers it.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Which sentence is compliant?",
+       "choices": [
+        "“You're eligible for the government subsidy.”",
+        "“You will receive assistance this year.”",
+        "“We'll see what assistance you may receive.”",
+        "“I guarantee the agent can help you.”"
+       ],
+       "answer_index": 2,
+       "explanation": "“May receive” is the approved framing. The other three are promises."
+      }
+     ]
+    },
+    {
+     "id": "ac_4",
+     "title": "The forbidden words",
+     "est_minutes": 6,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>These words create compliance risk because they make an insurance call sound like a financial offer. Do not use them, and do not repeat them back when a consumer uses them.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Financial words:</strong> money, cash, cheque, cards, calculate, total, income, how much, amount, mail, prequalify.</p><p><strong>Household expense words:</strong> bills, gas, grocery, rent, mortgage.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "The echo trap",
+       "html": "<p>A consumer asks: “Is this money for my groceries?” The natural human reply is “no, it's not money for groceries” — and you have just said both forbidden words on a recorded line.</p><p>Answer without the echo: <em>“That's confidential between you and the licensed agent — they'll go over it with you. Now, you still don't receive any Medicare, Medicaid or work insurance, correct?”</em></p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>This is also why the call is <strong>only about health insurance</strong>. Not financial help, not reimbursements, not household support, not cost-of-living help. If a consumer tries to pull the call in that direction, acknowledge and redirect to your verification.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer asks: “How much money is it?” What is the best reply?",
+       "choices": [
+        "“It depends how much money you make.”",
+        "“I can't tell you the amount of money, sorry.”",
+        "“That's confidential between you and the licensed agent. You still don't have Medicare, Medicaid or work insurance, correct?”",
+        "“Usually a few hundred, but it varies.”"
+       ],
+       "answer_index": 2,
+       "explanation": "The only reply that avoids repeating money and amount, and gets you back to the verification."
+      }
+     ]
+    },
+    {
+     "id": "ac_5",
+     "title": "Company name, recorded line, and what is never said",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Your company name is <strong>America's Health</strong> — unless the script on your screen shows a different approved name in the DBA field, which will be <strong>Health Benefit Guide</strong> or <strong>Benefit Link</strong>. If you do not see one of those, use America's Health.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Only the name changes",
+       "html": "<p>The DBA field changes the company name you introduce with. It does not change a single other word of your script.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Never mention Pitch Perfect Solutions on a call.</strong> Not the name, not the location, not who you really work for. The consumer-facing name is the approved one on your screen.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>And the recorded line disclosure is not optional, in any version of the opening: <em>“this is _______ with America's Health on a recorded line.”</em> Leave it out and the call is non-compliant from the first sentence, no matter how well the rest goes.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Your script shows “Benefit Link” in the DBA field. What do you say?",
+       "choices": [
+        "America's Health, because that is the real company",
+        "Benefit Link, and the rest of the script is unchanged",
+        "Pitch Perfect Solutions",
+        "Both names, so the consumer has the full picture"
+       ],
+       "answer_index": 1,
+       "explanation": "Use the approved name shown on the script. Everything else stays the same."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "ac_q1",
+      "question": "Compliance applies to which calls?",
+      "choices": [
+       "Outbound only",
+       "Outbound and inbound only",
+       "Every call, including accidental hang-ups, immediate callbacks and scheduled callbacks",
+       "Only calls that reach a transfer"
+      ],
+      "answer_index": 2,
+      "explanation": "Every call means every single call. No exceptions.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q2",
+      "question": "How many required compliance steps are there before you can transfer?",
+      "choices": [
+       "Five",
+       "Seven",
+       "Ten",
+       "Twelve"
+      ],
+      "answer_index": 2,
+      "explanation": "Ten, ending with verbal consent and a warm handoff.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q3",
+      "question": "Which of these is a banned promise?",
+      "choices": [
+       "“What you may qualify for”",
+       "“You're eligible”",
+       "“Let's see what we could do for you”",
+       "“Benefits you may not be receiving as of yet”"
+      ],
+      "answer_index": 1,
+      "explanation": "“You're eligible”, “you qualify” and “you will get” are all banned. Use “may”.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q4",
+      "question": "Which word keeps your phrasing compliant?",
+      "choices": [
+       "Will",
+       "May",
+       "Guaranteed",
+       "Approved"
+      ],
+      "answer_index": 1,
+      "explanation": "“May” turns a promise into the truth.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q5",
+      "question": "Which of these is a forbidden word on an ACA call?",
+      "choices": [
+       "Subsidy",
+       "Marketplace",
+       "Grocery",
+       "Coordinator"
+      ],
+      "answer_index": 2,
+      "explanation": "Grocery is on the household expense list. Subsidy and Marketplace are approved.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q6",
+      "question": "A consumer asks if the subsidy will help pay their rent. What do you do?",
+      "choices": [
+       "Say yes, it can help with rent",
+       "Say “no, it won't help with rent”",
+       "Redirect to the licensed agent without repeating the word, then return to your verification",
+       "Tell them to ask the agent about their mortgage instead"
+      ],
+      "answer_index": 2,
+      "explanation": "Never echo a forbidden word back, even to deny it. Redirect and get back on script.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q7",
+      "question": "What is the default company name?",
+      "choices": [
+       "Pitch Perfect Solutions",
+       "America's Health",
+       "HealthCare.gov",
+       "The Marketplace"
+      ],
+      "answer_index": 1,
+      "explanation": "America's Health, unless the script's DBA field shows Health Benefit Guide or Benefit Link.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q8",
+      "question": "Your script shows “Health Benefit Guide” in the DBA field. What changes?",
+      "choices": [
+       "The whole script changes",
+       "Only the company name you introduce with",
+       "You skip the recorded line notice",
+       "You must mention both company names"
+      ],
+      "answer_index": 1,
+      "explanation": "Only the company name changes. The script stays identical.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q9",
+      "question": "When may you mention Pitch Perfect Solutions on a call?",
+      "choices": [
+       "When the consumer asks who you really work for",
+       "When a manager asks you to",
+       "Never",
+       "When the consumer threatens to report you"
+      ],
+      "answer_index": 2,
+      "explanation": "Never mention it on a call, for any reason.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q10",
+      "question": "What counts as verbal consent to transfer?",
+      "choices": [
+       "The consumer goes quiet",
+       "The consumer says okay",
+       "The consumer did not object",
+       "The consumer answered your last verification"
+      ],
+      "answer_index": 1,
+      "explanation": "They must actually say okay. Silence is not consent.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q11",
+      "question": "You realise you forgot to confirm the state, and the consumer is agreeable. What do you do?",
+      "choices": [
+       "Transfer — they already said okay",
+       "Confirm the state before you click conference",
+       "Let the licensed agent get the state",
+       "Disposition as No Agent"
+      ],
+      "answer_index": 1,
+      "explanation": "Every step must be complete before conference. If a step is missed, do not transfer.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q12",
+      "question": "Why must you say “through the Affordable Care Act” in your intro?",
+      "choices": [
+       "It sounds more official",
+       "It is a required part of the approved programme explanation",
+       "It makes consumers trust you",
+       "It is optional but recommended"
+      ],
+      "answer_index": 1,
+      "explanation": "It is required — step 4 of the ten.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q13",
+      "question": "This call is about…",
+      "choices": [
+       "Health insurance only",
+       "Health insurance and help with bills",
+       "Any government assistance available",
+       "Household support for low-income families"
+      ],
+      "answer_index": 0,
+      "explanation": "Only health insurance. No financial help, reimbursements, household or cost-of-living framing.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "ac_q14",
+      "question": "A consumer says “so how much cash do I get?” Which reply is compliant?",
+      "choices": [
+       "“The cash amount depends on your income.”",
+       "“It's not cash.”",
+       "“That's a great question for the licensed agent. You still don't receive Medicare, Medicaid or work insurance, correct?”",
+       "“I can calculate that for you.”"
+      ],
+      "answer_index": 2,
+      "explanation": "No echo, no amount, no calculating — redirect and return to the verification.",
+      "tags": [
+       "compliance"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "aca_dispositions",
+   "title": "Dispositions",
+   "summary": "Every disposition, when to use it, and the edge cases that get miscoded most often.",
+   "est_minutes": 24,
+   "badge": {
+    "id": "badge_aca_dispositions",
+    "name": "Clean Coder",
+    "icon": "🗂️"
+   },
+   "lessons": [
+    {
+     "id": "ad_1",
+     "title": "Why coding accurately matters",
+     "est_minutes": 3,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>The disposition is how the call is counted, paid and audited. A miscoded call is not a small admin error — it misreports what happened on a recorded line, and patterns of miscoding are treated as a call-handling problem.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "The rule of thumb",
+       "html": "<p>Code what actually happened, not what you wish had happened, and never code a call to look better than it was.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>If you miscode by accident, report it. Keep it simple and clear for the QA team: the number, then the codes, no brackets, no long paragraphs. For example: <em>12345678910 — NA, change to CB.</em></p>"
+      }
+     ]
+    },
+    {
+     "id": "ad_2",
+     "title": "Transfer and Hung-Up Transfer",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p><strong>Transfer</strong> is the one you are working for. It means a licensed agent took over the call <em>and</em> you completed a warm handoff — you waited to hear the agent and the client speaking to each other before you dropped off.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Dropping early is not a transfer",
+       "html": "<p>If you disconnect before you hear them both speaking, you did not complete a warm handoff. You must introduce the client: <em>“Hi, I have (name) from (STATE), please take the call.”</em> Then wait.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Hung-Up Transfer</strong> is when the client hangs up after you hit the conference button. It happens constantly — holds feel long to people. It is its own disposition, and it is not Not Interested.</p>"
+      },
+      {
+       "type": "check",
+       "question": "You hit conference, the agent picks up, and the client hangs up while you are introducing them. What is the disposition?",
+       "choices": [
+        "Transfer",
+        "Hung-Up Transfer",
+        "Not Interested",
+        "Conference Ending"
+       ],
+       "answer_index": 1,
+       "explanation": "They hung up after you hit conference, so it is a Hung-Up Transfer."
+      }
+     ]
+    },
+    {
+     "id": "ad_3",
+     "title": "Not Interested, Dead Air and Answering Machine",
+     "est_minutes": 6,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>These three get confused more than any others, and the dividing line is simple: <strong>did they acknowledge?</strong></p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Not Interested</strong> — the client acknowledges their name or asks “who is this?”, then hangs up at any point before you hit conference. Also when they simply say they are not interested and decline.</p><p><strong>Dead Air</strong> — you say the name and get nothing. The call ends, or they never speak or respond to their name. Wait no longer than 15–20 seconds.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "The rule that settles it",
+       "html": "<p><strong>A hang-up after acknowledgement is always Not Interested, never Dead Air.</strong> If they said anything that showed they were there, it is Not Interested.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Answering Machine</strong> — you get the client's voicemail. <strong>Do not leave a voicemail.</strong></p><p><strong>Robo / Fake Recording</strong> — not their voicemail, but a fake recording that sounds like a live person and is not. Code as Robo.</p>"
+      },
+      {
+       "type": "check",
+       "question": "The consumer says “yeah, who's this?” and immediately hangs up. What is it?",
+       "choices": [
+        "Dead Air",
+        "Not Interested",
+        "Wrong Number",
+        "Hung-Up Transfer"
+       ],
+       "answer_index": 1,
+       "explanation": "They acknowledged, so it is Not Interested. A hang-up after acknowledgement is never Dead Air."
+      }
+     ]
+    },
+    {
+     "id": "ad_4",
+     "title": "DQ and DNC",
+     "est_minutes": 6,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p><strong>DQ</strong> — the client has any insurance that is not under the Marketplace, or is on the DQ list of who you cannot help. Read the DQ line and end the call warmly.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>DNC</strong> — use it when the client says “don't call me”, “remove me”, or any variation, or asks to be put on the DNC list. It also covers anyone under the age of 19, anyone deceased, businesses and companies, and anyone clearly asking not to be called.</p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "DNC disclaimer",
+       "response": "I will add you to our Do Not Call list right away, Ma'am/Sir, you will not get any further calls from our company.",
+       "coach_note": "Read it, end the call, code it DNC. DO NOT REBUTTAL a do-not-call request. If they hang up before you finish reading it, that is fine."
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Swearing is not a DNC",
+       "html": "<p>A consumer who swears at you is raising an objection, not asking to be removed. Stay respectful, rebut, and keep going.</p><p>It becomes a DNC when they tell you to stop calling, ask to be taken off the list, or threaten you. That is the line.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Inbound calls that need blocking get reported in the main ACA chat with the number to block, in the simple format: <em>123456789 inbound block</em>.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer shouts “why the hell do you people keep calling me?” but says nothing about stopping. What is the right move?",
+       "choices": [
+        "Code it DNC immediately",
+        "Rebut the objection and continue the call",
+        "Hang up and code it Not Interested",
+        "Read the DNC disclaimer to be safe"
+       ],
+       "answer_index": 1,
+       "explanation": "Swearing alone is an objection. Only a stop-calling request or a threat makes it a DNC."
+      }
+     ]
+    },
+    {
+     "id": "ad_5",
+     "title": "Call Back, No Agent and Conference Ending",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p><strong>Call Back</strong> — the client asks to be called back at any point during the script or the conference, and you did not get a licensed agent to take over.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>No Agent</strong> — you have made a total of <strong>3 calls</strong> to the client, a minimum of <strong>20 minutes apart</strong>, following the full scheduled callback rules, and still did not get a licensed agent. Only ever use this on the 3rd and last callback. Never for any other situation.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Conference Ending is not No Agent",
+       "html": "<p><strong>Conference Ending</strong> is when you click conference and the licensed agent line does not ring at all, or rings 3 times or less, and the response at the top left says “Conference Ended”.</p><p>Tell the client: <em>“Sir/Ma'am, looks like there are no new subsidies available for you at this time. If anything changes we will call you back. Thanks, goodbye.”</em> Do NOT schedule a callback.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>And the rest: <strong>Wrong Number</strong> when it is the wrong number or the person is no longer there. <strong>No English</strong> when the client cannot speak English. <strong>Purity Inbound</strong> only on a Purity inbound call with no client information and dead air — if the name and state are there, or they respond, code it like any other call.</p>"
+      },
+      {
+       "type": "check",
+       "question": "You clicked conference, the agent line rang twice and the screen said “Conference Ended”. What do you code?",
+       "choices": [
+        "No Agent",
+        "Conference Ending",
+        "Hung-Up Transfer",
+        "Call Back"
+       ],
+       "answer_index": 1,
+       "explanation": "Three rings or fewer with “Conference Ended” is Conference Ending, and you do not schedule a callback."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "ad_q1",
+      "question": "What makes a call a Transfer?",
+      "choices": [
+       "You clicked conference",
+       "A licensed agent took over AND you completed a warm handoff",
+       "The consumer agreed to be transferred",
+       "The agent line rang"
+      ],
+      "answer_index": 1,
+      "explanation": "Both: the agent took over, and you waited to hear them and the client speaking.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q2",
+      "question": "The client hangs up after you hit conference. Disposition?",
+      "choices": [
+       "Not Interested",
+       "Hung-Up Transfer",
+       "Dead Air",
+       "Conference Ending"
+      ],
+      "answer_index": 1,
+      "explanation": "After conference is pressed, a hang-up is a Hung-Up Transfer.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q3",
+      "question": "The consumer acknowledges their name, then hangs up before conference. Disposition?",
+      "choices": [
+       "Dead Air",
+       "Not Interested",
+       "Hung-Up Transfer",
+       "Wrong Number"
+      ],
+      "answer_index": 1,
+      "explanation": "A hang-up after acknowledgement is always Not Interested.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q4",
+      "question": "How long do you wait on silence before coding Dead Air?",
+      "choices": [
+       "5 seconds",
+       "15–20 seconds",
+       "A full minute",
+       "Until the dialer drops it"
+      ],
+      "answer_index": 1,
+      "explanation": "No longer than 15–20 seconds.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q5",
+      "question": "You reach the client's voicemail. What do you do?",
+      "choices": [
+       "Leave a short message with a callback number",
+       "Leave the compliance disclosure",
+       "Do not leave a voicemail — code Answering Machine",
+       "Code it Dead Air"
+      ],
+      "answer_index": 2,
+      "explanation": "Never leave a voicemail.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q6",
+      "question": "When may you use No Agent?",
+      "choices": [
+       "Any time an agent does not pick up",
+       "On the 3rd and last callback, after 3 calls at least 20 minutes apart",
+       "After two rings with no answer",
+       "When the conference ends immediately"
+      ],
+      "answer_index": 1,
+      "explanation": "Only on the 3rd and last callback, following the full rules.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q7",
+      "question": "The agent line rings twice and the screen says “Conference Ended”. What do you do?",
+      "choices": [
+       "Schedule a callback and code Call Back",
+       "Code Conference Ending, read the closing line, and do NOT schedule a callback",
+       "Code No Agent",
+       "Try conference again immediately"
+      ],
+      "answer_index": 1,
+      "explanation": "Conference Ending, with the closing line, and no callback.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q8",
+      "question": "A consumer swears at you but never asks you to stop calling. What is correct?",
+      "choices": [
+       "Code DNC",
+       "Rebut and keep going",
+       "Hang up and code Not Interested",
+       "Transfer them anyway"
+      ],
+      "answer_index": 1,
+      "explanation": "Swearing is an objection. Only a stop-calling request or threat is a DNC.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q9",
+      "question": "A consumer says “take me off your list”. What do you do?",
+      "choices": [
+       "Try one rebuttal first",
+       "Read the DNC disclaimer, end the call, code DNC",
+       "Code Not Interested",
+       "Ask why"
+      ],
+      "answer_index": 1,
+      "explanation": "Do not rebuttal a do-not-call request. Read the disclaimer and end.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q10",
+      "question": "Which of these is a DNC?",
+      "choices": [
+       "A consumer who is annoyed",
+       "A consumer who is 18 years old",
+       "A consumer with Medicaid",
+       "A consumer who asks you to call back tomorrow"
+      ],
+      "answer_index": 1,
+      "explanation": "Anyone under 19 is a DNC. Medicaid is a DQ, and a callback request is Call Back.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q11",
+      "question": "A consumer has Medicare. Which disposition?",
+      "choices": [
+       "DNC",
+       "DQ",
+       "Not Interested",
+       "No Agent"
+      ],
+      "answer_index": 1,
+      "explanation": "Coverage that is not Marketplace is a DQ.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q12",
+      "question": "The client asks to be called back during the conference, and no agent took over. Disposition?",
+      "choices": [
+       "No Agent",
+       "Call Back",
+       "Conference Ending",
+       "Hung-Up Transfer"
+      ],
+      "answer_index": 1,
+      "explanation": "A callback request at any point during script or conference, with no agent taking over, is Call Back.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q13",
+      "question": "When is Purity Inbound correct?",
+      "choices": [
+       "Any inbound call",
+       "Only a Purity inbound call with no client information and dead air",
+       "Any call where the consumer does not speak",
+       "Any inbound call that gets disconnected"
+      ],
+      "answer_index": 1,
+      "explanation": "If the name and state are there, or they respond, code it like any other call.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "ad_q14",
+      "question": "You realise you coded a call wrong. What do you do?",
+      "choices": [
+       "Leave it — it is only one call",
+       "Report it simply to QA: the number and the correction",
+       "Call the consumer back to fix it",
+       "Change it yourself without telling anyone"
+      ],
+      "answer_index": 1,
+      "explanation": "Report it in the simple format QA asked for. Patterns of miscoding are a call-handling issue.",
+      "tags": [
+       "dispositions"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "aca_real_calls",
+   "title": "What Real Calls Look Like",
+   "summary": "The patterns in 4,000 recorded ACA transfers: what a complete call sounds like, the five mistakes that show up most, and where compliance actually slips.",
+   "est_minutes": 24,
+   "badge": {
+    "id": "badge_aca_real_calls",
+    "name": "Floor Ready",
+    "icon": "🎧"
+   },
+   "lessons": [
+    {
+     "id": "arc_1",
+     "title": "A complete call, start to finish",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Everything in this module comes from <strong>4,000 recorded calls</strong> that all ended in a transfer. Not opinions about what a good call looks like — what the good ones actually did.</p><p>Here is the shape of one, with the consumer's lines taken from real recordings.</p>"
+      },
+      {
+       "type": "script",
+       "title": "A clean call",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Hey, am I speaking with Danielle?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Yeah, who's this?"
+        },
+        {
+         "speaker": "agent",
+         "text": "This is Marcus with America's Health on a recorded line. I'm calling because it shows you didn't get your subsidy allowances from the ACA program."
+        },
+        {
+         "speaker": "consumer",
+         "text": "What is this for?"
+        },
+        {
+         "speaker": "agent",
+         "text": "Great question — there's so many benefits and incentives available, it's different for everyone. Once I confirm what I have, the worker in your area can go over the options. Let's finish this part first — you're still living in Texas with no active Medicare, Medicaid or work insurance, correct?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Right, none of that."
+        },
+        {
+         "speaker": "agent",
+         "text": "And confirming you're over the age of 19?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Yes."
+        },
+        {
+         "speaker": "agent",
+         "text": "Just to finalize my notes — you did say no Medicare, Medicaid or work insurance?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Correct."
+        },
+        {
+         "speaker": "agent",
+         "text": "Okay, so you verified everything. I'll quickly get the senior agent on the line and see what assistance you may receive, okay?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Okay."
+        },
+        {
+         "speaker": "note",
+         "text": "(conference, fluff while it rings, warm handoff naming the state)"
+        }
+       ]
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Notice the rhythm",
+       "html": "<p>The objection did not derail anything. The agent answered it in two sentences and came straight back to the verification. That is the entire skill.</p>"
+      },
+      {
+       "type": "check",
+       "question": "In the call above, what does the agent do immediately after answering the objection?",
+       "choices": [
+        "Asks for the transfer",
+        "Goes back to the state and coverage verification",
+        "Explains the subsidy in more detail",
+        "Asks what insurance they have"
+       ],
+       "answer_index": 1,
+       "explanation": "Acknowledge, answer briefly, return to the verification."
+      }
+     ]
+    },
+    {
+     "id": "arc_2",
+     "title": "The five mistakes that show up most",
+     "est_minutes": 6,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>These are the gaps found across all 4,000 transferred calls. Every one of these calls still ended in a transfer — which is exactly why they are worth knowing. A call can convert and still be wrong.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<table><tr><th>Mistake</th><th>How often</th></tr><tr><td>Skipped the second M/M/W confirmation</td><td><strong>33.8%</strong></td></tr><tr><td>Asked the company name + recorded line without pausing</td><td><strong>31.0%</strong></td></tr><tr><td>Transferred without a spoken okay</td><td><strong>16.5%</strong></td></tr><tr><td>Rushed the age question</td><td><strong>21.4%</strong></td></tr><tr><td>No recorded-line disclosure at all</td><td><strong>4.4%</strong></td></tr></table>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "“Asked but didn't wait” is the quiet one",
+       "html": "<p>On roughly a quarter of calls, an agent asks a required question and keeps talking straight through the answer. It counts as asked. It verifies nothing. And if that consumer turns out to have Medicaid, the transfer is wasted and the call is a compliance problem.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>The fix for four of the five is the same, and it is not more words: <strong>stop talking after you ask</strong>.</p>"
+      },
+      {
+       "type": "check",
+       "question": "An agent says “no Medicare, Medicaid or work insurance, and you're over 19, right? Great, let me get the agent on…” What went wrong?",
+       "choices": [
+        "Nothing — both questions were asked",
+        "The confirmations were rolled into one and no answer was waited for",
+        "The agent should have asked about income",
+        "The order was wrong"
+       ],
+       "answer_index": 1,
+       "explanation": "Rolled-together confirmations with no pause fail twice over: it is not a valid double confirmation, and nothing was verified."
+      }
+     ]
+    },
+    {
+     "id": "arc_3",
+     "title": "Hold time is where compliance slips",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>When the conference rings, agents talk. That is correct — silence loses people. But it is also where almost every banned word on these calls appears.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Of the <strong>457 forbidden words</strong> found across 4,000 calls, <strong>320 happened during hold-time chat</strong>, not in the pitch. Agents talking about the price of groceries, their electricity bill, money being tight, what kids' sports cost.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "The words don't become safe because the pitch is over",
+       "html": "<p>The call is still recorded, and the consumer is still on the line. Money, cash, cheque, cards, calculate, mail, prequalify, total, income, how much, amount, bills, gas, grocery, rent, mortgage — none of them belong on this call at any point.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Safe ground, from the approved fluff list: the weather, how their day is going, whether they are calling from home, shows and films, music, food, hobbies, travel. And the honest one that always works: <em>“you may hear it ring — I'm still right here with you.”</em></p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>What to avoid saying while you wait: “I don't know what's taking so long”, “they're slow”, “the system is acting up”. All three hand the consumer a reason to doubt what comes next.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Where do most forbidden words get said?",
+       "choices": [
+        "During the opening",
+        "While verifying coverage",
+        "During hold-time small talk",
+        "In the handoff"
+       ],
+       "answer_index": 2,
+       "explanation": "320 of 457, by a wide margin. The pitch is comparatively clean."
+      }
+     ]
+    },
+    {
+     "id": "arc_4",
+     "title": "Inbound calls are not cold calls",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>About <strong>one in five</strong> of these calls came in rather than went out — callbacks and inbound queue calls. The consumer rang you.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>What does not change: every compliance step. Correct person, company name, recorded line, the ACA mention, state, coverage twice, 19+, consent, warm handoff. All of it, every time, inbound included.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "What does change is the opening",
+       "html": "<p>They called you, so “I'm calling because it shows you didn't get your subsidy” can sound odd. Acknowledge that they reached out, then run the same verification. The script's purpose does not change just because the direction did.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Scheduled callbacks are the trap. It feels silly to re-introduce yourself and re-disclose the recorded line to someone you spoke to twenty minutes ago. Do it anyway — a callback is a new call, and compliance applies to every single one.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer calls you back twenty minutes after your first call. What do you do?",
+       "choices": [
+        "Pick up where you left off",
+        "Run every compliance step again",
+        "Skip the recorded line notice",
+        "Transfer straight away"
+       ],
+       "answer_index": 1,
+       "explanation": "Every call means every call, including callbacks and immediate re-dials."
+      }
+     ]
+    },
+    {
+     "id": "arc_5",
+     "title": "What QA actually flags",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Across the calls QA pulled and reviewed by hand, the findings were almost never lies. They were <strong>missing steps</strong>:</p>"
+      },
+      {
+       "type": "text",
+       "html": "<table><tr><th>What QA wrote</th><th>Times</th></tr><tr><td>No ACA mention</td><td>9</td></tr><tr><td>No age question</td><td>9</td></tr><tr><td>No 2nd M/M/W question</td><td>6</td></tr><tr><td>No state in the handoff</td><td>5</td></tr><tr><td>No state confirmation</td><td>4</td></tr><tr><td>No verbal consent / no handoff</td><td>4</td></tr><tr><td>Wrong company name</td><td>2</td></tr></table>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "This is good news",
+       "html": "<p>Nobody is being flagged for inventing benefits or promising money. The gap is procedural, and procedural gaps close fast once you know which ones they are.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>One more from the QA list worth knowing: <em>“double confirming all in one sentence”</em> and <em>“age question asked after the transfer”</em>. Both are cases of doing the right steps in the wrong place. Order matters — everything gets verified <strong>before</strong> you click conference.</p>"
+      },
+      {
+       "type": "check",
+       "question": "What do QA's findings mostly consist of?",
+       "choices": [
+        "Agents lying about benefits",
+        "Agents being rude",
+        "Required steps missed, rushed or done out of order",
+        "Agents transferring too slowly"
+       ],
+       "answer_index": 2,
+       "explanation": "Almost entirely procedural. Which means they are fixable."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "arc_q1",
+      "question": "What share of transferred calls skipped the second coverage confirmation?",
+      "choices": [
+       "About 5%",
+       "About 15%",
+       "About a third",
+       "Over half"
+      ],
+      "answer_index": 2,
+      "explanation": "33.8% — the most commonly missed requirement.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "arc_q2",
+      "question": "“Asked but didn't wait” means…",
+      "choices": [
+       "The agent forgot the question",
+       "The agent asked and talked over the answer",
+       "The consumer refused to answer",
+       "The question was asked twice"
+      ],
+      "answer_index": 1,
+      "explanation": "It counts as asked and verifies nothing.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "arc_q3",
+      "question": "Where do most forbidden words appear?",
+      "choices": [
+       "The opening",
+       "The verification",
+       "Hold-time small talk",
+       "The handoff"
+      ],
+      "answer_index": 2,
+      "explanation": "320 of 457.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "arc_q4",
+      "question": "Which is safe hold-time conversation?",
+      "choices": [
+       "How much their bills cost",
+       "Whether groceries have got expensive",
+       "How their day is going",
+       "What they'd spend the money on"
+      ],
+      "answer_index": 2,
+      "explanation": "Weather, their day, shows, food, travel. Never money or household costs.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "arc_q5",
+      "question": "Roughly what share of these calls were inbound?",
+      "choices": [
+       "1 in 50",
+       "1 in 20",
+       "1 in 5",
+       "Half"
+      ],
+      "answer_index": 2,
+      "explanation": "About 19% came in rather than went out.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "arc_q6",
+      "question": "On an inbound call, which compliance steps apply?",
+      "choices": [
+       "Only the recorded line",
+       "Only the coverage checks",
+       "All of them",
+       "None — they called us"
+      ],
+      "answer_index": 2,
+      "explanation": "Every call, every step.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "arc_q7",
+      "question": "QA's most common findings are…",
+      "choices": [
+       "Lies about benefits",
+       "Missing or rushed required steps",
+       "Rudeness",
+       "Slow transfers"
+      ],
+      "answer_index": 1,
+      "explanation": "Procedural gaps, not integrity problems.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "arc_q8",
+      "question": "When must every verification be complete?",
+      "choices": [
+       "Before clicking conference",
+       "Before the handoff",
+       "Before the licensed agent speaks",
+       "Before you disposition"
+      ],
+      "answer_index": 0,
+      "explanation": "Everything is verified before conference. Asking after the transfer is a QA finding.",
+      "tags": [
+       "script"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "aca_dialer",
+   "title": "The Convoso Dialer",
+   "summary": "Logging in, your status, the agent screen, the transfer and conference flow, dispositioning, and the scheduled callback process.",
+   "est_minutes": 22,
+   "badge": {
+    "id": "badge_aca_dialer",
+    "name": "Dialer Ready",
+    "icon": "☎️"
+   },
+   "lessons": [
+    {
+     "id": "adl_1",
+     "title": "Logging in and your status",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Use Google Chrome",
+       "html": "<p>Convoso is supported in Chrome. Other browsers cause audio problems that look like dialer faults and waste your shift.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Sign in with your email and password, then the pop-up asks for two things:</p><ul><li><strong>Campaign:</strong> ACA Outbound</li><li><strong>Status:</strong> Available or Break</li></ul><p>Then click Login. <strong>Check the campaign every time.</strong> The wrong campaign means the wrong leads and the wrong script.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>You are <strong>either Available or Break, at all times</strong> — nothing else. Available means you are taking calls. Break means you are not.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Allow audio permissions",
+       "html": "<p>The browser will ask. Allow it. If you skip this, calls connect and you hear nothing.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Logging out:</strong> set your status to Break in the top right corner first, then select Logout at the very bottom.</p>"
+      },
+      {
+       "type": "check",
+       "question": "You're about to log out for the day. What comes first?",
+       "choices": [
+        "Click Logout",
+        "Set your status to Break, then Logout",
+        "Disposition your last call then close the tab",
+        "Change campaign"
+       ],
+       "answer_index": 1,
+       "explanation": "Break first, then Logout at the bottom."
+      }
+     ]
+    },
+    {
+     "id": "adl_2",
+     "title": "The agent screen",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p><strong>Top left</strong> — your call status: waiting for a call, or wrapping up. On a live call this shows the consumer's full name and a running timer.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Top right</strong> — two buttons that matter:</p><ul><li><strong>Blue Transfer button:</strong> brings the conference tab back up</li><li><strong>Red Wrap Up button:</strong> ends a call</li></ul>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Top left icons</strong> — the folder is the CRM (agent callbacks and history tabs). The phone icon is the dial pad, which is where you press 1 when a recording asks you to.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Left sidebar</strong> — Availability lets you change your status <em>before</em> a call lands, which matters because you cannot change the main status while you are on an active call. Below it are the dispositions.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Dispositioning ends the call",
+       "html": "<p>Selecting a disposition hangs up. Make sure you are finished before you click, and code it as what it actually was.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Two tabs:</strong> the Script tab holds your script and the conference transfer button. The Contact tab holds the consumer's information.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Where is the conference transfer button?",
+       "choices": [
+        "The Contact tab",
+        "The Script tab",
+        "The left sidebar",
+        "The dial pad"
+       ],
+       "answer_index": 1,
+       "explanation": "On the Script tab, alongside your script."
+      }
+     ]
+    },
+    {
+     "id": "adl_3",
+     "title": "The transfer and conference flow",
+     "est_minutes": 6,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Once every verification is complete and the consumer has said okay:</p><ol><li>Click the <strong>conference transfer button</strong> on the Script tab.</li><li>Fluff while it rings — you are still on the line with the consumer.</li><li>When the licensed agent answers, complete the warm handoff: <em>“Hi, I have (name) from (STATE), please take the call.”</em></li><li>Click the <strong>blue Transfer button</strong> to bring the conference page back, then <strong>Leave Conference Call</strong>.</li><li>Disposition the call.</li></ol>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Forgot the name or state mid-transfer?",
+       "html": "<p>Select the little X in the top right corner to get back to the consumer's details. Better than guessing, and far better than handing over without the state.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>If the consumer hangs up during the transfer:</strong> hit the red circle X on the licensed agent's line first, then disposition as Hung-Up Transfer.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>If you need to drop both lines:</strong> select both red circle X's, then disposition.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>If you hit the red Wrap Up button</strong> during a conference, “Three way call in progress” appears. Select Leave Conference Call and disposition as normal.</p>"
+      },
+      {
+       "type": "check",
+       "question": "The consumer hangs up right after you conference the licensed agent in. What's the sequence?",
+       "choices": [
+        "Disposition immediately as Not Interested",
+        "Hit the red X on the agent's line, then disposition as Hung-Up Transfer",
+        "Leave both lines open and wait",
+        "Click the blue Transfer button and try again"
+       ],
+       "answer_index": 1,
+       "explanation": "Clear the licensed agent's line first, then code it Hung-Up Transfer."
+      }
+     ]
+    },
+    {
+     "id": "adl_4",
+     "title": "Scheduled callbacks — No Agent protocol only",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "This is not a general tool",
+       "html": "<p>The scheduled callback process in the bottom left is <strong>only</strong> for the No Agent protocol. It is not for consumers who ask to be called later — that is the Call Back disposition.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>To schedule one:</p><ol><li>Bottom left corner — select the time zone (<strong>your</strong> time zone)</li><li>Select the time: <strong>20+ minutes later</strong></li><li><strong>Personal callback</strong> books it back to you. <strong>System callback</strong> sends it to whoever is available at that time.</li><li>Select the light blue Callback disposition — the call is then coded and scheduled together.</li></ol>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Twenty minutes later a pop-up appears in the bottom right reminding you.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Missed it?</strong> Set your status to Break, find it under the Callbacks tab, select the consumer's name tab, then the green phone icon beside their name on the Contact tab. The call dials out.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Remember what No Agent actually requires",
+       "html": "<p>Three calls total, at least 20 minutes apart, following the full callback rules — and only on the third and last one do you use the No Agent disposition.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer asks you to call them back tomorrow. What do you use?",
+       "choices": [
+        "The scheduled callback process",
+        "The Call Back disposition",
+        "The No Agent disposition",
+        "A personal callback for tomorrow"
+       ],
+       "answer_index": 1,
+       "explanation": "The scheduled callback process is only for the No Agent protocol. A consumer's request is a Call Back."
+      }
+     ]
+    },
+    {
+     "id": "adl_5",
+     "title": "Reporting miscodes",
+     "est_minutes": 2,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>If you code a call wrong, report it. Keep it simple and clear for QA — no spaces, no dashes, no brackets, no long paragraphs:</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><code>12345678910 NA CBS DONE</code><br><code>12345678910 AM change to DA</code></p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>If you would rather not post it in the channel, message privately. What matters is that it gets corrected, not where it is said.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Why this matters",
+       "html": "<p>Cross-checking the dialer log against recordings on 4,000 calls found a handful coded one way and recorded another. A small number — and every one of them was found because the data could be checked. Clean coding keeps everyone's numbers honest, including yours.</p>"
+      },
+      {
+       "type": "check",
+       "question": "What's the right way to report a miscode?",
+       "choices": [
+        "A long message explaining what happened",
+        "The number and the correction, kept simple",
+        "Call your manager",
+        "Re-dial the consumer and fix it"
+       ],
+       "answer_index": 1,
+       "explanation": "Number, then the correction. Simple and clear for QA."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "adl_q1",
+      "question": "Which browser should you use?",
+      "choices": [
+       "Safari",
+       "Firefox",
+       "Google Chrome",
+       "Any browser"
+      ],
+      "answer_index": 2,
+      "explanation": "Chrome. Other browsers cause audio problems.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "adl_q2",
+      "question": "Which campaign do you select at login?",
+      "choices": [
+       "ACA Inbound",
+       "ACA Outbound",
+       "Whichever is default",
+       "Marketplace"
+      ],
+      "answer_index": 1,
+      "explanation": "ACA Outbound — check it every time.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "adl_q3",
+      "question": "What are the only two statuses you should use?",
+      "choices": [
+       "Available and Lunch",
+       "Available and Break",
+       "Ready and Wrap",
+       "Online and Away"
+      ],
+      "answer_index": 1,
+      "explanation": "Available or Break, at all times.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "adl_q4",
+      "question": "Where is the conference transfer button?",
+      "choices": [
+       "Contact tab",
+       "Script tab",
+       "Left sidebar",
+       "Dial pad"
+      ],
+      "answer_index": 1,
+      "explanation": "On the Script tab.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "adl_q5",
+      "question": "What does selecting a disposition do?",
+      "choices": [
+       "Saves a note",
+       "Ends the call",
+       "Pauses the dialer",
+       "Opens the CRM"
+      ],
+      "answer_index": 1,
+      "explanation": "Dispositioning ends the call.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "adl_q6",
+      "question": "After the warm handoff, what's the sequence?",
+      "choices": [
+       "Hit red Wrap Up immediately",
+       "Blue Transfer button, Leave Conference Call, then disposition",
+       "Just close the tab",
+       "Disposition first, then leave"
+      ],
+      "answer_index": 1,
+      "explanation": "Blue Transfer brings the conference page back, then leave, then code it.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "adl_q7",
+      "question": "The consumer hangs up during the transfer. First action?",
+      "choices": [
+       "Disposition as Not Interested",
+       "Red circle X on the licensed agent's line",
+       "Blue Transfer button",
+       "Wrap Up"
+      ],
+      "answer_index": 1,
+      "explanation": "Clear the agent's line, then code Hung-Up Transfer.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "adl_q8",
+      "question": "The scheduled callback process is for…",
+      "choices": [
+       "Any consumer who asks for a callback",
+       "The No Agent protocol only",
+       "End of shift",
+       "Inbound calls"
+      ],
+      "answer_index": 1,
+      "explanation": "No Agent protocol only. A consumer's request is the Call Back disposition.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "adl_q9",
+      "question": "How far out do you set a scheduled callback?",
+      "choices": [
+       "5 minutes",
+       "20+ minutes",
+       "An hour",
+       "Next day"
+      ],
+      "answer_index": 1,
+      "explanation": "At least 20 minutes later.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "adl_q10",
+      "question": "Personal callback versus system callback?",
+      "choices": [
+       "Personal goes to anyone available",
+       "Personal comes back to you; system goes to whoever is available",
+       "They're identical",
+       "System is for managers"
+      ],
+      "answer_index": 1,
+      "explanation": "Personal returns to you, system goes to whoever is free.",
+      "tags": [
+       "operations"
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "final_exam": {
+  "product": {
+   "pass_pct": 80,
+   "draw": 20,
+   "pool": [
+    {
+     "id": "fx_aca_1",
+     "question": "The Affordable Care Act is also known as all of these EXCEPT:",
+     "choices": [
+      "Obamacare",
+      "The Marketplace",
+      "HealthCare.gov",
+      "Medicare Advantage"
+     ],
+     "answer_index": 3,
+     "explanation": "Medicare Advantage is a Medicare product and a DQ on this campaign.",
+     "tags": [
+      "product"
+     ]
+    },
+    {
+     "id": "fx_aca_2",
+     "question": "Which consumer CAN be transferred?",
+     "choices": [
+      "Has Medicaid",
+      "Has no insurance at all",
+      "Has VA health care",
+      "Has retiree coverage"
+     ],
+     "answer_index": 1,
+     "explanation": "No insurance at all, or Marketplace already.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_aca_3",
+     "question": "A consumer has SSDI. What is the outcome?",
+     "choices": [
+      "Transfer",
+      "DQ",
+      "DNC",
+      "Call Back"
+     ],
+     "answer_index": 1,
+     "explanation": "SSDI/SSD is a disqualifier. SSI is not.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_aca_4",
+     "question": "A consumer has SSI and no other coverage. What is the outcome?",
+     "choices": [
+      "DQ",
+      "Continue toward a transfer",
+      "DNC",
+      "Wrong Number"
+     ],
+     "answer_index": 1,
+     "explanation": "SSI is not a disqualifier.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_aca_5",
+     "question": "How many times must you confirm no Medicare, Medicaid or work insurance?",
+     "choices": [
+      "Once",
+      "Twice",
+      "Three times",
+      "Only if they sound unsure"
+     ],
+     "answer_index": 1,
+     "explanation": "A first confirmation and a double confirmation before the transfer ask.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_aca_6",
+     "question": "What age must you confirm?",
+     "choices": [
+      "18 or older",
+      "19 or older",
+      "21 or older",
+      "No age check is required"
+     ],
+     "answer_index": 1,
+     "explanation": "Confirm they are over the age of 19. Under 19 is a DNC.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_aca_7",
+     "question": "Which sentence is compliant?",
+     "choices": [
+      "“You qualify for the subsidy.”",
+      "“You will receive help with your premium.”",
+      "“We'll see what assistance you may receive.”",
+      "“I guarantee you'll get something.”"
+     ],
+     "answer_index": 2,
+     "explanation": "“May” is the required framing. The others are promises.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_aca_8",
+     "question": "Which is a forbidden word?",
+     "choices": [
+      "Subsidy",
+      "Allowance",
+      "Mortgage",
+      "Coordinator"
+     ],
+     "answer_index": 2,
+     "explanation": "Mortgage is on the household expense list.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_aca_9",
+     "question": "Which is a forbidden word?",
+     "choices": [
+      "Prequalify",
+      "Marketplace",
+      "Affordable Care Act",
+      "Licensed agent"
+     ],
+     "answer_index": 0,
+     "explanation": "Prequalify is on the financial list.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_aca_10",
+     "question": "A consumer names Anthem as their insurer. What must you establish?",
+     "choices": [
+      "Their monthly premium",
+      "Whether the plan is through the Marketplace",
+      "Whether they have had it more than a year",
+      "Their deductible"
+     ],
+     "answer_index": 1,
+     "explanation": "Named carriers require the Marketplace check. Unclear means DQ.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_aca_11",
+     "question": "What is the default company name?",
+     "choices": [
+      "Pitch Perfect Solutions",
+      "America's Health",
+      "Benefit Link always",
+      "HealthCare.gov"
+     ],
+     "answer_index": 1,
+     "explanation": "America's Health unless the DBA field shows Health Benefit Guide or Benefit Link.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_aca_12",
+     "question": "When may you mention Pitch Perfect Solutions on a call?",
+     "choices": [
+      "If asked directly",
+      "Never",
+      "On inbound calls",
+      "If a manager approves"
+     ],
+     "answer_index": 1,
+     "explanation": "Never on a call.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_aca_13",
+     "question": "A hang-up after the consumer acknowledged their name is coded as:",
+     "choices": [
+      "Dead Air",
+      "Not Interested",
+      "Wrong Number",
+      "Robo"
+     ],
+     "answer_index": 1,
+     "explanation": "Acknowledgement then hang-up is always Not Interested.",
+     "tags": [
+      "dispositions"
+     ]
+    },
+    {
+     "id": "fx_aca_14",
+     "question": "The client hangs up after you hit conference:",
+     "choices": [
+      "Not Interested",
+      "Hung-Up Transfer",
+      "Conference Ending",
+      "Call Back"
+     ],
+     "answer_index": 1,
+     "explanation": "Hung-Up Transfer.",
+     "tags": [
+      "dispositions"
+     ]
+    },
+    {
+     "id": "fx_aca_15",
+     "question": "The agent line rings twice and shows “Conference Ended”:",
+     "choices": [
+      "No Agent",
+      "Conference Ending, with no callback scheduled",
+      "Call Back",
+      "Dead Air"
+     ],
+     "answer_index": 1,
+     "explanation": "Read the closing line, code Conference Ending, do not schedule a callback.",
+     "tags": [
+      "dispositions"
+     ]
+    },
+    {
+     "id": "fx_aca_16",
+     "question": "No Agent may only be used:",
+     "choices": [
+      "Whenever an agent does not answer",
+      "On the 3rd and last callback after 3 calls at least 20 minutes apart",
+      "After the first failed conference",
+      "When the consumer asks for a callback"
+     ],
+     "answer_index": 1,
+     "explanation": "Only on the 3rd and last callback, following the full rules.",
+     "tags": [
+      "dispositions"
+     ]
+    },
+    {
+     "id": "fx_aca_17",
+     "question": "A consumer swears at you but does not ask you to stop calling:",
+     "choices": [
+      "DNC",
+      "Rebut and continue",
+      "Hang up",
+      "Transfer immediately"
+     ],
+     "answer_index": 1,
+     "explanation": "Swearing is an objection, not a do-not-call request.",
+     "tags": [
+      "dispositions"
+     ]
+    },
+    {
+     "id": "fx_aca_18",
+     "question": "A consumer says “don't ever call me again”:",
+     "choices": [
+      "Rebut once, then continue",
+      "Read the DNC disclaimer, end the call, code DNC",
+      "Code Not Interested",
+      "Ask them why"
+     ],
+     "answer_index": 1,
+     "explanation": "Do not rebuttal a do-not-call request.",
+     "tags": [
+      "dispositions"
+     ]
+    },
+    {
+     "id": "fx_aca_19",
+     "question": "You get the client's voicemail:",
+     "choices": [
+      "Leave a brief message",
+      "Leave the recorded-line disclosure",
+      "Do not leave a voicemail",
+      "Leave a callback number"
+     ],
+     "answer_index": 2,
+     "explanation": "Never leave a voicemail.",
+     "tags": [
+      "dispositions"
+     ]
+    },
+    {
+     "id": "fx_aca_20",
+     "question": "Which is NOT one of the ten required compliance steps?",
+     "choices": [
+      "State that the call is recorded",
+      "Confirm the client's state",
+      "Ask the client's annual income",
+      "Get verbal consent to transfer"
+     ],
+     "answer_index": 2,
+     "explanation": "You never ask about income — it is also a forbidden word.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_aca_21",
+     "question": "What counts as verbal consent?",
+     "choices": [
+      "Silence",
+      "The client saying okay",
+      "The client not objecting",
+      "The client answering your previous question"
+     ],
+     "answer_index": 1,
+     "explanation": "They must say okay.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_aca_22",
+     "question": "A consumer asks what they will actually receive. Who answers that?",
+     "choices": [
+      "You, from the script",
+      "The licensed agent after the transfer",
+      "The consumer's current insurer",
+      "A manager"
+     ],
+     "answer_index": 1,
+     "explanation": "Amounts and specifics belong to the licensed agent.",
+     "tags": [
+      "role"
+     ]
+    },
+    {
+     "id": "fx_aca_23",
+     "question": "A consumer with a red, white and blue card is:",
+     "choices": [
+      "Qualified",
+      "Disqualified — that is the Medicare card",
+      "Qualified if they also have Marketplace",
+      "A DNC"
+     ],
+     "answer_index": 1,
+     "explanation": "The red, white and blue card means Medicare, which is a DQ.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_aca_24",
+     "question": "A warm handoff means:",
+     "choices": [
+      "Clicking conference and dropping off",
+      "Introducing the client and waiting until the agent and client are speaking",
+      "Telling the client an agent will call them",
+      "Staying on the whole agent call"
+     ],
+     "answer_index": 1,
+     "explanation": "Introduce, then wait to hear them both speaking before disconnecting.",
+     "tags": [
+      "script"
+     ]
+    }
+   ]
+  },
+  "script": {
+   "pass_pct": 80,
+   "draw": 8,
+   "pool": [
+    {
+     "id": "fx_acascript_1",
+     "question": "What are the first four things that must happen on every call?",
+     "choices": [
+      "Name, state, age, consent",
+      "Correct person, company name, recorded line, the ACA mention",
+      "Greeting, small talk, name, pitch",
+      "Recorded line, income, state, age"
+     ],
+     "answer_index": 1,
+     "explanation": "Those four come before any verification.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_acascript_2",
+     "question": "How many separate coverage confirmations does the script require?",
+     "choices": [
+      "One",
+      "Two",
+      "Three",
+      "Four"
+     ],
+     "answer_index": 1,
+     "explanation": "Two separate asks, each answered.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_acascript_3",
+     "question": "“No Medicare, Medicaid or work insurance and over 19, correct?” asked once is…",
+     "choices": [
+      "A valid double confirmation",
+      "Not a valid double confirmation",
+      "Better than two asks",
+      "Only valid at level 1"
+     ],
+     "answer_index": 1,
+     "explanation": "Rolled-together confirmations do not count.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_acascript_4",
+     "question": "What must the warm handoff include?",
+     "choices": [
+      "The consumer's age",
+      "The consumer's state",
+      "The subsidy amount",
+      "The consumer's income"
+     ],
+     "answer_index": 1,
+     "explanation": "Name the state so the licensed agent matches it.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_acascript_5",
+     "question": "When can you disconnect from the conference?",
+     "choices": [
+      "When the agent answers",
+      "Once the agent and client are speaking",
+      "After you say the client's name",
+      "Immediately"
+     ],
+     "answer_index": 1,
+     "explanation": "Wait for both voices.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_acascript_6",
+     "question": "A consumer says nothing after your transfer ask. That is…",
+     "choices": [
+      "Consent",
+      "Not consent",
+      "A Dead Air disposition",
+      "A DQ"
+     ],
+     "answer_index": 1,
+     "explanation": "They must say okay.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_acascript_7",
+     "question": "Under-19 consumers are…",
+     "choices": [
+      "DQ",
+      "DNC",
+      "Transferable with a parent",
+      "Call Back"
+     ],
+     "answer_index": 1,
+     "explanation": "Under 19 is a do-not-call.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_acascript_8",
+     "question": "Where does every rebuttal end?",
+     "choices": [
+      "With an apology",
+      "Back at the verification question",
+      "With the transfer ask",
+      "With the subsidy explanation"
+     ],
+     "answer_index": 1,
+     "explanation": "Acknowledge, answer, return — ending on a question.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_acascript_9",
+     "question": "A consumer names a carrier you don't recognise. You must…",
+     "choices": [
+      "DQ immediately",
+      "Confirm the plan is through the Marketplace",
+      "Transfer",
+      "Ask what they pay"
+     ],
+     "answer_index": 1,
+     "explanation": "Unconfirmed Marketplace means DQ.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_acascript_10",
+     "question": "Which step do agents skip most on real calls?",
+     "choices": [
+      "The handoff",
+      "The second coverage confirmation",
+      "The greeting",
+      "The state"
+     ],
+     "answer_index": 1,
+     "explanation": "33.8% of transferred calls skipped it.",
+     "tags": [
+      "script"
+     ]
+    }
+   ]
+  }
+ }
+}

@@ -14,8 +14,8 @@ use Illuminate\Validation\ValidationException;
 /**
  * Imports training tracks from disk. Each sub-directory of the data path is a
  * track (its name is the track slug) holding an optional `track.json` with the
- * track's name/description, an optional `exam.json` final exam, and one JSON
- * file per module, ordered by filename.
+ * track's name/description/position (defaulting to folder order), an optional
+ * `exam.json` final exam, and one JSON file per module, ordered by filename.
  */
 #[Signature('training:import {--path= : Directory containing one folder per training track}')]
 #[Description('Import (or re-import) the training tracks and their modules from JSON files')]
@@ -48,8 +48,8 @@ class ImportTraining extends Command
             $tracks[] = $track;
         }
 
-        foreach ($tracks as $position => $track) {
-            $this->importTrack($track, $position);
+        foreach ($tracks as $index => $track) {
+            $this->importTrack($track, $track['position'] ?? $index);
 
             $this->info("Imported track [{$track['slug']}] with ".count($track['modules']).' modules.');
         }
@@ -60,7 +60,7 @@ class ImportTraining extends Command
     /**
      * Read and validate every file in a track folder.
      *
-     * @return array{slug: string, name: string, description: string|null, modules: array<int, array<string, mixed>>, exam: array<string, mixed>|null}|null
+     * @return array{slug: string, name: string, description: string|null, position: int|null, modules: array<int, array<string, mixed>>, exam: array<string, mixed>|null}|null
      */
     private function readTrack(string $trackDirectory): ?array
     {
@@ -114,6 +114,7 @@ class ImportTraining extends Command
             'slug' => $slug,
             'name' => $metadata['name'] ?? str($slug)->headline()->toString(),
             'description' => $metadata['description'] ?? null,
+            'position' => isset($metadata['position']) ? (int) $metadata['position'] : null,
             'modules' => $modules,
             'exam' => $exam,
         ];
@@ -179,7 +180,7 @@ class ImportTraining extends Command
      * Sync a track and its modules/lessons with the files. Modules and lessons
      * that are no longer in the files are removed.
      *
-     * @param  array{slug: string, name: string, description: string|null, modules: array<int, array<string, mixed>>, exam: array<string, mixed>|null}  $data
+     * @param  array{slug: string, name: string, description: string|null, position: int|null, modules: array<int, array<string, mixed>>, exam: array<string, mixed>|null}  $data
      */
     private function importTrack(array $data, int $position): void
     {

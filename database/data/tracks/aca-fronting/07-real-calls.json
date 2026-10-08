@@ -1,0 +1,377 @@
+{
+    "id": "aca_real_calls",
+    "title": "What Real Calls Look Like",
+    "summary": "The patterns in 4,000 recorded ACA transfers: what a complete call sounds like, the five mistakes that show up most, and where compliance actually slips.",
+    "est_minutes": 24,
+    "badge": {
+        "id": "badge_aca_real_calls",
+        "name": "Floor Ready",
+        "icon": "🎧"
+    },
+    "lessons": [
+        {
+            "id": "arc_1",
+            "title": "A complete call, start to finish",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Everything in this module comes from <strong>4,000 recorded calls</strong> that all ended in a transfer. Not opinions about what a good call looks like — what the good ones actually did.</p><p>Here is the shape of one, with the consumer's lines taken from real recordings.</p>"
+                },
+                {
+                    "type": "script",
+                    "title": "A clean call",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Hey, am I speaking with Danielle?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Yeah, who's this?"
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "This is Marcus with America's Health on a recorded line. I'm calling because it shows you didn't get your subsidy allowances from the ACA program."
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "What is this for?"
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "Great question — there's so many benefits and incentives available, it's different for everyone. Once I confirm what I have, the worker in your area can go over the options. Let's finish this part first — you're still living in Texas with no active Medicare, Medicaid or work insurance, correct?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Right, none of that."
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "And confirming you're over the age of 19?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Yes."
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "Just to finalize my notes — you did say no Medicare, Medicaid or work insurance?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Correct."
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "Okay, so you verified everything. I'll quickly get the senior agent on the line and see what assistance you may receive, okay?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Okay."
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(conference, fluff while it rings, warm handoff naming the state)"
+                        }
+                    ]
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Notice the rhythm",
+                    "html": "<p>The objection did not derail anything. The agent answered it in two sentences and came straight back to the verification. That is the entire skill.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "In the call above, what does the agent do immediately after answering the objection?",
+                    "choices": [
+                        "Asks for the transfer",
+                        "Explains the subsidy in more detail",
+                        "Asks what insurance they have",
+                        "Goes back to the state and coverage verification"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Acknowledge, answer briefly, return to the verification."
+                }
+            ]
+        },
+        {
+            "id": "arc_2",
+            "title": "The five mistakes that show up most",
+            "est_minutes": 6,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>These are the gaps found across all 4,000 transferred calls. Every one of these calls still ended in a transfer — which is exactly why they are worth knowing. A call can convert and still be wrong.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<table><tr><th>Mistake</th><th>How often</th></tr><tr><td>Skipped the second M/M/W confirmation</td><td><strong>33.8%</strong></td></tr><tr><td>Asked the company name + recorded line without pausing</td><td><strong>31.0%</strong></td></tr><tr><td>Transferred without a spoken okay</td><td><strong>16.5%</strong></td></tr><tr><td>Rushed the age question</td><td><strong>21.4%</strong></td></tr><tr><td>No recorded-line disclosure at all</td><td><strong>4.4%</strong></td></tr></table>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "“Asked but didn't wait” is the quiet one",
+                    "html": "<p>On roughly a quarter of calls, an agent asks a required question and keeps talking straight through the answer. It counts as asked. It verifies nothing. And if that consumer turns out to have Medicaid, the transfer is wasted and the call is a compliance problem.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>The fix for four of the five is the same, and it is not more words: <strong>stop talking after you ask</strong>.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "An agent says “no Medicare, Medicaid or work insurance, and you're over 19, right? Great, let me get the agent on…” What went wrong?",
+                    "choices": [
+                        "Nothing — both questions were asked",
+                        "The agent should have asked about income",
+                        "The confirmations were rolled into one and no answer was waited for",
+                        "The order was wrong"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Rolled-together confirmations with no pause fail twice over: it is not a valid double confirmation, and nothing was verified."
+                }
+            ]
+        },
+        {
+            "id": "arc_3",
+            "title": "Hold time is where compliance slips",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>When the conference rings, agents talk. That is correct — silence loses people. But it is also where almost every banned word on these calls appears.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Of the <strong>457 forbidden words</strong> found across 4,000 calls, <strong>320 happened during hold-time chat</strong>, not in the pitch. Agents talking about the price of groceries, their electricity bill, money being tight, what kids' sports cost.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "The words don't become safe because the pitch is over",
+                    "html": "<p>The call is still recorded, and the consumer is still on the line. Money, cash, cheque, cards, calculate, mail, prequalify, total, income, how much, amount, bills, gas, grocery, rent, mortgage — none of them belong on this call at any point.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Safe ground, from the approved fluff list: the weather, how their day is going, whether they are calling from home, shows and films, music, food, hobbies, travel. And the honest one that always works: <em>“you may hear it ring — I'm still right here with you.”</em></p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>What to avoid saying while you wait: “I don't know what's taking so long”, “they're slow”, “the system is acting up”. All three hand the consumer a reason to doubt what comes next.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Where do most forbidden words get said?",
+                    "choices": [
+                        "During the opening",
+                        "During hold-time small talk",
+                        "While verifying coverage",
+                        "In the handoff"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "320 of 457, by a wide margin. The pitch is comparatively clean."
+                }
+            ]
+        },
+        {
+            "id": "arc_4",
+            "title": "Inbound calls are not cold calls",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>About <strong>one in five</strong> of these calls came in rather than went out — callbacks and inbound queue calls. The consumer rang you.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>What does not change: every compliance step. Correct person, company name, recorded line, the ACA mention, state, coverage twice, 19+, consent, warm handoff. All of it, every time, inbound included.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "What does change is the opening",
+                    "html": "<p>They called you, so “I'm calling because it shows you didn't get your subsidy” can sound odd. Acknowledge that they reached out, then run the same verification. The script's purpose does not change just because the direction did.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Scheduled callbacks are the trap. It feels silly to re-introduce yourself and re-disclose the recorded line to someone you spoke to twenty minutes ago. Do it anyway — a callback is a new call, and compliance applies to every single one.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer calls you back twenty minutes after your first call. What do you do?",
+                    "choices": [
+                        "Pick up where you left off",
+                        "Run every compliance step again",
+                        "Skip the recorded line notice",
+                        "Transfer straight away"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Every call means every call, including callbacks and immediate re-dials."
+                }
+            ]
+        },
+        {
+            "id": "arc_5",
+            "title": "What QA actually flags",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Across the calls QA pulled and reviewed by hand, the findings were almost never lies. They were <strong>missing steps</strong>:</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<table><tr><th>What QA wrote</th><th>Times</th></tr><tr><td>No ACA mention</td><td>9</td></tr><tr><td>No age question</td><td>9</td></tr><tr><td>No 2nd M/M/W question</td><td>6</td></tr><tr><td>No state in the handoff</td><td>5</td></tr><tr><td>No state confirmation</td><td>4</td></tr><tr><td>No verbal consent / no handoff</td><td>4</td></tr><tr><td>Wrong company name</td><td>2</td></tr></table>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "This is good news",
+                    "html": "<p>Nobody is being flagged for inventing benefits or promising money. The gap is procedural, and procedural gaps close fast once you know which ones they are.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>One more from the QA list worth knowing: <em>“double confirming all in one sentence”</em> and <em>“age question asked after the transfer”</em>. Both are cases of doing the right steps in the wrong place. Order matters — everything gets verified <strong>before</strong> you click conference.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "What do QA's findings mostly consist of?",
+                    "choices": [
+                        "Required steps missed, rushed or done out of order",
+                        "Agents lying about benefits",
+                        "Agents being rude",
+                        "Agents transferring too slowly"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Almost entirely procedural. Which means they are fixable."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "arc_q1",
+                "question": "What share of transferred calls skipped the second coverage confirmation?",
+                "choices": [
+                    "About 5%",
+                    "About 15%",
+                    "Over half",
+                    "About a third"
+                ],
+                "answer_index": 3,
+                "explanation": "33.8% — the most commonly missed requirement.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "arc_q2",
+                "question": "“Asked but didn't wait” means…",
+                "choices": [
+                    "The agent forgot the question",
+                    "The consumer refused to answer",
+                    "The question was asked twice",
+                    "The agent asked and talked over the answer"
+                ],
+                "answer_index": 3,
+                "explanation": "It counts as asked and verifies nothing.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "arc_q3",
+                "question": "Where do most forbidden words appear?",
+                "choices": [
+                    "The opening",
+                    "Hold-time small talk",
+                    "The verification",
+                    "The handoff"
+                ],
+                "answer_index": 1,
+                "explanation": "320 of 457.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "arc_q4",
+                "question": "Which is safe hold-time conversation?",
+                "choices": [
+                    "How their day is going",
+                    "How much their bills cost",
+                    "Whether groceries have got expensive",
+                    "What they'd spend the money on"
+                ],
+                "answer_index": 0,
+                "explanation": "Weather, their day, shows, food, travel. Never money or household costs.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "arc_q5",
+                "question": "Roughly what share of these calls were inbound?",
+                "choices": [
+                    "1 in 5",
+                    "1 in 50",
+                    "1 in 20",
+                    "Half"
+                ],
+                "answer_index": 0,
+                "explanation": "About 19% came in rather than went out.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "arc_q6",
+                "question": "On an inbound call, which compliance steps apply?",
+                "choices": [
+                    "Only the recorded line",
+                    "All of them",
+                    "Only the coverage checks",
+                    "None — they called us"
+                ],
+                "answer_index": 1,
+                "explanation": "Every call, every step.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "arc_q7",
+                "question": "QA's most common findings are…",
+                "choices": [
+                    "Lies about benefits",
+                    "Rudeness",
+                    "Missing or rushed required steps",
+                    "Slow transfers"
+                ],
+                "answer_index": 2,
+                "explanation": "Procedural gaps, not integrity problems.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "arc_q8",
+                "question": "When must every verification be complete?",
+                "choices": [
+                    "Before the handoff",
+                    "Before the licensed agent speaks",
+                    "Before clicking conference",
+                    "Before you disposition"
+                ],
+                "answer_index": 2,
+                "explanation": "Everything is verified before conference. Asking after the transfer is a QA finding.",
+                "tags": [
+                    "script"
+                ]
+            }
+        ]
+    }
+}

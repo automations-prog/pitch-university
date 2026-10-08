@@ -1,0 +1,399 @@
+{
+    "id": "aca_dispositions",
+    "title": "Dispositions",
+    "summary": "Every disposition, when to use it, and the edge cases that get miscoded most often.",
+    "est_minutes": 24,
+    "badge": {
+        "id": "badge_aca_dispositions",
+        "name": "Clean Coder",
+        "icon": "🗂️"
+    },
+    "lessons": [
+        {
+            "id": "ad_1",
+            "title": "Why coding accurately matters",
+            "est_minutes": 3,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>The disposition is how the call is counted, paid and audited. A miscoded call is not a small admin error — it misreports what happened on a recorded line, and patterns of miscoding are treated as a call-handling problem.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "The rule of thumb",
+                    "html": "<p>Code what actually happened, not what you wish had happened, and never code a call to look better than it was.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>If you miscode by accident, report it. Keep it simple and clear for the QA team: the number, then the codes, no brackets, no long paragraphs. For example: <em>12345678910 — NA, change to CB.</em></p>"
+                }
+            ]
+        },
+        {
+            "id": "ad_2",
+            "title": "Transfer and Hung-Up Transfer",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p><strong>Transfer</strong> is the one you are working for. It means a licensed agent took over the call <em>and</em> you completed a warm handoff — you waited to hear the agent and the client speaking to each other before you dropped off.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Dropping early is not a transfer",
+                    "html": "<p>If you disconnect before you hear them both speaking, you did not complete a warm handoff. You must introduce the client: <em>“Hi, I have (name) from (STATE), please take the call.”</em> Then wait.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Hung-Up Transfer</strong> is when the client hangs up after you hit the conference button. It happens constantly — holds feel long to people. It is its own disposition, and it is not Not Interested.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "You hit conference, the agent picks up, and the client hangs up while you are introducing them. What is the disposition?",
+                    "choices": [
+                        "Transfer",
+                        "Not Interested",
+                        "Hung-Up Transfer",
+                        "Conference Ending"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "They hung up after you hit conference, so it is a Hung-Up Transfer."
+                }
+            ]
+        },
+        {
+            "id": "ad_3",
+            "title": "Not Interested, Dead Air and Answering Machine",
+            "est_minutes": 6,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>These three get confused more than any others, and the dividing line is simple: <strong>did they acknowledge?</strong></p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Not Interested</strong> — the client acknowledges their name or asks “who is this?”, then hangs up at any point before you hit conference. Also when they simply say they are not interested and decline.</p><p><strong>Dead Air</strong> — you say the name and get nothing. The call ends, or they never speak or respond to their name. Wait no longer than 15–20 seconds.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "The rule that settles it",
+                    "html": "<p><strong>A hang-up after acknowledgement is always Not Interested, never Dead Air.</strong> If they said anything that showed they were there, it is Not Interested.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Answering Machine</strong> — you get the client's voicemail. <strong>Do not leave a voicemail.</strong></p><p><strong>Robo / Fake Recording</strong> — not their voicemail, but a fake recording that sounds like a live person and is not. Code as Robo.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "The consumer says “yeah, who's this?” and immediately hangs up. What is it?",
+                    "choices": [
+                        "Dead Air",
+                        "Wrong Number",
+                        "Hung-Up Transfer",
+                        "Not Interested"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "They acknowledged, so it is Not Interested. A hang-up after acknowledgement is never Dead Air."
+                }
+            ]
+        },
+        {
+            "id": "ad_4",
+            "title": "DQ and DNC",
+            "est_minutes": 6,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p><strong>DQ</strong> — the client has any insurance that is not under the Marketplace, or is on the DQ list of who you cannot help. Read the DQ line and end the call warmly.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>DNC</strong> — use it when the client says “don't call me”, “remove me”, or any variation, or asks to be put on the DNC list. It also covers anyone under the age of 19, anyone deceased, businesses and companies, and anyone clearly asking not to be called.</p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "DNC disclaimer",
+                    "response": "I will add you to our Do Not Call list right away, Ma'am/Sir, you will not get any further calls from our company.",
+                    "coach_note": "Read it, end the call, code it DNC. DO NOT REBUTTAL a do-not-call request. If they hang up before you finish reading it, that is fine."
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Swearing is not a DNC",
+                    "html": "<p>A consumer who swears at you is raising an objection, not asking to be removed. Stay respectful, rebut, and keep going.</p><p>It becomes a DNC when they tell you to stop calling, ask to be taken off the list, or threaten you. That is the line.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Inbound calls that need blocking get reported in the main ACA chat with the number to block, in the simple format: <em>123456789 inbound block</em>.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer shouts “why the hell do you people keep calling me?” but says nothing about stopping. What is the right move?",
+                    "choices": [
+                        "Rebut the objection and continue the call",
+                        "Code it DNC immediately",
+                        "Hang up and code it Not Interested",
+                        "Read the DNC disclaimer to be safe"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Swearing alone is an objection. Only a stop-calling request or a threat makes it a DNC."
+                }
+            ]
+        },
+        {
+            "id": "ad_5",
+            "title": "Call Back, No Agent and Conference Ending",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p><strong>Call Back</strong> — the client asks to be called back at any point during the script or the conference, and you did not get a licensed agent to take over.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>No Agent</strong> — you have made a total of <strong>3 calls</strong> to the client, a minimum of <strong>20 minutes apart</strong>, following the full scheduled callback rules, and still did not get a licensed agent. Only ever use this on the 3rd and last callback. Never for any other situation.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Conference Ending is not No Agent",
+                    "html": "<p><strong>Conference Ending</strong> is when you click conference and the licensed agent line does not ring at all, or rings 3 times or less, and the response at the top left says “Conference Ended”.</p><p>Tell the client: <em>“Sir/Ma'am, looks like there are no new subsidies available for you at this time. If anything changes we will call you back. Thanks, goodbye.”</em> Do NOT schedule a callback.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>And the rest: <strong>Wrong Number</strong> when it is the wrong number or the person is no longer there. <strong>No English</strong> when the client cannot speak English. <strong>Purity Inbound</strong> only on a Purity inbound call with no client information and dead air — if the name and state are there, or they respond, code it like any other call.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "You clicked conference, the agent line rang twice and the screen said “Conference Ended”. What do you code?",
+                    "choices": [
+                        "Conference Ending",
+                        "No Agent",
+                        "Hung-Up Transfer",
+                        "Call Back"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Three rings or fewer with “Conference Ended” is Conference Ending, and you do not schedule a callback."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "ad_q1",
+                "question": "What makes a call a Transfer?",
+                "choices": [
+                    "You clicked conference",
+                    "The consumer agreed to be transferred",
+                    "The agent line rang",
+                    "A licensed agent took over AND you completed a warm handoff"
+                ],
+                "answer_index": 3,
+                "explanation": "Both: the agent took over, and you waited to hear them and the client speaking.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q2",
+                "question": "The client hangs up after you hit conference. Disposition?",
+                "choices": [
+                    "Not Interested",
+                    "Hung-Up Transfer",
+                    "Dead Air",
+                    "Conference Ending"
+                ],
+                "answer_index": 1,
+                "explanation": "After conference is pressed, a hang-up is a Hung-Up Transfer.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q3",
+                "question": "The consumer acknowledges their name, then hangs up before conference. Disposition?",
+                "choices": [
+                    "Dead Air",
+                    "Not Interested",
+                    "Hung-Up Transfer",
+                    "Wrong Number"
+                ],
+                "answer_index": 1,
+                "explanation": "A hang-up after acknowledgement is always Not Interested.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q4",
+                "question": "How long do you wait on silence before coding Dead Air?",
+                "choices": [
+                    "15–20 seconds",
+                    "5 seconds",
+                    "A full minute",
+                    "Until the dialer drops it"
+                ],
+                "answer_index": 0,
+                "explanation": "No longer than 15–20 seconds.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q5",
+                "question": "You reach the client's voicemail. What do you do?",
+                "choices": [
+                    "Leave a short message with a callback number",
+                    "Do not leave a voicemail — code Answering Machine",
+                    "Leave the compliance disclosure",
+                    "Code it Dead Air"
+                ],
+                "answer_index": 1,
+                "explanation": "Never leave a voicemail.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q6",
+                "question": "When may you use No Agent?",
+                "choices": [
+                    "On the 3rd and last callback, after 3 calls at least 20 minutes apart",
+                    "Any time an agent does not pick up",
+                    "After two rings with no answer",
+                    "When the conference ends immediately"
+                ],
+                "answer_index": 0,
+                "explanation": "Only on the 3rd and last callback, following the full rules.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q7",
+                "question": "The agent line rings twice and the screen says “Conference Ended”. What do you do?",
+                "choices": [
+                    "Code Conference Ending, read the closing line, and do NOT schedule a callback",
+                    "Schedule a callback and code Call Back",
+                    "Code No Agent",
+                    "Try conference again immediately"
+                ],
+                "answer_index": 0,
+                "explanation": "Conference Ending, with the closing line, and no callback.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q8",
+                "question": "A consumer swears at you but never asks you to stop calling. What is correct?",
+                "choices": [
+                    "Rebut and keep going",
+                    "Code DNC",
+                    "Hang up and code Not Interested",
+                    "Transfer them anyway"
+                ],
+                "answer_index": 0,
+                "explanation": "Swearing is an objection. Only a stop-calling request or threat is a DNC.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q9",
+                "question": "A consumer says “take me off your list”. What do you do?",
+                "choices": [
+                    "Try one rebuttal first",
+                    "Code Not Interested",
+                    "Ask why",
+                    "Read the DNC disclaimer, end the call, code DNC"
+                ],
+                "answer_index": 3,
+                "explanation": "Do not rebuttal a do-not-call request. Read the disclaimer and end.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q10",
+                "question": "Which of these is a DNC?",
+                "choices": [
+                    "A consumer who is annoyed",
+                    "A consumer with Medicaid",
+                    "A consumer who is 18 years old",
+                    "A consumer who asks you to call back tomorrow"
+                ],
+                "answer_index": 2,
+                "explanation": "Anyone under 19 is a DNC. Medicaid is a DQ, and a callback request is Call Back.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q11",
+                "question": "A consumer has Medicare. Which disposition?",
+                "choices": [
+                    "DNC",
+                    "Not Interested",
+                    "DQ",
+                    "No Agent"
+                ],
+                "answer_index": 2,
+                "explanation": "Coverage that is not Marketplace is a DQ.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q12",
+                "question": "The client asks to be called back during the conference, and no agent took over. Disposition?",
+                "choices": [
+                    "No Agent",
+                    "Conference Ending",
+                    "Hung-Up Transfer",
+                    "Call Back"
+                ],
+                "answer_index": 3,
+                "explanation": "A callback request at any point during script or conference, with no agent taking over, is Call Back.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q13",
+                "question": "When is Purity Inbound correct?",
+                "choices": [
+                    "Any inbound call",
+                    "Only a Purity inbound call with no client information and dead air",
+                    "Any call where the consumer does not speak",
+                    "Any inbound call that gets disconnected"
+                ],
+                "answer_index": 1,
+                "explanation": "If the name and state are there, or they respond, code it like any other call.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ad_q14",
+                "question": "You realise you coded a call wrong. What do you do?",
+                "choices": [
+                    "Leave it — it is only one call",
+                    "Call the consumer back to fix it",
+                    "Report it simply to QA: the number and the correction",
+                    "Change it yourself without telling anyone"
+                ],
+                "answer_index": 2,
+                "explanation": "Report it in the simple format QA asked for. Patterns of miscoding are a call-handling issue.",
+                "tags": [
+                    "dispositions"
+                ]
+            }
+        ]
+    }
+}

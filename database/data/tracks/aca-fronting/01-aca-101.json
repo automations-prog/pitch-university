@@ -1,0 +1,383 @@
+{
+    "id": "aca_101",
+    "title": "The ACA & Your Role",
+    "summary": "What the Affordable Care Act actually is, what the subsidy means, how ACA differs from Medicare, and exactly what your job on the call is.",
+    "est_minutes": 25,
+    "badge": {
+        "id": "badge_aca_101",
+        "name": "ACA Basics",
+        "icon": "☂️"
+    },
+    "lessons": [
+        {
+            "id": "a101_1",
+            "title": "Your job on this call",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Welcome to Pitch University. Before you take a single live call, you are going to learn the product, the rules, the script, and how to handle people who are not happy to hear from you.</p><p>Start with the most important thing: <strong>what your job actually is</strong>.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>You are a <strong>fronter</strong>. Your job is to find out whether the person on the phone <em>may</em> be able to get help through the Affordable Care Act, and if they can, to get them talking to a licensed agent in their state.</p><p>That is the whole job. Four things decide it: their state, whether they have Medicare, Medicaid or work insurance, their age, and whether they agree to be transferred.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "What you never do",
+                    "html": "<p>You never sell anything. You never enrol anyone. You never tell someone what they will get or how much. You are not licensed to do any of that, and the licensed agent is the only person who can answer those questions.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Think of it as a handoff, not a sale. You verify, you get permission, you introduce them to the licensed agent, and you make sure both people are talking before you drop off. A clean handoff is a good call.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "What is a fronter's job on an ACA call?",
+                    "choices": [
+                        "Enrol the consumer in a Marketplace plan",
+                        "Tell the consumer how much subsidy they will receive",
+                        "Verify a few details and get the consumer to a licensed agent in their state",
+                        "Collect income information so the agent can calculate a subsidy"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "You verify, get verbal consent, and complete a warm handoff. Everything about amounts and enrolment belongs to the licensed agent."
+                }
+            ]
+        },
+        {
+            "id": "a101_2",
+            "title": "What the ACA actually is",
+            "est_minutes": 6,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>The <strong>Affordable Care Act</strong> is the law that created the health insurance Marketplace. You will hear people call the same thing by different names, and all of them mean the Marketplace:</p><ul><li>ACA</li><li>Obamacare</li><li>The Marketplace</li><li>HealthCare.gov</li></ul><p>When a consumer says any of those words, they are talking about what you are calling about.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Through the Marketplace, people who do not have other coverage can get health insurance, and the government helps with the cost. That help is what the script calls the <strong>subsidy</strong>.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Say it the approved way",
+                    "html": "<p>Our approved terms are: subsidy assistance, subsidy benefits, subsidy incentives, subsidy support, government subsidy, free subsidy, health subsidy, government subsidy allowance.</p><p>And you must say <strong>“through the Affordable Care Act”</strong> in your intro. That is what makes the call legitimate and clear.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Notice what the subsidy is <em>not</em>. It is not a cheque, not a card, not cash, not help with groceries or bills. It is help with health insurance. The moment a call drifts into money or household expenses, it has gone somewhere it is not allowed to go. You will cover that in detail in the Compliance module.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer says: “Oh, is this the Obamacare thing?” What is true?",
+                    "choices": [
+                        "Obamacare is a different programme from the ACA",
+                        "Obamacare was replaced by the Marketplace in 2026",
+                        "Obamacare, the ACA, the Marketplace and HealthCare.gov are all the same thing",
+                        "You should say you have never heard of Obamacare"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "They are all names for the same thing. Nothing to correct — keep moving through your verifications."
+                }
+            ]
+        },
+        {
+            "id": "a101_3",
+            "title": "ACA is not Medicare — the rule is inverted",
+            "est_minutes": 6,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>If you have worked a Medicare campaign, unlearn the reflex. The two products qualify people in <strong>opposite</strong> directions.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<table><tr><th></th><th>Medicare campaign</th><th>ACA campaign</th></tr><tr><td><strong>You want</strong></td><td>People who HAVE Medicare Parts A &amp; B</td><td>People who have NO Medicare, NO Medicaid, NO work insurance</td></tr><tr><td><strong>Medicare means</strong></td><td>Qualified</td><td>Disqualified</td></tr><tr><td><strong>Typical age</strong></td><td>65+</td><td>19 to 64</td></tr></table>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "The single most expensive mistake",
+                    "html": "<p>Transferring someone who has Medicare, Medicaid or work insurance. They cannot be helped, the licensed agent's time is wasted, and the call is a compliance problem. On this campaign, coverage is a disqualifier.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>This is also why you confirm it <strong>twice</strong>. Once early, and once again right before you ask to transfer. People answer quickly the first time without really thinking, and often correct themselves on the second pass. That second confirmation is not padding — it is the check that catches the mistake.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer tells you they have Medicare Parts A and B. What are they on an ACA call?",
+                    "choices": [
+                        "Qualified — Parts A and B are what we want",
+                        "Qualified only if they also have Medicaid",
+                        "Disqualified — transfer is not possible",
+                        "Qualified if they are over 65"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "On ACA, Medicare is a DQ. The opposite of the Medicare campaign."
+                }
+            ]
+        },
+        {
+            "id": "a101_4",
+            "title": "What you may and may not say the subsidy is",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Consumers will push you on this constantly: <em>what is it, how much is it, is it a card, is it money?</em> You are not dodging them when you decline to answer — you genuinely are not the person who can answer, and guessing is what gets agents fired.</p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "What is the subsidy?",
+                    "response": "Great question — there's so many benefits and incentives available, it's different for everyone. It depends on your specific situation, your wants and your needs. Once I confirm what I have, the worker in your area can provide the options they may have available for you. Let's finish this part first, you're still living in (STATE) with no active Medicare, Medicaid, or Work Insurance correct?",
+                    "coach_note": "Answer the spirit of the question, then go straight back to your verification. Notice the rebuttal ends with a question — that is what keeps you in control of the call."
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "Is it money, cash, a cheque, a card? Will it help with my bills?",
+                    "response": "Since it's confidential between the licensed agent and yourself, once I verify everything you can go ahead and ask the licensed agent. Now, do you still not receive any Medicare, Medicaid or work insurance?",
+                    "coach_note": "Do not repeat the words they used. Do not confirm or deny that it is money. Hand the question to the licensed agent and get back on script."
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Every rebuttal ends the same way",
+                    "html": "<p>Acknowledge, answer briefly, then return to: <strong>still in (STATE), still no Medicare, Medicaid or work insurance?</strong></p><p>That loop is the whole rhythm of this campaign. If you learn nothing else today, learn that.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer asks whether the subsidy is money they can spend on groceries. What do you say?",
+                    "choices": [
+                        "Confirm that it can help with groceries",
+                        "Tell them it is confidential between them and the licensed agent, then go back to verifying",
+                        "Tell them it is roughly a few hundred dollars",
+                        "Tell them you are not allowed to talk to them about it and end the call"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "You redirect to the licensed agent and return to your verification. You never confirm what it is, and never repeat money or household words back to them."
+                }
+            ]
+        },
+        {
+            "id": "a101_5",
+            "title": "Who you are calling",
+            "est_minutes": 3,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>These are working-age adults, 19 to 64, who are listed as having no Medicare, Medicaid or employer coverage. Many are uninsured right now. Some already have a Marketplace plan and do not realise new options may be available.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Expect people at work, in the car, with kids in the background, people who have had several calls like this already today, and people who are sure this is a scam. None of that means the call is over. All of it is covered by a rebuttal you are going to learn.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "You are calling for a reason",
+                    "html": "<p>These are not random numbers. They came to us as people who may qualify. That is literally the rebuttal: “I do have you here for a reason.” Say it like you mean it, because it is true.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Which consumer is a fit for this campaign?",
+                    "choices": [
+                        "A 70-year-old with Medicare Parts A and B",
+                        "A 45-year-old with no insurance at all",
+                        "A 34-year-old with insurance through her employer",
+                        "A 60-year-old with VA health care"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "No insurance at all is exactly who this is for. Marketplace already is also fine. Medicare, work insurance and VA are all DQs."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "aca101_q1",
+                "question": "What is the mission of an ACA fronter?",
+                "choices": [
+                    "Verify a few details and connect the consumer to a licensed agent in their state",
+                    "Enrol consumers in a Marketplace plan over the phone",
+                    "Calculate how much subsidy the consumer will receive",
+                    "Collect income and household details for the application"
+                ],
+                "answer_index": 0,
+                "explanation": "You verify, get consent, and hand off. Enrolment and amounts belong to the licensed agent.",
+                "tags": [
+                    "role"
+                ]
+            },
+            {
+                "id": "aca101_q2",
+                "question": "Which of these is NOT another name for the ACA?",
+                "choices": [
+                    "Obamacare",
+                    "The Marketplace",
+                    "HealthCare.gov",
+                    "Medicare Part C"
+                ],
+                "answer_index": 3,
+                "explanation": "Medicare Part C is a Medicare Advantage plan — a different programme entirely, and a DQ on this campaign.",
+                "tags": [
+                    "product"
+                ]
+            },
+            {
+                "id": "aca101_q3",
+                "question": "On an ACA call, a consumer with work insurance is…",
+                "choices": [
+                    "Qualified",
+                    "Qualified if the employer plan is cheap",
+                    "Disqualified",
+                    "Qualified if they also have Medicaid"
+                ],
+                "answer_index": 2,
+                "explanation": "Any employer or spousal work coverage is a DQ.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aca101_q4",
+                "question": "Why do you confirm “no Medicare, Medicaid or work insurance” twice?",
+                "choices": [
+                    "To fill time while the system loads",
+                    "Because the dialer requires two entries",
+                    "To make the call sound longer and more official",
+                    "Because the first answer is often quick and careless, and people correct themselves on the second pass"
+                ],
+                "answer_index": 3,
+                "explanation": "The double confirmation is the check that catches the mistake. It is required on every call.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "aca101_q5",
+                "question": "Which phrase MUST appear in your intro?",
+                "choices": [
+                    "“this is a limited time offer”",
+                    "“you have been pre-approved”",
+                    "“through the Affordable Care Act”",
+                    "“this is a government agency”"
+                ],
+                "answer_index": 2,
+                "explanation": "Saying “through the Affordable Care Act” is a required part of the approved intro.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "aca101_q6",
+                "question": "A consumer asks: “How much am I going to get?” What is the right move?",
+                "choices": [
+                    "Tell them it is confidential between them and the licensed agent, then return to your verification",
+                    "Give them a rough range so they stay interested",
+                    "Tell them it depends on income and ask what they earn",
+                    "Tell them nobody knows and end the call"
+                ],
+                "answer_index": 0,
+                "explanation": "Amounts belong to the licensed agent. Redirect and go straight back to state and coverage.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "aca101_q7",
+                "question": "Which is an approved way to describe what you are calling about?",
+                "choices": [
+                    "Your subsidy assistance through the Affordable Care Act",
+                    "Your free money from the government",
+                    "Your grocery and utility allowance",
+                    "Your cash benefit card"
+                ],
+                "answer_index": 0,
+                "explanation": "Subsidy assistance through the ACA is on the approved list. The others use forbidden words.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "aca101_q8",
+                "question": "What age range does this campaign generally serve?",
+                "choices": [
+                    "65 and older",
+                    "19 to 64",
+                    "18 and older, any age",
+                    "Any age with a disability"
+                ],
+                "answer_index": 1,
+                "explanation": "ACA is for working-age adults. 19+ is the age you confirm, and most consumers above 65 will have Medicare.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aca101_q9",
+                "question": "A consumer already has a Marketplace plan. What do you do?",
+                "choices": [
+                    "Disqualify them — they already have coverage",
+                    "Continue — Marketplace consumers can be transferred",
+                    "Transfer them without any verification",
+                    "Tell them to call HealthCare.gov themselves"
+                ],
+                "answer_index": 1,
+                "explanation": "Already having Marketplace is one of the two groups you CAN transfer. You still complete every verification.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "aca101_q10",
+                "question": "After a rebuttal, where should you always end up?",
+                "choices": [
+                    "Asking for their income",
+                    "Asking whether they want to be called back later",
+                    "Explaining the subsidy in more detail",
+                    "Back at your verification — state and no Medicare, Medicaid or work insurance"
+                ],
+                "answer_index": 3,
+                "explanation": "Acknowledge, answer briefly, then loop back to the verification. That rhythm runs the whole campaign.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "aca101_q11",
+                "question": "Who answers the consumer's questions about what they will actually receive?",
+                "choices": [
+                    "You, from the script",
+                    "The consumer's insurance company",
+                    "The licensed agent after the transfer",
+                    "Nobody — it is a secret"
+                ],
+                "answer_index": 2,
+                "explanation": "The licensed agent. Your job is to get them there.",
+                "tags": [
+                    "role"
+                ]
+            },
+            {
+                "id": "aca101_q12",
+                "question": "What makes a call a good call?",
+                "choices": [
+                    "It lasted a long time",
+                    "The consumer agreed to be transferred and you completed a warm handoff with every step done",
+                    "You convinced the consumer to give you their income",
+                    "You got the consumer to admit they have Medicare"
+                ],
+                "answer_index": 1,
+                "explanation": "Verified, consented, warm handoff, every compliance step complete.",
+                "tags": [
+                    "role"
+                ]
+            }
+        ]
+    }
+}

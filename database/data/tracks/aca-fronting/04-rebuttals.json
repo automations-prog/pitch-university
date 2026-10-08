@@ -1,0 +1,426 @@
+{
+    "id": "aca_rebuttals",
+    "title": "Rebuttals That Work",
+    "summary": "The objections real consumers raise, how often each one comes up, the approved answer, and the loop that keeps you in control.",
+    "est_minutes": 30,
+    "badge": {
+        "id": "badge_aca_rebuttals",
+        "name": "Unshakeable",
+        "icon": "🛡"
+    },
+    "lessons": [
+        {
+            "id": "ar_1",
+            "title": "The loop",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Every rebuttal on this campaign has the same three beats:</p><ol><li><strong>Acknowledge</strong> what they said.</li><li><strong>Answer briefly</strong> — one or two sentences, never a speech.</li><li><strong>Go straight back</strong> to your verification: still in (STATE), still no Medicare, Medicaid or work insurance?</li></ol>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "End on a question",
+                    "html": "<p>Every approved rebuttal finishes with a question. That is deliberate: whoever asks the last question controls where the call goes next. End on a statement and you hand the call to them.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>These are the objections real consumers actually raise, measured across 4,000 calls:</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<table><tr><th>What they say</th><th>How often</th></tr><tr><td>What is the subsidy? What kind of assistance?</td><td>17.4%</td></tr><tr><td>I already have Marketplace / Obamacare</td><td>12.3%</td></tr><tr><td>I need to think about it</td><td>10.6%</td></tr><tr><td>I'm busy / call me back</td><td>8.7%</td></tr><tr><td>I already have that</td><td>7.8%</td></tr><tr><td>I don't know what insurance I have</td><td>7.7%</td></tr><tr><td>Who are you with?</td><td>7.1%</td></tr><tr><td>This is a scam</td><td>4.5%</td></tr></table>"
+                },
+                {
+                    "type": "check",
+                    "question": "What is the last beat of every rebuttal?",
+                    "choices": [
+                        "A joke to lighten the mood",
+                        "Asking if they have any other questions",
+                        "Explaining the subsidy in more detail",
+                        "Going back to your verification question"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Acknowledge, answer briefly, return to the verification — ending on a question."
+                }
+            ]
+        },
+        {
+            "id": "ar_2",
+            "title": "“What is the subsidy?” — the most common question",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Raised on <strong>17.4%</strong> of calls — more than any other objection. They are not being difficult; they genuinely want to know what you are calling about.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Real consumers say it like this: <em>“What is this for?”</em></p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "What is the subsidy?",
+                    "response": "Great question — there's so many benefits and incentives available, it's different for everyone. It depends on your specific situation, your wants and your needs. Once I confirm what I have, the worker in your area can provide the options they may have available for you. Let's finish this part first, you're still living in (STATE) with no active Medicare, Medicaid, or Work Insurance correct?",
+                    "coach_note": "Answer the spirit of it, then go straight back to the verification. You are not stonewalling — you genuinely are not the person who can give them specifics."
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>A top agent on a real call:</strong> “There are benefits, (customer's name), that's not included in any healthcare plan. Now, which ones you may qualify for, I don't know the local agent is going to be joining in with their status. But they are benefits that you can't just go out and buy.”</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "The trap inside this one",
+                    "html": "<p>The follow-up is almost always “is it money?” — raised on 3.3% of calls. Do not repeat their words back. “It's not money for groceries” puts two banned words on a recorded line.</p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "Is it money? A card? Help with bills?",
+                    "response": "Since it's confidential between the licensed agent and yourself, once I verify everything you can go ahead and ask the licensed agent. Now, do you still not receive any Medicare, Medicaid or work insurance?",
+                    "coach_note": "Redirect to the licensed agent without echoing the word they used, then back to the verification."
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer asks “is this cash or a card?” What is the compliant answer?",
+                    "choices": [
+                        "“It's not cash or a card.”",
+                        "“It's usually a card.”",
+                        "“That's confidential between you and the licensed agent — now, you still don't receive Medicare, Medicaid or work insurance, correct?”",
+                        "“I can calculate that for you.”"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "No echo, no guess, straight back to the verification."
+                }
+            ]
+        },
+        {
+            "id": "ar_3",
+            "title": "“I already have insurance”",
+            "est_minutes": 6,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Two different objections that sound identical. “I already have Marketplace” comes up on <strong>12.3%</strong> of calls; the vaguer “I already have that” on <strong>7.8%</strong> — and that second one is handled badly more than any other objection on the board.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>What makes it hard is that the consumer says the same words whether they are qualified or disqualified: <em>“I have insurance.”</em>, <em>“I got Medicaid.”</em></p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "I already have Marketplace / Obamacare / ACA",
+                    "response": "And that's why we are calling today — there are new benefits that have come out that you may not be receiving as of yet. Just want to be sure you don't have Medicare, Medicaid or work insurance still, to be able to assist you.",
+                    "coach_note": "Marketplace is NOT a disqualifier. Acknowledge it, then confirm there is no Medicare, Medicaid or work insurance."
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>A top agent on a real call:</strong> “All right. Is that through the marketplace?  Okay, that's what I see here. And that's okay. You can have that.”</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "When they name a carrier, one question decides the call",
+                    "html": "<p>Blue Cross, Oscar, Ambetter, Anthem, UnitedHealthcare — those companies sell Marketplace plans <em>and</em> other plans. Ask: <strong>“It is through the Marketplace, correct?”</strong> A clear yes and you continue. No, or they can't tell you — that is a DQ.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer says “I've got Ambetter.” What is your next sentence?",
+                    "choices": [
+                        "“It is through the Marketplace, correct?”",
+                        "“Perfect, let me get you transferred.”",
+                        "“Unfortunately you wouldn't be qualified.”",
+                        "“How much do you pay for that?”"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Named carriers always need the Marketplace check before you go any further."
+                }
+            ]
+        },
+        {
+            "id": "ar_4",
+            "title": "“I don't know what I have” — and when it becomes a DQ",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Raised on <strong>7.7%</strong> of calls, and it is the second worst-handled objection. Consumers say: <em>“I have no idea.”</em>, <em>“I don't know.”</em></p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "I don't know what I have",
+                    "response": "I can help you figure it out. Medicare is usually for folks over the age of 65, it comes with a red, white, and blue card. Medicaid, you would have had to apply and get approved for. And work insurance is provided by your employer, you'd see that deducted off your paycheque. You have none of those, right?",
+                    "coach_note": "Walk them through the three, calmly. Most people can answer once you describe what each one looks like."
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "If they still can't tell you, it's a DQ",
+                    "html": "<p>Not a transfer and not a guess. If you cannot establish what coverage someone has, the correct outcome is a disqualification. Transferring an unresolved consumer is the mistake this whole campaign is built to avoid.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>The quick test for Medicare: <em>“Do you receive a red, white or blue card?”</em> Yes means Medicare, which means DQ.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "After you walk them through all three, the consumer still can't say what they have. What now?",
+                    "choices": [
+                        "Transfer — the licensed agent can check",
+                        "Schedule a callback so they can look",
+                        "Mark it Dead Air",
+                        "DQ and move on"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Unresolved coverage is a DQ."
+                }
+            ]
+        },
+        {
+            "id": "ar_5",
+            "title": "Suspicion: scam, caller ID, “how did you get my number”",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>“This is a scam” comes up on <strong>4.5%</strong> of calls, and consumers are blunt about it: <em>“I done filled out 50 applications of the subsidy loan stuff, man. It's starting to sound like a scam to me.”</em></p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "This is a scam / That doesn't sound true",
+                    "response": "I get it, Mr./Mrs. (Customer's Name). I completely understand why you'd be cautious, a lot of people feel that way at first. For your peace of mind, I can assure you this is legit, it isn't a scam call. I don't need any personal or financial information from you, so there's nothing here for me to misuse. The purpose is simply to verify whether you still live in (STATE) and currently have no Medicare, Medicaid, or employer coverage. For you to see which benefits you could possibly get, are those details still accurate for you?",
+                    "coach_note": "Do not get defensive and do not argue. The strongest line you have is true: you are not asking for personal or financial information."
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>A top agent on a real call:</strong> “No, ma'am, is real. I'm a real person. We have a real company. We do real benefits and subsidy allowances through the Affordable Care Act. That's real. I base my character on my being honest, so I'm honestly telling you what's going on.”</p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "How did you get my information?",
+                    "response": "I do have you here for a reason — we are actually only calling those that may qualify for a free subsidy with the Affordable Care Act. Now, you do not receive Medicare or Medicaid or any work insurance, correct?",
+                    "coach_note": "Calm and factual: they are on the list because they may qualify. Then straight back to the verification."
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Your best asset here is what you don't need",
+                    "html": "<p>You are not asking for a Social Security number, a bank account or a card. Say so. It is the fastest way to defuse a suspicious consumer, and it happens to be true.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer says this sounds like a scam. What is the strongest compliant response?",
+                    "choices": [
+                        "Insist that it isn't and keep pitching",
+                        "Tell them you don't need any personal or financial information, then return to verifying",
+                        "Offer to send them proof in the mail",
+                        "Tell them to look up the company and call back"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "True, brief, and it goes straight back to the verification."
+                }
+            ]
+        },
+        {
+            "id": "ar_6",
+            "title": "Brush-offs and the ones that end the call",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>“I need to think about it” (10.6%) and “I'm busy” (8.7%) are the two most common brush-offs. Both have the same answer: be quick, be specific, keep moving.</p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "I'm busy / Call me back",
+                    "response": "No problem at all, I'll be quick. I just need to confirm if you still live in (STATE) and don't have Medicare, Medicaid, or employer insurance.",
+                    "coach_note": "Promise brevity and then actually be brief. The approved line works because it is honest about how little time this takes."
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "I'm not interested",
+                    "response": "This isn't a matter of interest. The benefits and incentives are provided to help you for living in (STATE) with no active Medicare, Medicaid, or Work Insurance, are these details still up to date for you?",
+                    "coach_note": "Notice this does not argue. It reframes: this isn't a matter of interest, it's a check on whether something was missed."
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Where the rebuttals stop",
+                    "html": "<p>If the consumer tells you to stop calling, asks to be taken off the list, or threatens you — that is a DNC. Read the disclaimer, end the call, code it DNC. <strong>Do not rebuttal a do-not-call request.</strong></p><p>Swearing on its own is not a do-not-call request. It is an objection. Stay respectful and keep going.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>The DNC line:</strong> “I will add you to our Do Not Call list right away, Ma'am/Sir, you will not get any further calls from our company.”</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer swears at you and says “what is this garbage?” What do you do?",
+                    "choices": [
+                        "Read the DNC disclaimer",
+                        "Hang up and code Not Interested",
+                        "Transfer them quickly before they change their mind",
+                        "Rebut the objection and carry on"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Swearing is an objection, not a do-not-call request. Only a stop-calling request or a threat is a DNC."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "ar_q1",
+                "question": "What are the three beats of every rebuttal?",
+                "choices": [
+                    "Argue, persuade, close",
+                    "Acknowledge, answer briefly, return to the verification",
+                    "Apologise, explain, transfer",
+                    "Deflect, redirect, re-pitch"
+                ],
+                "answer_index": 1,
+                "explanation": "And it ends on a question, so you keep control.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "ar_q2",
+                "question": "Which objection comes up most often?",
+                "choices": [
+                    "This is a scam",
+                    "I'm not interested",
+                    "What is the subsidy?",
+                    "I don't want to change my plan"
+                ],
+                "answer_index": 2,
+                "explanation": "Raised on 17.4% of calls, more than any other.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "ar_q3",
+                "question": "A consumer asks “is it money?”. What must you avoid?",
+                "choices": [
+                    "Mentioning the licensed agent",
+                    "Repeating the word “money” back to them",
+                    "Returning to the verification",
+                    "Saying it's confidential"
+                ],
+                "answer_index": 1,
+                "explanation": "Never echo a forbidden word, even to deny it.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "ar_q4",
+                "question": "“I already have Marketplace” means…",
+                "choices": [
+                    "Still qualified — keep verifying",
+                    "Disqualified",
+                    "Transfer immediately",
+                    "DNC"
+                ],
+                "answer_index": 0,
+                "explanation": "Marketplace is one of the two groups you CAN transfer.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "ar_q5",
+                "question": "A consumer names UnitedHealthcare. What decides the call?",
+                "choices": [
+                    "Their monthly premium",
+                    "Whether the plan is through the Marketplace",
+                    "Whether they like the plan",
+                    "How long they've had it"
+                ],
+                "answer_index": 1,
+                "explanation": "A clear yes continues; no or unsure is a DQ.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "ar_q6",
+                "question": "The consumer can't establish what coverage they have. Correct outcome?",
+                "choices": [
+                    "DQ",
+                    "Transfer",
+                    "Call Back",
+                    "Not Interested"
+                ],
+                "answer_index": 0,
+                "explanation": "Unresolved coverage is a disqualification.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "ar_q7",
+                "question": "What is your strongest line against a scam accusation?",
+                "choices": [
+                    "Our company has been around for years",
+                    "You can send them a letter",
+                    "They can call the state",
+                    "You don't need any personal or financial information from them"
+                ],
+                "answer_index": 3,
+                "explanation": "True, short, and it leads straight back to the verification.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "ar_q8",
+                "question": "A consumer asks to be taken off your list. What do you do?",
+                "choices": [
+                    "One more rebuttal first",
+                    "Code Not Interested",
+                    "Read the DNC disclaimer, end the call, code DNC",
+                    "Ask why they want off"
+                ],
+                "answer_index": 2,
+                "explanation": "Never rebuttal a do-not-call request.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ar_q9",
+                "question": "A consumer swears at you but doesn't ask you to stop calling.",
+                "choices": [
+                    "Rebut and continue",
+                    "DNC",
+                    "Hang up",
+                    "Transfer immediately"
+                ],
+                "answer_index": 0,
+                "explanation": "Swearing alone is an objection.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "ar_q10",
+                "question": "Why does every approved rebuttal end with a question?",
+                "choices": [
+                    "To sound friendly",
+                    "Because the script says so",
+                    "To fill silence",
+                    "So the agent keeps control of where the call goes"
+                ],
+                "answer_index": 3,
+                "explanation": "Whoever asks the last question steers the call.",
+                "tags": [
+                    "rebuttals"
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,1983 @@
+{
+ "all": {
+  "calls_analysed": 3981,
+  "relevant": 3981,
+  "conversations": 3979,
+  "outcomes": {
+   "callback": 180,
+   "transferred": 3757,
+   "unclear": 38,
+   "consumer_hung_up": 3,
+   "dq": 1
+  },
+  "objections": {
+   "other": {
+    "label": "Anything else",
+    "seen_pct": 22.6,
+    "seen_n": 898,
+    "loss_pct": 0.1,
+    "handled": {
+     "ok": 622,
+     "missed": 44,
+     "weak": 104,
+     "strong": 294
+    },
+    "strong_examples": [
+     "No, sir, you should be good. So what they'll do is look and see what all is offered in your area for you and then look and see what all you may be eligible for.",
+     "Apologized, raised volume and restated the ACA / no Medicare, Medicaid, work insurance and over 19 question slowly",
+     "Yeah, of course. Just to confirm, no Medicare, no Medicaid or work coverage over the age of 19. That's all correct for you, Right.",
+     "Yeah. But you don't. You don't have work coverage. Right?",
+     "Oh, no, not to worry. Nothing like that, William, at all. So when I get you with the senior agent, they're just going to ask you some questions, see what kind of coverage you may or may not have.",
+     "This is Crystal with America's Health on a recorded line. The call is regarding the subsidy allowance through the Affordable Care act."
+    ]
+   },
+   "what_is_subsidy": {
+    "label": "What is the subsidy / what kind of assistance is it",
+    "seen_pct": 15.7,
+    "seen_n": 624,
+    "loss_pct": 0.2,
+    "handled": {
+     "ok": 450,
+     "strong": 195,
+     "weak": 40,
+     "missed": 8
+    },
+    "strong_examples": [
+     "No, this is a benefit allowance to help you for not having support through Medicare, Medicaid or work insurance. You don't have any of those. Correct.",
+     "Explained it is assistance since the Affordable Care Act for people with no Medicare, Medicaid or work insurance living in Nebraska, and mentioned a 2026 subsidy allowance they may qualify for",
+     "Well, it is a subsidy that helps people with no Medicare, Medicaid or work insurance. Do you have any of those, Jasmine?",
+     "So these are benefits put in place for people who are not receiving Medicare, Medicaid, or work insurance. Is that still up to date for you?",
+     "There are benefits and incentives for people that have no Medicare, Medicaid or work insurance over the age of 19.",
+     "Explained it is assistance for those not currently receiving Medicare, Medicaid or work insurance, and that benefits are different for everyone."
+    ]
+   },
+   "already_have_marketplace": {
+    "label": "I already have Marketplace / Obamacare / ACA",
+    "seen_pct": 12.2,
+    "seen_n": 484,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 237,
+     "strong": 216,
+     "weak": 28,
+     "missed": 7
+    },
+    "strong_examples": [
+     "Marketplace? Yes, ma'am. Marketplace, but not Medicaid, Medicare work coverage. Can I confirm? That's right.",
+     "Asked 'Is that through the marketplace?' then explained there may still be benefits available that they haven't yet received through the marketplace.",
+     "Okay. Is that Marketplace or somewhere else?",
+     "Okay, was that with the Affordable Care Act? ... So you talked to the licensed agent, I'm going to guess... and then what ended up happening?",
+     "Is that through the marketplace? ... Okay, that is fine. But no Medicare, Medicaid or work insurance at this time.",
+     "Oh, is that from Marketplace? ... we're not looking at Marketplace. We're looking specifically at Medicare, Medicaid or work insurance."
+    ]
+   },
+   "hesitation": {
+    "label": "I need to think about it",
+    "seen_pct": 10.2,
+    "seen_n": 406,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 280,
+     "strong": 87,
+     "weak": 46,
+     "missed": 7
+    },
+    "strong_examples": [
+     "No, sir, they are the licensed agent, and they will be the one to help you access what subsidy allowance you may receive. I'm not a licensed agent, so I don't want to miss quote you on anything here.",
+     "So it's regarding the Affordable Care act and then the benefits through the program. So they'll tell you all about it and I'll make sure you get someone that we can actually understand because they should have never hung up.",
+     "There are brand new subsidies for marketplace... everyone may qualify for something different, and the only person that can answer that is our licensed agent, since I'm not licensed. So I don't want to misquote you.",
+     "What's going on? Sir... Is there something that you want to ask me about? Like, I could explain it to you if you like.",
+     "I'm not going to be the one that disqualify you. That would be the licensed agent at the end of the day. You can hear what the licensed agent has to say. If you're not interested, you don't have to go through the process.",
+     "They're not going to hang up on you now because I'm on the phone. I'm not hanging up until they say... hang on to the line. They'll be right with us. I got you. Don't worry. You're in good hands."
+    ]
+   },
+   "busy_callback": {
+    "label": "I'm busy, at work, call me back",
+    "seen_pct": 8.1,
+    "seen_n": 322,
+    "loss_pct": 0.6,
+    "handled": {
+     "ok": 202,
+     "strong": 108,
+     "weak": 28,
+     "missed": 10
+    },
+    "strong_examples": [
+     "Okay, so I'll make this very brief.",
+     "You didn't have just two minutes to spare because we already completed 95% of everything... All that's left is for the coordinator to let you know which subsidy benefits you may receive. We would get you right back to work.",
+     "Offered to call back at a better time and then waited while the consumer was put on speakerphone.",
+     "Oh, shoot. I do have your profile pulled up, but it'll be super quick for you.",
+     "I only need a couple minutes here to grab them so we can at least confirm the subsidy to see if a callback is necessary. Give me about 2 minutes, 3 minutes top, so we can confirm.",
+     "Because that's what I'm showing here. Do you have a minute to talk as I have you on the line, Judy?"
+    ]
+   },
+   "already_have_it": {
+    "label": "I already have that / I already get it",
+    "seen_pct": 7.7,
+    "seen_n": 306,
+    "loss_pct": 0.0,
+    "handled": {
+     "weak": 82,
+     "ok": 116,
+     "strong": 91,
+     "missed": 23
+    },
+    "strong_examples": [
+     "Okay, is that through Medicare, Medicaid, or work insurance?... That's through Marketplace.",
+     "That's through the marketplace, right? ... Perfect. All right, so far everything looks correct.",
+     "Okay. Is that involved with Marketplace at all?",
+     "Asked for clarification: \"I'm asking if it was the insurance that you got or was it the subsidy allowance?\"",
+     "Is it through Marketplace or somewhere else? ... Okay. But no Medicare, Medicaid or work insurance. Last we checked, Aca. And you're over 19, right?",
+     "Asked whether it was with the Marketplace, Obamacare or Healthcare.gov, then probed again on where the Blue Cross plan came from."
+    ]
+   },
+   "dont_know_what_i_have": {
+    "label": "I don't know what insurance I have",
+    "seen_pct": 7.5,
+    "seen_n": 300,
+    "loss_pct": 0.0,
+    "handled": {
+     "weak": 65,
+     "ok": 160,
+     "strong": 71,
+     "missed": 11
+    },
+    "strong_examples": [
+     "Okay. Okay. So no Medicaid or Medicare either. Right.",
+     "Clarified by asking again about Medicaid/job insurance and age, then explained Medicare is usually 65+ or two years on Social Security disability, and confirmed the consumer had nothing at all.",
+     "Okay, no problem. So this program is for people who are not receiving Medicare, Medicaid or employment insurance. You may be entitled to a subsidy allowance at this time.",
+     "'Okay. And that's through the marketplace. Right.' - confirmed it was a Marketplace plan before continuing",
+     "Clarified: \"Ambetters through the marketplace\" and confirmed no Medicare/Medicaid/work coverage",
+     "Explained the subsidy program is provided through the Affordable Care Act, that it's not just for seniors, and that she doesn't need anything personal or sensitive"
+    ]
+   },
+   "company_question": {
+    "label": "What is America's Health / who are you with",
+    "seen_pct": 6.9,
+    "seen_n": 274,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 110,
+     "ok": 157,
+     "weak": 12,
+     "missed": 4
+    },
+    "strong_examples": [
+     "Clarified she is not an insurance company, calling through America's Health, and would connect him to licensed coordinators in his state",
+     "Of course... my name is (agent). I said Danny, but it's Danielle. And I'm with America's Health. Now, the subsidy, the allowance and the incentive, that is through the Affordable Care Act.",
+     "This is Amber with America's Health and Recorded line. We were calling about your subsidy allowance. It's through the Affordable Care Act.",
+     "Identified herself by name, stated she was on a recorded line with America's Health, and explained the call was regarding subsidy and allowances from the Affordable Care Act.",
+     "Identified himself by name, stated he was on a recorded line with America's Health, and that the call was about her subsidy through the Affordable Care Act.",
+     "Yes, that's the company I'm with. We were calling about your subsidy allowance from the Affordable Care Act."
+    ]
+   },
+   "where_calling_from": {
+    "label": "Where are you calling from / which state / why this coordinator",
+    "seen_pct": 5.9,
+    "seen_n": 233,
+    "loss_pct": 0.4,
+    "handled": {
+     "strong": 91,
+     "weak": 12,
+     "ok": 123,
+     "missed": 7
+    },
+    "strong_examples": [
+     "So I myself, I am in Canada, but I am connecting you with a Texas agent.",
+     "My name is Lucy. I'm with America's Health on a recorded line. And this call is in regards to your subsidy allowance provided by the Affordable Care Act.",
+     "I'm in Pensacola, Florida... across the Gulf from you.",
+     "This is Amber with America's Health and a recorded line.",
+     "My name is David. I'm with the America's Health here. I'm on a recorded line.",
+     "South Carolina."
+    ]
+   },
+   "scam": {
+    "label": "This is a scam / spam / doesn't sound real",
+    "seen_pct": 4.2,
+    "seen_n": 166,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 94,
+     "weak": 17,
+     "strong": 65,
+     "missed": 5
+    },
+    "strong_examples": [
+     "I don't blame you for feeling that way. Not one bit... I'm the senior supervisor here, I'm the one who calls people that's been called a lot, so I do a lot of apologizing and picking up the pieces. It comes down to people not doing their jobs properly, because the last thing anyone needs is any kind",
+     "I agree, absolutely. And so we can definitely provide you with that. And also you can go to health.gov and verify what we spoke about. So that is the official government website... This isn't for Medicaid or Medicare, however.",
+     "No, ma'am, we're not asking for any of your personal information. We're just confirming no Medicare, Medicaid, no work insurance so we were able to help out today... so get us connected so we're able to see what may help out with today.",
+     "\"As soon as you hear someone tell you that they're supposed to be telling them something or say this, red flag, do not do it. Huge red flag.\"",
+     "No, sir. So we don't ask for any personal banking details or anything like that. We are only confirming your benefits information. Sir, it is showing you may still qualify.",
+     "Yes ma'am, it is assistance for not receiving Medicare, Medicaid or work insurance, and we do not ask for any financial or sensitive information; then re-confirmed state and coverage."
+    ]
+   },
+   "wrong_state": {
+    "label": "Wrong state / I don't live there",
+    "seen_pct": 3.5,
+    "seen_n": 140,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 80,
+     "ok": 45,
+     "weak": 12,
+     "missed": 7
+    },
+    "strong_examples": [
+     "Austin. Okay, they got San Antonio. Austin. Let me fix that.",
+     "If your permanent address is in Texas, I can get a benefits coordinator from Texas. That way we can check there. But we do cover a lot of different states for the program, so they can also check for Wisconsin as well. Is that okay with you?",
+     "Oh, I see. Let me see. What state are you in? I can see if it's there.",
+     "Okay, that's probably why. Have you received it yet? We have you in Texas. What state are you in, (customer)?",
+     "Well, that's weird. I'm so sorry. It could just be a glitch in the system.",
+     "Okay. What state are you in?"
+    ]
+   },
+   "is_it_money": {
+    "label": "Is it money, cash, a cheque, a card, help with bills or groceries",
+    "seen_pct": 3.0,
+    "seen_n": 120,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 70,
+     "strong": 45,
+     "weak": 16,
+     "missed": 2
+    },
+    "strong_examples": [
+     "Again, they are different for everyone. I'm just here to verify if you're still in the state of Tennessee to receive it.",
+     "So the coordinator is going to let you know what you may receive here.",
+     "Well, it's different things for different people, sir. So the agent will be the one to specify exactly what you may be eligible for.",
+     "Again, sir, there's different things for different people and I just don't want to say that is what it is that you're getting because I'm not the license agent... you can ask them as soon as they get on the line.",
+     "So just bear with me here until we get connected to my coordinator, okay? Because it is confidential between you and them as long as you don't receive any Medicare Medicaid work insurance, which you don't have. Right.",
+     "It does look different for every individual, but it's a benefit, like subsidy through the Affordable Care Act... it's through the health insurance program."
+    ]
+   },
+   "insurance_not_familiar": {
+    "label": "Names an insurance company (Blue Cross, Oscar, Ambetter, Anthem, UHC...)",
+    "seen_pct": 2.7,
+    "seen_n": 108,
+    "loss_pct": 0.0,
+    "handled": {
+     "weak": 10,
+     "ok": 60,
+     "strong": 35,
+     "missed": 3
+    },
+    "strong_examples": [
+     "So let me explain to you. We help you with a subsidy benefit, sir... It provides free support for individuals who are at least 19 years and older and are not receiving Medicare, Medicaid or work insurance. Do you have any of that?",
+     "\"And I get that. So let me explain what it is... It is a health subsidy that was released back in 2010. It came out to help individuals who don't get work insurance from their job or Medicare and Medicaid.\"",
+     "'Of course. Yeah, I definitely get that. As long as you don't have any of those, it's not a problem... they'll be able to see exactly what may be available for you.'",
+     "That's okay, I can explain it a little better. Every few months we do some automatic reviews for individuals living in Florida that do not receive any Medicaid, Medicare, or work insurance, and your name came up.",
+     "\"Just basically what this is, and I don't need nothing personal or sensitive from you either, but there is a subsidy allowance that the state put back up and running in January to help people out... it is a free subsidy allowance through the Affordable Care Act.\"",
+     "Explained it is a subsidy allowance provided through the state under the Affordable Care Act, clarified it is not just for seniors and that anyone over 19 without work insurance, Medicaid or Medicare may be considered"
+    ]
+   },
+   "told_not_qualified": {
+    "label": "They told me I don't qualify (no job, income, not in my area)",
+    "seen_pct": 2.3,
+    "seen_n": 90,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 54,
+     "strong": 38,
+     "weak": 4,
+     "missed": 1
+    },
+    "strong_examples": [
+     "Clarified: 'If your job provides you with health care, it would disqualify. Do you receive either one?'",
+     "It's not for that. The subsidy was for folks who don't receive Medicare, Medicaid or work insurance.",
+     "I can't really comment on who you may have spoken to... the subsidy that I'm referring to, it's only been out since the start of this year. I can definitely try to get you helped out here.",
+     "That's somebody else you spoke to. I'm the one that's doing the follow up calls... there looks like there was some miscommunication. So I'm going to quickly get you over to the senior coordinator to see what new subsidies that you may receive.",
+     "Explained the subsidy is for folks who do NOT have Medicare, Medicaid or work insurance, and confirmed she had none of those.",
+     "I'm not sure who you spoke to or what you're referring to, but this is about the subsidy allowance through the Affordable Care Act for people who are not receiving Medicare, Medicaid, or work insurance. Is that up to date for you?"
+    ]
+   },
+   "personal_info": {
+    "label": "I'm not giving you my personal information",
+    "seen_pct": 1.9,
+    "seen_n": 77,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 42,
+     "strong": 31,
+     "weak": 7,
+     "missed": 1
+    },
+    "strong_examples": [
+     "\"Yes. For yourself.\"",
+     "Oh, no, no, no, no, no, no, sweetheart. We can't take back information. No, no, no.",
+     "Oh, I'm not asking for that information. I'm not asking for any personal information. I just need to make sure you have no Medicare, no Medicaid, no work insurance.",
+     "The only reason why I need your state is so that I can connect us with the appropriate benefits coordinator so that they can take a look and let you know what benefits are available to you in the state that you're currently in. That's why I don't require any other personal information.",
+     "\"I totally understand your concern, (customer). We already verified everything here. So all that's left is for the coordinator to let you know which subsidy benefits you might receive today.\"",
+     "There's nothing personal, really. I mean, that's why I wanted to get them on the line, because they only are able to configure what those benefits are for your state, since they do vary from state to state."
+    ]
+   },
+   "not_interested": {
+    "label": "I'm not interested / I don't want that",
+    "seen_pct": 1.9,
+    "seen_n": 77,
+    "loss_pct": 0.0,
+    "handled": {
+     "weak": 2,
+     "ok": 49,
+     "strong": 27,
+     "missed": 2
+    },
+    "strong_examples": [
+     "Pardon me, ma'am... Well, as I said, these benefits are for those with no Medicare, Medicaid, or work insurance. I do see that you have been through a process like this in the past, and there could have been an issue on either end as to why you didn't receive the benefits for that year.",
+     "I understand that you get a lot of calls, you get bombarded. I don't want you to miss out on the 2026 benefit package because it is a limited thing. So if you had maybe one or two minutes just to hear the information out, you can make your decision at a later time if you wanted to.",
+     "Oh, no, this is not a sales call. The call was in reference to the assistance. So it's a government subsidy going out to folks that do not have any Medicare, Medicaid or work coverage",
+     "Do you actually know what this is before you do, write this off? Because I'm noticing a lot of people are being misinformed here.",
+     "Ma'am, this is not a matter of interest. This is in regards to your subsidy allowance from the Affordable Care Act. You haven't received that yet, correct?",
+     "If it's not going to benefit you, I wouldn't see why you would need to take advantage of it. But that's the goal of my call, is to make sure we connect you to someone so they can confirm those benefits to see if those are beneficial for you."
+    ]
+   },
+   "how_got_info": {
+    "label": "How did you get my information",
+    "seen_pct": 1.9,
+    "seen_n": 75,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 49,
+     "weak": 20,
+     "strong": 9,
+     "missed": 2
+    },
+    "strong_examples": [
+     "You could have filled out a survey. It could have been as current as a week ago or as long as a year and a half ago... we keep all of our top priority surveyors on file.",
+     "Many people go online. They either apply for a job... a promotional ad, or sometimes people just inquire... and we call to assist those with the Affordable Cares Act.",
+     "Explained that many people are being misinformed, that this is not for seniors, that the subsidy is through the Affordable Care Act, and that anyone over 19 without work insurance, Medicaid or Medicare may be able to get help; also offered to look into who had been calling him.",
+     "No. So it just shows up in our system because it's showing that you are living in Louisiana with no active Medicare, Medicaid, or work insurance. Is that still up to date for you?",
+     "Framed the call as a courtesy call apologizing for the over-calling and explained the subsidy program is provided through the Affordable Care Act.",
+     "You could have filled out a survey... as current as a week ago or as long as two and a half years ago... I show the last time we had contact with this resident, it was September 29th of last year"
+    ]
+   },
+   "dont_want_change": {
+    "label": "I don't want to change my insurance / will this change my plan",
+    "seen_pct": 1.5,
+    "seen_n": 61,
+    "loss_pct": 0.0,
+    "handled": {
+     "missed": 5,
+     "strong": 24,
+     "ok": 26,
+     "weak": 8
+    },
+    "strong_examples": [
+     "Ultimately, at the end of the day, it's up to you if you want to change anything. But they update things all the time and there may be other things that you qualify for.",
+     "We're not asking you to change your insurance. Does that happen to be a private one or something else?",
+     "No... if you're happy with the plan that you're on, that's absolutely fine. The only reason you're showing back up here is because subsidies, incentives, and allowances have changed, and we do want to make sure that you're not missing out on anything that you may qualify for. But changing your polic",
+     "Which insurance plan do you currently have at this time, sir? ... that is completely fine and necessarily do not have anything to do with that. These are just additional benefits and subsidies that may be available to you at this time.",
+     "Oh, no, ma'am. No, you're not signing for a new application here. This is just about the additional subsidies for Marketplace for you.",
+     "No, no. The only person that can change your health insurance is you, sir... nobody would be changing your insurance besides you."
+    ]
+   },
+   "didnt_apply": {
+    "label": "I didn't apply for that",
+    "seen_pct": 1.5,
+    "seen_n": 60,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 19,
+     "ok": 36,
+     "weak": 5,
+     "missed": 1
+    },
+    "strong_examples": [
+     "Well, it's not something you sign up for, (customer). We were notified you don't get Medicare, Medicaid, or work insurance. Is that up to date for you?",
+     "'You do not need to apply. As long as you're in Texas not receiving any help from Medicare, Medicaid, or work insurance, you may be eligible. So this is a program that was put out to help those that don't receive any type of help.'",
+     "This isn't something that you sign up for. That's why we're reaching out to you, because it shows that you're not receiving Medicare, Medicaid, or work insurance.",
+     "Explained a lot of people are being misinformed, said nothing personal or sensitive was needed, and described the program provided through the Affordable Care Act",
+     "No, this isn't something you apply for. It's the Affordable Care Act... something we were all given as part of the federal government about 10, 11 years ago. The only new part to this is the subsidy, which is for people that don't have Medicare, Medicaid, or work insurance.",
+     "So this is not something that you would have applied for. The reason why you're receiving this call is because we have you living in Missouri with no active Medicare, Medicaid or work insurance... and it is through the marketplace."
+    ]
+   },
+   "caller_id": {
+    "label": "Why does it say you're calling from another state / scam likely",
+    "seen_pct": 1.1,
+    "seen_n": 44,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 7,
+     "ok": 31,
+     "missed": 3,
+     "weak": 3
+    },
+    "strong_examples": [
+     "Asked 'did they say they were with America's Health on a recorded line?' and when told it was 'marketplace', explained 'we work together with Marketplace'",
+     "That happens whenever we call out from a dialer in a call center. But we're a legit company, America's Health, and we're working with people that don't have Medicare, Medicaid, or work insurance. Do you have any of those three?",
+     "Acknowledged it happens when numbers aren't stored, said they get the same calls, apologized for the volume of calls and promised to look into who had been calling, and reassured 'I don't need nothing personal sensitive from me to put you at ease.'",
+     "Explained that they reside throughout the states assisting people with subsidies and that she personally resides in Colorado.",
+     "Explained being a transfer agent, not the licensed agent, that numbers can display differently, and that there is no harm in listening and she can decline anything she is uncomfortable with",
+     "Explained that in Florida the line is not a recognized line so it lists as scam or spam, that they have no control of it and are trying to fix it, and reiterated the benefits are regulated through the Affordable Care Act and came out to help anybody without Medicare, Medicaid or work insurance."
+    ]
+   },
+   "no_subsidy_exists": {
+    "label": "There is no subsidy / the government shut it down",
+    "seen_pct": 1.1,
+    "seen_n": 44,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 10,
+     "ok": 32,
+     "weak": 3,
+     "missed": 1
+    },
+    "strong_examples": [
+     "The subsidy, are you referring to that? Because that is a thing, actually... it looks like you still may qualify, but we just want to make sure we still have everything correct and up to date for you.",
+     "\"Okay... no one should be guaranteeing anything. Right. Because that's not how this actually works. So I'm gonna actually see what's happening here.\"",
+     "So when you say you don't receive the government subsidy, is it because you have Medicare, Medicaid or work insurance?",
+     "Explained there is a program restarted in January, provided through the state from the Affordable Care Act, and that nothing personal or sensitive is needed.",
+     "So it became available here. It's a form of assistance for folks who don't have any support for Medicare Medicaid employer coverage.",
+     "So this is for people who are not receiving either and they have you here on file as not receiving yours. So they were just calling to see what you may be eligible for."
+    ]
+   },
+   "not_enough_income": {
+    "label": "I don't have enough income for this",
+    "seen_pct": 0.5,
+    "seen_n": 19,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 13,
+     "strong": 5,
+     "weak": 1
+    },
+    "strong_examples": [
+     "I wasn't asking if you had a job or not. I just have to make sure... it doesn't matter if you have a job or not. Make sure you don't have work insurance from your job.",
+     "I gotcha. I mean, the benefits are free for people who have no support through work insurance, Medicare or Medicaid. I show you is currently having none of those.",
+     "There are different benefits for different brackets. Whatever you may be entitled to specifically is going to be confidential between you and a licensed agent.",
+     "Well, the benefits are free for people who have no work insurance, Medicare or Medicaid.",
+     "So not to worry. That's why this is given to you because there is some benefits and incentives that are being provided. Since you're not getting any health care at this time, do you get any Medicare, Medicaid or work insurance currently?"
+    ]
+   },
+   "tax_question": {
+    "label": "Questions about the tax confirmation",
+    "seen_pct": 0.3,
+    "seen_n": 12,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 5,
+     "ok": 7,
+     "weak": 1
+    },
+    "strong_examples": [
+     "Said she could not advise as a customer service representative, but could grab the licensed coordinator in Texas who can explain what additional subsidy he may be eligible for.",
+     "That's a good question, but I'm not a licensed agent, so I don't want to miss coaching anything here. What I can do is connect you over to the coordinator to help you access what subsidy allowance you may receive.",
+     "So you have Marketplace insurance. Correct... what I can do here for you Michael, is I can grab one of the coordinator and we'll take a look and see what's going on with the additional subsidy and you can go ahead and speak with them.",
+     "Yes. The person that I'm getting, they'll be the ones to let you know what it is you might qualify for.",
+     "I am kind of just a middleman, so I don't want to give you any wrong information... once one of these agents come on, they are more knowledgeable about every answer that you're going to need."
+    ]
+   },
+   "family_handles": {
+    "label": "My son / husband / wife handles this",
+    "seen_pct": 0.2,
+    "seen_n": 8,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 6,
+     "ok": 2
+    },
+    "strong_examples": [
+     "Yes. Yeah. So you can always take this back to her, what you gather from us.",
+     "\"I know it could be frustrating, but I'm trying to bring some clarity to it and some transparency\" then re-explained the coordinator's role and built rapport about her children.",
+     "So you're his power of attorney... you're the person that looks at his plan and says, hey, we need to make some changes.",
+     "Another problem. So the insurance you have is through Marketplace? Yes.",
+     "I'm sorry. I would only be able to speak with him about it. He can have the phone on speakerphone, though.",
+     "Okay, yes, sir. I can walk you through. I can give you a better breakdown so you can understand for yourself."
+    ]
+   },
+   "dnc_request": {
+    "label": "Asked not to be called again",
+    "seen_pct": 0.2,
+    "seen_n": 6,
+    "loss_pct": 0.0,
+    "handled": {
+     "weak": 3,
+     "ok": 2,
+     "strong": 1
+    },
+    "strong_examples": [
+     "I didn't say this was a subsidy insurance, ma'am. I said it was subsidy allowance. This is the relief being sent out to those who don't receive any Medicare, Medicaid or work insurance. Is that still your case?"
+    ]
+   },
+   "open_enrollment": {
+    "label": "Open enrolment / why are you calling me",
+    "seen_pct": 0.2,
+    "seen_n": 6,
+    "loss_pct": 0.0,
+    "handled": {
+     "weak": 1,
+     "ok": 4,
+     "missed": 1
+    },
+    "strong_examples": []
+   },
+   "give_to_someone_else": {
+    "label": "Give it to someone who needs it more",
+    "seen_pct": 0.1,
+    "seen_n": 3,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 3
+    },
+    "strong_examples": []
+   }
+  },
+  "steps": {
+   "correct_person": {
+    "done_pct": 70.4,
+    "skipped_pct": 7.2,
+    "asked_not_waited_pct": 22.4,
+    "counts": {
+     "asked_not_waited": 891,
+     "asked_and_waited": 2801,
+     "skipped": 287
+    }
+   },
+   "company_and_recorded_line": {
+    "done_pct": 67.9,
+    "skipped_pct": 1.1,
+    "asked_not_waited_pct": 31.0,
+    "counts": {
+     "asked_not_waited": 1235,
+     "asked_and_waited": 2700,
+     "skipped": 44
+    }
+   },
+   "aca_mention": {
+    "done_pct": 74.2,
+    "skipped_pct": 1.4,
+    "asked_not_waited_pct": 24.4,
+    "counts": {
+     "asked_not_waited": 971,
+     "asked_and_waited": 2952,
+     "skipped": 56
+    }
+   },
+   "state_confirm": {
+    "done_pct": 75.5,
+    "skipped_pct": 2.2,
+    "asked_not_waited_pct": 22.4,
+    "counts": {
+     "asked_and_waited": 3002,
+     "asked_not_waited": 890,
+     "skipped": 86,
+     "not_reached": 1
+    }
+   },
+   "mmw_first": {
+    "done_pct": 87.2,
+    "skipped_pct": 0.1,
+    "asked_not_waited_pct": 12.8,
+    "counts": {
+     "asked_and_waited": 3468,
+     "asked_not_waited": 508,
+     "skipped": 2,
+     "not_reached": 1
+    }
+   },
+   "age_19": {
+    "done_pct": 76.2,
+    "skipped_pct": 2.4,
+    "asked_not_waited_pct": 21.4,
+    "counts": {
+     "asked_and_waited": 3029,
+     "asked_not_waited": 850,
+     "skipped": 97,
+     "not_reached": 3
+    }
+   },
+   "mmw_double": {
+    "done_pct": 53.1,
+    "skipped_pct": 33.8,
+    "asked_not_waited_pct": 13.1,
+    "counts": {
+     "asked_and_waited": 2112,
+     "asked_not_waited": 519,
+     "skipped": 1345,
+     "not_reached": 3
+    }
+   },
+   "verbal_consent": {
+    "done_pct": 64.9,
+    "skipped_pct": 18.9,
+    "asked_not_waited_pct": 16.2,
+    "counts": {
+     "skipped": 751,
+     "asked_and_waited": 2580,
+     "asked_not_waited": 644,
+     "not_reached": 4
+    }
+   },
+   "warm_handoff_with_state": {
+    "done_pct": 93.9,
+    "skipped_pct": 4.0,
+    "asked_not_waited_pct": 2.0,
+    "counts": {
+     "skipped": 154,
+     "asked_and_waited": 3584,
+     "not_reached": 163,
+     "asked_not_waited": 78
+    }
+   }
+  },
+  "compliance": {
+   "promise_will_get": {
+    "n": 1260,
+    "examples": [
+     "So it may mean you didn't get everything you're entitled to yet.",
+     "It's still showing you haven't received your benefits.",
+     "We noticed you haven't received your subsidies under the Affordable Care Act. You're in the state of Wisconsin to receive yours, is that correct?",
+     "so they can tell you what subsidy benefits you may receive today and when you might receive those benefits",
+     "As soon as our benefits coordinator picks up here, they're going to assist you with your subsidies and your benefits."
+    ]
+   },
+   "transferred_without_consent": {
+    "n": 1043,
+    "examples": [
+     "I'm now going to grab a licensed agent and they'll let you know what subsidy assistance you may receive to help you out. Okay? Okay.",
+     "You just got to. You just got to give me the green words and say, okay. ... So I'm going to go ahead and get us transferred over, okay?",
+     "So I'm going to get my agent on the line and just let them know how you may want to receive that. Okay, that's all that's left.",
+     "so now I do need two minutes of your time... All right, sir. Thank you. Can you hear a little bit of ringing on the line",
+     "Should be any moment the great pleasure of speaking with. Hey, Tanya Davis, sir. And we have Tammy Marshall with us in Tennessee."
+    ]
+   },
+   "other": {
+    "n": 826,
+    "examples": [
+     "you may be getting additional allowances and support",
+     "it looks like you might not have received all of your benefits and incentives you may be entitled to",
+     "about your subsidy allowance that you haven't received with the Affordable Care Act",
+     "No Medicare, no Medicaid or work insurance and over the age of 18. Correct. (age threshold stated as 18, and state/medical/age confirmations rolled into single combined asks rather than a separate second confirmation)",
+     "our files here show that you didn't get your government allowance with the Affordable Care act"
+    ]
+   },
+   "guaranteed_outcome": {
+    "n": 544,
+    "examples": [
+     "so they can tell you what subsidy benefits you may receive today and when you might receive those benefits",
+     "No, we're not. Because after that, you'll be removed.",
+     "And you are over the age of 19 to receive your free subsidies.",
+     "my system is showing you may collect the full benefits available today",
+     "Yes, the state does provide actual benefits through the subsidy allowance."
+    ]
+   },
+   "wrong_company_name": {
+    "n": 387,
+    "examples": [
+     "it's Ronisha from American Health",
+     "It's Frank on a recorded line. I'm with American Health.",
+     "this is La Brea with American Health on the recording line",
+     "This is Mike Merrick's help recorded line.",
+     "this is labrielle with American Health on the recording line"
+    ]
+   },
+   "forbidden_financial_word": {
+    "n": 312,
+    "examples": [
+     "whenever there's money involved, something bad's gonna happen",
+     "kids got to have money to play any sport",
+     "they're not going to be asking for any, like, Social Security card numbers or anything like that",
+     "they'll also let you know exactly how much they are and when you may receive those as well",
+     "it ended up hitting my card for like a bunch of money"
+    ]
+   },
+   "promise_qualify_eligible": {
+    "n": 309,
+    "examples": [
+     "I just need to confirm that you're still in the qualifying state of Mississippi",
+     "As long as you have blue cost procedure, you're still good to go.",
+     "That's just Anthem Blue Cost Shield. You're. You're still good to go, though, ma'am",
+     "My Florida coordinator is going to quickly go into detail of your subsidies.",
+     "you may be eligible for a free health insurance subsidy"
+    ]
+   },
+   "no_recorded_line": {
+    "n": 171,
+    "examples": [
+     "this is (agent) with America's Health, and I'm calling you in regards to your subsidy allowance through the Affordable Care Act.",
+     "Hey, this is (agent) with America's Healthline and I'm calling you in regards to your subsidy allowance through the Affordable Care Act.",
+     "this is (agent) with America's Health, and this call is in regards to your subsidy allowance through the aca",
+     "No recorded line disclosure was given at any point in the call.",
+     "Hi, this is (agent) with America's Health. This call is in regards to your subsidy allowance through the aca."
+    ]
+   },
+   "forbidden_household_word": {
+    "n": 124,
+    "examples": [
+     "what's not fun, actually, this year is the electricity bills. The electricity bill I just got, I kid you not, $350.",
+     "they just don't know the bills",
+     "I was able to pay my rent two weeks early this week",
+     "If they weren't trying to get take an arm and a leg from me when I walk in the grocery store, I would be a lot happier",
+     "Someone that could pay the bills, right?"
+    ]
+   },
+   "rude_to_consumer": {
+    "n": 18,
+    "examples": [
+     "No, you didn't get all of them. That's exactly why I'm calling you.",
+     "I don't know if you're being sarcastic or not. Just sit there.",
+     "Oh, nice.",
+     "Okay, shut up. Answer the call. Shut up, shut up.",
+     "You don't need nothing. Who doesn't need anything? Come on, man. I don't understand. Alexa, you're extremely wealthy."
+    ]
+   },
+   "pitched_past_dnc": {
+    "n": 5,
+    "examples": [
+     "Stop calling me because. / Oh, no, that wasn't us... This is in regards to your free subsidies.",
+     "All right, so I'm not putting you on the do not call us. I'm going to transfer you to the agent",
+     "take me off your colleagues [call list], please. — I didn't say this was a subsidy insurance, ma'am. I said it was subsidy allowance...",
+     "I wish I would just take me off your list... / Oh, they do, though. So I'm a little bit confused as why, again, you're feeling the way how you feel.",
+     "Oh, never mind. The agent is here, I think. Good morning. I have Randy head on the line in Tennessee."
+    ]
+   }
+  },
+  "dq": {
+   "with_disqualifier": 239,
+   "types": {
+    "not_marketplace_carrier": 121,
+    "medicaid": 51,
+    "ssdi": 11,
+    "medicare": 12,
+    "private": 13,
+    "state_insurance": 6,
+    "military_va": 4,
+    "non_citizen": 1,
+    "work_insurance": 20
+   },
+   "caught": 81,
+   "transferred_anyway": 220
+  },
+  "hangup_triggers": [
+   "No consumer hang-up; the licensed agent line did not pick up, so the agent arranged a callback on the consumer's new number.",
+   "No hang-up - no licensed agent was available before closing time, so the agent set a callback for the following week.",
+   "No hang-up; the consumer said he was leaving for work and the agent scheduled a callback before the live transfer connected.",
+   "No licensed agent available after several transfer attempts; agent offered to schedule a call back and ended the call.",
+   "No licensed agent became available during the long hold, so the agent offered a callback and ended the call.",
+   "Consumer said he had just arrived at work and asked for a callback; after a long hold waiting for the licensed agent he ended the call agreeing to call back.",
+   "No hang-up; the transfer lines failed repeatedly (no sound / no licensed agent available) and the agent closed the call by scheduling a midweek callback.",
+   "No hang-up; the agent could not reach a licensed agent ('They're all tied up') and set a callback instead.",
+   "No hang-up occurred; the transcript ends during extended small talk while the agent stalled waiting for an advisor, with no transfer attempted.",
+   "No hang-up: the transfer line failed to connect and the agent offered to call back once the line cleared.",
+   "No licensed agent available for Minnesota after several transfer attempts; the agent offered a callback in about 20 minutes and ended the call.",
+   "No hang-up; the consumer was transferred and then told the licensed agent he already has coverage, ending the exchange.",
+   "No hang-up occurred; the call trailed off while the agent repeatedly tried and failed to reach a licensed agent/coordinator, leaving the consumer waiting on hold.",
+   "No hang-up. The consumer stayed on and was cooperative throughout; the agent filled a long hold with small talk and then offered a call back because no coordinator became available.",
+   "No hang-up; the transfer failed to connect after repeated ringing and the agent agreed to schedule a callback for tomorrow or Monday.",
+   "After a long hold filled with small talk about dogs and the weather while waiting for the licensed agent, the consumer went silent and the line appeared to drop before any handoff occurred.",
+   "No licensed agent available after a long hold; the agent scheduled a call back instead of transferring.",
+   "No licensed agent picked up after a long hold; the consumer asked to be called back in a couple of hours and the agent agreed to call back",
+   "No licensed agent was available on the transfer line, so the consumer was placed on a call-back list",
+   "No hang-up; the transfer attempt reached voicemail and the agent rescheduled the call for 10-15 minutes later.",
+   "No hang-up; the licensed agent never picked up after several attempts, so the call was set for a callback.",
+   "No licensed agent was available on the transfer line, so the call was ended with a promise to reach out later.",
+   "No hang-up - no licensed agent was available, so the call was closed as a callback.",
+   "No clear hang-up; the recording ends in a confused handoff attempt with overlapping speech (\"Would you like to qualify? Yeah, I don't know. I don't need her.\")",
+   "No hang-up; the transfer line kept disconnecting and the agent arranged a call back.",
+   "No hang-up; the agent ended the call by offering a callback tomorrow after a long transfer hold and the consumer's confusion about a different program.",
+   "No hang-up: no licensed agent picked up during the hold, so the call was closed out as a callback for the next day.",
+   "No hang-up; the transfer line dropped repeatedly and the agent arranged to call back later.",
+   "No hang-up; the consumer was confused and largely unresponsive (repeated 'Huh?', 'Say what', garbled replies) and the audio ended with what sounds like a separate plan recording playing, with no licensed agent ever joining.",
+   "Consumer repeatedly voiced reluctance (\"I don't want to\", \"I'm not trying to\") but the agent pushed through to transfer instead of resolving the objection.",
+   "No licensed agent was available on the transfer attempt and the consumer's delivery order came up, so the call ended as an agreed callback.",
+   "No hang-up; four transfer attempts failed to reach a South Carolina-licensed agent and the consumer was at work, so the call was ended with a callback promise.",
+   "No hang-up - the licensed agent never picked up after a long hold, so the call was ended with a promise to call back: \"So, (customer), I don't want you to be waiting any longer here. We're just gonna call you back some other time.\"",
+   "No hang-up; the call was transferred and the consumer disclosed existing Marketplace coverage to the licensed agent.",
+   "No hang-up; consumer stayed on and was connected to the licensed agent, though he said he was 'trying to see what's going on real quick before I hang'",
+   "Agent ended the call politely after the consumer disclosed work insurance (disqualifier).",
+   "No hang-up - agent could not find an available licensed agent and offered a callback.",
+   "No licensed agent was available for transfer; the call ended with the agent arranging a callback.",
+   "Long hold with no licensed agent available; consumer lost patience after about six minutes and asked for a callback instead.",
+   "No hang-up - no licensed agent was available in the queue after a long hold, so the agent ended the call promising to call back once an agent could be connected.",
+   "No hang-up; the transfer took place but the handoff named the wrong state and the consumer corrected it (Kentucky, not Alabama).",
+   "No consumer hang-up; the attempted transfer failed because licensed agents were busy, so the agent offered a callback for the next evening.",
+   "No licensed agent picked up after several long hold attempts; the agent disconnected the transfer and offered to call back later.",
+   "Long hold with no licensed agent available; consumer grew impatient (\"I'm about to hang up\") and the agent converted it to a callback.",
+   "No hang-up; no licensed agent became available on the queue so the agent offered to call back in about 20 minutes and the consumer agreed.",
+   "No hang-up; the licensed agent queue never connected (hit a voicemail extension twice) and the agent closed by scheduling a callback.",
+   "No licensed agent ever picked up the transfer; after a long hold filled with small talk the agent offered to call back instead.",
+   "No consumer hang-up; the licensed agent on the receiving end declined the transfer, saying \"No, we don't do North Dakota.\"",
+   "No hang-up; the consumer was mid-errand (grocery shopping) and, once handed to the licensed agent, asked to be called back within the hour instead of continuing.",
+   "No hang-up; the transfer line was busy and no licensed agent answered, so the call was converted to a callback.",
+   "No hang-up; the consumer was transferred but was distracted because his bus was arriving.",
+   "No hang-up - the transfer lines were busy, so the agent told the consumer she would call back in about 20 minutes on the same number.",
+   "No hang-up; the transfer extension was repeatedly unavailable and the agent arranged a callback.",
+   "No hang-up captured; the recording breaks off mid-script with the agent talking about dialing a three-way call, so the consumer's side of the conversation never developed.",
+   "No hang-up. No licensed coordinator was available, so the agent offered a callback and the consumer agreed.",
+   "No hang-up captured; the recording ends while the agent is still cycling through transfer lines trying to reach an available licensed agent after a long hold filled with small talk.",
+   "No hang-up; the consumer was transferred and told the licensed agent she was not looking for insurance.",
+   "No licensed agent was available for Florida near closing time; after a long hold filled with small talk the consumer opted to reschedule and the call ended as a callback.",
+   "No hang-up; the licensed agent never picked up during a long hold and the consumer had a ride arriving, so a callback was scheduled.",
+   "No hang-up; after repeated failed attempts to reach a licensed agent the agent ended with a promise to call back tomorrow."
+  ],
+  "best_lines": [
+   "They are the license agent, and they will be the one to help you access what subsidy allowance you may receive. I'm not a licensed agent, so I don't want to miss quote you on anything here.",
+   "It looks like you may qualify for some free subsidies.",
+   "I'm reaching out to you in regards to a recent assistance that you haven't yet received, and it is being provided through the Affordable Care Act.",
+   "We will be on a confidential line with a license coordinator. They're going to let you know what benefits and subsidies you may qualify for.",
+   "Along with no Medicaid, no Medicare and no work insurance, I also see that you have no VA benefits either. Was that also correct?",
+   "As long as like you don't have the Medicare Medicaid work insurance, you may be getting additional allowances and support",
+   "Okay. So I just want to confirm, (customer), you're not receiving Medicare, Medicaid, or work insurance.",
+   "We're going to quickly see which of these subsidies here you may qualify for and how we can assist.",
+   "I'm going to connect us with a license coordinator and they're going to let you know exactly what subsidy allowance and benefits you may receive",
+   "But just to double check, I want to make sure you said no Medicaid or Medicare work coverage. Right.",
+   "In order for me to help you here, I just need to verify we have you listed as no Medicare, no Medicaid, no work insurance. Still correct?",
+   "They're going to let you know exactly what benefits and subsidies you may qualify for.",
+   "And I've also gone on file for you that you have no work insurance, no Medicaid and no Medicare. Was that still correct as well?",
+   "So there's an assistance or benefits we may help out with today as long as you have no Medicare, Medicaid, work insurance, and you don't have any of those. Correct.",
+   "So what I can go ahead and do for you is bring my senior agent on the line just to let us know what assistance may be available for you.",
+   "I'm calling about your subsidy allowance package with the Affordable Care Act.",
+   "Richard Kelly on a recorded line with America's Health and the calls in regards to the subsidy and the benefits provided through the Affordable Cares Act.",
+   "What I'm going to do is grab some help on the line real quick to see what all you may qualify for.",
+   "they're joining on the line with us to tell us exactly which of these subsidies here you may qualify for",
+   "Last we checked through the aca, the Affordable Care act, you had no Medicare, no Medicaid, no work insurance, and were over the age of 19. Has that changed?",
+   "So just to verify that everything is still the same, you don't have any Medicare, Medicaid or work insurance?",
+   "No, this is a benefit allowance to help you for not having support through Medicare, Medicaid or work insurance.",
+   "I do want to double check myself. You did say no work insurance, no Medicare, no Medicaid. Correct.",
+   "So let's go ahead and get connected to a benefits coordinator, and they'll take a look and they'll let you know exactly what benefits you may be entitled to receive.",
+   "Well, it's not something you sign up for, (customer). We were notified you don't get Medicare, Medicaid, or work insurance. Is that up to date for you?",
+   "Just to confirm, no Medicare, no Medicaid or work coverage over the age of 19. That's all correct for you, Right.",
+   "And just to double confirm with you, no Medicare, Medicaid, or workers.",
+   "what I am able to do, David, is just grab the coordinator and they'll be able to look in to see the details of what benefits you may receive to help out.",
+   "All right, that's all I do need to confirm here on my end, sir. And get my coordinator and they'll let you know exactly what free benefits and subsidies that may be available for you to help you out.",
+   "Again, this is the subsidy allowance. Put us through a fall coordinator to let you know what those subsidy benefits are and what you may receive here as well.",
+   "Marketplace, but not Medicaid, Medicare work coverage. Can I confirm? That's right.",
+   "Okay, so I'll get us connected so we can see what assistance, what benefits we may help out with today. Is that okay?",
+   "And lastly, (customer), just to clarify, no Medicare, no Medicaid and no work insurance. Right.",
+   "And just to be sure, I always double check this. I apologize for the redundancy. But just to be sure, you have no support with any Medicare, Medicaid or works.",
+   "So when I get you with the senior agent, they're just going to ask you some questions, see what kind of coverage you may or may not have. And they'll see exactly which subsidy would best fit your needs.",
+   "This is Crystal with America's Health on a recorded line. The call is regarding the subsidy allowance through the Affordable Care act.",
+   "And is it still the same you don't receive any help through Medicaid, Medicare or work insurance?",
+   "And to reconfirm that I heard you correctly, you're over 19, no Medicare, Medicaid, or work insurance.",
+   "So I'll get us connected so we can see what assistance or benefits we may help out with today. Is that okay?",
+   "Since the Affordable Care act, it's assistance for people that have no coverage through Medicare, Medicaid, or work insurance and that live in Nebraska.",
+   "So what I can go ahead and do for you, James, is bring my senior agent on the line just to let us know what assistance may be available for you.",
+   "As long as you're not getting the main Medicare, Medicaid, work insurance, we can check, see what allowances you may be getting.",
+   "I'm going to grab my license coordinator. They'll let you know what subsidy allowance or benefits you may receive to help you out at this time.",
+   "And (customer), I'm so sorry to ask again. I just got to double confirm. You did say no Medicare, Medicaid or work insurance. Right.",
+   "So I'm going to get customer care on the line. I've updated what they need to help you. So what they're going to do is they're going to connect you with any benefits you may still get. Okay.",
+   "Okay, so I'll make this very brief.",
+   "Hi, this is (agent) calling with America's Health. I'm on a recorded line.",
+   "So it's regarding the Affordable Care act and then the benefits through the program. So they'll tell you all about it and I'll make sure you get someone that we can actually understand because they should have never hung up.",
+   "So you do not need to apply. As long as you're in Texas not receiving any help from medicare, Medicaid, or work insurance, you may be eligible.",
+   "And just to be sure, I always double check this. I apologize for the redundancy. But just to be sure, you have no support with any Medicare, Medicaid or work insurance.",
+   "I'm now going to grab a licensed agent and they'll let you know what subsidy assistance you may receive to help you out. Okay?",
+   "This is Cass with America's Health recorded line. I'm reaching out regarding the subsidies provided through the aca.",
+   "The subsidy allowance is provided to folks that do not have no Medicaid, no Medicare, no work insurance. You don't have any of those, do you?",
+   "My name is Lucy. I'm with America's Health on a recorded line. And this call is in regards to your subsidy allowance provided by the Affordable Care Act.",
+   "All that's left is for the coordinator to let you know which subsidy benefits you may receive. And that's basically it. We would get you right back to work.",
+   "This is Emily on a recorded line with America's Health, and we were calling regarding your subsidy allowance through the Affordable Care Act.",
+   "Well, we're going to try to make some things happen today, see what you may qualify for here.",
+   "I have a (customer) on the line and she's from Texas. Can you help her out?",
+   "So that's why we're calling. We're showing that there may still be some benefits available for you that you haven't yet received through the marketplace.",
+   "Okay. Is that Marketplace or somewhere else?",
+   "So my name is (agent). I said Danny, but it's Danielle. And I'm with America's Health. Now, the subsidy, the allowance and the incentive, that is through the Affordable Care Act.",
+   "They're going to explain to you what benefits you may qualify for. And I'm right there with you as well.",
+   "So there are benefits and allowances that are there to help people in Texas.",
+   "This is Michelle calling from America's Health on a recorded line.",
+   "So benefits there for people who don't have active Medicare, Medicaid or work insurance.",
+   "We will be on a confidential line with the license coordinator. The going to let you know what benefits and subsidies you may qualify for.",
+   "Hi, I have a (customer) on the line and he's from Oklahoma. Can you help him out?",
+   "(customer), it's about your subsidy allowance with the Affordable Care Act.",
+   "My name's Jessica. I'm with America's Health on a recorded line. We're calling about your subsidy provided through aca.",
+   "I'm going to grab the agent. They're just going to let you know exactly what benefits that you may receive to help you out. Okay.",
+   "But again no medicare, Medicaid, work insurance just am better.",
+   "Sir, I was calling about your benefits with the Affordable Care act in Tennessee.",
+   "And just to double confirm myself, you said no Medicare, no Medicaid, or no work insurance.",
+   "And (customer), I hate to ask you again, I'm so sorry, but I'm just double confirming you did say no Medicare, Medicaid or work insurance. Right.",
+   "My name is Sophie. I'm on a recorded line here with America's Health. This call is just in regards to your subsidy and allowance assistance through the Affordable Care act.",
+   "We want to see which ones you may qualify for",
+   "I wasn't asking if you had a job or not. I just have to make sure it doesn't matter if you have a job or not. Make sure you don't have work insurance from your job.",
+   "They're going to go over some benefits that you may be entitled and exactly when you may receive those. Okay?",
+   "Hi, my name is (agent). I'm with America's Health on a recorded line. And this call is in regards to your subsidy allowance provided by the Affordable Care Act.",
+   "And just to double confirm again, you do not have Medicare, Medicaid or work insurance. Right? None of those."
+  ]
+ },
+ "model": {
+  "calls_analysed": 1326,
+  "relevant": 1326,
+  "conversations": 1326,
+  "outcomes": {
+   "callback": 69,
+   "transferred": 1247,
+   "unclear": 6,
+   "agent_ended_ni": 1,
+   "dq": 1,
+   "consumer_hung_up": 1,
+   "dnc": 1
+  },
+  "objections": {
+   "other": {
+    "label": "Anything else",
+    "seen_pct": 17.6,
+    "seen_n": 234,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 167,
+     "missed": 13,
+     "strong": 55,
+     "weak": 39
+    },
+    "strong_examples": [
+     "Asked whether he receives veteran benefits, confirmed he does not, then thanked him for his service and proceeded.",
+     "Maybe this will be beneficial to you, Charles, because some of these are health subsidies and benefit packages. So if you don't have any Medicaid, Medicare or work insurance, this may be very beneficial to you.",
+     "Okay, no problem. (then repeated the full opening script from the top)",
+     "I'm not. No, I'm a real person. I'm a real person. If it's AI, it's not real. Okay?",
+     "Oh, it's Angelique. Okay... I'll update that here. Not a problem. That's beautiful though.",
+     "Broke the qualifier down into separate pieces: over 19, no Medicaid, no Medicare, no work insurance, asking one at a time."
+    ]
+   },
+   "what_is_subsidy": {
+    "label": "What is the subsidy / what kind of assistance is it",
+    "seen_pct": 14.0,
+    "seen_n": 186,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 161,
+     "weak": 27,
+     "strong": 14,
+     "missed": 1
+    },
+    "strong_examples": [
+     "Repeated that it was in regards to the allowance federally provided through the Affordable Care Act, released January 1st and funded for individuals not receiving government assistance or aid, then re-confirmed no Medicaid/Medicare/coverage",
+     "These are free subsidy and benefit allowances that come through Affordable Care Act, and it's to help the people that are not receiving Medicaid, Medicare, work insurance... a benefits coordinator will go over it and let you know you may be able to receive it.",
+     "There are benefits, (customer), that's not included in any healthcare plan. Now, which ones you may qualify for, I don't know... the local agent is going to be joining in with their status. But they are benefits that you can't just go out and buy.",
+     "These are free subsidy and benefit allowances. They come through the Affordable Care act, and it's to help the people that do not receive Medicaid, Medicare or work insurance. And you have to be over 19 to receive them... the benefits coordinator will explain that to you.",
+     "'There's health subsidies, and there's benefit packages that come through the Affordable Care Act, and everybody's situations, wants, and needs are different. So everybody's benefits are different.'",
+     "It could be. It could be a range of anything. It's so many of them. I don't want to misquote you, but they're waiting to tell us what yours may be."
+    ]
+   },
+   "hesitation": {
+    "label": "I need to think about it",
+    "seen_pct": 8.1,
+    "seen_n": 108,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 81,
+     "strong": 22,
+     "missed": 2,
+     "weak": 7
+    },
+    "strong_examples": [
+     "They got you working hard on a Friday... thank you for your service, (customer). I know it's not an easy job.",
+     "Repeated the full intro verbatim: name, company, recorded line, Affordable Care Act benefit allowances, over 19 and no Medicaid/Medicare/work insurance.",
+     "No. I'm asking you to make sure you can confirm that you have no Medicaid, Medicare, or work insurance. Because these benefits are for help the people that do not receive any Medicaid, Medicare or work insurance.",
+     "Okay. Take your time. (customer), are you there?",
+     "Repeated the qualifying question slowly: 'You're over the age of 19 and you have no Medicaid, Medicare or work insurance. Is all that correct and up to date.'",
+     "Re-asked directly: \"No work Insurance, Medicare, Medicaid, Ms. McDaniels.\""
+    ]
+   },
+   "busy_callback": {
+    "label": "I'm busy, at work, call me back",
+    "seen_pct": 7.7,
+    "seen_n": 102,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 61,
+     "missed": 3,
+     "weak": 8,
+     "strong": 34
+    },
+    "strong_examples": [
+     "I got you. So this takes a couple minutes, but I'm just going to get us a faster line because we don't need to sit and hold.",
+     "You don't have to do anything. You just talk to the benefits coordinator and that's it... you either decide you want them or not. It's that simple.",
+     "Oh, okay. Yeah. This is pretty quick... We'll get you all there as fast as possible for you. Just bear with me... if they don't grab this in about 15 more seconds, I will get a faster line for you.",
+     "'No worries... I say you don't want to see what your free subsidies may be?' then 'it's super brief. They're joining in now to tell us what they may be. And I'll remain on the line with you also.'",
+     "Okay, so give me. We're gonna respect your time for work. This doesn't take but a couple minutes. Okay.",
+     "Okay, so you're just ready to relax... This won't take but a couple minutes. I understand you want to relax. We all get that. I'm gonna respect that."
+    ]
+   },
+   "already_have_marketplace": {
+    "label": "I already have Marketplace / Obamacare / ACA",
+    "seen_pct": 7.2,
+    "seen_n": 95,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 58,
+     "strong": 29,
+     "weak": 7,
+     "missed": 1
+    },
+    "strong_examples": [
+     "All right. Is that through the marketplace? ... Okay, that's what I see here. And that's okay. You can have that.",
+     "Yeah, we know. We see that. We're friendly with Marketplace. That's great, but no work insurance, Medicare, Medicaid or none of that stuff, right?",
+     "You do. You do. So you're receiving, at this moment, active market insurance, which is in regards to my call... This allowance was specifically released for January 1st of this year, and it was funded for individuals who are still under the age of 65, over 19, not receiving Medicaid or Medicare.",
+     "And is it through the marketplace?",
+     "Is that through the marketplace or is that through, like, Medicare or Medicaid or work insurance? ... Okay, that's the reason for my call.",
+     "Is it through the marketplace or is that through your employer or job? ... Okay, that's the reason for my call. So I just need to get your benefits coordinator."
+    ]
+   },
+   "already_have_it": {
+    "label": "I already have that / I already get it",
+    "seen_pct": 6.9,
+    "seen_n": 92,
+    "loss_pct": 0.0,
+    "handled": {
+     "weak": 35,
+     "strong": 14,
+     "ok": 30,
+     "missed": 17
+    },
+    "strong_examples": [
+     "And that's through the marketplace, right? ... that's fine. I see that. That's absolutely fine.",
+     "Yes. Do you have it through Marketplace?",
+     "Is that through Marketplace? ... Okay, that's fine. That's absolutely fine.",
+     "Okay, yeah. That's what I have too — through marketplace, correct?",
+     "Said these are for free subsidies he hasn't received, then asked if he had work insurance, Medicare or Medicaid and confirmed the UnitedHealthcare plan was through the Marketplace.",
+     "'No. These are subsidies. These are free benefits. That's not included in any health care plan... we want to see what you may qualify for.'"
+    ]
+   },
+   "company_question": {
+    "label": "What is America's Health / who are you with",
+    "seen_pct": 5.5,
+    "seen_n": 73,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 32,
+     "ok": 36,
+     "weak": 6
+    },
+    "strong_examples": [
+     "America, America's health.",
+     "Sarah? I work for America's Health. We do the free subsidy and benefit allowances that are through Affordable Care Act.",
+     "This is Cheryl on a recorded line with America's Health. It's a quick reminder regarding your subsidies under the Affordable Care Act.",
+     "Hi, James. This is Sarah. I work for America's Health. We're on a recorded line. We do the benefit allowances that are through Affordable Care act...",
+     "I'm in with America's Health.",
+     "My name is Sarah. I work for America's Health. We're on a recorded line. We do the benefit allowances that are through Affordable Care act"
+    ]
+   },
+   "dont_know_what_i_have": {
+    "label": "I don't know what insurance I have",
+    "seen_pct": 4.8,
+    "seen_n": 63,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 39,
+     "strong": 8,
+     "weak": 17,
+     "missed": 3
+    },
+    "strong_examples": [
+     "Explained how to tell each one apart: Medicare is 65+ with a red, white and blue card, Medicaid is applied for at the county/benefit office, work insurance comes out of the paycheck, then asked 'Do you have Marketplace or is it Medicaid?'",
+     "Good. Yeah, that's why we're calling. Because you don't have work insurance either, right?",
+     "Well, no, no, no. It's just having a certain kind of insurance. Do you just have Marketplace or do you have work insurance, Medicare and Medicaid?",
+     "Oh, Medicaid.",
+     "Let me ask you. Do you have work insurance, Medicare and Medicaid? ... I'm saying, do you have it now?",
+     "Yes, correct. So your children do have their active Medicaid, but unfortunately you didn't get the part A or B. So no Medicaid or coverage or Medicare still under 65."
+    ]
+   },
+   "where_calling_from": {
+    "label": "Where are you calling from / which state / why this coordinator",
+    "seen_pct": 4.1,
+    "seen_n": 54,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 25,
+     "ok": 26,
+     "weak": 3
+    },
+    "strong_examples": [
+     "Hi, this is (agent) on a recorded line with America's Health. We notice you haven't received your subsidies under the Affordable Care Act.",
+     "My name is Sarah. I work for America's Health. We are on a recorded line. We do the benefit allowances that are through Affordable Care Act.",
+     "No, no, I'm in Florida. I'm actually in Florida.",
+     "Hi, my name is (agent). I work for America's Health. We're on a recorded line. We do the benefit allowances that are through Affordable Care act",
+     "Introduced herself by name, on a recorded line with America's Health, and explained the call was about subsidies under the Affordable Care Act",
+     "I'm calling from Florida, but I've worked for America's Health, and the benefits coordinator will be in yours in the state of Iowa with you."
+    ]
+   },
+   "scam": {
+    "label": "This is a scam / spam / doesn't sound real",
+    "seen_pct": 3.4,
+    "seen_n": 45,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 38,
+     "strong": 8,
+     "weak": 3,
+     "missed": 1
+    },
+    "strong_examples": [
+     "You don't want to find out that I'm not a scam. I work for a legit company. We have a legit website. We actually do free subsidy and benefit allowances that are through Affordable Care Act... it takes a couple minutes of your time... and you can deny them if you want to.",
+     "No, ma'am, this is real. I'm a real person. We have a real company. We do real benefits and subsidy allowances through the Affordable Care Act. That's real. I base my character on my being honest, so I'm honestly telling you what's going on.",
+     "It's not, though. It really isn't. We have a real company, real website. We're real people. There is scams out there... but we're not one of them.",
+     "Acknowledged the concern, said to ask the benefits coordinator any questions, explained HIPAA means she won't stay on the line and she's just connecting him.",
+     "I don't blame you because I used to get spam calls as well... you can confirm everything that I have spoken about by going to health.gov, that is official government website.",
+     "'You wouldn't be the first I've heard... it is a new allowance... I don't need anything else from you in regards to it. So based off of state, zip code, address, we'll take a look. So no personal information, nothing financial.'"
+    ]
+   },
+   "is_it_money": {
+    "label": "Is it money, cash, a cheque, a card, help with bills or groceries",
+    "seen_pct": 3.3,
+    "seen_n": 44,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 10,
+     "weak": 8,
+     "ok": 29
+    },
+    "strong_examples": [
+     "No, this is a free government provided allowance. I don't have any questions for you. Nothing personal, nothing financial.",
+     "I'm not sure. I don't want to promise you something and then it not happen. I honestly don't know. But if you've read something, that may be accurate.",
+     "I'm not sure exactly what your benefits may be. There's health subsidies and there's benefit packages. I don't know what they're going to offer you because it's a private thing between you guys.",
+     "I don't know. The benefits coordinator will go over that with you... everybody's situation, wants and needs are different. So I don't know what yours may be.",
+     "That's a great question for one of our certified agents. We'll be with them in just a moment, we can ask them that.",
+     "This is a great question for one of our certified agents. We'll be on with them in just a moment and we can ask them that question."
+    ]
+   },
+   "wrong_state": {
+    "label": "Wrong state / I don't live there",
+    "seen_pct": 3.2,
+    "seen_n": 42,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 19,
+     "ok": 14,
+     "weak": 11,
+     "missed": 2
+    },
+    "strong_examples": [
+     "You live in Oklahoma. Okay, that's okay. I'll update your state real quick for you because the benefits are quite different in each state, so give me a second to update that.",
+     "You're in Illinois. Okay, let me update that for you real quick, because the benefits are completely different for that... I'm just double confirming now. Illinois over 19, no Medicaid, Medicare, work insurance.",
+     "Oh, you're in South Carolina. That's okay... the benefits are different in each state, so let me just change your state real quick. Double confirm that. No worries. And you can update your address with the benefits coordinator.",
+     "Okay, okay. Let me put that here.",
+     "Let me update your state real quick because the benefits are completely different in each state. I just need to confirm it.",
+     "Okay, let me update your state real quick for you... Because the benefits are different in each of these states... So let's see. Kansas."
+    ]
+   },
+   "personal_info": {
+    "label": "I'm not giving you my personal information",
+    "seen_pct": 2.0,
+    "seen_n": 27,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 14,
+     "weak": 2,
+     "strong": 11,
+     "missed": 1
+    },
+    "strong_examples": [
+     "No, no, no, no, no. No proof of residence or anything like that. As long as you're still in Texas, [ZIP] is the zip code I see for you.",
+     "I'm not asking you for any personal information, Rufus. Not none. I'm just asking you to confirm that you're in South Carolina with no Medicaid, Medicare, work insurance.",
+     "That's all I need to confirm is you don't have work insurance, Medicare and Medicaid. Nothing's changed in that area. Correct.",
+     "Oh, I don't need any of that. I just confirmed everything that I needed. (customer), no worries.",
+     "I don't require anything else from you. No personal information, nothing financial.",
+     "No, no, no... I don't need anything else from you. Nothing personal, nothing financial... anything I needed was what we've already confirmed, still in state and nothing active."
+    ]
+   },
+   "told_not_qualified": {
+    "label": "They told me I don't qualify (no job, income, not in my area)",
+    "seen_pct": 1.8,
+    "seen_n": 24,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 18,
+     "weak": 1,
+     "strong": 7
+    },
+    "strong_examples": [
+     "Okay, no worries. Well, this program is for... to help those people that have no Medicaid, Medicare, or work insurance.",
+     "You don't have to be. If you would have been on disability, you wouldn't qualify. It's only for people who are not on those that may qualify.",
+     "Well, the only thing I have to confirm, (customer), is that you don't have work insurance, Medicare or Medicaid. The rest... the agent's waiting to tell you and I what your subsidies may be. And I'll remain on the line with you.",
+     "No. So for Medicaid, Medicare, you're not eligible. And that is what this allowance is for. It was federally funded for people under the age of 65 who are not entitled to any other type of government program or assistance.",
+     "So it is for people that don't have Medicare, Medicaid or work insurance. You're not receiving any of those.",
+     "We're not trying to give you any, like, Medicare. We're trying to make sure you don't. These are the three things that you can't have in order to receive these benefits. It's Medicaid, Medicare, or work insurance. And you have to be over the age of 19. I'm not saying that you have Medicare. I was as"
+    ]
+   },
+   "how_got_info": {
+    "label": "How did you get my information",
+    "seen_pct": 1.8,
+    "seen_n": 24,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 4,
+     "ok": 14,
+     "missed": 2,
+     "weak": 4
+    },
+    "strong_examples": [
+     "I don't have very much information. I just have your name and your state. This comes through the Affordable Care act or it can come through somebody trying to see if they qualify for something.",
+     "It's national. It's in every state. It's all 50 states. It's the Affordable Care Act... I don't have any of your information except your name and the state you're in.",
+     "You would have had to sign up for this on healthcare.gov. While it does take us a while to get around to these applications in a timely manner, that's why we asked to check and make sure our paperwork is still correct.",
+     "Explained the consumer could have filled out a survey anywhere from a week ago to a year and a half ago, and that contact is only made when there are benefits available, then pivoted straight into the Medicare/Medicaid/work insurance confirmation."
+    ]
+   },
+   "not_interested": {
+    "label": "I'm not interested / I don't want that",
+    "seen_pct": 1.4,
+    "seen_n": 18,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 9,
+     "strong": 4,
+     "weak": 3,
+     "missed": 2
+    },
+    "strong_examples": [
+     "It takes a couple minutes of your time, if you have that, to just find out what they may be, it may be worth your while.",
+     "Oh, okay, so you don't want to see which ones you may qualify for? Yeah, it's super brief. It doesn't hurt.",
+     "Explained the allowance was federally released January 1st for people not receiving other programs or government aid, based on state/zip, and reassured 'I don't have any questions, nothing personal, nothing financial for you'",
+     "Oh, they're free, (customer). We don't want to see them go to waste or go unused. As long as you don't have work insurance, Medicare, and Medicaid, we can quickly see which ones they may be and get them to you."
+    ]
+   },
+   "insurance_not_familiar": {
+    "label": "Names an insurance company (Blue Cross, Oscar, Ambetter, Anthem, UHC...)",
+    "seen_pct": 1.4,
+    "seen_n": 18,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 12,
+     "weak": 3,
+     "strong": 3
+    },
+    "strong_examples": [
+     "Asked if he'd heard of Obamacare, explained it's the same thing as the Affordable Care Act, said the benefits coordinator would go over the subsidy and benefit allowances, it takes a couple of minutes, and there's no pressure to take it.",
+     "This is free subsidy health subsidies and benefit allowances that are coming through the Affordable Care Act to help the people that don't receive any Medicaid, Medicare or work insurance... your benefits coordinator will go over that with you. It's HIPAA, so it'll just be you and them.",
+     "So it's for people that don't have Medicare, Medicaid, or work insurance. You're not receiving any of those?"
+    ]
+   },
+   "dont_want_change": {
+    "label": "I don't want to change my insurance / will this change my plan",
+    "seen_pct": 0.9,
+    "seen_n": 12,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 9,
+     "weak": 2,
+     "ok": 1
+    },
+    "strong_examples": [
+     "No, only you have the power to change your insurance, sweetheart. Not me, not anybody else, just you.",
+     "That's okay. You just let them know that that's not a problem. That only you have the power to do that.",
+     "Oh, I can't change anything. No, ma'am... The only person that should be able to change your plan is you.",
+     "I can't mess with your insurance, (customer). The only thing we can do is see if you may qualify for the free subsidies. And you don't have work insurance, Medicare and Medicaid. Right.",
+     "Your insurance is already up to date, there's no issues, the licensed broker got you all set up for this year, so it's just the allowance you haven't received.",
+     "'(customer), I'm not here to sell you anything... my department only takes care of all the allowances, all the benefits that may have been missed. So this isn't a sales call nor am I here to seek any information from you.'"
+    ]
+   },
+   "didnt_apply": {
+    "label": "I didn't apply for that",
+    "seen_pct": 0.8,
+    "seen_n": 10,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 10,
+     "weak": 1
+    },
+    "strong_examples": []
+   },
+   "caller_id": {
+    "label": "Why does it say you're calling from another state / scam likely",
+    "seen_pct": 0.8,
+    "seen_n": 10,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 4,
+     "weak": 4,
+     "strong": 2
+    },
+    "strong_examples": [
+     "Because that's our corporate office. I work from home now, since Covid. That's what comes out of our database. But I live in Sarasota, Florida.",
+     "Yep, yep. It should be the same number... and warned that if she doesn't double confirm Medicare, Medicaid, work insurance twice, it's not us, hang up."
+    ]
+   },
+   "no_subsidy_exists": {
+    "label": "There is no subsidy / the government shut it down",
+    "seen_pct": 0.6,
+    "seen_n": 8,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 2,
+     "weak": 1,
+     "ok": 5
+    },
+    "strong_examples": [
+     "Offered to get the benefits coordinator on the line to find out what's going on with her case, said it takes a couple minutes, then moved into the confirmations.",
+     "Explained the allowance was released January 1st and funded specifically for people not receiving Medicaid or Medicare, so she would not have seen it yet."
+    ]
+   },
+   "dnc_request": {
+    "label": "Asked not to be called again",
+    "seen_pct": 0.2,
+    "seen_n": 2,
+    "loss_pct": 50.0,
+    "handled": {
+     "ok": 1,
+     "missed": 1
+    },
+    "strong_examples": []
+   },
+   "give_to_someone_else": {
+    "label": "Give it to someone who needs it more",
+    "seen_pct": 0.1,
+    "seen_n": 1,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 1
+    },
+    "strong_examples": []
+   },
+   "family_handles": {
+    "label": "My son / husband / wife handles this",
+    "seen_pct": 0.1,
+    "seen_n": 1,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 1
+    },
+    "strong_examples": []
+   },
+   "not_enough_income": {
+    "label": "I don't have enough income for this",
+    "seen_pct": 0.1,
+    "seen_n": 1,
+    "loss_pct": 0.0,
+    "handled": {
+     "weak": 1
+    },
+    "strong_examples": []
+   }
+  },
+  "steps": {
+   "correct_person": {
+    "done_pct": 57.8,
+    "skipped_pct": 19.9,
+    "asked_not_waited_pct": 22.2,
+    "counts": {
+     "skipped": 264,
+     "asked_and_waited": 767,
+     "asked_not_waited": 295
+    }
+   },
+   "company_and_recorded_line": {
+    "done_pct": 66.6,
+    "skipped_pct": 0.2,
+    "asked_not_waited_pct": 33.2,
+    "counts": {
+     "asked_not_waited": 440,
+     "asked_and_waited": 883,
+     "skipped": 3
+    }
+   },
+   "aca_mention": {
+    "done_pct": 68.6,
+    "skipped_pct": 0.5,
+    "asked_not_waited_pct": 30.9,
+    "counts": {
+     "asked_not_waited": 410,
+     "asked_and_waited": 910,
+     "skipped": 6
+    }
+   },
+   "state_confirm": {
+    "done_pct": 64.7,
+    "skipped_pct": 3.0,
+    "asked_not_waited_pct": 32.3,
+    "counts": {
+     "asked_not_waited": 428,
+     "asked_and_waited": 857,
+     "skipped": 40,
+     "not_reached": 1
+    }
+   },
+   "mmw_first": {
+    "done_pct": 86.3,
+    "skipped_pct": 0.3,
+    "asked_not_waited_pct": 13.4,
+    "counts": {
+     "asked_and_waited": 1144,
+     "asked_not_waited": 177,
+     "skipped": 4,
+     "not_reached": 1
+    }
+   },
+   "age_19": {
+    "done_pct": 67.9,
+    "skipped_pct": 5.5,
+    "asked_not_waited_pct": 26.6,
+    "counts": {
+     "asked_and_waited": 898,
+     "asked_not_waited": 352,
+     "skipped": 73,
+     "not_reached": 3
+    }
+   },
+   "mmw_double": {
+    "done_pct": 34.5,
+    "skipped_pct": 58.4,
+    "asked_not_waited_pct": 7.0,
+    "counts": {
+     "skipped": 773,
+     "asked_and_waited": 457,
+     "asked_not_waited": 93,
+     "not_reached": 3
+    }
+   },
+   "verbal_consent": {
+    "done_pct": 43.7,
+    "skipped_pct": 41.8,
+    "asked_not_waited_pct": 14.5,
+    "counts": {
+     "asked_and_waited": 576,
+     "skipped": 552,
+     "asked_not_waited": 191,
+     "not_reached": 7
+    }
+   },
+   "warm_handoff_with_state": {
+    "done_pct": 96.8,
+    "skipped_pct": 1.2,
+    "asked_not_waited_pct": 2.0,
+    "counts": {
+     "not_reached": 71,
+     "asked_and_waited": 1215,
+     "skipped": 15,
+     "asked_not_waited": 25
+    }
+   }
+  },
+  "compliance": {
+   "promise_will_get": {
+    "n": 980,
+    "examples": [
+     "You're in the state of Texas to receive yours, is that still correct?",
+     "We noticed you haven't received your subsidies under the Affordable Care Act. You're in the state of Louisiana to receive yours, is that still correct?",
+     "And you are over the age of 19 to receive yours? Correct.",
+     "we're going to see which of these subsidies here, real quick, we can get",
+     "they're joining in to let us know what your subsidies may be and how we can get them out to you"
+    ]
+   },
+   "transferred_without_consent": {
+    "n": 595,
+    "examples": [
+     "All right, give me a second to get you a benefits coordinator.",
+     "Alrighty. They're joining in with you and I now. I'll remain on the line with you.",
+     "They're joining in to give us your status, Mr. J.D. i'll remain on the line with you.",
+     "Well, they're joining in with you and I now. They have your status.",
+     "Okay, give me a second to get you a benefits coordinator."
+    ]
+   },
+   "other": {
+    "n": 358,
+    "examples": [
+     "it looks like you've never received your benefits",
+     "It looks like you've never received your benefits",
+     "your subsidy allowance provided through the Affordable Care act, which I do see you still haven't received",
+     "We've noticed you haven't received your subsidies under the Affordable Care Act.",
+     "Medicaid is for people under the age of 19 and Medicare is for people above the age of 65."
+    ]
+   },
+   "guaranteed_outcome": {
+    "n": 326,
+    "examples": [
+     "we'll get your case straightened out today for you",
+     "We'll get your case taken care of today",
+     "We're going to quickly see which of these subsidies you may qualify for and get them out to you.",
+     "let you know when you may be able to receive it",
+     "And you are over the age of 19 to receive the free subsidies. Correct?"
+    ]
+   },
+   "forbidden_financial_word": {
+    "n": 237,
+    "examples": [
+     "You can get more for your money out there.",
+     "this was meant to be a follow up call with you going over mailing in active status",
+     "the only thing I was here to go through with you, like I mentioned, was active status and mailing",
+     "We'll get your mailing up to date to the PO Box",
+     "this was a follow up call meant to go over mailing and active status"
+    ]
+   },
+   "promise_qualify_eligible": {
+    "n": 124,
+    "examples": [
+     "when you may be entitled to receive your allowance",
+     "we'll be able to see exactly what your allowance may look like when you may be entitled to receive your allowance",
+     "You at this moment for 2026. You do have government insurance, it is active and I see that it is provided through market for the year.",
+     "we'll be able to see exactly what your allowance may look like when you may be entitled to a procedure allowance",
+     "And you are over the age of 19 to receive your free subsidies?"
+    ]
+   },
+   "wrong_company_name": {
+    "n": 26,
+    "examples": [
+     "Good afternoon. Thank you for calling Ema Marketing.",
+     "I reached out with American Health reported line",
+     "this is (agent). I work for Ameri Coast Health.",
+     "I reached out with the health recorded line and I called in regards to your subsidy allowance",
+     "this is (agent) on a recorded line with America's elf"
+    ]
+   },
+   "forbidden_household_word": {
+    "n": 21,
+    "examples": [
+     "We had a Jenkins grocery store on MLK in Sarasota, Florida.",
+     "It does. Bills come. It's like every paycheck there's a bill... Big bills all the time.",
+     "it's good on gas, but, you know, gas is through the roof now",
+     "But I still got backup bills.",
+     "Going to Walmart or the grocery stores wears me out."
+    ]
+   },
+   "no_recorded_line": {
+    "n": 9,
+    "examples": [
+     "My name is Sarah. I'm calling from Americas Health and we do the free subsidy and benefit allowances that are through Affordable Care Act.",
+     "Hi, (customer). Yeah, we had a bad connection. I'm sorry about that.",
+     "I'm with America's Health Recordathon.",
+     "My name is Harley. I'm with America's Health Recorded Fund.",
+     "I reached out with America's Health Report at night and my call was in regards to your subsidy allowance provided through the Affordable Care act"
+    ]
+   },
+   "mentioned_pitch_perfect": {
+    "n": 1,
+    "examples": [
+     "You can go on. Indeed. And look up Pitch Perfect. They're hiring."
+    ]
+   }
+  },
+  "dq": {
+   "with_disqualifier": 83,
+   "types": {
+    "private": 8,
+    "not_marketplace_carrier": 37,
+    "medicaid": 23,
+    "state_insurance": 2,
+    "ssdi": 5,
+    "none": 1,
+    "work_insurance": 1,
+    "medicare": 6
+   },
+   "caught": 17,
+   "transferred_anyway": 75
+  },
+  "hangup_triggers": [
+   "No hang-up - no benefits coordinator ever picked up the line, so the agent offered a Monday callback and the call ended cordially.",
+   "No licensed agent picked up on multiple transfer lines; after a long hold the agent released the consumer with instructions to call back Monday.",
+   "No hang-up: agent ended the call because no licensed agents were available and placed the consumer in her callback list.",
+   "No hang-up by the consumer; the call ended at the handoff while she mentioned it was a bad time as she was heading to the store.",
+   "No hang-up; no licensed agent was available, so the consumer was placed in a callback rotation and the call ended cordially.",
+   "No hang-up; no licensed agent was available so the call ended with a scheduled callback.",
+   "No hang-up; the call drifted into small talk and then an unclear exchange between the agent and another party, ending without a confirmed handoff.",
+   "No hang-up; no licensed agent was available so the agent placed the consumer in a callback rotation.",
+   "No consumer hang-up; the call stalled waiting for a licensed agent who never joined, filled with long off-topic small talk, and ended with an automated transcription message.",
+   "No hang-up; the licensed agent line went to voicemail/queue, so the call was converted into a scheduled callback.",
+   "No hang-up; the agent said no licensed agents were available and scheduled a personal callback after a long off-topic personal conversation.",
+   "No hang-up by the consumer; the transfer queue never answered after several attempts and the agent closed by asking him to call back in about 20 minutes.",
+   "No hang-up; the agent ended the call with a callback promise after being unable to reach a licensed agent, amid the consumer's repeated confusion and poor line quality.",
+   "Recording ends mid-pitch; no consumer response captured after the stacked state/coverage question.",
+   "No consumer hang-up; after several minutes of failed attempts across three lines, no benefits coordinator picked up and the agent ended the call asking the consumer to call back.",
+   "No hang-up; the agent ended the call by placing the consumer in the callback rotation after saying all agents were tied up.",
+   "No hang-up; the licensed agent could not be reached, so the call was closed as a scheduled 4:30 callback.",
+   "No hang-up; the consumer voiced a scam concern and the agent pushed straight into a transfer attempt.",
+   "No agents available; agent placed consumer in callback rotation and ended the call politely",
+   "No hang-up; after a long stretch of small talk waiting for a licensed agent, the call was converted to a scheduled callback for 4-5pm on the same number.",
+   "Repeated failed transfer attempts and long dead time on the line; consumer declined to wait any longer for another attempt.",
+   "No hang-up; no licensed agent was available so the agent scheduled a callback and ended the call politely.",
+   "After vague, non-specific answers about what the 'free benefits' actually were, the consumer said she didn't want it and the agent politely closed the call.",
+   "No hang-up; the licensed agent's disqualifier questions confused the consumer (he had just taken a United Healthcare plan) and no agent was available, so the call was turned into a callback.",
+   "No hang-up; the consumer said she was at work and the licensed agent was not answering, so the call ended with a scheduled callback after 2.",
+   "No hang-up; the agent could not reach a licensed agent and moved to scheduling a callback while small-talking about the consumer's job, and the recording ends mid-conversation.",
+   "No hang-up; the licensed agent never came on the line (\"Agent, are you there? Oh, okay, they have us in cue\") and the consumer's phone was dying and he needed to leave, so the call was converted to a 20-minute callback.",
+   "No benefits coordinator picked up after a long hold; the agent ended the call and told the consumer to call back later.",
+   "No hang-up; the licensed agent never picked up (\"they have us in queue\"), so the call was converted into a scheduled callback with the consumer's permission.",
+   "No licensed agent was available after a long hold; the consumer said he had to leave and accepted a scheduled callback instead.",
+   "No hang-up; the licensed agent line never picked up after repeated attempts, so the consumer suggested continuing another day and the call was ended cordially.",
+   "No hang-up. No licensed agent was available (\"all of our agents... they're all tied up at the moment\"), so the call was placed into a 20-30 minute callback after a long off-topic conversation about trucking.",
+   "No hang-up; no licensed agent became available after a long hold, so the agent scheduled a call back in 15-20 minutes and ended the call cordially.",
+   "No consumer hang-up; the call ended during the handoff attempt when no licensed agent picked up ('Is anyone there?').",
+   "The consumer appeared distracted and began speaking to someone else ('Wait a minute... It's the third house on the left') and the recording ended during the opening pitch.",
+   "No hang-up by the consumer; repeated failed transfer attempts led the agent to close the call and offer a call back in 20 minutes.",
+   "No hang-up. The licensed agent line never picked up, so the agent arranged a callback for later when the consumer was home and off her lunch break.",
+   "No hang-up; agent ended the call as a callback because transfer lines were busy and the consumer had a meeting to attend.",
+   "No hang-up; consumer had an incoming call from his wife while waiting in queue for the licensed agent, so the call was converted to a 20-minute callback.",
+   "No hang-up; the consumer was transferred while still objecting and told the licensed agent 'I don't need health insurance. Why y'all keep asking.'",
+   "No hang-up; no licensed agent picked up, so the agent scheduled a 1-2 pm callback and ended the call politely.",
+   "No hang-up. The transfer line repeatedly failed to connect to a licensed agent, so after several attempts the agent asked the consumer to call back in about 20 minutes.",
+   "No hang-up; no licensed agent was available so the call was converted into a scheduled 20-minute callback.",
+   "No hang-up; after an extended off-topic conversation about New Orleans the agent said the licensed agents were tied up and offered a callback, which the consumer accepted.",
+   "No hang-up; agent ended the call by placing the consumer in a callback rotation because no licensed agent was available.",
+   "No hang-up - no licensed agent was available on the transfer line and the consumer was leaving to pick up his daughter, so a callback was scheduled.",
+   "No hang-up; the agent could not reach a licensed agent (\"their lines are just busy right now\") and offered to call back later.",
+   "No hang-up; consumer was on another line with her attorney and the agent scheduled a callback instead of completing the transfer.",
+   "Consumer asked to be called back because he was driving, right after the handoff",
+   "The transfer went through with no warm introduction; the closer opened with a coverage-screening question and the consumer declined with 'I'm not interested.'",
+   "No licensed agent picked up the transfer line; the agent ended the call and set a callback.",
+   "No hang-up - no licensed agent was available, so the call ended with a scheduled callback at the consumer's agreement.",
+   "No hang-up; no licensed agent was available on the transfer line, so the agent scheduled a callback for roughly 6:00-6:30 and ended the call cordially.",
+   "No hang-up - no licensed agent was available on the queue, so the agent closed the call and scheduled a callback in about an hour to an hour and a half.",
+   "No hang-up; no licensed agent was available so the agent scheduled a 30-minute callback and ended the call politely.",
+   "No hang-up: no licensed agent picked up during the hold attempt, so the agent ended the call promising to call back in an hour to an hour and a half.",
+   "No hang-up; the agent said all licensed agents were tied up and scheduled a callback in about 20 minutes, which the consumer agreed to.",
+   "No hang-up; no licensed agent was available so the call was converted into a scheduled 12 o'clock callback",
+   "No hang-up; the agent said all agents were tied up and placed the consumer in a callback rotation after a long off-topic conversation about job opportunities.",
+   "No hang-up; the agent said all licensed agents were tied up and ended the call by scheduling a 15-20 minute callback."
+  ],
+  "best_lines": [
+   "They're going to go over subsidy and benefit allowances with you real quick and then let you know and you may be able to receive it.",
+   "So the benefits coordinator needs to go over subsidy and benefit allowances with you real quick and let you know you may be able to receive it. That just takes a couple minutes to complete with them.",
+   "They're going to go over subsidy and benefit allowances with you real quick and let you know and you may be able to receive it.",
+   "We can't tell you exactly what it is. We don't have that authority. That's why we have to get the agent on the line.",
+   "We're going to see which of the subsidies here, you may qualify for",
+   "I just need to double confirm, Louisiana over 19. No Medicaid, Medicare or work insurance. That's all up to date and correct.",
+   "Hi, this is (agent) on a recorded line with America's Health.",
+   "See which ones you may qualify for.",
+   "They're just looking to see what you may qualify for, (customer).",
+   "They're going to go over the subsidy and benefit allowances with you real quick and let you know you may be able to receive it.",
+   "This is Cheryl, and I also have (customer) Chapman on the line with us out of Louisiana.",
+   "My name is Sarah and I work for America's Health, and we are on a recorded line.",
+   "My name is Sarah and I work for America's Health and we are on a recorded line and we do the benefit allowances that are through the Affordable Care Act.",
+   "And that's through the marketplace, right?",
+   "The agent joining in to tell us your subsidies and let us know which ones you may qualify for.",
+   "And just to double confirm, Louisiana over 19, no Medicaid, Medicare, work insurance. That's correct and up to date.",
+   "Okay, just to double confirm. Alabama over 19, no Medicaid, Medicare, work insurance. That's correct and up to date.",
+   "The agent's joining in with you and I to tell us your status on what you may qualify for",
+   "My name is Sarah. I work for America's Health. And we're on a recorded line. We're doing benefit allowances that are through Affordable Care Act.",
+   "I called in regards to your allowance provided through the Affordable Care act",
+   "I have Delish on the line from Louisiana.",
+   "Hi, this is (agent) on a recorded line with America's Health. It's a quick reminder regarding your subsidies under the Affordable Care Act.",
+   "I called with America's Health recorded line and I reached out in regards to your subsidy allowance provided through the Affordable Care act",
+   "The benefits coordinator will go over the subsidy and benefit allowances with you real quick and let you know when you may be able to receive it.",
+   "They're looking to see actually which of these subsidies that you may qualify for.",
+   "Your benefits coordinator is just going to go over some subsidies and benefit allowances with you real quick and let you know when you may be able to receive it.",
+   "I reached out with America's Health recorded line and I called in regards to your subsidy allowance provided through the Affordable Care act",
+   "All right. Is that through the marketplace?",
+   "This is Cheryl on a recorded line with America's Health.",
+   "Hi, Zoe, this is (agent). I work for America's Health. We're on a recorded line. We do benefit allowances that are through Affordable Care.",
+   "This is Cheryl on a recorded line with America's Health.",
+   "we have free subsidies that we would love to see which ones you may qualify for",
+   "I called in regards to your subsidy allowance provided through the Affordable Care act",
+   "Hi, this is (agent) on a recorded line with America's Health.",
+   "Hi, this is (agent) on a recorded line with America's Health. It's a quick reminder regarding your subsidies under the Affordable Care Act.",
+   "I just need to confirm you're In Texas over 19 with no Medicaid, Medicare, work insurance.",
+   "This is Cheryl and I also have (customer) Brooks out of beautiful Alabama.",
+   "And just to double confirm, Alabama over 19, no Medicaid, Medicare, work insurance. That's correct. And up to date?",
+   "Hi, this is (agent) on a recorded line with America's Health.",
+   "They're going to go over the subsidy and benefit allowances with you real quick and let you know when you may be able to receive it.",
+   "And you don't have work insurance, Medicaid, Medicare, none of those, is that still correct?",
+   "this is (agent) on a recorded line with America's Health. We was giving you a quick reminder regarding your subsidies under the Affordable Care Act.",
+   "These are free subsidy and benefit allowances that come through the Affordable Care act and it looks like you've never received yours. So I was confirming that you are over the age of 19 and you have no Medicaid, Medicare or work insurance.",
+   "I have (customer) Scott coming out of South Carolina. Can you assist?",
+   "I reached out, (customer), with America's Health recorded line and I did call in regards to your subsidy allowance provided through the Affordable Care act",
+   "We are on a recorded line. We are doing the benefit allowances that are through Affordable Care Act.",
+   "Medicaid is something you would apply for like through the county office, through, like the food stamp or benefit office, and then work insurance or employer insurance comes out of your paycheck each week.",
+   "Hi, Taylor, this is (agent). I work for America's Health. We are on a recorded line. We're doing benefit allowances that are through the Affordable Care Act.",
+   "Hi, Agent, pleasure to hear your voice. I have (customer) Tajada coming out of Texas. Can you assist?",
+   "My name is Sarah. I work for America's Health. On a recorded line. We are doing benefit allowances that are through the Affordable Care Act.",
+   "they're going to go over the subsidy and benefit allowances with you real quick and then let you know when she may be able to receive it",
+   "No, this is a free government provided allowance, (customer). So I don't have any questions for you. Nothing personal, nothing financial.",
+   "If you have any questions, I'm on the line with you.",
+   "And I did hear you correct, (customer). No SSI, no Medicaid, Medicare or coverage. There was nothing. Right.",
+   "This is Cheryl on a recorded line with America's health.",
+   "You live in Oklahoma. Okay, that's okay. I'll update your state real quick for you because the benefits are quite different in each state.",
+   "We'll be able to see exactly what your allowance may look like when you may be entitled to receive your allowance.",
+   "This is Sarah. I work for America's Health. We're on our recorded line. We do the benefit allowances that are through Affordable Care Act.",
+   "I reached out with America's Health recorded line and I called in regards to your subsidy allowance provided through the Affordable Care act",
+   "So your, your physical address is your confidential information. I don't have your, your personal file opened up.",
+   "I reached out with America's Health recorded line and I called in regards to your subsidy allowance provided through the Affordable Care act",
+   "Just to double confirm. Alabama over 19. No Medicaid, Medicare, work insurance? That's correct and up to date.",
+   "Yes, this is (agent), and I have (customer) Wilson out of Texas. Can you take our call?",
+   "I reached out with America's Health recorded line and I called in regards to your subsidy allowance provided through the Affordable Care act",
+   "The allowance does look different for each individual. It's based off a state zip code address. So that is what we'll take a look into. We'll be able to see what your allowance may look like.",
+   "we're going to see which ones you may qualify for",
+   "My name is Sarah. I work for America's Health, and we are on a recorded line. We are doing benefit allowances that are through the Affordable Care Act.",
+   "The agent's on the line with us to tell us exactly which subsidies here you may qualify for.",
+   "So this allowance was federally funded specifically for people under the age of 65 who are not receiving or entitled to receive any other type of government programs or aid.",
+   "I have (customer) Miller coming out of Tennessee. Can you assist?",
+   "The agent's on the line with us to tell us exactly what subsidies you may qualify for",
+   "This is Cheryl on a recorded line with America's Health. It's a quick reminder regarding your subsidies under the Affordable Care Act.",
+   "I work for America's Health. We're on a recorded line. We do the benefit allowances that are through Affordable Care act",
+   "Now, what yours may be, I don't know. I don't like to try to speculate because I don't know.",
+   "My name is Sarah. I work for America's Health. We are on a recorded line. We do the benefit allowances that are coming through the Affordable Care act",
+   "The agent's joining in with you and I now to tell us exactly which of the subsidies you may qualify for",
+   "Hi, this is (agent) on a recorded line with America's Health.",
+   "Hi, Corey, this is (agent) on a recorded line with America's Health.",
+   "They're going to go over the subsidy and benefit allowances with you real quick and then let you know you may be able to receive it.",
+   "Hi, Gina, this is (agent) on a recorded line with America's Health."
+  ]
+ },
+ "bad": {
+  "calls_analysed": 30,
+  "relevant": 30,
+  "conversations": 30,
+  "outcomes": {
+   "transferred": 30
+  },
+  "objections": {
+   "other": {
+    "label": "Anything else",
+    "seen_pct": 20.0,
+    "seen_n": 6,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 5,
+     "strong": 2,
+     "weak": 2,
+     "missed": 1
+    },
+    "strong_examples": [
+     "Yes, sir. I'm sorry. We were calling you about the subsidy allowance. It said you had not received that yet. Is that correct?",
+     "Yeah, not a problem. So it's by law, I have to."
+    ]
+   },
+   "already_have_it": {
+    "label": "I already have that / I already get it",
+    "seen_pct": 6.7,
+    "seen_n": 2,
+    "loss_pct": 0.0,
+    "handled": {
+     "strong": 1,
+     "weak": 2
+    },
+    "strong_examples": [
+     "Do you have insurance? Is that with the marketplace or is it Medicare, Medicaid or work insurance."
+    ]
+   },
+   "how_got_info": {
+    "label": "How did you get my information",
+    "seen_pct": 6.7,
+    "seen_n": 2,
+    "loss_pct": 0.0,
+    "handled": {
+     "weak": 1,
+     "missed": 1
+    },
+    "strong_examples": []
+   },
+   "dont_know_what_i_have": {
+    "label": "I don't know what insurance I have",
+    "seen_pct": 6.7,
+    "seen_n": 2,
+    "loss_pct": 0.0,
+    "handled": {
+     "missed": 1,
+     "ok": 1
+    },
+    "strong_examples": []
+   },
+   "what_is_subsidy": {
+    "label": "What is the subsidy / what kind of assistance is it",
+    "seen_pct": 6.7,
+    "seen_n": 2,
+    "loss_pct": 0.0,
+    "handled": {
+     "weak": 1,
+     "strong": 1
+    },
+    "strong_examples": [
+     "So what the license agent will do is look and see what's offered in your zip code for you and what's a good fit for you."
+    ]
+   },
+   "already_have_marketplace": {
+    "label": "I already have Marketplace / Obamacare / ACA",
+    "seen_pct": 3.3,
+    "seen_n": 1,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 1
+    },
+    "strong_examples": []
+   },
+   "company_question": {
+    "label": "What is America's Health / who are you with",
+    "seen_pct": 3.3,
+    "seen_n": 1,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 1
+    },
+    "strong_examples": []
+   },
+   "caller_id": {
+    "label": "Why does it say you're calling from another state / scam likely",
+    "seen_pct": 3.3,
+    "seen_n": 1,
+    "loss_pct": 0.0,
+    "handled": {
+     "ok": 1
+    },
+    "strong_examples": []
+   }
+  },
+  "steps": {
+   "correct_person": {
+    "done_pct": 80.0,
+    "skipped_pct": 6.7,
+    "asked_not_waited_pct": 13.3,
+    "counts": {
+     "asked_and_waited": 24,
+     "skipped": 2,
+     "asked_not_waited": 4
+    }
+   },
+   "company_and_recorded_line": {
+    "done_pct": 83.3,
+    "skipped_pct": 10.0,
+    "asked_not_waited_pct": 6.7,
+    "counts": {
+     "skipped": 3,
+     "asked_and_waited": 25,
+     "asked_not_waited": 2
+    }
+   },
+   "aca_mention": {
+    "done_pct": 56.7,
+    "skipped_pct": 36.7,
+    "asked_not_waited_pct": 6.7,
+    "counts": {
+     "skipped": 11,
+     "asked_not_waited": 2,
+     "asked_and_waited": 17
+    }
+   },
+   "state_confirm": {
+    "done_pct": 70.0,
+    "skipped_pct": 3.3,
+    "asked_not_waited_pct": 26.7,
+    "counts": {
+     "asked_not_waited": 8,
+     "skipped": 1,
+     "asked_and_waited": 21
+    }
+   },
+   "mmw_first": {
+    "done_pct": 73.3,
+    "skipped_pct": 3.3,
+    "asked_not_waited_pct": 23.3,
+    "counts": {
+     "asked_not_waited": 7,
+     "skipped": 1,
+     "asked_and_waited": 22
+    }
+   },
+   "age_19": {
+    "done_pct": 60.0,
+    "skipped_pct": 23.3,
+    "asked_not_waited_pct": 16.7,
+    "counts": {
+     "asked_not_waited": 5,
+     "skipped": 7,
+     "asked_and_waited": 18
+    }
+   },
+   "mmw_double": {
+    "done_pct": 43.3,
+    "skipped_pct": 40.0,
+    "asked_not_waited_pct": 16.7,
+    "counts": {
+     "asked_not_waited": 5,
+     "skipped": 12,
+     "asked_and_waited": 13
+    }
+   },
+   "verbal_consent": {
+    "done_pct": 53.3,
+    "skipped_pct": 26.7,
+    "asked_not_waited_pct": 20.0,
+    "counts": {
+     "skipped": 8,
+     "asked_and_waited": 16,
+     "asked_not_waited": 6
+    }
+   },
+   "warm_handoff_with_state": {
+    "done_pct": 66.7,
+    "skipped_pct": 26.7,
+    "asked_not_waited_pct": 6.7,
+    "counts": {
+     "asked_and_waited": 20,
+     "skipped": 8,
+     "asked_not_waited": 2
+    }
+   }
+  },
+  "compliance": {
+   "transferred_without_consent": {
+    "n": 10,
+    "examples": [
+     "So we will let you onto the line with the license coordinator... All right. Here's the ringing on the line.",
+     "Well, yeah, this is (agent). ... I have Floyd here. He's in the state of Texas. Please take over.",
+     "We're going to hear some ringing as we connect to the coordinator.",
+     "Perfect. Let me get you over real quick. There we go. There'll be some ringing.",
+     "So you're going to hear a few rings and then I'll introduce you so they can go over the on with you. Okay. And I'll be on the line with you. Okay."
+    ]
+   },
+   "promise_will_get": {
+    "n": 4,
+    "examples": [
+     "my file shows you still have received your government subsidy allowance. I want to make sure you're still here in Florida to receive it.",
+     "they will let you know what substances you may receive at this time and when you're going to get",
+     "These are benefits provided to you for not receiving Medicaid.",
+     "they're going to go over all your subsidies and they'll let you know the date you may receive it"
+    ]
+   },
+   "no_recorded_line": {
+    "n": 3,
+    "examples": [
+     "(no company name or recorded-line disclosure given anywhere in the call)",
+     "(no company name or recorded-line disclosure anywhere in the captured call)",
+     "(agent never stated company name or that the call was on a recorded line)"
+    ]
+   },
+   "other": {
+    "n": 3,
+    "examples": [
+     "No mention that the call concerns their subsidy through the Affordable Care Act; only 'government subsidy allowance' was used.",
+     "we are on a recorded line regarding that subscription for you",
+     "a licensed specialist coming on the line to let you know what subsidy you may receive"
+    ]
+   },
+   "guaranteed_outcome": {
+    "n": 2,
+    "examples": [
+     "The coordinator will go over the exact subsidy you may receive.",
+     "let me ring up my coordinator from aca. He'll provide you the date you may receive it."
+    ]
+   },
+   "wrong_company_name": {
+    "n": 2,
+    "examples": [
+     "Okay. So thank you for calling Ema Marketing.",
+     "Okay. So thank you for calling Ema Marketing."
+    ]
+   }
+  },
+  "dq": {
+   "with_disqualifier": 0,
+   "types": {},
+   "caught": 0,
+   "transferred_anyway": 0
+  },
+  "hangup_triggers": [],
+  "best_lines": [
+   "They're going to let you know what benefits and subsidies you may qualify for.",
+   "I have Floyd here. He's in the state of Texas. Please take over.",
+   "And just to make sure that we're on the same page, I heard you properly. That was no work insurance also, right... Or Medicare Medicaid.",
+   "Before I get you over, I need to confirm you have no Medicare Medicaid work insurance.",
+   "And to double confirm, no Medicare, Medicaid or work insurance.",
+   "Oh, sorry. You said no Medicare, no Medicaid, no work insurance.",
+   "So what I'm going to do for you is I can bring some help on the line to see what assistance is available to you and when you may receive it. But just to confirm, you have no Medicare, no Medicaid or no work insurance, right?",
+   "we do need to verify before we invite an agent in your state on the line that you do not receive Medicaid, Medicare or insurance during employer, Is that correct?",
+   "Hi, this is (agent) Francis on a recorded line with America's Health. This call is regarding the subsidy allowance through the Affordable Care Act.",
+   "Is that with the marketplace or is it Medicare, Medicaid or work insurance.",
+   "Hi, my name is (agent). I'm with America's Health on a recorded line giving you a quick call today regarding your subsidy allowance through the Affordable Care Act.",
+   "This calls regards to the subsidies allowance through Affordable Care Act. Are you still in the state of Tennessee to receive it?",
+   "Okay, one more time. I confirm no Medicaid, Medicare, work coverage.",
+   "I'm calling with America's Health, sir, on a recorded line regarding your subsidy allowance.",
+   "I'm calling with America's Health, sir, on a recorded line regarding your subsidy allowance.",
+   "I'm going to bring in my coordinator to open your file up and let you know a subsidy allowance may be available for you.",
+   "Just want to make sure, Jason, on record, we are on a recorded line",
+   "I'm going to grab some help on the line for your area real quick and we'll look and see what all you may qualify for.",
+   "Also looks like you don't have any active support still with Medicare, Medicaid or work insurance. That's still correct for you, too.",
+   "And you did say no Medicare or Medicaid or work insurance. Right?",
+   "So what the license agent will do is look and see what's offered in your zip code for you and what's a good fit for you.",
+   "we're just confirming you don't have Medicare, Medicaid, or work insurance. Is that up to date?",
+   "What I can actually do for you is bring some help on the line to tell us what assistance may be available for you and when you may receive it.",
+   "They're going to let you know what benefits and subsidies you may qualify for.",
+   "my name is (agent). I'm with America's Health on a recorded line giving you a quick call today regarding your subsidy allowance through the Affordable Care Act.",
+   "So I do have my South Carolina coordinator to go on the line to go over everything you may qualify for, and it won't take long.",
+   "I'll be grabbing a licensed agent on the phone with us and they'll let you know what subsidy you may receive to help you out at this time.",
+   "I'm sorry, I have to repeat, but this is. I have to. Because it's a recorded line.",
+   "let you speak with our licensed agents in Alabama and they're gonna let you know about the benefits that you may qualify for",
+   "And to double confirm, sir, no Medicare, Medicaid, work insurance. Correct."
+  ]
+ },
+ "_cost_usd": 179.96
+}

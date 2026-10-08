@@ -1,0 +1,415 @@
+{
+ "vertical": "aca",
+ "source": "3,979 analysed ACA calls, Sept-Oct 2026",
+ "weight_formula": "round(seen_pct * 10 + badly_handled_pct * 1.5)",
+ "objections": [
+  {
+   "id": "what_is_subsidy",
+   "label": "What is the subsidy? What kind of assistance?",
+   "seen_pct": 17.4,
+   "badly_handled_pct": 8.5,
+   "draw_weight": 187,
+   "unlocks_at_level": 1,
+   "consumer_says": [
+    "What is this for?",
+    "What is it?",
+    "I don't even know what that is."
+   ],
+   "script_heading": "What is the subsidy / Any questions in regards to the subsidy",
+   "official_rebuttal": "Great question — there's so many benefits and incentives available, it's different for everyone. It depends on your specific situation, your wants and your needs. Once I confirm what I have, the worker in your area can provide the options they may have available for you. Let's finish this part first, you're still living in (STATE) with no active Medicare, Medicaid, or Work Insurance correct?",
+   "top_agent_lines": [
+    "There are benefits, (customer's name), that's not included in any healthcare plan. Now, which ones you may qualify for, I don't know the local agent is going to be joining in with their status. But they are benefits that you can't just go out and buy.",
+    "There's health subsidies, and there's benefit packages that come through the Affordable Care Act, and everybody's situations, wants, and needs are different. So everybody's benefits are different."
+   ]
+  },
+  {
+   "id": "already_have_marketplace",
+   "label": "I already have Marketplace / Obamacare",
+   "seen_pct": 12.3,
+   "badly_handled_pct": 7.4,
+   "draw_weight": 134,
+   "unlocks_at_level": 1,
+   "consumer_says": [
+    "Marketplace.",
+    "I have marketplace.",
+    "I got a marketplace."
+   ],
+   "script_heading": "I already have Marketplace / Obamacare / ACA",
+   "official_rebuttal": "And that's why we are calling today — there are new benefits that have come out that you may not be receiving as of yet. Just want to be sure you don't have Medicare, Medicaid or work insurance still, to be able to assist you.",
+   "top_agent_lines": [
+    "All right. Is that through the marketplace?  Okay, that's what I see here. And that's okay. You can have that.",
+    "Yeah, we know. We see that. We're friendly with Marketplace. That's great, but no work insurance, Medicare, Medicaid or none of that stuff, right?"
+   ]
+  },
+  {
+   "id": "hesitation",
+   "label": "I need to think about it",
+   "seen_pct": 10.6,
+   "badly_handled_pct": 11.7,
+   "draw_weight": 124,
+   "unlocks_at_level": 2,
+   "consumer_says": [
+    "I don't know.",
+    "Say it again.",
+    "I'm sorry, what?"
+   ],
+   "script_heading": "Anything not listed above",
+   "official_rebuttal": "That's a great question, we will find out as soon as the worker gets on the line for accurate details. I'll quickly finish this part first — you're still living in (STATE) with no active Medicare, Medicaid, or Work Insurance correct?",
+   "top_agent_lines": [
+    "They got you working hard on a Friday thank you for your service, (customer's name). I know it's not an easy job.",
+    "No. I'm asking you to make sure you can confirm that you have no Medicaid, Medicare, or work insurance. Because these benefits are for help the people that do not receive any Medicaid, Medicare or work insurance."
+   ]
+  },
+  {
+   "id": "busy_callback",
+   "label": "I'm busy / call me back",
+   "seen_pct": 8.7,
+   "badly_handled_pct": 10.8,
+   "draw_weight": 103,
+   "unlocks_at_level": 1,
+   "consumer_says": [
+    "I'm actually about to head into work right now. Could you call me back at a later day.",
+    "Yeah, I need to go. They... trying to stop there way early that Friday afternoon.",
+    "I'm actually busy. I just got to work. Could I get a call back later on?"
+   ],
+   "script_heading": "I'm at work / I can't talk / I'm busy / Can you call me back?",
+   "official_rebuttal": "No problem at all, I'll be quick. I just need to confirm if you still live in (STATE) and don't have Medicare, Medicaid, or employer insurance.",
+   "top_agent_lines": [
+    "I got you. So this takes a couple minutes, but I'm just going to get us a faster line because we don't need to sit and hold.",
+    "You don't have to do anything. You just talk to the benefits coordinator and that's it you either decide you want them or not. It's that simple."
+   ]
+  },
+  {
+   "id": "already_have_it",
+   "label": "I already have that",
+   "seen_pct": 7.8,
+   "badly_handled_pct": 38.5,
+   "draw_weight": 136,
+   "unlocks_at_level": 1,
+   "consumer_says": [
+    "I have insurance.",
+    "I got Medicaid.",
+    "I have Medicaid."
+   ],
+   "script_heading": "I already have Marketplace / Obamacare / ACA",
+   "official_rebuttal": "And that's why we are calling today — there are new benefits that have come out that you may not be receiving as of yet. Just want to be sure you don't have Medicare, Medicaid or work insurance still, to be able to assist you.",
+   "top_agent_lines": [
+    "And that's through the marketplace, right?  that's fine. I see that. That's absolutely fine.",
+    "Yes. Do you have it through Marketplace?"
+   ]
+  },
+  {
+   "id": "dont_know_what_i_have",
+   "label": "I don't know what insurance I have",
+   "seen_pct": 7.7,
+   "badly_handled_pct": 25.7,
+   "draw_weight": 116,
+   "unlocks_at_level": 1,
+   "consumer_says": [
+    "I have no idea.",
+    "I don't know.",
+    "I think so."
+   ],
+   "script_heading": "I don't know what I have",
+   "official_rebuttal": "I can help you figure it out. Medicare is usually for folks over the age of 65, it comes with a red, white, and blue card. Medicaid, you would have had to apply and get approved for. And work insurance is provided by your employer, you'd see that deducted off your paycheque. You have none of those, right?",
+   "top_agent_lines": [
+    "Good. Yeah, that's why we're calling. Because you don't have work insurance either, right?",
+    "Well, no, no, no. It's just having a certain kind of insurance. Do you just have Marketplace or do you have work insurance, Medicare and Medicaid?"
+   ]
+  },
+  {
+   "id": "company_question",
+   "label": "Who are you with?",
+   "seen_pct": 7.1,
+   "badly_handled_pct": 6.2,
+   "draw_weight": 80,
+   "unlocks_at_level": 1,
+   "consumer_says": [
+    "Who is this?",
+    "Who's this?",
+    "Who's calling?"
+   ],
+   "script_heading": "What is America's Health / Health Benefits Centre?",
+   "official_rebuttal": "We help you to receive benefits through the Affordable Care Act. The incentives are provided to you for living in (STATE) with no active Medicare, Medicaid, or Work Insurance, are these details still up to date for you?",
+   "top_agent_lines": [
+    "This is Cheryl on a recorded line with America's Health. It's a quick reminder regarding your subsidies under the Affordable Care Act.",
+    "America, America's health."
+   ]
+  },
+  {
+   "id": "where_calling_from",
+   "label": "Where are you calling from?",
+   "seen_pct": 5.9,
+   "badly_handled_pct": 7.7,
+   "draw_weight": 71,
+   "unlocks_at_level": 2,
+   "consumer_says": [
+    "Who is this?",
+    "Who's calling?",
+    "Where are you at?"
+   ],
+   "script_heading": "Anything not listed above",
+   "official_rebuttal": "That's a great question, we will find out as soon as the worker gets on the line for accurate details. I'll quickly finish this part first — you're still living in (STATE) with no active Medicare, Medicaid, or Work Insurance correct?",
+   "top_agent_lines": [
+    "Hi, this is Cheryl on a recorded line with America's Health. We notice you haven't received your subsidies under the Affordable Care Act.",
+    "My name is Sarah. I work for America's Health. We are on a recorded line. We do the benefit allowances that are through Affordable Care Act."
+   ]
+  },
+  {
+   "id": "scam",
+   "label": "This is a scam",
+   "seen_pct": 4.5,
+   "badly_handled_pct": 11.3,
+   "draw_weight": 62,
+   "unlocks_at_level": 3,
+   "consumer_says": [
+    "I done filled out 50 applications of the subsidy loan stuff, man. It's starting to sound like a scam to me.",
+    "Is this real?",
+    "Is this the J. Is not some kind of scam."
+   ],
+   "script_heading": "This is a scam / spam call / That doesn't sound true",
+   "official_rebuttal": "I get it, Mr./Mrs. (Customer's Name). I completely understand why you'd be cautious, a lot of people feel that way at first. For your peace of mind, I can assure you this is legit, it isn't a scam call. I don't need any personal or financial information from you, so there's nothing here for me to misuse. The purpose is simply to verify whether you still live in (STATE) and currently have no Medicare, Medicaid, or employer coverage. For you to see which benefits you could possibly get, are those details still accurate for you?",
+   "top_agent_lines": [
+    "No, ma'am, is real. I'm a real person. We have a real company. We do real benefits and subsidy allowances through the Affordable Care Act. That's real. I base my character on my being honest, so I'm honestly telling you what's going on.",
+    "It's not, though. It really isn't. We have a real company, real website. We're real people. There is scams out there but we're not one of them."
+   ]
+  },
+  {
+   "id": "wrong_state",
+   "label": "Wrong state",
+   "seen_pct": 3.6,
+   "badly_handled_pct": 16.8,
+   "draw_weight": 61,
+   "unlocks_at_level": 2,
+   "consumer_says": [
+    "I'm in arkansas.",
+    "No, I'm in arkansas.",
+    "I'm in louisiana."
+   ],
+   "script_heading": "Wrong state",
+   "official_rebuttal": "That could be the issue. What state can I get you help in? (edit and save on the Call Info page)",
+   "top_agent_lines": [
+    "You live in Oklahoma. Okay, that's okay. I'll update your state real quick for you because the benefits are quite different in each state, so give me a second to update that.",
+    "You're in Illinois. Okay, let me update that for you real quick, because the benefits are completely different for that I'm just double confirming now. Illinois over 19, no Medicaid, Medicare, work insurance."
+   ]
+  },
+  {
+   "id": "is_it_money",
+   "label": "Is it money? A card? Help with bills?",
+   "seen_pct": 3.3,
+   "badly_handled_pct": 14.4,
+   "draw_weight": 55,
+   "unlocks_at_level": 2,
+   "consumer_says": [
+    "Are you talking about. Money? Any insurance or something like that? I don't know what?",
+    "Do I have to pay anything for anything?",
+    "It's something that costs money. So it's like, if it costs money, I can't do it because I have none."
+   ],
+   "script_heading": "What am I going to get / Is it money, cash, cheque, card, help with bills or groceries?",
+   "official_rebuttal": "Since it's confidential between the licensed agent and yourself, once I verify everything you can go ahead and ask the licensed agent. Now, do you still not receive any Medicare, Medicaid or work insurance?",
+   "top_agent_lines": [
+    "No, this is a free government provided allowance. I don't have any questions for you. Nothing personal, nothing financial.",
+    "I'm not sure. I don't want to promise you something and then it not happen. I honestly don't know. But if you've read something, that may be accurate."
+   ]
+  },
+  {
+   "id": "insurance_not_familiar",
+   "label": "They name a carrier",
+   "seen_pct": 2.7,
+   "badly_handled_pct": 12.7,
+   "draw_weight": 46,
+   "unlocks_at_level": 2,
+   "consumer_says": [
+    "This is for insurance.",
+    "I don't know what you're talking about.",
+    "I received this one card before... It said Anthem on it was like blue and white. Would that be the car you're referring to?"
+   ],
+   "script_heading": "They name an insurance you are not familiar with",
+   "official_rebuttal": "It is through the Marketplace, correct? (NO or cannot confirm = DQ. YES = proceed with the transfer)",
+   "top_agent_lines": [
+    "Asked if he'd heard of Obamacare, explained it's the same thing as the Affordable Care Act, said the benefits coordinator would go over the subsidy and benefit allowances, it takes a couple of minutes, and there's no pressure to take it.",
+    "So it's for people that don't have Medicare, Medicaid, or work insurance. You're not receiving any of those?"
+   ]
+  },
+  {
+   "id": "told_not_qualified",
+   "label": "They told me I don't qualify",
+   "seen_pct": 2.4,
+   "badly_handled_pct": 4.9,
+   "draw_weight": 31,
+   "unlocks_at_level": 2,
+   "consumer_says": [
+    "That's what the last agent explained to me.",
+    "No, when my agent said I shouldn't be receiving anything.",
+    "I was disqualified."
+   ],
+   "script_heading": "They told me I'm not qualified (no job / make too much / not available in my area)",
+   "official_rebuttal": "That's exactly why they asked me to call you, I will take care of this immediately. The benefits and incentives are provided to help you for living in (STATE) with no active Medicare, Medicaid, or Work Insurance, are these details still up to date for you?",
+   "top_agent_lines": [
+    "Okay, no worries. Well, this program is for to help those people that have no Medicaid, Medicare, or work insurance.",
+    "You don't have to be. If you would have been on disability, you wouldn't qualify. It's only for people who are not on those that may qualify."
+   ]
+  },
+  {
+   "id": "personal_info",
+   "label": "I'm not giving personal information",
+   "seen_pct": 2.0,
+   "badly_handled_pct": 10.1,
+   "draw_weight": 35,
+   "unlocks_at_level": 3,
+   "consumer_says": [
+    "Do you have my address?",
+    "Ma'am, if you. I already gave you all this information. You know that it's right in front of your computer. You know, I'm 47 years old.",
+    "Present my credit card."
+   ],
+   "script_heading": "I'm not giving you my personal information",
+   "official_rebuttal": "I don't need any personal or financial information from you. The purpose is simply to verify whether you still live in (STATE) and currently have no Medicare, Medicaid, or employer coverage. For you to see which benefits you could possibly get, are those details still accurate for you?",
+   "top_agent_lines": [
+    "No, no, no, no, no. No proof of residence or anything like that. As long as you're still in Texas, 77022 is the zip code I see for you.",
+    "I'm not asking you for any personal information, Rufus. Not none. I'm just asking you to confirm that you're in South Carolina with no Medicaid, Medicare, work insurance."
+   ]
+  },
+  {
+   "id": "how_got_info",
+   "label": "How did you get my information?",
+   "seen_pct": 2.0,
+   "badly_handled_pct": 26.9,
+   "draw_weight": 60,
+   "unlocks_at_level": 3,
+   "consumer_says": [
+    "And how did you get my number?",
+    "So who told you to get in contact with me?",
+    "I just got my number changed to this number right here... I never talked to anyone on this number."
+   ],
+   "script_heading": "How did you get my information / Where did you get my information?",
+   "official_rebuttal": "I do have you here for a reason — we are actually only calling those that may qualify for a free subsidy with the Affordable Care Act. Now, you do not receive Medicare or Medicaid or any work insurance, correct?",
+   "top_agent_lines": [
+    "I don't have very much information. I just have your name and your state. This comes through the Affordable Care act or it can come through somebody trying to see if they qualify for something.",
+    "It's national. It's in every state. It's all 50 states. It's the Affordable Care Act I don't have any of your information except your name and the state you're in."
+   ]
+  },
+  {
+   "id": "not_interested",
+   "label": "I'm not interested",
+   "seen_pct": 2.0,
+   "badly_handled_pct": 9.2,
+   "draw_weight": 34,
+   "unlocks_at_level": 1,
+   "consumer_says": [
+    "No, thank you.",
+    "Oh, lord, I don't want to.",
+    "I just keep getting calls from so many people and it's annoying as hell... I don't care to answer any more questions."
+   ],
+   "script_heading": "I'm not interested / I don't want that",
+   "official_rebuttal": "This isn't a matter of interest. The benefits and incentives are provided to help you for living in (STATE) with no active Medicare, Medicaid, or Work Insurance, are these details still up to date for you?",
+   "top_agent_lines": [
+    "It takes a couple minutes of your time, if you have that, to just find out what they may be, it may be worth your while.",
+    "Oh, okay, so you don't want to see which ones you may qualify for? Yeah, it's super brief. It doesn't hurt."
+   ]
+  },
+  {
+   "id": "dont_want_change",
+   "label": "I don't want to change my insurance",
+   "seen_pct": 1.6,
+   "badly_handled_pct": 20.0,
+   "draw_weight": 46,
+   "unlocks_at_level": 2,
+   "consumer_says": [
+    "I'm okay. I don't want to say nothing out right now.",
+    "I don't want to speak to anybody because the last time I did, they changed my insurance.",
+    "Now, this won't affect my plan, right? ... Like the United Healthcare gold plan."
+   ],
+   "script_heading": "I don't want to change my insurance / Will this change my plan?",
+   "official_rebuttal": "You'd be the one to change anything, I can't do that. The purpose is simply to verify whether you still live in (STATE) and currently have no Medicare, Medicaid, or employer coverage.",
+   "top_agent_lines": [
+    "No, only you have the power to change your insurance, sweetheart. Not me, not anybody else, just you.",
+    "That's okay. You just let them know that that's not a problem. That only you have the power to do that."
+   ]
+  },
+  {
+   "id": "didnt_apply",
+   "label": "I didn't apply for that",
+   "seen_pct": 1.5,
+   "badly_handled_pct": 9.7,
+   "draw_weight": 30,
+   "unlocks_at_level": 2,
+   "consumer_says": [
+    "Yeah, I didn't sign up for none of that.",
+    "I'm so confused. Like, I never put my information in any online or whatever... how they get my number.",
+    "No, not here."
+   ],
+   "script_heading": "I didn't apply for that",
+   "official_rebuttal": "That's right, you don't apply for it. The benefits and incentives are provided to help you for living in (STATE) with no active Medicare, Medicaid, or Work Insurance, are these details still up to date for you?",
+   "top_agent_lines": []
+  },
+  {
+   "id": "no_subsidy_exists",
+   "label": "There is no subsidy / it was shut down",
+   "seen_pct": 1.2,
+   "badly_handled_pct": 9.3,
+   "draw_weight": 26,
+   "unlocks_at_level": 3,
+   "consumer_says": [
+    "My agent says that there is no such thing. If there's a. Is such a thing. You've got all my information, mail it to me.",
+    "I ain't waiting on that because the marketplace already told me I wasn't getting no such... they paying for my premium right now.",
+    "I always get told that... I look to see what there is, and it just takes me a silly circle and nothing ever comes from it."
+   ],
+   "script_heading": "There is no subsidy / The government shut it down",
+   "official_rebuttal": "I understand your concern. There's a lot of confusing information out there. Luckily, it doesn't affect this benefit at all. This is about the assistance you haven't claimed. You're still living in (STATE) with no active Medicare, Medicaid, or Work Insurance correct?",
+   "top_agent_lines": [
+    "Offered to get the benefits coordinator on the line to find out what's going on with her case, said it takes a couple minutes, then moved into the confirmations."
+   ]
+  },
+  {
+   "id": "caller_id",
+   "label": "Your caller ID says scam likely",
+   "seen_pct": 1.1,
+   "badly_handled_pct": 18.5,
+   "draw_weight": 39,
+   "unlocks_at_level": 3,
+   "consumer_says": [
+    "Are you in new smyrna beach? The call's coming in from new smyrna beach.",
+    "Now? I'm picking out from your number. It's a Mississippi.",
+    "I think you're calling me from a Texas number... but you calling me from a Texas number also."
+   ],
+   "script_heading": "This is a scam / spam call / That doesn't sound true",
+   "official_rebuttal": "I get it, Mr./Mrs. (Customer's Name). I completely understand why you'd be cautious, a lot of people feel that way at first. For your peace of mind, I can assure you this is legit, it isn't a scam call. I don't need any personal or financial information from you, so there's nothing here for me to misuse. The purpose is simply to verify whether you still live in (STATE) and currently have no Medicare, Medicaid, or employer coverage. For you to see which benefits you could possibly get, are those details still accurate for you?",
+   "top_agent_lines": [
+    "Because that's our corporate office. I work from home now, since Covid. That's what comes out of our database. But I live in Sarasota, Florida.",
+    "Yep, yep. It should be the same number and warned that if she doesn't double confirm Medicare, Medicaid, work insurance twice, it's not us, hang up."
+   ]
+  },
+  {
+   "id": "not_enough_income",
+   "label": "I don't have enough income",
+   "seen_pct": 0.5,
+   "badly_handled_pct": 10.0,
+   "draw_weight": 20,
+   "unlocks_at_level": 2,
+   "consumer_says": [
+    "I am of the age of 21, but on top of that I do not have currently steady paying jobs.",
+    "I don't have those, but I also don't have a job, and I know that I have to have a job to qualify.",
+    "I'm in school right now, and I can't really... I can afford, like, nothing right now."
+   ],
+   "script_heading": "I don't have enough income for this / I don't receive Medicare or Medicaid",
+   "official_rebuttal": "Sir/Ma'am, this is only to help those that do not receive Medicare, Medicaid or work insurance — the Affordable Care Act is free health insurance.",
+   "top_agent_lines": []
+  },
+  {
+   "id": "tax_question",
+   "label": "Why the tax question?",
+   "seen_pct": 0.3,
+   "badly_handled_pct": 7.7,
+   "draw_weight": 15,
+   "unlocks_at_level": 3,
+   "consumer_says": [
+    "The person that I spoke to said that as long as I was making under 24,000 a year, that this is an available availability to me.",
+    "Do you help out with anything, like late tax routine returns or anything?",
+    "Well, I don't want to come back and charge me before on my taxes or nothing like that, you know."
+   ],
+   "script_heading": "Anything not listed above",
+   "official_rebuttal": "That's a great question, we will find out as soon as the worker gets on the line for accurate details. I'll quickly finish this part first — you're still living in (STATE) with no active Medicare, Medicaid, or Work Insurance correct?",
+   "top_agent_lines": []
+  }
+ ]
+}
