@@ -9,6 +9,14 @@ const RINGBACK_GAP_MS = 1_200;
 const RINGBACK_RINGS = 2;
 const RINGBACK_VOLUME = 0.08;
 
+/**
+ * A held-open ringback keeps playing this far below hearing, so the speaker
+ * or headset never goes idle between the last ring and the "Hello?". Not
+ * digital silence: some devices sleep on that too.
+ */
+const HOLD_OPEN_FREQUENCY_HZ = 20;
+const HOLD_OPEN_VOLUME = 0.001;
+
 /** Longest to wait for the AI's audio to start playing before picking up anyway. */
 export const REMOTE_AUDIO_WAIT_MS = 5_000;
 
@@ -19,21 +27,25 @@ export const RINGBACK_CYCLE_MS = RINGBACK_TONE_MS + RINGBACK_GAP_MS;
  * Plays a US-style ringback (440 + 480 Hz) on its own short-lived
  * AudioContext, closed once it's done, so the call's context never outputs
  * to the speakers and the ring stays out of the recording. `finished`
- * resolves when the ringing ends; `stop()` cuts it short (and never
- * resolves `finished`).
+ * resolves when the ringing ends, `lastToneEnded` a gap earlier, when the
+ * last ring goes quiet; `stop()` cuts it short (and resolves neither).
+ * With `holdOpen`, the context stays open after the last ring, playing an
+ * inaudible tone to keep the output device awake, until `stop()` is called.
  */
 export function playRingback({
     rings = RINGBACK_RINGS,
     volume = RINGBACK_VOLUME,
-}: { rings?: number; volume?: number } = {}): {
+    holdOpen = false,
+}: { rings?: number; volume?: number; holdOpen?: boolean } = {}): {
     finished: Promise<void>;
+    lastToneEnded: Promise<void>;
     stop: () => void;
 } {
     const audioContext = new AudioContext();
     void audioContext.resume();
     const startsAt = audioContext.currentTime;
     const durationMs = rings * RINGBACK_CYCLE_MS;
-    let timeout: ReturnType<typeof setTimeout> | null = null;
+    const timeouts: ReturnType<typeof setTimeout>[] = [];
 
     const close = () => {
         if (audioContext.state !== 'closed') {
@@ -61,19 +73,37 @@ export function playRingback({
         }
     }
 
+    if (holdOpen) {
+        const keepAwakeGain = audioContext.createGain();
+        keepAwakeGain.gain.value = HOLD_OPEN_VOLUME;
+        keepAwakeGain.connect(audioContext.destination);
+
+        const keepAwake = audioContext.createOscillator();
+        keepAwake.frequency.value = HOLD_OPEN_FREQUENCY_HZ;
+        keepAwake.connect(keepAwakeGain);
+        keepAwake.start(startsAt);
+    }
+
     const finished = new Promise<void>((resolve) => {
-        timeout = setTimeout(() => {
-            close();
-            resolve();
-        }, durationMs);
+        timeouts.push(
+            setTimeout(() => {
+                if (!holdOpen) {
+                    close();
+                }
+                resolve();
+            }, durationMs),
+        );
+    });
+
+    const lastToneEnded = new Promise<void>((resolve) => {
+        timeouts.push(setTimeout(resolve, durationMs - RINGBACK_GAP_MS));
     });
 
     return {
         finished,
+        lastToneEnded,
         stop: () => {
-            if (timeout) {
-                clearTimeout(timeout);
-            }
+            timeouts.forEach(clearTimeout);
             close();
         },
     };

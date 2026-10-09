@@ -31,6 +31,8 @@ class RoleplayDeliveryMetrics
         'agent_loudness' => ['at', 'rms'],
         // Whether the consumer's "Hello?" was heard, to diagnose silent greetings.
         'greeting_checked' => ['at', 'attempt', 'heard', 'heard_ms', 'peak_rms'],
+        // The trainee stayed silent after the "Hello?", so the consumer said it again.
+        'greeting_repeated' => ['at'],
         // A trainee turn dropped as the consumer's echo, and what the mic really applied.
         'echo_discarded' => ['at'],
         'audio_checked' => ['at', 'echo_cancellation', 'noise_suppression', 'auto_gain_control'],

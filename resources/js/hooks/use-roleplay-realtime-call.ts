@@ -98,12 +98,15 @@ const GREETING_MIN_HEARD_MS = 200;
  */
 const GREETING_STATS_INTERVAL_MS = 200;
 /**
- * The ringback plays on its own AudioContext, closed when it ends, and a
- * headset or speaker can take a moment to wake back up for the consumer's
- * audio. "Hello?" is short enough to be lost entirely in that gap, so the
- * pick-up waits this long after the ringing ends.
+ * The greeting check reads the audio that reached the browser, not the
+ * speakers, so a "Hello?" can pass it and still be lost to a waking
+ * headset. Like someone on a real phone, the consumer says hello again
+ * when the trainee stays silent this long after it, up to this many times.
  */
-const GREETING_WARMUP_MS = 700;
+const GREETING_ANSWER_WAIT_MS = 5_000;
+const GREETING_REPEAT_MAX = 2;
+const GREETING_REPEAT_MESSAGE =
+    'Nobody has answered you yet. Say "Hello?" again, like someone checking whether anyone is on the line, and nothing else.';
 
 /**
  * After End call, how long the connection stays open for the trainee's
@@ -279,7 +282,8 @@ type CallEvent =
               | 'lead_answered_specialist'
               | 'transfer_completed'
               | 'agent_talked_on_connect'
-              | 'consumer_interrupted';
+              | 'consumer_interrupted'
+              | 'greeting_repeated';
           at: number;
       }
     | { type: 'agent_loudness'; rms: number; at: number }
@@ -437,6 +441,12 @@ export function useRoleplayRealtimeCall({
         null,
     );
     const stopRingbackRef = useRef<(() => void) | null>(null);
+    /** Stops the dial's ringback, held open to keep the speakers awake. */
+    const stopKeepAwakeRef = useRef<(() => void) | null>(null);
+    const helloRepeatTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+        null,
+    );
+    const helloRepeatsRef = useRef(0);
     const greetingMicTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
         null,
     );
@@ -511,9 +521,6 @@ export function useRoleplayRealtimeCall({
         /** Its transcript, held back until the greeting has been heard. */
         transcript: { text: string; at: number } | null;
     } | null>(null);
-    const greetingWarmupTimeoutRef = useRef<ReturnType<
-        typeof setTimeout
-    > | null>(null);
     const greetingWatchIntervalRef = useRef<ReturnType<
         typeof setInterval
     > | null>(null);
@@ -1133,6 +1140,85 @@ export function useRoleplayRealtimeCall({
         }, GREETING_WATCH_INTERVAL_MS);
     }, [isRemoteAudioPlaying, sampleReceivedGreeting]);
 
+    const stopHelloWatch = useCallback(() => {
+        if (helloRepeatTimeoutRef.current) {
+            clearTimeout(helloRepeatTimeoutRef.current);
+            helloRepeatTimeoutRef.current = null;
+        }
+
+        stopKeepAwakeRef.current?.();
+        stopKeepAwakeRef.current = null;
+    }, []);
+
+    /**
+     * After the greeting, waits for the trainee to answer it. If they stay
+     * silent they likely never heard it, so the consumer says hello again.
+     * Holds off while the consumer is talking or the greeting is still
+     * being retried or waiting for the audio to be turned on.
+     */
+    const watchForHelloAnswer = useCallback(() => {
+        const check = () => {
+            helloRepeatTimeoutRef.current = null;
+
+            const hasTraineeSpoken =
+                agentTurnRef.current !== null ||
+                pendingTranscriptsRef.current.size > 0 ||
+                transcriptRef.current.some((line) => line.speaker === 'agent');
+
+            if (
+                endingRef.current ||
+                hasTraineeSpoken ||
+                helloRepeatsRef.current >= GREETING_REPEAT_MAX
+            ) {
+                stopHelloWatch();
+                return;
+            }
+
+            if (
+                responseActiveRef.current ||
+                greetingRef.current ||
+                pendingGreetingRef.current
+            ) {
+                helloRepeatTimeoutRef.current = setTimeout(
+                    check,
+                    GREETING_ANSWER_WAIT_MS,
+                );
+                return;
+            }
+
+            helloRepeatsRef.current += 1;
+            logEvent({ type: 'greeting_repeated', at: msIntoCall() });
+            void audioContextRef.current?.resume();
+            remoteAudioElRef.current?.play().catch(() => {
+                setAudioBlocked(true);
+            });
+            sendEvent({
+                type: 'conversation.item.create',
+                item: {
+                    type: 'message',
+                    role: 'system',
+                    content: [
+                        { type: 'input_text', text: GREETING_REPEAT_MESSAGE },
+                    ],
+                },
+            });
+            sendEvent({ type: 'response.create' });
+            helloRepeatTimeoutRef.current = setTimeout(
+                check,
+                GREETING_ANSWER_WAIT_MS,
+            );
+        };
+
+        if (helloRepeatTimeoutRef.current) {
+            clearTimeout(helloRepeatTimeoutRef.current);
+        }
+
+        helloRepeatTimeoutRef.current = setTimeout(
+            check,
+            GREETING_ANSWER_WAIT_MS,
+        );
+    }, [logEvent, msIntoCall, sendEvent, stopHelloWatch]);
+
     /** The consumer picks up the phone ("Hello?"). */
     const sendGreeting = useCallback(() => {
         greetingRef.current = {
@@ -1213,6 +1299,7 @@ export function useRoleplayRealtimeCall({
             }
 
             releaseMic();
+            watchForHelloAnswer();
             return;
         }
 
@@ -1262,6 +1349,7 @@ export function useRoleplayRealtimeCall({
         sendEvent,
         sendGreeting,
         stopGreetingWatch,
+        watchForHelloAnswer,
     ]);
 
     const scheduleGreetingCheck = useCallback(
@@ -1313,7 +1401,7 @@ export function useRoleplayRealtimeCall({
             transferTimeoutRef,
             greetingMicTimeoutRef,
             greetingCheckTimeoutRef,
-            greetingWarmupTimeoutRef,
+            helloRepeatTimeoutRef,
         ]) {
             if (timeout.current) {
                 clearTimeout(timeout.current);
@@ -1322,6 +1410,9 @@ export function useRoleplayRealtimeCall({
         }
         stopRingbackRef.current?.();
         stopRingbackRef.current = null;
+        stopKeepAwakeRef.current?.();
+        stopKeepAwakeRef.current = null;
+        helloRepeatsRef.current = 0;
         specialistAudioRef.current?.pause();
         specialistAudioRef.current = null;
         window.speechSynthesis?.cancel();
@@ -2241,7 +2332,12 @@ export function useRoleplayRealtimeCall({
 
             pc.ontrack = (trackEvent) => {
                 const remoteStream = trackEvent.streams[0];
-                remoteAudio.srcObject = remoteStream;
+
+                // Reassigning the same stream restarts the element, which
+                // can swallow the start of the "Hello?".
+                if (remoteAudio.srcObject !== remoteStream) {
+                    remoteAudio.srcObject = remoteStream;
+                }
                 remotePlayback.play(trackEvent.track);
 
                 if (wiredRemoteStreamIdRef.current === remoteStream.id) {
@@ -2277,11 +2373,16 @@ export function useRoleplayRealtimeCall({
             dataChannel.addEventListener('open', () => {
                 setPhase('ringing');
 
-                const ringback = playRingback();
+                // Held open past the last ring so the speakers are still
+                // awake for the "Hello?"; stopped once it's been answered.
+                const ringback = playRingback({ holdOpen: true });
                 stopRingbackRef.current = ringback.stop;
+                stopKeepAwakeRef.current = ringback.stop;
 
+                // Picks up as the last ring goes quiet: the reply's own
+                // latency is the natural pause before "Hello?".
                 void Promise.all([
-                    ringback.finished,
+                    ringback.lastToneEnded,
                     remotePlayback.started,
                 ]).then(([, isPlaying]) => {
                     // Hung up or torn down while it was ringing.
@@ -2316,16 +2417,12 @@ export function useRoleplayRealtimeCall({
                         1000,
                     );
 
-                    // Only say hello once the trainee can hear it, and the
-                    // output has had a moment to wake up after the ring.
+                    // Only say hello once the trainee can hear it. The
+                    // held-open ringback keeps the output awake for it.
                     if (isPlaying) {
-                        greetingWarmupTimeoutRef.current = setTimeout(() => {
-                            greetingWarmupTimeoutRef.current = null;
-
-                            if (!endingRef.current) {
-                                sendGreeting();
-                            }
-                        }, GREETING_WARMUP_MS);
+                        if (!endingRef.current) {
+                            sendGreeting();
+                        }
                     } else {
                         pendingGreetingRef.current = true;
                         setAudioBlocked(true);

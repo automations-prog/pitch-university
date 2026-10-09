@@ -89,10 +89,12 @@ test('sanitizing drops unknown types and malformed events, and caps the count', 
 test('greeting checks are kept so silent greetings can be diagnosed', function () {
     $events = RoleplayDeliveryMetrics::sanitize([
         ['type' => 'greeting_checked', 'at' => 900, 'attempt' => 1, 'heard' => 0, 'heard_ms' => 50, 'peak_rms' => 0.0213, 'extra' => 'dropped'],
+        ['type' => 'greeting_repeated', 'at' => 6200],
     ]);
 
     expect($events)->toBe([
         ['type' => 'greeting_checked', 'at' => 900, 'attempt' => 1, 'heard' => 0, 'heard_ms' => 50, 'peak_rms' => 0.0213],
+        ['type' => 'greeting_repeated', 'at' => 6200],
     ]);
 });
 
