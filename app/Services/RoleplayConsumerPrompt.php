@@ -162,7 +162,7 @@ class RoleplayConsumerPrompt
         }
 
         if ($quirk !== null) {
-            $text .= "\nQuirk: {$quirk}. Let it show throughout the call.";
+            $text .= "\nQuirk: {$quirk}. Let it show throughout the call in what you say (\"Hold on, the TV's loud\"), never as sound: don't imitate noises, background sounds or effects with your voice.";
         }
 
         return $text;

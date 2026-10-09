@@ -90,6 +90,14 @@ const GREETING_DONE_GRACE_MS = 3_000;
  */
 const GREETING_MIN_HEARD_MS = 200;
 /**
+ * The page's own level meter on the consumer's stream can read silence for
+ * the first seconds of a call while the "Hello?" is playing, so it was
+ * asked for again and heard two or three times. The audio WebRTC actually
+ * received (its `totalAudioEnergy`) is checked this often as well, and
+ * either one hearing it is enough.
+ */
+const GREETING_STATS_INTERVAL_MS = 200;
+/**
  * The ringback plays on its own AudioContext, closed when it ends, and a
  * headset or speaker can take a moment to wake back up for the consumer's
  * audio. "Hello?" is short enough to be lost entirely in that gap, so the
@@ -493,6 +501,10 @@ export function useRoleplayRealtimeCall({
         itemId: string | null;
         /** How long the consumer's audio was above the speech level. */
         heardMs: number;
+        /** The same, from the audio WebRTC received. */
+        receivedHeardMs: number;
+        /** Received audio energy and duration so far, to diff against. */
+        receivedBaseline: { energy: number; seconds: number } | null;
         /** Whether the consumer's audio level could be read at all. */
         couldMeasure: boolean;
         peakRms: number;
@@ -1023,9 +1035,68 @@ export function useRoleplayRealtimeCall({
     }, [sendEvent]);
 
     /**
-     * Samples the consumer's audio level while the greeting plays. Without
-     * a running AudioContext the level can't be read, and the greeting
-     * counts as heard if the element is playing.
+     * Measures the audio WebRTC received since the last sample: its RMS
+     * from the change in `totalAudioEnergy` over `totalSamplesDuration`.
+     */
+    const sampleReceivedGreeting = useCallback(async () => {
+        const greeting = greetingRef.current;
+        const pc = peerConnectionRef.current;
+
+        if (!greeting || !pc) {
+            return;
+        }
+
+        const stats = await pc.getStats().catch(() => null);
+        let energy: number | null = null;
+        let seconds = 0;
+
+        stats?.forEach(
+            (report: {
+                type?: string;
+                kind?: string;
+                totalAudioEnergy?: number;
+                totalSamplesDuration?: number;
+            }) => {
+                if (
+                    report.type === 'inbound-rtp' &&
+                    report.kind === 'audio' &&
+                    report.totalAudioEnergy !== undefined
+                ) {
+                    energy = report.totalAudioEnergy;
+                    seconds = report.totalSamplesDuration ?? 0;
+                }
+            },
+        );
+
+        // A newer attempt started while the stats were read.
+        if (energy === null || greetingRef.current !== greeting) {
+            return;
+        }
+
+        const baseline = greeting.receivedBaseline;
+        greeting.receivedBaseline = { energy, seconds };
+
+        if (!baseline || seconds <= baseline.seconds) {
+            return;
+        }
+
+        const rms = Math.sqrt(
+            (energy - baseline.energy) / (seconds - baseline.seconds),
+        );
+        greeting.couldMeasure = true;
+        greeting.peakRms = Math.max(greeting.peakRms, rms);
+
+        if (rms > SPEECH_RMS_THRESHOLD && isRemoteAudioPlaying()) {
+            greeting.receivedHeardMs += Math.round(
+                (seconds - baseline.seconds) * 1000,
+            );
+        }
+    }, [isRemoteAudioPlaying]);
+
+    /**
+     * Samples the consumer's audio level while the greeting plays, from
+     * the page's level meter and from the audio WebRTC received. Without
+     * either the greeting counts as not heard and is retried.
      */
     const startGreetingWatch = useCallback(() => {
         if (greetingWatchIntervalRef.current) {
@@ -1033,8 +1104,14 @@ export function useRoleplayRealtimeCall({
         }
 
         const levels = new Uint8Array(512);
+        let lastStatsAt = 0;
 
         greetingWatchIntervalRef.current = setInterval(() => {
+            if (Date.now() - lastStatsAt >= GREETING_STATS_INTERVAL_MS) {
+                lastStatsAt = Date.now();
+                void sampleReceivedGreeting();
+            }
+
             const greeting = greetingRef.current;
             const analyser = remoteAnalyserRef.current;
             const audioContext = audioContextRef.current;
@@ -1054,7 +1131,7 @@ export function useRoleplayRealtimeCall({
                 greeting.heardMs += GREETING_WATCH_INTERVAL_MS;
             }
         }, GREETING_WATCH_INTERVAL_MS);
-    }, [isRemoteAudioPlaying]);
+    }, [isRemoteAudioPlaying, sampleReceivedGreeting]);
 
     /** The consumer picks up the phone ("Hello?"). */
     const sendGreeting = useCallback(() => {
@@ -1062,6 +1139,8 @@ export function useRoleplayRealtimeCall({
             attempt: (greetingRef.current?.attempt ?? 0) + 1,
             itemId: null,
             heardMs: 0,
+            receivedHeardMs: 0,
+            receivedBaseline: null,
             couldMeasure: false,
             peakRms: 0,
             transcript: null,
@@ -1095,15 +1174,16 @@ export function useRoleplayRealtimeCall({
             return;
         }
 
+        const heardMs = Math.max(greeting.heardMs, greeting.receivedHeardMs);
         const wasHeard =
-            greeting.couldMeasure && greeting.heardMs >= GREETING_MIN_HEARD_MS;
+            greeting.couldMeasure && heardMs >= GREETING_MIN_HEARD_MS;
 
         logEvent({
             type: 'greeting_checked',
             at: msIntoCall(),
             attempt: greeting.attempt,
             heard: wasHeard ? 1 : 0,
-            heard_ms: greeting.heardMs,
+            heard_ms: heardMs,
             peak_rms: Number(greeting.peakRms.toFixed(4)),
         });
 
@@ -1572,10 +1652,14 @@ export function useRoleplayRealtimeCall({
                 pendingTranscriptsRef.current.add(itemId);
                 itemStartedAtRef.current.set(itemId, secondsIntoCall());
 
-                // May be the consumer's echo: answered once its transcript
-                // shows it isn't.
-                if (commit?.mayBeEcho) {
-                    echoCheckItemsRef.current.set(itemId, commit.speechEvent);
+                // May be the consumer's echo, or a breath or noise while
+                // the consumer was already answering (that made them answer
+                // twice): answered once its transcript shows real words.
+                if (commit?.mayBeEcho || responseActiveRef.current) {
+                    echoCheckItemsRef.current.set(
+                        itemId,
+                        commit?.speechEvent ?? null,
+                    );
                     return;
                 }
 
@@ -1748,6 +1832,18 @@ export function useRoleplayRealtimeCall({
             }
 
             const text = (event.transcript as string | undefined)?.trim();
+
+            // A held turn with no words was noise: never answer it.
+            if (
+                type &&
+                AGENT_TRANSCRIPT_EVENTS.has(type) &&
+                !text &&
+                itemId &&
+                echoCheckItemsRef.current.has(itemId)
+            ) {
+                discardEchoTurn(itemId);
+                return;
+            }
 
             if (!type || !text) {
                 return;

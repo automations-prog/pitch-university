@@ -25,6 +25,15 @@ class RoleplayGrader
 
     private const string NEGATIVE = '/\b(no|nope|nah|dont|cant|wont)\b/';
 
+    /** "Parts A and B" as transcription writes it: "Part A and Part B", "A & B", "Medicare A and B". */
+    private const string PARTS_A_AND_B = '/\b(parts?|medicare) a,? (and|&) (part )?b\b/';
+
+    /** "Red, white and blue", with or without commas or the "and". */
+    private const string RED_WHITE_BLUE = '/red,? white,?( and| &)? blue/';
+
+    /** "America's Health", however it was transcribed ("Americas Health", "America Health"). */
+    private const string AMERICAS_HEALTH = '/\bamericas?[\s-]*health\b/';
+
     /** The agent's transfer ask, as the script words it. */
     private const string TRANSFER_ASK = '/few minutes|specialist is coming|coming on the line/';
 
@@ -59,9 +68,9 @@ class RoleplayGrader
 
         $checks = [
             $this->check('recorded_line', "Said you're on a recorded line with America's Health",
-                str_contains($agentText, 'recorded line') && (bool) preg_match('/americas? health/', $agentText)),
+                str_contains($agentText, 'recorded line') && (bool) preg_match(self::AMERICAS_HEALTH, $agentText)),
             $this->check('double_confirm', 'Asked about Parts A and B and double-confirmed the red, white and blue card',
-                (bool) preg_match('/parts? a (and|&) b/', $agentText) && (bool) preg_match('/red,? white,? (and|&) blue/', $agentText)),
+                (bool) preg_match(self::PARTS_A_AND_B, $agentText) && (bool) preg_match(self::RED_WHITE_BLUE, $agentText)),
             $this->check('state_zip', 'Confirmed state and ZIP',
                 str_contains($agentText, strtolower($lead['state'])) && $this->mentionsZip($agent, $lead['zip'])),
             $this->check('work_va', 'Asked about insurance through work or the VA',

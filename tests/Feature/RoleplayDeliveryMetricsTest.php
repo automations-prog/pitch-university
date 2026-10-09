@@ -13,7 +13,7 @@ test('pace, fillers, pauses, barge-ins and the opener are measured from the even
         ['type' => 'agent_speech', 'start' => 1500, 'end' => 13500],
         ['type' => 'consumer_speech', 'start' => 14000, 'end' => 16000],
         ['type' => 'objection_raised', 'id' => 'busy', 'at' => 15000],
-        ['type' => 'agent_speech', 'start' => 20000, 'end' => 26000],
+        ['type' => 'agent_speech', 'start' => 20500, 'end' => 26500],
         ['type' => 'consumer_speech', 'start' => 27000, 'end' => 31000],
         ['type' => 'agent_speech', 'start' => 29000, 'end' => 32000],
         ['type' => 'objection_resolved', 'id' => 'busy', 'at' => 27000],
@@ -29,7 +29,7 @@ test('pace, fillers, pauses, barge-ins and the opener are measured from the even
     expect($metrics['wpm'])->toBe(94)
         ->and($metrics['fillers_per_100'])->toBe(6.1)
         ->and($metrics['opener_delay_ms'])->toBe(500)
-        ->and($metrics['longest_gap_ms'])->toBe(4000)
+        ->and($metrics['longest_gap_ms'])->toBe(4500)
         ->and($metrics['gaps_over_threshold'])->toBe(1)
         ->and($metrics['gaps_after_objection'])->toBe(1)
         ->and($metrics['barge_ins'])->toBe(1)

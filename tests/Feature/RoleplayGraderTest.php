@@ -94,6 +94,23 @@ test('the transfer permission check does not apply to DQ and DNC personas', func
         ->and(array_column($result['checks'], 'passed', 'key')['transfer_permission'])->toBeNull();
 });
 
+test('the opener checks accept how transcription writes the script', function (string $opener, string $card) {
+    [, $checks] = gradedCall(transcript: ["[0:05] agent: {$opener}", "[0:12] agent: {$card}"]);
+
+    expect($checks['recorded_line'])->toBeTrue()
+        ->and($checks['double_confirm'])->toBeTrue();
+})->with([
+    ["I'm with Americas Health on a recorded line. You still have Medicare Part A and Part B?", 'That is the red white and blue card?'],
+    ['This is America Health on a recorded line. You have your Medicare A & B?', 'The red, white, blue card, correct?'],
+]);
+
+test('the opener checks still fail when the script was skipped', function () {
+    [, $checks] = gradedCall(transcript: ['[0:05] agent: Hi, you have Medicare, right?', '[0:12] agent: The blue card?']);
+
+    expect($checks['recorded_line'])->toBeFalse()
+        ->and($checks['double_confirm'])->toBeFalse();
+});
+
 test('a benefit claim without may or maybe fails the hedging check', function () {
     [, $checks] = gradedCall(transcript: ['[0:20] agent: You are ENTITLED to some additional food benefits and you qualify for more.']);
 

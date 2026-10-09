@@ -19,10 +19,10 @@ return [
         // this many wpm outside the range costs one point.
         'pace_min_wpm' => 130,
         'pace_max_wpm' => 185,
-        'pace_wpm_per_point' => 15,
+        'pace_wpm_per_point' => 20,
 
         // Silence between the consumer finishing and the agent starting.
-        'dead_air_ms' => 3000,
+        'dead_air_ms' => 4000,
 
         // Filler words ("um", "uh", ...) per 100 agent words that still earn a 3.
         'fillers_per_100_ok' => 3,

@@ -102,7 +102,7 @@ test('only the stage criteria may come back unscored', function () {
         && $request['text']['format']['schema']['properties']['tonality']['properties']['score']['type'] === 'integer');
 });
 
-test('pace allows confident fast talkers and loses a point per 15 wpm outside the range', function (int $wpm, int $score) {
+test('pace allows confident fast talkers and loses a point per 20 wpm outside the range', function (int $wpm, int $score) {
     fakeGraderReply(aiScores(4));
     $session = gradableSession();
     $session->update([
@@ -113,7 +113,7 @@ test('pace allows confident fast talkers and loses a point per 15 wpm outside th
     GradeRoleplayDelivery::dispatchSync($session);
 
     expect(collect($session->fresh()->delivery['criteria'])->firstWhere('key', 'pace')['score'])->toBe($score);
-})->with([[175, 5], [185, 5], [200, 4], [230, 2], [120, 4]]);
+})->with([[175, 5], [185, 5], [205, 4], [225, 3], [230, 2], [120, 4]]);
 
 test('when the AI review fails the measured criteria are still saved', function () {
     Http::fake([RESPONSES_URL => Http::response([], 500)]);
