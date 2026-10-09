@@ -72,8 +72,19 @@ test('AI scores outside 1 to 5 are clamped', function (int $returned, int $saved
 
     GradeRoleplayDelivery::dispatchSync($session);
 
-    expect(collect($session->fresh()->delivery['criteria'])->firstWhere('key', 'tonality')['score'])->toBe($saved);
+    expect(collect($session->fresh()->delivery['criteria'])->firstWhere('key', 'composure')['score'])->toBe($saved);
 })->with([[99, 5], [-3, 1]]);
+
+test('tonality never scores below 2 and the rubric tells the AI to grade it leniently', function () {
+    fakeGraderReply(aiScores(1));
+    $session = gradableSession();
+
+    GradeRoleplayDelivery::dispatchSync($session);
+
+    expect(collect($session->fresh()->delivery['criteria'])->firstWhere('key', 'tonality')['score'])->toBe(2);
+
+    Http::assertSent(fn (Request $request) => str_contains($request['input'][0]['content'], 'Be especially lenient on tonality'));
+});
 
 test('a call that never reached a transfer leaves the handoff unscored and out of the overall', function () {
     fakeGraderReply([...aiScores(4), 'transfer_handoff' => ['score' => null, 'feedback' => 'The call ended in a DQ, so there was no transfer.']]);
