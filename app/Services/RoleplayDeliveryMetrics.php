@@ -31,6 +31,9 @@ class RoleplayDeliveryMetrics
         'agent_loudness' => ['at', 'rms'],
         // Whether the consumer's "Hello?" was heard, to diagnose silent greetings.
         'greeting_checked' => ['at', 'attempt', 'heard', 'heard_ms', 'peak_rms'],
+        // A trainee turn dropped as the consumer's echo, and what the mic really applied.
+        'echo_discarded' => ['at'],
+        'audio_checked' => ['at', 'echo_cancellation', 'noise_suppression', 'auto_gain_control'],
     ];
 
     public const int MAX_EVENTS = 5000;

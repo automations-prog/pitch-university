@@ -148,6 +148,42 @@ const BARGE_IN_RMS_THRESHOLD = 0.05;
 const BARGE_IN_HOLD_MS = 600;
 const BARGE_IN_QUIET_RESET_MS = 400;
 
+/**
+ * Echo cancellation never removes all of the consumer's voice from the
+ * mic, least of all on laptop speakers, and what's left read as the
+ * trainee talking: the consumer then answered its own echo ("Morning." →
+ * "Warning."). While the consumer is audible, and for `ECHO_TAIL_MS`
+ * after, the mic has to beat the echo expected from the consumer's level
+ * by `ECHO_MARGIN` to count as the trainee.
+ *
+ * How much of the consumer leaks into the mic (the echo ratio) is learned
+ * from the call itself, starting at `ECHO_RATIO_INITIAL`, and the gate
+ * never rises above `ECHO_GATE_MAX_RMS` so a real barge-in still counts.
+ * While the consumer is talking and the trainee isn't, the input buffer is
+ * cleared every `ECHO_CLEAR_MS` so the echo never reaches the model, and
+ * the mic is turned down to `RECORDING_ECHO_DUCK_GAIN` in the recording so
+ * the consumer isn't heard twice.
+ */
+const ECHO_TAIL_MS = 400;
+const ECHO_MARGIN = 2.5;
+const ECHO_RATIO_INITIAL = 0.15;
+const ECHO_RATIO_MAX = 0.5;
+const ECHO_RATIO_SMOOTHING = 0.05;
+const ECHO_GATE_MAX_RMS = 0.1;
+const ECHO_CLEAR_MS = 500;
+const RECORDING_ECHO_DUCK_GAIN = 0.15;
+const RECORDING_GAIN_TIME_CONSTANT_S = 0.03;
+
+/**
+ * A turn that started while the consumer was audible is answered only once
+ * its transcript is in, and dropped if it mostly repeats what the consumer
+ * just said: that's the consumer's echo, not the trainee. Words match when
+ * they're within an edit distance of a third of their length.
+ */
+const ECHO_TRANSCRIPT_MATCH_RATIO = 0.6;
+const ECHO_TRANSCRIPT_MAX_WORDS = 8;
+const ECHO_TRANSCRIPT_RECENT_LINES = 2;
+
 /** Tags the replies we ask for, so an error can be traced back to one. */
 const REPLY_EVENT_ID_PREFIX = 'reply_';
 const ACTIVE_RESPONSE_ERROR_CODE = 'conversation_already_has_active_response';
@@ -239,6 +275,14 @@ type CallEvent =
           at: number;
       }
     | { type: 'agent_loudness'; rms: number; at: number }
+    | { type: 'echo_discarded'; at: number }
+    | {
+          type: 'audio_checked';
+          at: number;
+          echo_cancellation: number;
+          noise_suppression: number;
+          auto_gain_control: number;
+      }
     | {
           type: 'greeting_checked';
           at: number;
@@ -261,6 +305,60 @@ function rmsOf(
     }
 
     return Math.sqrt(sumSquares / levels.length);
+}
+
+function wordsOf(text: string): string[] {
+    return text
+        .toLowerCase()
+        .replace(/[^a-z0-9' ]/g, ' ')
+        .split(/\s+/)
+        .filter(Boolean);
+}
+
+function editDistance(a: string, b: string): number {
+    let previous = Array.from({ length: b.length + 1 }, (_, i) => i);
+
+    for (let i = 1; i <= a.length; i++) {
+        const current = [i];
+
+        for (let j = 1; j <= b.length; j++) {
+            current[j] = Math.min(
+                previous[j] + 1,
+                current[j - 1] + 1,
+                previous[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1),
+            );
+        }
+        previous = current;
+    }
+
+    return previous[b.length];
+}
+
+/**
+ * Whether a short trainee turn is mostly the consumer's recent words heard
+ * back through the mic. Transcription garbles echo, so words match loosely.
+ */
+function isEchoOfConsumer(text: string, consumerLines: string[]): boolean {
+    const words = wordsOf(text);
+    const consumerWords = consumerLines.flatMap(wordsOf);
+
+    if (
+        words.length === 0 ||
+        words.length > ECHO_TRANSCRIPT_MAX_WORDS ||
+        consumerWords.length === 0
+    ) {
+        return false;
+    }
+
+    const matched = words.filter((word) =>
+        consumerWords.some(
+            (consumerWord) =>
+                editDistance(word, consumerWord) <=
+                Math.max(1, Math.floor(word.length / 3)),
+        ),
+    ).length;
+
+    return matched / words.length >= ECHO_TRANSCRIPT_MATCH_RATIO;
 }
 
 function formatOffset(totalSeconds: number): string {
@@ -358,7 +456,21 @@ export function useRoleplayRealtimeCall({
     const agentTurnRef = useRef<{
         loudMs: number;
         lastLoudAt: number;
+        /** It started while the consumer was audible, so it may be echo. */
+        mayBeEcho: boolean;
     } | null>(null);
+    /** The turn being committed, read when the commit lands. */
+    const nextCommitRef = useRef<{
+        mayBeEcho: boolean;
+        speechEvent: CallEvent | null;
+    } | null>(null);
+    /**
+     * Committed turns held back from a reply until their transcript is
+     * checked for echo, with their speech event to drop if it is.
+     */
+    const echoCheckItemsRef = useRef(new Map<string, CallEvent | null>());
+    /** The trainee's mic into the recording, turned down while the consumer talks. */
+    const micRecordingGainRef = useRef<GainNode | null>(null);
     /** The mic is off the call for good (the specialist joined). */
     const micOffCallRef = useRef(false);
     /** A turn ended while the consumer was still answering; reply after. */
@@ -665,13 +777,17 @@ export function useRoleplayRealtimeCall({
             return;
         }
 
+        let speechEvent: CallEvent | null = null;
+
         if (startedAt !== null) {
-            logEvent({
+            speechEvent = {
                 type: 'agent_speech',
                 start: startedAt,
                 end: turn.lastLoudAt,
-            });
+            };
+            logEvent(speechEvent);
         }
+        nextCommitRef.current = { mayBeEcho: turn.mayBeEcho, speechEvent };
         sendEvent({ type: 'input_audio_buffer.commit' });
     }, [logEvent, sendEvent]);
 
@@ -698,9 +814,62 @@ export function useRoleplayRealtimeCall({
         let quietSince: number | null = null;
         let talkOverLoudMs = 0;
         let talkOverQuietMs = 0;
+        const remoteLevels = new Uint8Array(512);
+        const recentRemoteRms: number[] = [];
+        let echoRatio = ECHO_RATIO_INITIAL;
+        let firstLoudInEcho = false;
+        let wasConsumerAudible = false;
+        let lastEchoClearAt = 0;
 
         agentTurnWatchIntervalRef.current = setInterval(() => {
             const now = msIntoCall();
+            const rms = rmsOf(mic, levels);
+
+            // The consumer's loudest over the echo tail: their echo can
+            // reach the mic a moment after they stop.
+            const remote = remoteAnalyserRef.current;
+            recentRemoteRms.push(remote ? rmsOf(remote, remoteLevels) : 0);
+
+            if (
+                recentRemoteRms.length >
+                ECHO_TAIL_MS / AGENT_TURN_WATCH_INTERVAL_MS
+            ) {
+                recentRemoteRms.shift();
+            }
+
+            const remotePeak = Math.max(...recentRemoteRms);
+            const isConsumerAudible = remotePeak > SPEECH_RMS_THRESHOLD;
+            const turnThreshold = isConsumerAudible
+                ? Math.min(
+                      ECHO_GATE_MAX_RMS,
+                      Math.max(
+                          AGENT_TURN_RMS_THRESHOLD,
+                          echoRatio * remotePeak * ECHO_MARGIN,
+                      ),
+                  )
+                : AGENT_TURN_RMS_THRESHOLD;
+            const isTraineeTalking =
+                agentTurnRef.current !== null || startLoudMs > 0;
+
+            // Learn how much of the consumer leaks into the mic, only while
+            // the trainee isn't talking.
+            if (isConsumerAudible && !isTraineeTalking) {
+                echoRatio +=
+                    (Math.min(ECHO_RATIO_MAX, rms / remotePeak) - echoRatio) *
+                    ECHO_RATIO_SMOOTHING;
+            }
+
+            const recordingGain = micRecordingGainRef.current;
+
+            if (recordingGain) {
+                recordingGain.gain.setTargetAtTime(
+                    isConsumerAudible && !isTraineeTalking
+                        ? RECORDING_ECHO_DUCK_GAIN
+                        : 1,
+                    recordingGain.context.currentTime,
+                    RECORDING_GAIN_TIME_CONSTANT_S,
+                );
+            }
 
             // Not on the call yet (greeting), or no longer (specialist).
             if (
@@ -711,11 +880,24 @@ export function useRoleplayRealtimeCall({
                 endAgentTurn();
                 startLoudMs = 0;
                 firstLoudAt = null;
+                wasConsumerAudible = isConsumerAudible;
                 return;
             }
 
-            const rms = rmsOf(mic, levels);
-            const isLoud = rms > AGENT_TURN_RMS_THRESHOLD;
+            // Keep the consumer's echo out of the model: clear it while
+            // they talk, and once more when their echo tail ends.
+            if (
+                !isTraineeTalking &&
+                (isConsumerAudible
+                    ? now - lastEchoClearAt >= ECHO_CLEAR_MS
+                    : wasConsumerAudible)
+            ) {
+                sendEvent({ type: 'input_audio_buffer.clear' });
+                lastEchoClearAt = now;
+            }
+            wasConsumerAudible = isConsumerAudible;
+
+            const isLoud = rms > turnThreshold;
             const turn = agentTurnRef.current;
 
             if (turn) {
@@ -727,7 +909,10 @@ export function useRoleplayRealtimeCall({
                     quietSince = now;
                 }
             } else if (isLoud) {
-                firstLoudAt ??= now;
+                if (firstLoudAt === null) {
+                    firstLoudAt = now;
+                    firstLoudInEcho = isConsumerAudible;
+                }
                 startLoudMs += AGENT_TURN_WATCH_INTERVAL_MS;
                 startQuietMs = 0;
                 quietSince = null;
@@ -736,6 +921,7 @@ export function useRoleplayRealtimeCall({
                     agentTurnRef.current = {
                         loudMs: startLoudMs,
                         lastLoudAt: now,
+                        mayBeEcho: firstLoudInEcho || isConsumerAudible,
                     };
                     agentSpeechStartRef.current = firstLoudAt;
                     startLoudMs = 0;
@@ -769,7 +955,7 @@ export function useRoleplayRealtimeCall({
                 return;
             }
 
-            if (rms > BARGE_IN_RMS_THRESHOLD) {
+            if (rms > Math.max(BARGE_IN_RMS_THRESHOLD, turnThreshold)) {
                 talkOverLoudMs += AGENT_TURN_WATCH_INTERVAL_MS;
                 talkOverQuietMs = 0;
             } else {
@@ -794,6 +980,28 @@ export function useRoleplayRealtimeCall({
         sendEvent,
         stopAgentTurnWatch,
     ]);
+
+    /**
+     * Drops a trainee turn that was the consumer's echo: it leaves the
+     * conversation so the model never answers it, and its speech segment
+     * leaves the delivery log.
+     */
+    const discardEchoTurn = useCallback(
+        (itemId: string) => {
+            const speechEvent = echoCheckItemsRef.current.get(itemId);
+            echoCheckItemsRef.current.delete(itemId);
+            sendEvent({ type: 'conversation.item.delete', item_id: itemId });
+
+            if (speechEvent) {
+                eventsRef.current = eventsRef.current.filter(
+                    (event) => event !== speechEvent,
+                );
+            }
+
+            logEvent({ type: 'echo_discarded', at: msIntoCall() });
+        },
+        [logEvent, msIntoCall, sendEvent],
+    );
 
     /**
      * Asks the consumer to answer the trainee, after the line they're on
@@ -1086,6 +1294,9 @@ export function useRoleplayRealtimeCall({
         greetingRef.current = null;
         discardedItemsRef.current.clear();
         pendingTranscriptsRef.current.clear();
+        echoCheckItemsRef.current.clear();
+        nextCommitRef.current = null;
+        micRecordingGainRef.current = null;
         awaitingFinalCommitRef.current = false;
         wiredRemoteStreamIdRef.current = null;
         remoteAnalyserRef.current = null;
@@ -1355,10 +1566,20 @@ export function useRoleplayRealtimeCall({
                 typeof event.item_id === 'string' ? event.item_id : null;
 
             if (type === 'input_audio_buffer.committed' && itemId) {
+                const commit = nextCommitRef.current;
+                nextCommitRef.current = null;
                 awaitingFinalCommitRef.current = false;
-                spokeSinceAgentTurnRef.current = false;
                 pendingTranscriptsRef.current.add(itemId);
                 itemStartedAtRef.current.set(itemId, secondsIntoCall());
+
+                // May be the consumer's echo: answered once its transcript
+                // shows it isn't.
+                if (commit?.mayBeEcho) {
+                    echoCheckItemsRef.current.set(itemId, commit.speechEvent);
+                    return;
+                }
+
+                spokeSinceAgentTurnRef.current = false;
 
                 if (!endingRef.current && !pendingEndReasonRef.current) {
                     requestReply();
@@ -1369,6 +1590,12 @@ export function useRoleplayRealtimeCall({
             if (type === AGENT_TRANSCRIPT_FAILED_EVENT) {
                 if (itemId) {
                     pendingTranscriptsRef.current.delete(itemId);
+                }
+
+                // Nothing could be made of a turn that was probably echo.
+                if (itemId && echoCheckItemsRef.current.has(itemId)) {
+                    discardEchoTurn(itemId);
+                    return;
                 }
                 // eslint-disable-next-line no-console
                 console.warn('[roleplay-call] transcription failed', event);
@@ -1574,11 +1801,33 @@ export function useRoleplayRealtimeCall({
             }
 
             if (AGENT_TRANSCRIPT_EVENTS.has(type)) {
+                if (itemId && echoCheckItemsRef.current.has(itemId)) {
+                    const recentConsumerLines = transcriptRef.current
+                        .filter((line) => line.speaker === 'consumer')
+                        .slice(-ECHO_TRANSCRIPT_RECENT_LINES)
+                        .map((line) => line.text);
+
+                    if (isEchoOfConsumer(text, recentConsumerLines)) {
+                        discardEchoTurn(itemId);
+                        return;
+                    }
+
+                    echoCheckItemsRef.current.delete(itemId);
+                    appendLine('agent', text, at);
+                    spokeSinceAgentTurnRef.current = false;
+
+                    if (!endingRef.current && !pendingEndReasonRef.current) {
+                        requestReply();
+                    }
+                    return;
+                }
+
                 appendLine('agent', text, at);
             }
         },
         [
             appendLine,
+            discardEchoTurn,
             handleFunctionCall,
             logEvent,
             markCutOff,
@@ -1868,7 +2117,10 @@ export function useRoleplayRealtimeCall({
             const destination = audioContext.createMediaStreamDestination();
             recordingDestinationRef.current = destination;
             const micSource = audioContext.createMediaStreamSource(localStream);
-            micSource.connect(destination);
+            const micRecordingGain = audioContext.createGain();
+            micSource.connect(micRecordingGain);
+            micRecordingGain.connect(destination);
+            micRecordingGainRef.current = micRecordingGain;
 
             const micAnalyser = audioContext.createAnalyser();
             micAnalyser.fftSize = 512;
@@ -1944,6 +2196,22 @@ export function useRoleplayRealtimeCall({
                     recorder.start(1000);
                     callStartedAtRef.current = Date.now();
                     eventsRef.current = [];
+
+                    // What the browser really applied to the mic, to
+                    // diagnose echo: a constraint can be silently ignored.
+                    const micSettings =
+                        localStream.getAudioTracks()[0]?.getSettings() ?? {};
+                    logEvent({
+                        type: 'audio_checked',
+                        at: 0,
+                        echo_cancellation: micSettings.echoCancellation
+                            ? 1
+                            : 0,
+                        noise_suppression: micSettings.noiseSuppression
+                            ? 1
+                            : 0,
+                        auto_gain_control: micSettings.autoGainControl ? 1 : 0,
+                    });
                     startLevelWatch();
                     startAgentTurnWatch();
                     setPhase('active');
@@ -2011,6 +2279,7 @@ export function useRoleplayRealtimeCall({
     }, [
         cleanup,
         handleServerEvent,
+        logEvent,
         secondsIntoCall,
         sendGreeting,
         sessionId,

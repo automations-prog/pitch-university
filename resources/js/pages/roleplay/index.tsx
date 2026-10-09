@@ -357,7 +357,8 @@ function LiveFooter({
                 <div className={row}>
                     <p className="text-muted-foreground text-sm">
                         Your browser will ask for the microphone. You read the
-                        script; the consumer answers.
+                        script; the consumer answers. Use headphones so the
+                        consumer doesn't hear their own echo.
                     </p>
                     <Button className={brandButtonClass} onClick={onDial}>
                         <PhoneCall />

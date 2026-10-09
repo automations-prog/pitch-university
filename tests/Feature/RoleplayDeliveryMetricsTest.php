@@ -96,6 +96,19 @@ test('greeting checks are kept so silent greetings can be diagnosed', function (
     ]);
 });
 
+test('echo diagnostics are kept so echo on a call can be diagnosed', function () {
+    $events = RoleplayDeliveryMetrics::sanitize([
+        ['type' => 'audio_checked', 'at' => 0, 'echo_cancellation' => 1, 'noise_suppression' => 1, 'auto_gain_control' => 0],
+        ['type' => 'echo_discarded', 'at' => 5600],
+        ['type' => 'audio_checked', 'at' => 0, 'echo_cancellation' => 'yes', 'noise_suppression' => 1, 'auto_gain_control' => 1],
+    ]);
+
+    expect($events)->toBe([
+        ['type' => 'audio_checked', 'at' => 0, 'echo_cancellation' => 1, 'noise_suppression' => 1, 'auto_gain_control' => 0],
+        ['type' => 'echo_discarded', 'at' => 5600],
+    ]);
+});
+
 test('each time the consumer was cut off counts as a barge-in, without counting the same one twice', function () {
     $events = RoleplayDeliveryMetrics::sanitize([
         ['type' => 'consumer_speech', 'start' => 0, 'end' => 4000],
