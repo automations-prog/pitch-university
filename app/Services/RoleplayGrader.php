@@ -40,8 +40,12 @@ class RoleplayGrader
     /** Objections answered with the busy rebuttal. */
     private const array BUSY_OBJECTIONS = ['busy', 'too_many_calls'];
 
-    /** A consumer saying they're busy, for when the tool call was missed. */
-    private const string BUSY = '/\b(busy|call (me )?back|cant talk|bad time|not a good time|driving|in the middle of)\b/';
+    /**
+     * A consumer saying they're busy, for when the tool call was missed.
+     * Covers the scripted busy lines ("I'm at the doctor, I can't talk")
+     * and the ways people repeat it ("I don't have time", "I gotta go").
+     */
+    private const string BUSY = '/\b(busy|call (me )?back|cant talk|bad time|(not|isnt) a good time|(dont|do not) have (the )?time|(got|have) no time|driving|in the middle of|at (the )?(doctors?|hospital|work|store)|(gotta|got to|have to|need to) go|in a (hurry|rush))\b/';
 
     /**
      * A consumer asking not to be called, or threatening, per the DNC

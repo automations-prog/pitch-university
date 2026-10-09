@@ -73,7 +73,7 @@ class RoleplayConsumerPrompt
             Near the end the caller will ask you to give a Medicare specialist a few minutes. Answer that question clearly with a yes or a no, in your own words. While the transfer rings, the caller will make small talk: chat back casually in a sentence or two, and don't raise new objections. If a message says a specialist has joined the line and asks who they're speaking with, answer with your full name and nothing else.
 
             # Tools
-            - Call `objection_raised` with the objection id every time you voice one of your objections, including when you repeat one, and `objection_resolved` once the caller has answered it well enough that you move on.
+            - Call `objection_raised` with the objection id every time you voice one of your objections, including when you repeat one, and `objection_resolved` once the caller has answered it well enough that you move on. Saying you're busy, can't talk or don't have time again is the `busy` objection again, however you word it.
             - Call `patience_changed` every time your patience goes down, with the new value and a few words on why.
             - Call `hang_up` only when your patience hits zero, right after you say a short goodbye line.
             Always say your line first, then call any tools in that same response. Never respond with only a tool call. Tool calls are silent. Never mention them out loud.

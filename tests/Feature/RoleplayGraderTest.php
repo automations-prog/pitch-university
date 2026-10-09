@@ -163,14 +163,29 @@ test('a second busy after the rebuttal makes Not Interested the correct code', f
     'coded transfer' => ['transfer', false],
 ]);
 
-test('a repeated busy is caught from the transcript when the objection was not logged', function () {
-    [, , $correct] = gradedCall(transcript: [
-        "[0:03] consumer: I'm busy right now, call me back later.",
+test('a repeated busy is caught from the transcript when the objection was not logged', function (string $first, string $second) {
+    [$passed, , $correct] = gradedCall(['disposition' => 'not_interested'], transcript: [
+        "[0:03] consumer: {$first}",
         "[0:05] agent: Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
-        "[0:10] consumer: I told you, I can't talk right now.",
+        "[0:10] consumer: {$second}",
+    ], transferClickedAt: null, events: []);
+
+    expect($correct)->toBe('not_interested')->and($passed)->toBeTrue();
+})->with([
+    ["I'm busy right now, call me back later.", "I told you, I can't talk right now."],
+    ["I'm at the doctor, I can't talk.", "Honey, I really don't have time for this."],
+    ["I'm literally driving right now, man.", 'Look, I gotta go.'],
+    ["This isn't a good time.", "I'm at work, I'm in a hurry."],
+]);
+
+test('a single busy line in the transcript keeps the persona outcome', function () {
+    [, , $correct] = gradedCall(transcript: [
+        "[0:03] consumer: I don't have time for a long call.",
+        "[0:05] agent: Oh, let me assure you this will be SUPER brief. I just have 3 SUPER quick questions and I'll bring the agent on.",
+        '[0:10] consumer: Okay, go ahead.',
     ], events: []);
 
-    expect($correct)->toBe('not_interested');
+    expect($correct)->toBe('transfer');
 });
 
 test('a busy objection said only once keeps the persona outcome', function () {
