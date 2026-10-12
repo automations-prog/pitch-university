@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, setLayoutProps, usePage } from '@inertiajs/react';
 import {
     ChevronRight,
     Mic,
@@ -39,7 +39,9 @@ import { brandButtonClass } from '@/lib/brand-theme';
 import { xsrfHeader } from '@/lib/csrf';
 import {
     RoleplayContentContext,
+    RoleplayVerticalContext,
     useRoleplayContent,
+    useRoleplayVertical,
 } from '@/lib/roleplay-content';
 import {
     OUTCOME_LABELS,
@@ -48,27 +50,35 @@ import {
     type PublicPersona,
     type RoleplayContent,
     type RoleplaySessionResult,
+    type RoleplayVertical,
 } from '@/lib/roleplay-data';
 import { generatePersona, type Persona } from '@/lib/roleplay-persona';
+import { roleplayRoutes } from '@/lib/roleplay-routes';
 import { dashboard } from '@/routes';
-import { index as roleplayIndex } from '@/routes/roleplay';
-import {
-    show as showSession,
-    store as storeSession,
-} from '@/routes/roleplay/sessions';
 
 type ActiveSession =
     | { key: number; kind: 'live'; persona: PublicPersona }
     | { key: number; kind: 'mock'; persona: Persona };
 
 export default function RoleplayIndex({
+    vertical,
     content,
     recentSessions,
 }: {
+    vertical: RoleplayVertical;
     content: RoleplayContent;
     recentSessions: RoleplaySessionResult[];
 }) {
     const { auth } = usePage().props;
+    const routes = roleplayRoutes(vertical.id);
+
+    setLayoutProps({
+        breadcrumbs: [
+            { title: 'Dashboard', href: dashboard() },
+            { title: `${vertical.label} Roleplay`, href: routes.index() },
+        ],
+    });
+
     const agentName = auth.user.name.split(' ')[0];
     const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel>(1);
     const [practiceWithoutMic, setPracticeWithoutMic] = useState(false);
@@ -97,7 +107,7 @@ export default function RoleplayIndex({
         setStartError(null);
 
         try {
-            const response = await fetch(storeSession.url(), {
+            const response = await fetch(routes.sessions.store.url(), {
                 method: 'POST',
                 body: JSON.stringify({ level }),
                 headers: {
@@ -137,57 +147,59 @@ export default function RoleplayIndex({
     const changeLevel = () => setSession(null);
 
     return (
-        <RoleplayContentContext value={content}>
-            <Head title="Roleplay" />
+        <RoleplayVerticalContext value={vertical}>
+            <RoleplayContentContext value={content}>
+                <Head title={`${vertical.label} Roleplay`} />
 
-            <div className="flex h-full flex-1 flex-col gap-6 p-4">
-                <div className="space-y-0.5">
-                    <h2 className="text-xl font-semibold tracking-tight">
-                        Roleplay
-                    </h2>
-                    <p className="text-muted-foreground text-sm">
-                        {session
-                            ? 'Follow the script, rebut every objection, and code the call correctly.'
-                            : 'Pick a difficulty and practice a Medicare call against an AI consumer.'}
-                    </p>
-                </div>
+                <div className="flex h-full flex-1 flex-col gap-6 p-4">
+                    <div className="space-y-0.5">
+                        <h2 className="text-xl font-semibold tracking-tight">
+                            Roleplay
+                        </h2>
+                        <p className="text-muted-foreground text-sm">
+                            {session
+                                ? 'Follow the script, rebut every objection, and code the call correctly.'
+                                : `Pick a difficulty and practice ${vertical.id === 'aca' ? 'an' : 'a'} ${vertical.label} call against an AI consumer.`}
+                        </p>
+                    </div>
 
-                {session?.kind === 'live' && (
-                    <LiveRoleplaySession
-                        key={session.key}
-                        persona={session.persona}
-                        agentName={agentName}
-                        onRetry={() => retry(session.persona.level)}
-                        onChangeLevel={changeLevel}
-                    />
-                )}
-
-                {session?.kind === 'mock' && (
-                    <MockRoleplaySession
-                        key={session.key}
-                        persona={session.persona}
-                        agentName={agentName}
-                        onRetry={() => retry(session.persona.level.level)}
-                        onChangeLevel={changeLevel}
-                    />
-                )}
-
-                {!session && (
-                    <>
-                        <LevelPicker
-                            selectedLevel={selectedLevel}
-                            onSelect={setSelectedLevel}
-                            onStart={() => void startSession(selectedLevel)}
-                            isStarting={isStarting}
-                            error={startError}
-                            practiceWithoutMic={practiceWithoutMic}
-                            onPracticeWithoutMicChange={setPracticeWithoutMic}
+                    {session?.kind === 'live' && (
+                        <LiveRoleplaySession
+                            key={session.key}
+                            persona={session.persona}
+                            agentName={agentName}
+                            onRetry={() => retry(session.persona.level)}
+                            onChangeLevel={changeLevel}
                         />
-                        <RecentCalls sessions={recentSessions} />
-                    </>
-                )}
-            </div>
-        </RoleplayContentContext>
+                    )}
+
+                    {session?.kind === 'mock' && (
+                        <MockRoleplaySession
+                            key={session.key}
+                            persona={session.persona}
+                            agentName={agentName}
+                            onRetry={() => retry(session.persona.level.level)}
+                            onChangeLevel={changeLevel}
+                        />
+                    )}
+
+                    {!session && (
+                        <>
+                            <LevelPicker
+                                selectedLevel={selectedLevel}
+                                onSelect={setSelectedLevel}
+                                onStart={() => void startSession(selectedLevel)}
+                                isStarting={isStarting}
+                                error={startError}
+                                practiceWithoutMic={practiceWithoutMic}
+                                onPracticeWithoutMicChange={setPracticeWithoutMic}
+                            />
+                            <RecentCalls sessions={recentSessions} />
+                        </>
+                    )}
+                </div>
+            </RoleplayContentContext>
+        </RoleplayVerticalContext>
     );
 }
 
@@ -217,10 +229,12 @@ function LiveRoleplaySession({
     onChangeLevel: () => void;
 }) {
     const { levels, scriptSections } = useRoleplayContent();
+    const vertical = useRoleplayVertical();
     const call = useRoleplayRealtimeCall({
         sessionId: persona.id,
         level: persona.level,
         startingPatience: persona.patience,
+        vertical,
     });
     const [scriptStep, setScriptStep] = useState(0);
     const transferAskStep = scriptSections.findIndex(
@@ -293,6 +307,7 @@ function LiveRoleplaySession({
                         <AudioBlockedNotice onEnable={call.enableAudio} />
                     )}
                     <LiveFooter
+                        handoff={vertical.handoff}
                         phase={call.phase}
                         transferStage={call.transferStage}
                         error={call.error}
@@ -329,6 +344,7 @@ function AudioBlockedNotice({ onEnable }: { onEnable: () => void }) {
 }
 
 function LiveFooter({
+    handoff,
     phase,
     transferStage,
     error,
@@ -339,6 +355,7 @@ function LiveFooter({
     onCompleteTransfer,
     onRetry,
 }: {
+    handoff: RoleplayVertical['handoff'];
     phase: RoleplayCallPhase;
     transferStage: TransferStage | null;
     error: string | null;
@@ -399,15 +416,19 @@ function LiveFooter({
                 <div className={row}>
                     <p className="text-muted-foreground text-sm">
                         {transferStage === 'ringing'
-                            ? "It's ringing. Fluff away and keep them talking until the specialist picks up."
-                            : 'Stay quiet. Complete the transfer once you have heard both parties speak.'}
+                            ? `It's ringing. Fluff away and keep them talking until the ${handoff === 'warm' ? 'licensed agent' : 'specialist'} picks up.`
+                            : handoff === 'warm'
+                              ? `Introduce them: "Hi, I have (name) from (state), please take the call." Leave once you hear both of them speaking.`
+                              : 'Stay quiet. Complete the transfer once you have heard both parties speak.'}
                     </p>
                     <Button
                         className={brandButtonClass}
                         onClick={onCompleteTransfer}
                     >
                         <PhoneOutgoing />
-                        Complete transfer
+                        {handoff === 'warm'
+                            ? 'Leave conference'
+                            : 'Complete transfer'}
                     </Button>
                 </div>
             );
@@ -416,8 +437,8 @@ function LiveFooter({
                 <div className={row}>
                     <p className="text-muted-foreground text-sm">
                         {canTransfer
-                            ? 'Ask for the transfer, then stop and wait for a yes before you click.'
-                            : 'Tap Next on the script as you go. Transfer unlocks at the transfer ask.'}
+                            ? `Ask for the transfer, then stop and wait for ${handoff === 'warm' ? 'an okay' : 'a yes'} before you click.`
+                            : `Tap Next on the script as you go. ${handoff === 'warm' ? 'Conference' : 'Transfer'} unlocks at the transfer ask.`}
                     </p>
                     <Button
                         className={brandButtonClass}
@@ -425,7 +446,7 @@ function LiveFooter({
                         onClick={onTransfer}
                     >
                         <PhoneForwarded />
-                        Transfer
+                        {handoff === 'warm' ? 'Conference' : 'Transfer'}
                     </Button>
                 </div>
             );
@@ -448,6 +469,7 @@ function MockRoleplaySession({
     onChangeLevel: () => void;
 }) {
     const { scriptSections } = useRoleplayContent();
+    const vertical = useRoleplayVertical();
     const call = useRoleplayCall(persona, agentName, scriptSections);
     const [isWrappingUp, setIsWrappingUp] = useState(false);
     const isOver = call.endReason !== null;
@@ -530,8 +552,9 @@ function MockRoleplaySession({
                 ) : !nextSection ? (
                     <div className={row}>
                         <p className="text-muted-foreground text-sm">
-                            Script complete. Stay quiet while the agent
-                            connects.
+                            {vertical.handoff === 'warm'
+                                ? 'Script complete. Introduce them to the licensed agent, then leave.'
+                                : 'Script complete. Stay quiet while the agent connects.'}
                         </p>
                         <Button
                             className={brandButtonClass}
@@ -577,6 +600,8 @@ function MockRoleplaySession({
 }
 
 function RecentCalls({ sessions }: { sessions: RoleplaySessionResult[] }) {
+    const vertical = useRoleplayVertical();
+
     if (sessions.length === 0) {
         return null;
     }
@@ -594,7 +619,9 @@ function RecentCalls({ sessions }: { sessions: RoleplaySessionResult[] }) {
                 {sessions.map((session) => (
                     <Link
                         key={session.id}
-                        href={showSession(session.id)}
+                        href={roleplayRoutes(vertical.id).sessions.show(
+                            session.id,
+                        )}
                         className="hover:bg-muted/50 -mx-2 flex flex-wrap items-center justify-between gap-2 rounded-md px-2 py-2 text-sm"
                     >
                         <div className="min-w-0">
@@ -628,10 +655,3 @@ function RecentCalls({ sessions }: { sessions: RoleplaySessionResult[] }) {
         </Card>
     );
 }
-
-RoleplayIndex.layout = {
-    breadcrumbs: [
-        { title: 'Dashboard', href: dashboard() },
-        { title: 'Roleplay', href: roleplayIndex() },
-    ],
-};

@@ -21,38 +21,49 @@ use App\Models\RoleplaySession;
 class RoleplayGrader
 {
     /** Words a consumer uses to say yes to the transfer ask. */
-    private const string AFFIRMATIVE = '/\b(yes|yeah|yep|yup|ok|okay|sure|alright|all right|fine|go ahead|uh-huh|mm-hmm|i guess)\b/';
+    protected const string AFFIRMATIVE = '/\b(yes|yeah|yep|yup|ok|okay|sure|alright|all right|fine|go ahead|uh-huh|mm-hmm|i guess)\b/';
 
-    private const string NEGATIVE = '/\b(no|nope|nah|dont|cant|wont)\b/';
+    protected const string NEGATIVE = '/\b(no|nope|nah|dont|cant|wont)\b/';
 
     /** "Parts A and B" as transcription writes it: "Part A and Part B", "A & B", "Medicare A and B". */
-    private const string PARTS_A_AND_B = '/\b(parts?|medicare) a,? (and|&) (part )?b\b/';
+    protected const string PARTS_A_AND_B = '/\b(parts?|medicare) a,? (and|&) (part )?b\b/';
 
     /** "Red, white and blue", with or without commas or the "and". */
-    private const string RED_WHITE_BLUE = '/red,? white,?( and| &)? blue/';
+    protected const string RED_WHITE_BLUE = '/red,? white,?( and| &)? blue/';
 
     /** "America's Health", however it was transcribed ("Americas Health", "America Health"). */
-    private const string AMERICAS_HEALTH = '/\bamericas?[\s-]*health\b/';
+    protected const string AMERICAS_HEALTH = '/\bamericas?[\s-]*health\b/';
 
     /** The agent's transfer ask, as the script words it. */
-    private const string TRANSFER_ASK = '/few minutes|specialist is coming|coming on the line/';
+    protected const string TRANSFER_ASK = '/few minutes|specialist is coming|coming on the line/';
 
     /** Objections answered with the busy rebuttal. */
-    private const array BUSY_OBJECTIONS = ['busy', 'too_many_calls'];
+    protected const array BUSY_OBJECTIONS = ['busy', 'too_many_calls'];
 
     /**
      * A consumer saying they're busy, for when the tool call was missed.
      * Covers the scripted busy lines ("I'm at the doctor, I can't talk")
      * and the ways people repeat it ("I don't have time", "I gotta go").
      */
-    private const string BUSY = '/\b(busy|call (me )?back|cant talk|bad time|(not|isnt) a good time|(dont|do not) have (the )?time|(got|have) no time|driving|in the middle of|at (the )?(doctors?|hospital|work|store)|(gotta|got to|have to|need to) go|in a (hurry|rush))\b/';
+    protected const string BUSY = '/\b(busy|call (me )?back|cant talk|bad time|(not|isnt) a good time|(dont|do not) have (the )?time|(got|have) no time|driving|in the middle of|at (the )?(doctors?|hospital|work|store)|(gotta|got to|have to|need to) go|in a (hurry|rush))\b/';
 
     /**
      * A consumer asking not to be called, or threatening, per the DNC
      * disposition. Swearing or complaining about calls alone doesn't count,
      * and "don't call me back" is a busy, not a DNC.
      */
-    private const string DNC_REQUEST = '/\b(stop|quit) calling\b|\bnever call\b|\b(dont|do not) call (me|here|this number)\b(?! back)|\btake me off\b|\bremove me\b|\b(do not|dont) call list\b|\bdnc\b|\b(sue|lawyer|attorney)\b|\breport (you|this)\b/';
+    protected const string DNC_REQUEST = '/\b(stop|quit) calling\b|\bnever call\b|\b(dont|do not) call (me|here|this number)\b(?! back)|\btake me off\b|\bremove me\b|\b(do not|dont) call list\b|\bdnc\b|\b(sue|lawyer|attorney)\b|\breport (you|this)\b/';
+
+    /**
+     * The checks that cover qualifying the lead, for the delivery score's
+     * qualifying accuracy.
+     *
+     * @return list<string>
+     */
+    public function qualifyingCheckKeys(): array
+    {
+        return ['double_confirm', 'state_zip', 'work_va'];
+    }
 
     /**
      * @return array{checks: list<Check>, passed: bool, correct_disposition: string, correct_reason: string|null}
@@ -120,7 +131,7 @@ class RoleplayGrader
      * @param  list<Event>  $events
      * @return array{0: string, 1: string|null}
      */
-    private function correctDisposition(RoleplaySession $session, array $lines, array $events): array
+    protected function correctDisposition(RoleplaySession $session, array $lines, array $events): array
     {
         $consumer = array_values(array_filter($lines, fn (array $line): bool => $line['role'] === 'consumer'));
 
@@ -145,13 +156,13 @@ class RoleplayGrader
      * @param  list<Line>  $lines
      * @param  list<Event>  $events
      */
-    private function saidBusyAfterRebuttal(array $lines, array $events): bool
+    protected function saidBusyAfterRebuttal(array $lines, array $events): bool
     {
         $busyAt = [];
         $agentSpokeAt = [];
 
         foreach ($events as $event) {
-            if ($event['type'] === 'objection_raised' && in_array($event['id'] ?? null, self::BUSY_OBJECTIONS, true)) {
+            if ($event['type'] === 'objection_raised' && in_array($event['id'] ?? null, static::BUSY_OBJECTIONS, true)) {
                 $busyAt[] = $event['at'] ?? 0;
             }
 
@@ -184,7 +195,7 @@ class RoleplayGrader
      * @param  list<int>  $times
      * @param  list<int>  $replies
      */
-    private function repeatsAfterReply(array $times, array $replies): bool
+    protected function repeatsAfterReply(array $times, array $replies): bool
     {
         if (count($times) < 2) {
             return false;
@@ -211,7 +222,7 @@ class RoleplayGrader
      * @param  list<Event>  $events
      * @return array{fluffed: bool, silent_on_connect: bool|null, completed_after_both_spoke: bool}
      */
-    private function transferHandoff(array $events): array
+    protected function transferHandoff(array $events): array
     {
         $firstAt = function (string $type) use ($events): ?int {
             foreach ($events as $event) {
@@ -268,7 +279,7 @@ class RoleplayGrader
      *
      * @param  list<Line>  $lines
      */
-    private function hasTransferPermission(array $lines, ?int $transferClickedAt): bool
+    protected function hasTransferPermission(array $lines, ?int $transferClickedAt): bool
     {
         if ($transferClickedAt === null) {
             return false;
@@ -309,7 +320,7 @@ class RoleplayGrader
      * A reply that opens with a yes counts ("Sure, why not"), otherwise any
      * no wins ("I guess not, no").
      */
-    private function isAffirmative(string $text): bool
+    protected function isAffirmative(string $text): bool
     {
         $opening = ltrim($text, " \t.,!?-");
 
@@ -327,7 +338,7 @@ class RoleplayGrader
      *
      * @param  list<Line>  $agent
      */
-    private function hedgesBenefitClaims(array $agent): bool
+    protected function hedgesBenefitClaims(array $agent): bool
     {
         foreach ($agent as $line) {
             foreach (preg_split('/[.!?]+/', $this->normalize($line['text'])) ?: [] as $sentence) {
@@ -350,7 +361,7 @@ class RoleplayGrader
      *
      * @param  list<Line>  $agent
      */
-    private function mentionsZip(array $agent, string $zip): bool
+    protected function mentionsZip(array $agent, string $zip): bool
     {
         foreach ($agent as $line) {
             if (str_contains((string) preg_replace('/\D/', '', $line['text']), $zip)) {
@@ -361,7 +372,7 @@ class RoleplayGrader
         return false;
     }
 
-    private function normalize(string $text): string
+    protected function normalize(string $text): string
     {
         return strtolower(str_replace(['’', "'"], '', $text));
     }
@@ -369,7 +380,7 @@ class RoleplayGrader
     /**
      * @return Check
      */
-    private function check(string $key, string $label, ?bool $passed): array
+    protected function check(string $key, string $label, ?bool $passed): array
     {
         return ['key' => $key, 'label' => $label, 'passed' => $passed];
     }

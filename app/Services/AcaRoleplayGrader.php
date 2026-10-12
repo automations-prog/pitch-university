@@ -1,0 +1,480 @@
+<?php
+
+namespace App\Services;
+
+use App\Enums\Outcome;
+use App\Models\RoleplaySession;
+
+/**
+ * Deterministic checks over a finished ACA call, one per required step in
+ * `ai-roleplay/aca/script.md` plus the warm handoff, the instant fails and
+ * the forbidden words.
+ *
+ * Coverage is the disqualifier here, the reverse of Medicare: the agent
+ * confirms no Medicare, Medicaid or work insurance, twice, as two separate
+ * asks. The correct outcome is decided from what happened on the call
+ * (a DNC request, a hang-up, a repeated call-back ask), not only from the
+ * persona.
+ *
+ * @phpstan-import-type Line from RoleplayGrader
+ * @phpstan-import-type Check from RoleplayGrader
+ * @phpstan-import-type Event from RoleplayGrader
+ */
+class AcaRoleplayGrader extends RoleplayGrader
+{
+    protected const array BUSY_OBJECTIONS = ['busy_callback'];
+
+    /** "America's Health" or a DBA on the script. "American Health" is wrong. */
+    private const string COMPANY = '/\bamericas?[\s-]*health\b|\bhealth benefits? guide\b|\bbenefits? link\b/';
+
+    /** "ACA", "the Affordable Care Act", "Obamacare" and "Marketplace" all count. */
+    private const string ACA_MENTION = '/affordable care act|\ba\.? ?c\.? ?a\b|obama ?care|market ?place/';
+
+    /** A coverage check names all three: Medicare, Medicaid and work insurance. */
+    private const string MEDICARE = '/\bmedicare\b/';
+
+    private const string MEDICAID = '/\bmedicaid\b/';
+
+    private const string WORK_INSURANCE = '/\b(work|employer|job|employment)\b/';
+
+    private const string AGE_19 = '/\b19\b|\bnineteen\b/';
+
+    /** The agent's transfer ask, as the script words it. */
+    private const string ACA_TRANSFER_ASK = '/senior agent|licensed agent|(get|bring|have) (them|someone|somebody|him|her|the agent|an agent) on|on the line/';
+
+    /** The DQ line, or anything telling the consumer they don't qualify. */
+    private const string DQ_LINE = '/\bnot (be )?qualified\b|\bwouldnt (be )?qualif|\bdont qualify\b|\bnot eligible\b/';
+
+    /** The DNC disclaimer, or anything promising no more calls. */
+    private const string DNC_DISCLAIMER = '/do not call|dont call|\bdnc\b|further calls|remove you|take you off|no more calls/';
+
+    /** A DNC request with one of these is conditional ("if this is a scam, don't call me"). */
+    private const string CONDITIONAL = '/\b(if|unless|otherwise|or else)\b/';
+
+    /** Rules where a preceding negative rescues the line ("I can't guarantee that"). */
+    private const array NEGATABLE_INSTANT_FAILS = ['guarantee', 'dollar_amount'];
+
+    private const string NEGATIVE_BEFORE = '/\b(cant|cannot|can not|dont|do not|wont|will not|not|never|no)\b/';
+
+    /**
+     * Instant fails from `04_PROMPTS_ACA.md`, matched against the agent's
+     * normalised line (lowercase, apostrophes removed).
+     *
+     * @var array<string, array{pattern: string, reason: string}>
+     */
+    private const array INSTANT_FAILS = [
+        'free_money' => ['pattern' => '/\bfree\s+(money|cash)\b/', 'reason' => 'Promised free money'],
+        'dollar_amount' => ['pattern' => '/\byou(ll| will|re going to| are going to)\s+(get|receive)\s+(up to\s+)?(\$\s?\d|\d[\d,]*\s*dollars)/', 'reason' => 'Promised a dollar amount'],
+        'send_money' => ['pattern' => '/\b(well|ill|theyll|we will|i will|they will)\s+(send|mail)\s+you\s+(a\s+)?(check|cheque|card|money)\b/', 'reason' => 'Promised to send money or a card'],
+        'government' => ['pattern' => '/\b(im|i am|were|we are|this is)\s+(\w+\s+)?(calling\s+)?(with|from)\s+(the\s+)?(government|federal government|marketplace|healthcare\.? ?gov|medicaid|social security)\b/', 'reason' => 'Claimed to be the government or the Marketplace'],
+        'approved' => ['pattern' => '/\byou(ve| have)\s+(been\s+)?(approved|pre-?approved|qualified)\b/', 'reason' => 'Told the consumer they are approved or qualified'],
+        'guarantee' => ['pattern' => '/\bguarantee(d)?\b[^.?!]{0,40}\b(approv|qualif|benefit|subsid|money|coverage)/', 'reason' => 'Guaranteed benefits or approval'],
+        'won' => ['pattern' => '/\byou(ve| have)\s+(won|been awarded)\b/', 'reason' => 'Told the consumer they won something'],
+        'financial_details' => ['pattern' => '/\b(whats|what is|read|give me|can i (get|have)|provide|spell out|tell me)\b[^.?!]{0,40}\b(social security( number)?|ssn|bank|account number|routing number|card number|credit card|debit card)\b/', 'reason' => 'Asked for a Social Security number or financial details'],
+        'pitch_perfect' => ['pattern' => '/\bpitch\s*perfect\b/', 'reason' => 'Named Pitch Perfect on the call'],
+        'not_sales' => ['pattern' => '/\bthis\s+(is\s+|isnt\s+)?(not\s+)?(a\s+)?(sales|sale)\s+call\b/', 'reason' => "Claimed it's not a sales call"],
+    ];
+
+    /**
+     * Forbidden words whose forms differ from the listed word. "Check" only
+     * counts as a noun ("a check"), never "let me check".
+     *
+     * @var array<string, string>
+     */
+    private const array FORBIDDEN_WORD_FORMS = [
+        'cheque' => 'cheques?|(a|the|your|that|any) checks?',
+        'grocery' => 'grocer(y|ies)',
+        'amount' => 'amounts?',
+        'mortgage' => 'mortgages?',
+        'total' => 'totals?',
+    ];
+
+    public function __construct(private readonly AcaRoleplayScript $script) {}
+
+    public function qualifyingCheckKeys(): array
+    {
+        return ['confirm_state', 'first_coverage_check', 'age_19', 'double_confirm'];
+    }
+
+    public function grade(RoleplaySession $session, ?int $transferClickedAt): array
+    {
+        $lines = $this->parseTranscript((string) $session->transcript);
+        $agent = array_values(array_filter($lines, fn (array $line): bool => $line['role'] === 'agent'));
+        $agentText = $this->normalize(implode("\n", array_column($agent, 'text')));
+        $persona = $session->persona;
+        $lead = $persona['lead'];
+        $state = $persona['actual_state'] ?? $lead['state'];
+        /** @var list<Event> $events */
+        $events = $session->events ?? [];
+
+        [$correctDisposition, $correctReason, $dncRequestIndex] = $this->correctAcaDisposition($session, $lines, $events, $transferClickedAt);
+        $expectsTransfer = $correctDisposition === Outcome::Transfer->value;
+        $isDisqualified = $persona['dq_trap'] !== null;
+
+        $coverageAsks = $this->coverageAsks($lines);
+        $handoff = $expectsTransfer ? $this->transferHandoff($events) : null;
+        $instantFail = $this->instantFail($agent);
+        [$pitchWords, $holdWords] = $this->forbiddenWordsUsed($agent, $transferClickedAt);
+
+        $checks = [
+            $this->check('correct_person', 'Confirmed you had the right person',
+                $this->asksForLead($agent, $lead['name'])),
+            $this->check('company_recorded_line', "Said you're with America's Health on a recorded line",
+                str_contains($agentText, 'recorded line') && (bool) preg_match(self::COMPANY, $agentText)),
+            $this->check('aca_mention', 'Explained the subsidy through the Affordable Care Act',
+                (bool) preg_match(self::ACA_MENTION, $agentText)),
+            $this->check('confirm_state', "Confirmed the state ({$state})",
+                str_contains($agentText, strtolower($state))),
+            $this->check('first_coverage_check', 'Asked: no Medicare, Medicaid or work insurance',
+                $coverageAsks !== []),
+            $this->check('age_19', 'Confirmed they are 19 or older',
+                (bool) preg_match(self::AGE_19, $agentText)),
+            $this->check('double_confirm', 'Double-confirmed no Medicare, Medicaid or work insurance as a separate ask, after their first answer',
+                $expectsTransfer || $transferClickedAt !== null ? $this->hasSeparateDoubleConfirm($lines, $coverageAsks) : null),
+            $this->check('verbal_consent', 'Heard them say okay to the transfer before conferencing',
+                $expectsTransfer ? $this->hasTransferConsent($lines, $transferClickedAt) : null),
+            $this->check('fluffed', 'Kept them talking while the conference rang',
+                $handoff['fluffed'] ?? null),
+            $this->check('handoff_names_state', 'Introduced them to the licensed agent, naming their state',
+                $expectsTransfer ? $this->handoffNamesState($lines, $events, $state) : null),
+            $this->check('completed_after_both_spoke', 'Left the conference after the consumer and the licensed agent both spoke',
+                $handoff['completed_after_both_spoke'] ?? null),
+            $this->check('no_dq_transfer', 'Did not conference a disqualified consumer',
+                $isDisqualified ? $transferClickedAt === null : null),
+            $this->check('dq_line', 'Read the DQ line',
+                $correctDisposition === Outcome::Dq->value ? (bool) preg_match(self::DQ_LINE, $agentText) : null),
+            $this->check('dnc_respected', 'Read the DNC disclaimer and ended without a rebuttal',
+                $dncRequestIndex === null ? null : $this->respectedDnc($lines, $dncRequestIndex)),
+            $this->check('no_promises', 'Kept benefit talk hedged ("may", "might", "could"), with no promises',
+                $this->hedgesPromises($agent)),
+            $this->check('forbidden_words_pitch', $pitchWords === []
+                ? 'Kept forbidden words out of the pitch'
+                : 'Kept forbidden words out of the pitch (you said: '.implode(', ', $pitchWords).')',
+                $pitchWords === []),
+            $this->check('forbidden_words_hold', $holdWords === []
+                ? 'Kept forbidden words out of the small talk on hold (coaching note)'
+                : 'Kept forbidden words out of the small talk on hold (coaching note, you said: '.implode(', ', $holdWords).')',
+                $transferClickedAt === null ? null : $holdWords === []),
+            $this->check('no_instant_fail', $instantFail === null
+                ? 'No instant-fail lines'
+                : "No instant-fail lines (instant fail: {$instantFail})",
+                $instantFail === null),
+            $this->check('disposition', 'Coded the call correctly',
+                $session->disposition === $correctDisposition),
+            $this->check('patience', "Didn't run out of patience",
+                $session->end_reason !== 'hung_up'),
+        ];
+
+        $byKey = array_column($checks, 'passed', 'key');
+
+        return [
+            'checks' => $checks,
+            'passed' => $byKey['disposition'] === true
+                && $byKey['patience'] === true
+                && $byKey['no_instant_fail'] === true
+                && $byKey['no_dq_transfer'] !== false
+                && $byKey['dnc_respected'] !== false
+                && $byKey['verbal_consent'] !== false
+                && ($expectsTransfer ? $byKey['double_confirm'] === true : true)
+                && $byKey['completed_after_both_spoke'] !== false,
+            'correct_disposition' => $correctDisposition,
+            'correct_reason' => $correctReason,
+        ];
+    }
+
+    /**
+     * The disposition the call should be coded as, from what happened:
+     * a real DNC request wins, then a hang-up (Hung-Up Transfer once the
+     * conference was clicked, Not Interested before), then a second
+     * call-back ask after the rebuttal, then the persona's outcome.
+     *
+     * @param  list<Line>  $lines
+     * @param  list<Event>  $events
+     * @return array{0: string, 1: string|null, 2: int|null}
+     */
+    private function correctAcaDisposition(RoleplaySession $session, array $lines, array $events, ?int $transferClickedAt): array
+    {
+        foreach ($lines as $index => $line) {
+            if ($line['role'] === 'consumer' && $this->isDncRequest($line['text'])) {
+                return [Outcome::Dnc->value, 'They asked not to be called, so this call is a DNC: read the DNC disclaimer, end the call and code it DNC. No rebuttal.', $index];
+            }
+        }
+
+        if ($session->end_reason === 'hung_up') {
+            return $transferClickedAt === null
+                ? ['not_interested', 'They hung up before you conferenced the licensed agent, so the call is Not Interested.', null]
+                : ['hung_up_transfer', 'They hung up after you clicked conference, so the call is a Hung-Up Transfer.', null];
+        }
+
+        if ($this->saidBusyAfterRebuttal($lines, $events)) {
+            return ['call_back', 'They asked to be called back again after your rebuttal, so the call should be coded Call Back.', null];
+        }
+
+        return [$session->expected_outcome->value, null, null];
+    }
+
+    /**
+     * A direct, unconditional request not to be called. "If this is a scam,
+     * don't call me again" is not one, and neither is swearing.
+     */
+    private function isDncRequest(string $text): bool
+    {
+        foreach (preg_split('/[.!?]+/', $this->normalize($text)) ?: [] as $sentence) {
+            if (preg_match(self::DNC_REQUEST, $sentence) && ! preg_match(self::CONDITIONAL, $sentence)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * The next thing the agent said after a DNC request has to be the
+     * disclaimer, not a rebuttal.
+     *
+     * @param  list<Line>  $lines
+     */
+    private function respectedDnc(array $lines, int $requestIndex): bool
+    {
+        foreach (array_slice($lines, $requestIndex + 1) as $line) {
+            if ($line['role'] === 'agent') {
+                return (bool) preg_match(self::DNC_DISCLAIMER, $this->normalize($line['text']));
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * The agent turns that ask about all three coverages, by transcript
+     * index.
+     *
+     * @param  list<Line>  $lines
+     * @return list<int>
+     */
+    private function coverageAsks(array $lines): array
+    {
+        $asks = [];
+
+        foreach ($lines as $index => $line) {
+            $text = $this->normalize($line['text']);
+
+            if ($line['role'] === 'agent'
+                && preg_match(self::MEDICARE, $text)
+                && preg_match(self::MEDICAID, $text)
+                && preg_match(self::WORK_INSURANCE, $text)) {
+                $asks[] = $index;
+            }
+        }
+
+        return $asks;
+    }
+
+    /**
+     * Two coverage asks in separate agent turns, with the consumer
+     * answering in between. Rolling everything into one sentence asked
+     * once doesn't count.
+     *
+     * @param  list<Line>  $lines
+     * @param  list<int>  $asks
+     */
+    private function hasSeparateDoubleConfirm(array $lines, array $asks): bool
+    {
+        if (count($asks) < 2) {
+            return false;
+        }
+
+        foreach ($asks as $position => $first) {
+            foreach (array_slice($asks, $position + 1) as $second) {
+                foreach (array_slice($lines, $first + 1, $second - $first - 1) as $between) {
+                    if ($between['role'] === 'consumer') {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * The agent asked for the lead by first or last name.
+     *
+     * @param  list<Line>  $agent
+     */
+    private function asksForLead(array $agent, string $name): bool
+    {
+        $text = $this->normalize(implode("\n", array_column($agent, 'text')));
+
+        foreach (explode(' ', strtolower($name)) as $part) {
+            if ($part !== '' && preg_match('/\b'.preg_quote($part, '/').'\b/', $text)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * A consumer okay after the agent's last transfer ask and before the
+     * conference click. Silence is not consent.
+     *
+     * @param  list<Line>  $lines
+     */
+    private function hasTransferConsent(array $lines, ?int $transferClickedAt): bool
+    {
+        if ($transferClickedAt === null) {
+            return false;
+        }
+
+        $askedAt = null;
+
+        foreach ($lines as $index => $line) {
+            if ($line['at'] > $transferClickedAt) {
+                break;
+            }
+
+            if ($line['role'] === 'agent' && preg_match(self::ACA_TRANSFER_ASK, $this->normalize($line['text']))) {
+                $askedAt = $index;
+            }
+        }
+
+        if ($askedAt === null) {
+            return false;
+        }
+
+        foreach (array_slice($lines, $askedAt + 1) as $line) {
+            if ($line['at'] > $transferClickedAt) {
+                break;
+            }
+
+            if ($line['role'] === 'consumer') {
+                return $this->isAffirmative($this->normalize($line['text']));
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Once the licensed agent joined, the agent named the consumer's state
+     * to them ("I have Ashley from Texas, please take the call").
+     *
+     * @param  list<Line>  $lines
+     * @param  list<Event>  $events
+     */
+    private function handoffNamesState(array $lines, array $events, string $state): bool
+    {
+        $joinedAt = null;
+
+        foreach ($events as $event) {
+            if ($event['type'] === 'specialist_joined') {
+                $joinedAt = intdiv($event['at'] ?? 0, 1000);
+
+                break;
+            }
+        }
+
+        if ($joinedAt === null) {
+            return false;
+        }
+
+        foreach ($lines as $line) {
+            if ($line['role'] === 'agent' && $line['at'] >= $joinedAt && str_contains($this->normalize($line['text']), strtolower($state))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * No sentence tells the lead they qualify, are eligible or will get
+     * something without a hedge. The DQ line and other negatives aren't
+     * promises.
+     *
+     * @param  list<Line>  $agent
+     */
+    private function hedgesPromises(array $agent): bool
+    {
+        foreach ($agent as $line) {
+            foreach (preg_split('/[.!?]+/', $this->normalize($line['text'])) ?: [] as $sentence) {
+                $promises = preg_match('/\byou(re| are)? (qualify|eligible|entitled)\b|\byou(ll| will| are going to|re going to) (get|receive|be getting)\b|\byou qualify\b/', $sentence);
+
+                if ($promises && ! preg_match('/\b(may|maybe|might|could)\b/', $sentence) && ! preg_match(self::NEGATIVE_BEFORE, $sentence)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * The first instant-fail line the agent said, as "reason: “quote”".
+     *
+     * @param  list<Line>  $agent
+     */
+    private function instantFail(array $agent): ?string
+    {
+        foreach ($agent as $line) {
+            foreach (preg_split('/(?<=[.!?])\s+/', $this->normalize($line['text'])) ?: [] as $sentence) {
+                foreach (self::INSTANT_FAILS as $key => $rule) {
+                    if (! preg_match($rule['pattern'], $sentence, $match, PREG_OFFSET_CAPTURE)) {
+                        continue;
+                    }
+
+                    $before = substr($sentence, 0, $match[0][1]);
+
+                    if (in_array($key, self::NEGATABLE_INSTANT_FAILS, true) && preg_match(self::NEGATIVE_BEFORE, $before)) {
+                        continue;
+                    }
+
+                    return "{$rule['reason']}: “{$line['text']}”";
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Forbidden words the agent said, split by where: in the pitch (before
+     * the conference click) and in the small talk while it rang. Only the
+     * agent's own words count.
+     *
+     * @param  list<Line>  $agent
+     * @return array{0: list<string>, 1: list<string>}
+     */
+    private function forbiddenWordsUsed(array $agent, ?int $transferClickedAt): array
+    {
+        $pitch = [];
+        $hold = [];
+
+        foreach ($agent as $line) {
+            $text = $this->normalize($line['text']);
+            $onHold = $transferClickedAt !== null && $line['at'] >= $transferClickedAt;
+
+            foreach ($this->script->forbiddenWords() as $word) {
+                $form = self::FORBIDDEN_WORD_FORMS[$word] ?? preg_quote($word, '/');
+
+                if (! preg_match('/\b('.$form.')\b/', $text)) {
+                    continue;
+                }
+
+                if ($onHold) {
+                    $hold[$word] = $word;
+                } else {
+                    $pitch[$word] = $word;
+                }
+            }
+        }
+
+        return [array_values($pitch), array_values($hold)];
+    }
+
+    protected function normalize(string $text): string
+    {
+        return strtolower(str_replace(['’', '‘', "'", '`'], '', $text));
+    }
+}

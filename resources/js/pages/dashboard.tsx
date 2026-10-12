@@ -53,7 +53,8 @@ import {
     create as usersCreate,
     index as usersIndex,
 } from '@/routes/admin/users';
-import { index as roleplayIndex } from '@/routes/roleplay';
+import { index as acaRoleplayIndex } from '@/routes/aca-roleplay';
+import { index as medicareRoleplayIndex } from '@/routes/medicare-roleplay';
 import {
     Award,
     GraduationCap,
@@ -455,7 +456,7 @@ export default function Dashboard(props: Props) {
                     </form>
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
                     <QuickActionCard
                         title="Review candidates"
                         description={`${screenings.stats.awaiting_review} ready now`}
@@ -475,11 +476,18 @@ export default function Dashboard(props: Props) {
                         onClick={() => selectTab('training')}
                     />
                     <QuickActionCard
-                        title="Start a roleplay"
+                        title="Start a Medicare roleplay"
                         description="Practice a call"
                         tile={<Play className="size-4 fill-current" />}
                         color="teal"
-                        href={roleplayIndex()}
+                        href={medicareRoleplayIndex()}
+                    />
+                    <QuickActionCard
+                        title="Start an ACA roleplay"
+                        description="Practice a call"
+                        tile={<Play className="size-4 fill-current" />}
+                        color="rose"
+                        href={acaRoleplayIndex()}
                     />
                     <QuickActionCard
                         title="Invite an agent"

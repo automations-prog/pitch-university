@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RoleplayVertical;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LicenseController;
 use App\Http\Controllers\RoleplayCallController;
@@ -38,14 +39,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('{track}/{module}/quiz', [TrainingController::class, 'submitQuiz'])->name('quiz.store');
         });
 
-    Route::prefix('roleplay')->name('roleplay.')->group(function () {
-        Route::get('/', [RoleplayController::class, 'index'])->name('index');
-        Route::post('sessions', [RoleplayController::class, 'store'])->middleware('throttle:roleplay-sessions')->name('sessions.store');
-        Route::get('sessions/{roleplaySession}', [RoleplayController::class, 'show'])->name('sessions.show');
-        Route::get('sessions/{roleplaySession}/recording', [RoleplayController::class, 'recording'])->name('sessions.recording');
-        Route::post('sessions/{roleplaySession}/call', [RoleplayCallController::class, 'session'])->name('call.session');
-        Route::post('sessions/{roleplaySession}/call/complete', [RoleplayCallController::class, 'complete'])->name('call.complete');
-    });
+    foreach (RoleplayVertical::cases() as $vertical) {
+        Route::prefix($vertical->routePrefix())->name($vertical->routePrefix().'.')->group(function () use ($vertical) {
+            Route::get('/', [RoleplayController::class, 'index'])->defaults('vertical', $vertical->value)->name('index');
+            Route::post('sessions', [RoleplayController::class, 'store'])->defaults('vertical', $vertical->value)->middleware('throttle:roleplay-sessions')->name('sessions.store');
+            Route::get('sessions/{roleplaySession}', [RoleplayController::class, 'show'])->defaults('vertical', $vertical->value)->name('sessions.show');
+            Route::get('sessions/{roleplaySession}/recording', [RoleplayController::class, 'recording'])->defaults('vertical', $vertical->value)->name('sessions.recording');
+            Route::post('sessions/{roleplaySession}/call', [RoleplayCallController::class, 'session'])->defaults('vertical', $vertical->value)->name('call.session');
+            Route::post('sessions/{roleplaySession}/call/complete', [RoleplayCallController::class, 'complete'])->defaults('vertical', $vertical->value)->name('call.complete');
+        });
+    }
 
     Route::get('licenses', [LicenseController::class, 'index'])->name('licenses.index');
     Route::get('licenses/{license}', [LicenseController::class, 'show'])->name('licenses.show');

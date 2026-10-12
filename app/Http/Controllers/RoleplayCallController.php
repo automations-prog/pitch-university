@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RoleplayVertical;
 use App\Http\Requests\StoreRoleplayCallRequest;
 use App\Http\Resources\RoleplaySessionResource;
 use App\Jobs\GradeRoleplayDelivery;
 use App\Models\RoleplaySession;
 use App\Services\OpenAiRealtimeClient;
-use App\Services\RoleplayConsumerPrompt;
-use App\Services\RoleplayGrader;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -20,9 +19,11 @@ class RoleplayCallController extends Controller
      * baked in. One mint per session: every mint is a paid Realtime
      * session, so a failed call starts over with a new persona.
      */
-    public function session(RoleplaySession $roleplaySession, OpenAiRealtimeClient $client, RoleplayConsumerPrompt $prompt): JsonResponse
+    public function session(RoleplaySession $roleplaySession, RoleplayVertical $vertical, OpenAiRealtimeClient $client): JsonResponse
     {
         Gate::authorize('update', $roleplaySession);
+
+        abort_if($roleplaySession->vertical !== $vertical, 404);
 
         $claimed = RoleplaySession::query()
             ->whereKey($roleplaySession->id)
@@ -34,7 +35,7 @@ class RoleplayCallController extends Controller
 
         return response()->json($client->createEphemeralSession(
             $roleplaySession->consumerVoice()?->value,
-            $prompt->sessionConfig($roleplaySession),
+            $vertical->consumerPrompt()->sessionConfig($roleplaySession),
         ));
     }
 
@@ -43,18 +44,17 @@ class RoleplayCallController extends Controller
      * Delivery is scored in the background. The row is locked so two
      * submits of the same call can't both get through.
      */
-    public function complete(StoreRoleplayCallRequest $request, RoleplaySession $roleplaySession, RoleplayGrader $grader): RoleplaySessionResource
+    public function complete(StoreRoleplayCallRequest $request, RoleplaySession $roleplaySession): RoleplaySessionResource
     {
         $roleplaySession = DB::transaction(fn (): RoleplaySession => $this->store(
             $request,
             RoleplaySession::query()->lockForUpdate()->findOrFail($roleplaySession->id),
-            $grader,
         ));
 
         return RoleplaySessionResource::make($roleplaySession);
     }
 
-    private function store(StoreRoleplayCallRequest $request, RoleplaySession $roleplaySession, RoleplayGrader $grader): RoleplaySession
+    private function store(StoreRoleplayCallRequest $request, RoleplaySession $roleplaySession): RoleplaySession
     {
         abort_if($roleplaySession->started_at === null || $roleplaySession->ended_at !== null, 409);
 
@@ -68,7 +68,7 @@ class RoleplayCallController extends Controller
         ]);
 
         $transferClickedAt = $request->validated('transfer_clicked_at');
-        $result = $grader->grade($roleplaySession, $transferClickedAt === null ? null : (int) $transferClickedAt);
+        $result = $roleplaySession->vertical->grader()->grade($roleplaySession, $transferClickedAt === null ? null : (int) $transferClickedAt);
 
         $roleplaySession->fill([
             'score' => [

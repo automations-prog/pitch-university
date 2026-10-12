@@ -24,6 +24,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index as acaRoleplayIndex } from '@/routes/aca-roleplay';
 import { index as licensingIndex } from '@/routes/admin/licensing';
 import { index as reportsIndex } from '@/routes/admin/reports';
 import { index as screeningIndex } from '@/routes/admin/screening';
@@ -31,7 +32,7 @@ import { index as trainingTracksIndex } from '@/routes/admin/training-tracks';
 import { index as usersIndex } from '@/routes/admin/users';
 import { index as verticalTrainingIndex } from '@/routes/admin/vertical-training';
 import { index as myLicensesIndex } from '@/routes/licenses';
-import { index as roleplayIndex } from '@/routes/roleplay';
+import { index as medicareRoleplayIndex } from '@/routes/medicare-roleplay';
 import { index as trainingIndex } from '@/routes/training';
 import type { NavGroup } from '@/types';
 
@@ -85,8 +86,13 @@ export function AppSidebar() {
                       ]
                     : []),
                 {
-                    title: 'Roleplay',
-                    href: roleplayIndex(),
+                    title: 'Medicare Roleplay',
+                    href: medicareRoleplayIndex(),
+                    icon: Headphones,
+                },
+                {
+                    title: 'ACA Roleplay',
+                    href: acaRoleplayIndex(),
                     icon: Headphones,
                 },
                 ...(SHOW_LICENSING && auth.user.licenses_count > 0

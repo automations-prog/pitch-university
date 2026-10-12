@@ -19,8 +19,8 @@ import type {
     DeliveryStatus,
     RoleplaySessionResult,
 } from '@/lib/roleplay-data';
+import { roleplayRoutes } from '@/lib/roleplay-routes';
 import { cn } from '@/lib/utils';
-import { show as showSession } from '@/routes/roleplay/sessions';
 
 /**
  * Quick checks first, then backing off: when many trainees finish at once
@@ -55,6 +55,7 @@ export function useDeliveryPolling(
     const current = latest?.id === result?.id ? latest : result;
     const isPending = current?.delivery_status === 'pending';
     const sessionId = current?.id;
+    const vertical = current?.vertical ?? 'medicare';
 
     useEffect(() => {
         if (!isPending || sessionId === undefined) {
@@ -67,10 +68,13 @@ export function useDeliveryPolling(
 
         const poll = async () => {
             try {
-                const response = await fetch(showSession.url(sessionId), {
-                    headers: { Accept: 'application/json' },
-                    credentials: 'same-origin',
-                });
+                const response = await fetch(
+                    roleplayRoutes(vertical).sessions.show.url(sessionId),
+                    {
+                        headers: { Accept: 'application/json' },
+                        credentials: 'same-origin',
+                    },
+                );
 
                 if (response.ok && !isCancelled) {
                     setLatest((await response.json()) as RoleplaySessionResult);
@@ -95,7 +99,7 @@ export function useDeliveryPolling(
             isCancelled = true;
             clearTimeout(timeout);
         };
-    }, [isPending, sessionId]);
+    }, [isPending, sessionId, vertical]);
 
     return current;
 }

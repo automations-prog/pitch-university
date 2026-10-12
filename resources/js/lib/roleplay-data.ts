@@ -1,8 +1,20 @@
 /**
  * Roleplay content types. The content itself is parsed server-side from
- * `ai-roleplay/medicare_script.md` and `ai-roleplay/OBJECTIONS_AND_PERSONAS.md`
- * (`App\Services\RoleplayScript`) and arrives as the page's `content` prop.
+ * each vertical's docs in `ai-roleplay/` (`App\Services\RoleplayScript`,
+ * `App\Services\AcaRoleplayScript`) and arrives as the page's `content`
+ * prop.
  */
+
+/** Matches `App\Enums\RoleplayVertical`. */
+export type RoleplayVerticalId = 'medicare' | 'aca';
+
+/** `RoleplayVertical::toPage()`. */
+export type RoleplayVertical = {
+    id: RoleplayVerticalId;
+    label: string;
+    /** Cold: stay silent once the specialist joins. Warm: introduce the consumer. */
+    handoff: 'cold' | 'warm';
+};
 
 export type DifficultyLevel = 1 | 2 | 3 | 4 | 5;
 
@@ -74,6 +86,8 @@ export type RoleplayContent = {
     dqTraps: DqTrap[];
     quirks: string[];
     quirkMinLevel: DifficultyLevel;
+    /** What the objection stats call how often it goes wrong ("Lost"). */
+    objectionRiskLabel: string;
 };
 
 export type Lead = {
@@ -119,6 +133,7 @@ export type DeliveryStatus = 'pending' | 'done' | 'failed';
 /** `App\Http\Resources\RoleplaySessionResource` once the call has ended. */
 export type RoleplaySessionResult = {
     id: number;
+    vertical: RoleplayVerticalId;
     level: DifficultyLevel;
     lead: Lead;
     created_at: string;
@@ -135,6 +150,8 @@ export type RoleplaySessionResult = {
     delivery_status?: DeliveryStatus | null;
     delivery?: Delivery | null;
     dq_trap?: { id: string; hidden_truth: string } | null;
+    /** The persona's other hidden facts (ACA coverage), in words. */
+    hidden_facts?: string[];
     objections?: Objection[];
     transcript?: string | null;
     recording_url?: string | null;

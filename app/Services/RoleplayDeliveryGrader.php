@@ -40,11 +40,7 @@ class RoleplayDeliveryGrader
 
     private const string RESPONSES_URL = 'https://api.openai.com/v1/responses';
 
-    public function __construct(
-        private readonly RoleplayScript $script,
-        private readonly RoleplayDeliveryMetrics $metrics,
-        private readonly RoleplayGrader $grader,
-    ) {}
+    public function __construct(private readonly RoleplayDeliveryMetrics $metrics) {}
 
     /**
      * Everything that doesn't need the AI. Saved on its own if the AI call
@@ -74,7 +70,7 @@ class RoleplayDeliveryGrader
     {
         return $this->metrics->compute(
             $session->events ?? [],
-            $this->grader->parseTranscript((string) $session->transcript),
+            $session->vertical->grader()->parseTranscript((string) $session->transcript),
         );
     }
 
@@ -87,9 +83,9 @@ class RoleplayDeliveryGrader
     {
         $criteria = [];
 
-        foreach ($this->script->content()['deliveryCriteria'] as $criterion) {
+        foreach ($session->vertical->script()->content()['deliveryCriteria'] as $criterion) {
             [$score, $source, $feedback] = match ($criterion['key']) {
-                'pace' => $this->pace($metrics['wpm']),
+                'pace' => $this->pace($metrics['wpm'], $session->vertical->audience()),
                 'filler_words' => $this->fillers($metrics['fillers_per_100']),
                 'dead_air' => $this->deadAir($metrics),
                 'listening' => $this->listening($metrics['barge_ins']),
@@ -121,7 +117,7 @@ class RoleplayDeliveryGrader
     /**
      * @return array{0: int|null, 1: string, 2: string}
      */
-    private function pace(?int $wpm): array
+    private function pace(?int $wpm, string $audience): array
     {
         if ($wpm === null) {
             return [null, 'measured', 'Not enough of your speech was captured to measure pace.'];
@@ -131,7 +127,7 @@ class RoleplayDeliveryGrader
         $max = (int) config('roleplay.delivery.pace_max_wpm');
         $perPoint = (int) config('roleplay.delivery.pace_wpm_per_point');
         $off = max($min - $wpm, $wpm - $max, 0);
-        $verdict = $wpm > $max ? 'too fast for seniors' : ($wpm < $min ? 'a little slow' : 'a good pace for seniors');
+        $verdict = $wpm > $max ? "too fast for {$audience}" : ($wpm < $min ? 'a little slow' : "a good pace for {$audience}");
 
         return [$this->clamp(5 - (int) ceil($off / $perPoint)), 'measured', "{$wpm} words per minute, {$verdict} (aim for {$min}–{$max})."];
     }
@@ -231,7 +227,7 @@ class RoleplayDeliveryGrader
     private function qualifyingAccuracy(RoleplaySession $session): array
     {
         $checks = array_column($session->score['checks'] ?? [], 'passed', 'key');
-        $keys = ['double_confirm', 'state_zip', 'work_va'];
+        $keys = $session->vertical->grader()->qualifyingCheckKeys();
 
         if ($session->expected_outcome === Outcome::Dq) {
             $keys[] = 'disposition';
@@ -265,10 +261,10 @@ class RoleplayDeliveryGrader
             ->post(self::RESPONSES_URL, [
                 'model' => config('roleplay.delivery.grader_model'),
                 'input' => [
-                    ['role' => 'system', 'content' => $this->rubric()],
+                    ['role' => 'system', 'content' => $this->rubric($session)],
                     ['role' => 'user', 'content' => json_encode([
                         'level' => $session->level,
-                        'consumer_temperament' => $this->script->level($session->level)['temperament'],
+                        'consumer_temperament' => $session->vertical->script()->level($session->level)['temperament'],
                         'measured' => $metrics,
                         'transcript' => (string) $session->transcript,
                     ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)],
@@ -331,11 +327,13 @@ class RoleplayDeliveryGrader
         return $judged;
     }
 
-    private function rubric(): string
+    private function rubric(RoleplaySession $session): string
     {
         $lines = [];
+        $vertical = $session->vertical->label();
+        $audience = $session->vertical->audience();
 
-        foreach ($this->script->content()['deliveryCriteria'] as $criterion) {
+        foreach ($session->vertical->script()->content()['deliveryCriteria'] as $criterion) {
             if (in_array($criterion['key'], self::AI_CRITERIA, true)) {
                 $lines[] = "- {$criterion['key']} ({$criterion['label']}): {$criterion['description']}";
             }
@@ -344,7 +342,7 @@ class RoleplayDeliveryGrader
         $rubric = implode("\n", $lines);
 
         return <<<TEXT
-        You are a call-center trainer scoring a trainee's practice Medicare call. The trainee is the "agent"; the "consumer" is a simulated senior.
+        You are a call-center trainer scoring a trainee's practice {$vertical} call. The trainee is the "agent"; the "consumer" is one of the {$audience} the campaign calls, simulated.
 
         Score each criterion from 1 (poor) to 5 (excellent), with one sentence of feedback that quotes or timestamps a specific moment from the transcript.
 

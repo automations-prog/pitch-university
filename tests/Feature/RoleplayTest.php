@@ -5,7 +5,7 @@ use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('guests are redirected to the login page', function () {
-    $response = $this->get(route('roleplay.index'));
+    $response = $this->get(route('medicare-roleplay.index'));
 
     $response->assertRedirect(route('login'));
 });
@@ -13,7 +13,7 @@ test('guests are redirected to the login page', function () {
 test('a verified user can open the roleplay page with the script content', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get(route('roleplay.index'));
+    $response = $this->actingAs($user)->get(route('medicare-roleplay.index'));
 
     $response->assertOk();
     $response->assertInertia(fn (Assert $page) => $page
@@ -30,7 +30,7 @@ test('the roleplay page lists only the user\'s own finished calls', function () 
     RoleplaySession::factory()->for($user)->started()->create();
     RoleplaySession::factory()->ended()->create();
 
-    $response = $this->actingAs($user)->get(route('roleplay.index'));
+    $response = $this->actingAs($user)->get(route('medicare-roleplay.index'));
 
     $response->assertInertia(fn (Assert $page) => $page
         ->has('recentSessions', 1)

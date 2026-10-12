@@ -133,7 +133,7 @@ export function ResultCard({
     onRetry?: () => void;
     onChangeLevel?: () => void;
 }) {
-    const { dispositions } = useRoleplayContent();
+    const { dispositions, objectionRiskLabel } = useRoleplayContent();
     const outcome = result.expected_outcome ?? 'transfer';
     const correctDisposition = dispositions.find(
         (disposition) =>
@@ -201,6 +201,17 @@ export function ResultCard({
                     </div>
                 )}
 
+                {!!result.hidden_facts?.length && (
+                    <div>
+                        <p className="font-semibold">About this consumer</p>
+                        <ul className="text-muted-foreground list-disc pl-5">
+                            {result.hidden_facts.map((fact) => (
+                                <li key={fact}>{fact}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
                 <div className="flex flex-col gap-2">
                     <p className="font-semibold">
                         Objections this consumer had
@@ -218,7 +229,8 @@ export function ResultCard({
                                         {objection.meaning}
                                     </span>
                                     <Badge variant="outline">
-                                        Lost {objection.lostPercent}%
+                                        {objectionRiskLabel}{' '}
+                                        {objection.lostPercent}%
                                     </Badge>
                                 </div>
                                 <p className="text-muted-foreground mt-1 text-xs">

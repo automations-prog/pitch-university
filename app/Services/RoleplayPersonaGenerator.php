@@ -35,13 +35,23 @@ class RoleplayPersonaGenerator
         ['name' => 'Charles Robinson', 'state' => 'Michigan', 'zip' => '48219', 'gender' => 'male', 'voice' => 'verse'],
     ];
 
-    private readonly Randomizer $randomizer;
+    protected readonly Randomizer $randomizer;
 
     public function __construct(
-        private readonly RoleplayScript $script,
+        protected readonly RoleplayScript $script,
         ?Randomizer $randomizer = null,
     ) {
         $this->randomizer = $randomizer ?? new Randomizer;
+    }
+
+    /**
+     * The mock dialer leads personas are drawn from.
+     *
+     * @return list<array{name: string, state: string, zip: string, gender: 'male'|'female', voice: string}>
+     */
+    protected function leads(): array
+    {
+        return self::LEADS;
     }
 
     /** Starting patience is `10 - level`. */
@@ -80,7 +90,7 @@ class RoleplayPersonaGenerator
 
         $trap = $outcome === Outcome::Dq ? $this->pick($content['dqTraps']) : null;
 
-        ['voice' => $voice] = $lead = $this->pick(self::LEADS);
+        ['voice' => $voice] = $lead = $this->pick($this->leads());
         unset($lead['voice']);
 
         return [
@@ -105,7 +115,7 @@ class RoleplayPersonaGenerator
      * @param  callable(T): int  $weightOf
      * @return list<T>
      */
-    private function weightedSample(array $items, int $count, callable $weightOf): array
+    protected function weightedSample(array $items, int $count, callable $weightOf): array
     {
         $drawn = [];
 
@@ -134,7 +144,7 @@ class RoleplayPersonaGenerator
      * @param  list<T>  $items
      * @return T
      */
-    private function pick(array $items): mixed
+    protected function pick(array $items): mixed
     {
         return $items[$this->randomizer->getInt(0, count($items) - 1)];
     }

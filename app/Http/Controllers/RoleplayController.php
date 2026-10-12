@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RoleplayVertical;
 use App\Http\Requests\StoreRoleplaySessionRequest;
 use App\Http\Resources\RoleplaySessionResource;
 use App\Models\RoleplaySession;
-use App\Services\RoleplayPersonaGenerator;
-use App\Services\RoleplayScript;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -18,19 +17,21 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class RoleplayController extends Controller
 {
     /**
-     * Display the roleplay page with the script content and the user's
-     * recent calls.
+     * Display the vertical's roleplay page with its script content and the
+     * user's recent calls on it.
      */
-    public function index(Request $request, RoleplayScript $script): Response
+    public function index(Request $request, RoleplayVertical $vertical): Response
     {
         $recentSessions = $request->user()->roleplaySessions()
+            ->where('vertical', $vertical)
             ->whereNotNull('ended_at')
             ->latest()
             ->limit(10)
             ->get();
 
         return Inertia::render('roleplay/index', [
-            'content' => $script->content(),
+            'vertical' => $vertical->toPage(),
+            'content' => $vertical->script()->content(),
             'recentSessions' => RoleplaySessionResource::collection($recentSessions),
         ]);
     }
@@ -39,12 +40,13 @@ class RoleplayController extends Controller
      * Start a new roleplay session. The persona is built and kept
      * server-side; only its public part goes back to the browser.
      */
-    public function store(StoreRoleplaySessionRequest $request, RoleplayPersonaGenerator $generator): JsonResponse
+    public function store(StoreRoleplaySessionRequest $request, RoleplayVertical $vertical): JsonResponse
     {
         $level = (int) $request->validated('level');
-        $generated = $generator->generate($level);
+        $generated = $vertical->personaGenerator()->generate($level);
 
         $session = $request->user()->roleplaySessions()->create([
+            'vertical' => $vertical,
             'level' => $level,
             'persona' => $generated['persona'],
             'expected_outcome' => $generated['outcome'],
@@ -58,18 +60,19 @@ class RoleplayController extends Controller
      * Show a finished call's score, transcript and recording. JSON requests
      * get the resource, which the wrap-up polls for the delivery score.
      */
-    public function show(Request $request, RoleplaySession $roleplaySession, RoleplayScript $script): Response|RoleplaySessionResource
+    public function show(Request $request, RoleplaySession $roleplaySession, RoleplayVertical $vertical): Response|RoleplaySessionResource
     {
         Gate::authorize('view', $roleplaySession);
 
-        abort_if($roleplaySession->ended_at === null, 404);
+        abort_if($roleplaySession->vertical !== $vertical || $roleplaySession->ended_at === null, 404);
 
         if ($request->wantsJson()) {
             return RoleplaySessionResource::make($roleplaySession);
         }
 
         return Inertia::render('roleplay/sessions/show', [
-            'content' => $script->content(),
+            'vertical' => $vertical->toPage(),
+            'content' => $vertical->script()->content(),
             'session' => RoleplaySessionResource::make($roleplaySession),
         ]);
     }
@@ -77,11 +80,11 @@ class RoleplayController extends Controller
     /**
      * Stream a finished call's recording to its owner.
      */
-    public function recording(RoleplaySession $roleplaySession): StreamedResponse
+    public function recording(RoleplaySession $roleplaySession, RoleplayVertical $vertical): StreamedResponse
     {
         Gate::authorize('view', $roleplaySession);
 
-        abort_if($roleplaySession->recording_path === null, 404);
+        abort_if($roleplaySession->vertical !== $vertical || $roleplaySession->recording_path === null, 404);
 
         return Storage::disk('local')->response($roleplaySession->recording_path);
     }

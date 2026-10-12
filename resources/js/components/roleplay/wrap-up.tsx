@@ -87,8 +87,12 @@ export function WrapUp({
     onRetry: () => void;
     onChangeLevel: () => void;
 }) {
-    const { complianceGuidelines, dispositions, scriptSections } =
-        useRoleplayContent();
+    const {
+        complianceGuidelines,
+        dispositions,
+        objectionRiskLabel,
+        scriptSections,
+    } = useRoleplayContent();
     const [dispositionId, setDispositionId] = useState<string | null>(null);
     const correctDispositionId = OUTCOME_DISPOSITION[persona.outcome];
     const correctDisposition = dispositions.find(
@@ -185,8 +189,8 @@ export function WrapUp({
                                                     {objection.meaning}
                                                 </span>
                                                 <Badge variant="outline">
-                                                    Lost {objection.lostPercent}
-                                                    %
+                                                    {objectionRiskLabel}{' '}
+                                                    {objection.lostPercent}%
                                                 </Badge>
                                             </div>
                                             <p className="text-muted-foreground mt-1 text-xs">

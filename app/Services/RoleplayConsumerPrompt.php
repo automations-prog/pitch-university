@@ -13,7 +13,17 @@ use App\Models\RoleplaySession;
  */
 class RoleplayConsumerPrompt
 {
-    public function __construct(private readonly RoleplayScript $script) {}
+    /** The objection a repeated "I'm busy" counts as. */
+    protected const string BUSY_OBJECTION = 'busy';
+
+    /**
+     * A disfluent prompt nudges transcription to keep the trainee's "um"s
+     * and "uh"s, which delivery scoring counts, and primes the script's
+     * vocabulary.
+     */
+    protected const string TRANSCRIPTION_PROMPT = 'Um, so, uh, I was, like, calling about your, you know, Medicare card.';
+
+    public function __construct(protected readonly RoleplayScript $script) {}
 
     /**
      * The `session` overrides for `OpenAiRealtimeClient::createEphemeralSession()`.
@@ -39,12 +49,10 @@ class RoleplayConsumerPrompt
                     // the mic read as the trainee talking. Filtered before
                     // transcription.
                     'noise_reduction' => ['type' => 'near_field'],
-                    // A disfluent prompt nudges transcription to keep the
-                    // trainee's "um"s and "uh"s, which delivery scoring
-                    // counts. Verify on a live call; see AI_CALL_PLAN §9.1.
+                    // Verify on a live call; see AI_CALL_PLAN §9.1.
                     'transcription' => [
                         'model' => 'gpt-transcribe',
-                        'prompt' => 'Um, so, uh, I was, like, calling about your, you know, Medicare card.',
+                        'prompt' => static::TRANSCRIPTION_PROMPT,
                     ],
                 ],
             ],
@@ -54,13 +62,11 @@ class RoleplayConsumerPrompt
     public function instructions(RoleplaySession $session): string
     {
         $persona = $session->persona;
-        $level = $this->script->level($session->level);
-        $lead = $persona['lead'];
 
         $sections = [
-            $this->identity($lead, $level, $persona['quirk'], $session->consumerGender()),
+            $this->identity($session),
             $this->objectionsSection($persona['objections'], $session->level),
-            $this->answersSection($lead, $persona['dq_trap']),
+            $this->answersSection($session),
             $this->outcomeSection($session->expected_outcome),
             <<<'TEXT'
             # Swearing, complaints and do-not-call
@@ -68,12 +74,10 @@ class RoleplayConsumerPrompt
             Asking to stop is different: telling the caller to stop calling you or never call again, to take you off their list or put you on the do-not-call list, or threatening them (a lawsuit, reporting them). Only do any of that if your outcome below says so. Otherwise never say it, however annoyed you get.
             TEXT,
             $this->patienceSection($persona['patience']),
-            <<<'TEXT'
-            # The transfer
-            Near the end the caller will ask you to give a Medicare specialist a few minutes. Answer that question clearly with a yes or a no, in your own words. While the transfer rings, the caller will make small talk: chat back casually in a sentence or two, and don't raise new objections. If a message says a specialist has joined the line and asks who they're speaking with, answer with your full name and nothing else.
-
+            $this->transferSection(),
+            <<<TEXT
             # Tools
-            - Call `objection_raised` with the objection id every time you voice one of your objections, including when you repeat one, and `objection_resolved` once the caller has answered it well enough that you move on. Saying you're busy, can't talk or don't have time again is the `busy` objection again, however you word it.
+            - Call `objection_raised` with the objection id every time you voice one of your objections, including when you repeat one, and `objection_resolved` once the caller has answered it well enough that you move on. Saying you're busy, can't talk or don't have time again is the `{$this->busyObjection()}` objection again, however you word it.
             - Call `patience_changed` every time your patience goes down, with the new value and a few words on why.
             - Call `hang_up` only when your patience hits zero, right after you say a short goodbye line.
             Always say your line first, then call any tools in that same response. Never respond with only a tool call. Tool calls are silent. Never mention them out loud.
@@ -84,6 +88,7 @@ class RoleplayConsumerPrompt
             - Keep your turns short, like a real person on the phone: one or two sentences.
             - Never repeat a line you already said. Once an objection has been handled, don't bring it back.
             - Keep the same voice the whole call: the same pitch, accent, age and way of speaking you started with. Show annoyance, confusion or yelling through your words and pace, never by switching to a different-sounding voice. Don't imitate anyone else's voice.
+            - Your voice always sounds clean and close, like on a good phone line: never add echo, reverb, a speakerphone or room sound, background noise or sound effects.
             - When the call connects, answer the phone with only a short "Hello?" or "Yeah?" and nothing else. Then stay quiet until the caller speaks. Don't raise objections or ask who's calling before they say anything.
             TEXT,
         ];
@@ -141,13 +146,13 @@ class RoleplayConsumerPrompt
         ];
     }
 
-    /**
-     * @param  array{name: string, state: string, zip: string}  $lead
-     * @param  array{level: int, name: string, temperament: string}  $level
-     * @param  'male'|'female'|null  $gender
-     */
-    private function identity(array $lead, array $level, ?string $quirk, ?string $gender): string
+    protected function identity(RoleplaySession $session): string
     {
+        $lead = $session->persona['lead'];
+        $level = $this->script->level($session->level);
+        $gender = $session->consumerGender();
+        $quirk = $session->persona['quirk'];
+
         $text = <<<TEXT
         # Who you are
         You are {$lead['name']}, an older Medicare member living in {$lead['state']}, ZIP code {$lead['zip']}. You just picked up an outbound sales call from someone you don't know. You are the consumer, not the caller.
@@ -161,17 +166,22 @@ class RoleplayConsumerPrompt
             $text .= "\nYou are a {$person}. Always sound like an older {$person}: speak in a {$person}'s natural voice and pitch the whole call, and never sound like a {$other}.";
         }
 
-        if ($quirk !== null) {
-            $text .= "\nQuirk: {$quirk}. Let it show throughout the call in what you say (\"Hold on, the TV's loud\"), never as sound: don't imitate noises, background sounds or effects with your voice.";
+        return $text.$this->quirkLine($quirk);
+    }
+
+    protected function quirkLine(?string $quirk): string
+    {
+        if ($quirk === null) {
+            return '';
         }
 
-        return $text;
+        return "\nQuirk: {$quirk}. Let it show throughout the call in what you say (\"Hold on, the TV's loud\"), never as sound: don't imitate noises, background sounds or effects with your voice.";
     }
 
     /**
      * @param  list<string>  $objectionIds
      */
-    private function objectionsSection(array $objectionIds, int $level): string
+    protected function objectionsSection(array $objectionIds, int $level): string
     {
         if ($objectionIds === []) {
             return "# Objections\nYou have no particular objections. Go along with the call once you understand what it's about.";
@@ -186,29 +196,45 @@ class RoleplayConsumerPrompt
                 continue;
             }
 
-            // Reps hear "I already got it" with all kinds of carriers and
-            // cards, so this one offers every phrasing instead of one per level.
-            $phrasing = $id === 'already_have_it'
-                ? 'Say one of these, picking one carrier and card and sticking with it: '.implode(' / ', array_map(fn (string $line): string => "\"{$line}\"", $objection['consumerLines']))
-                : 'Say something like: "'.self::consumerLineFor($objection['consumerLines'], $level).'"';
-            $when = match ($id) {
-                'transfer_no' => ' Raise this one only when they ask you to give the specialist a few minutes.',
-                'already_have_it' => ' Raise this one right when the caller first asks if you still have Medicare Parts A and B. If they ask again after answering it, confirm you have Parts A and B.',
-                default => '',
-            };
-
-            $lines[] = "- `{$id}`: {$objection['meaning']}. {$phrasing}{$when}";
+            $lines[] = "- `{$id}`: {$objection['meaning']}. {$this->objectionPhrasing($id, $objection['consumerLines'], $level)}{$this->objectionTiming($id)}";
         }
 
         return implode("\n", $lines);
     }
 
     /**
-     * @param  array{name: string, state: string, zip: string}  $lead
-     * @param  array{id: string, hidden_truth: string}|null  $trap
+     * How the consumer words an objection.
+     *
+     * @param  list<string>  $consumerLines
      */
-    private function answersSection(array $lead, ?array $trap): string
+    protected function objectionPhrasing(string $id, array $consumerLines, int $level): string
     {
+        // Reps hear "I already got it" with all kinds of carriers and
+        // cards, so this one offers every phrasing instead of one per level.
+        if ($id === 'already_have_it') {
+            return 'Say one of these, picking one carrier and card and sticking with it: '.implode(' / ', array_map(fn (string $line): string => "\"{$line}\"", $consumerLines));
+        }
+
+        return 'Say something like: "'.self::consumerLineFor($consumerLines, $level).'"';
+    }
+
+    /**
+     * When in the call an objection belongs, if it has a fixed moment.
+     */
+    protected function objectionTiming(string $id): string
+    {
+        return match ($id) {
+            'transfer_no' => ' Raise this one only when they ask you to give the specialist a few minutes.',
+            'already_have_it' => ' Raise this one right when the caller first asks if you still have Medicare Parts A and B. If they ask again after answering it, confirm you have Parts A and B.',
+            default => '',
+        };
+    }
+
+    protected function answersSection(RoleplaySession $session): string
+    {
+        $lead = $session->persona['lead'];
+        $trap = $session->persona['dq_trap'];
+
         $text = <<<TEXT
         # How you answer
         Answer the caller's questions truthfully. You have Medicare Parts A and B and the red, white and blue Medicare card. Your state is {$lead['state']} and your ZIP code is {$lead['zip']}. You don't have insurance through work or the VA.
@@ -221,7 +247,20 @@ class RoleplayConsumerPrompt
         return $text;
     }
 
-    private function outcomeSection(Outcome $outcome): string
+    protected function transferSection(): string
+    {
+        return <<<'TEXT'
+        # The transfer
+        Near the end the caller will ask you to give a Medicare specialist a few minutes. Answer that question clearly with a yes or a no, in your own words. While the transfer rings, the caller will make small talk: chat back casually in a sentence or two, and don't raise new objections. If a message says a specialist has joined the line and asks who they're speaking with, answer with your full name and nothing else.
+        TEXT;
+    }
+
+    protected function busyObjection(): string
+    {
+        return static::BUSY_OBJECTION;
+    }
+
+    protected function outcomeSection(Outcome $outcome): string
     {
         $goal = match ($outcome) {
             Outcome::Transfer => 'Once your objections have been handled well, agree to wait for the specialist when asked.',
@@ -232,7 +271,7 @@ class RoleplayConsumerPrompt
         return "# How this call should go\n{$goal}";
     }
 
-    private function patienceSection(int $patience): string
+    protected function patienceSection(int $patience): string
     {
         return <<<TEXT
         # Patience

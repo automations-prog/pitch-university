@@ -5,11 +5,11 @@ import {
     remoteAudioPlayback,
     RINGBACK_CYCLE_MS,
 } from '@/lib/ringback';
-import type { RoleplaySessionResult } from '@/lib/roleplay-data';
-import {
-    complete as completeCall,
-    session as createCallSession,
-} from '@/routes/roleplay/call';
+import type {
+    RoleplaySessionResult,
+    RoleplayVertical,
+} from '@/lib/roleplay-data';
+import { roleplayRoutes } from '@/lib/roleplay-routes';
 
 /**
  * Drives a live roleplay call: the trainee reads the script, and an AI
@@ -60,8 +60,6 @@ const MAX_EVENTS = 5_000;
 const TRANSFER_FLUFF_MS = 30_000;
 const TRANSFER_RING_VOLUME = 0.04;
 
-/** The specialist's pre-recorded "Who am I speaking with?". */
-const SPECIALIST_AUDIO_URL = '/audio/roleplay/specialist-intro.mp3';
 const SPECIALIST_AUDIO_MAX_MS = 6_000;
 
 /** Trainee speech this long while the specialist is on counts as talking over them. */
@@ -84,6 +82,19 @@ const GREETING_WATCH_INTERVAL_MS = 50;
 const GREETING_STOPPED_TAIL_MS = 300;
 /** After the greeting's response is done, in case its audio never starts or stops. */
 const GREETING_DONE_GRACE_MS = 3_000;
+/**
+ * Early in a call OpenAI's audio sometimes never reaches the browser: the
+ * "Hello?" finishes without `output_audio_buffer.started`, or starts and
+ * arrives as silence, or stalls with no `response.done` at all. None of
+ * that is the browser blocking audio, so such a greeting is asked for again
+ * without using up one of `GREETING_MAX_ATTEMPTS` (which end in "Turn on
+ * audio"), up to `GREETING_MAX_LOST_RETRIES` times. A greeting not heard
+ * `GREETING_STALL_MS` after it was asked for is cancelled and retried
+ * whatever events did or didn't arrive.
+ */
+const GREETING_UNSENT_GRACE_MS = 1_000;
+const GREETING_STALL_MS = 5_000;
+const GREETING_MAX_LOST_RETRIES = 8;
 /**
  * The greeting counts as heard once the consumer's audio was above the
  * speech level for this long in total; a single 50ms blip used to pass.
@@ -122,7 +133,6 @@ const EMPTY_COMMIT_ERROR_CODE = 'input_audio_buffer_commit_empty';
 const AGENT_TRANSCRIPT_FAILED_EVENT =
     'conversation.item.input_audio_transcription.failed';
 
-const SPECIALIST_LINE = 'Hi, who am I speaking with?';
 
 /**
  * OpenAI's turn detection is off (`turn_detection: null`): on WebRTC it
@@ -172,8 +182,10 @@ const BARGE_IN_QUIET_RESET_MS = 400;
  * never rises above `ECHO_GATE_MAX_RMS` so a real barge-in still counts.
  * While the consumer is talking and the trainee isn't, the input buffer is
  * cleared every `ECHO_CLEAR_MS` so the echo never reaches the model, and
- * the mic is turned down to `RECORDING_ECHO_DUCK_GAIN` in the recording so
- * the consumer isn't heard twice.
+ * the mic is muted in the recording (`RECORDING_ECHO_DUCK_GAIN`) so the
+ * consumer isn't heard twice: their own stream is recorded directly, so any
+ * of their voice the mic picks up off the speakers lands a beat late and
+ * plays back as an echo. Turned down to 15% it was still audible.
  */
 const ECHO_TAIL_MS = 400;
 const ECHO_MARGIN = 2.5;
@@ -182,7 +194,7 @@ const ECHO_RATIO_MAX = 0.5;
 const ECHO_RATIO_SMOOTHING = 0.05;
 const ECHO_GATE_MAX_RMS = 0.1;
 const ECHO_CLEAR_MS = 500;
-const RECORDING_ECHO_DUCK_GAIN = 0.15;
+const RECORDING_ECHO_DUCK_GAIN = 0;
 const RECORDING_GAIN_TIME_CONSTANT_S = 0.03;
 
 /**
@@ -199,10 +211,47 @@ const ECHO_TRANSCRIPT_RECENT_LINES = 2;
 const REPLY_EVENT_ID_PREFIX = 'reply_';
 const ACTIVE_RESPONSE_ERROR_CODE = 'conversation_already_has_active_response';
 
-const TRANSFER_STARTED_MESSAGE =
-    "(The caller is transferring you to a Medicare specialist and you can hear it ringing. The specialist hasn't picked up yet. While you wait, chat casually with the caller: answer their small talk in a sentence or two, like the weather or your day. Don't raise new objections and don't hang up.)";
+/**
+ * How the agent on the other end of the transfer joins. Cold (Medicare):
+ * the specialist asks who they're speaking with and the trainee stays
+ * silent. Warm (ACA): the licensed agent picks up and the trainee
+ * introduces the consumer, naming their state, before leaving.
+ */
+type Handoff = {
+    /** The joining agent's pre-recorded line, and the file it's in. */
+    line: string;
+    audioUrl: string;
+    /** How the transcript names them. */
+    label: string;
+    transferringLine: string;
+    transferStartedMessage: string;
+    joinsMessage: string;
+};
 
-const SPECIALIST_JOINS_MESSAGE = `(A licensed Medicare specialist just picked up and says: "${SPECIALIST_LINE}" Answer the specialist.)`;
+const HANDOFFS: Record<RoleplayVertical['handoff'], Handoff> = {
+    cold: {
+        line: 'Hi, who am I speaking with?',
+        audioUrl: '/audio/roleplay/specialist-intro.mp3',
+        label: 'Specialist',
+        transferringLine:
+            'Transferring… ringing the specialist. Keep them talking.',
+        transferStartedMessage:
+            "(The caller is transferring you to a Medicare specialist and you can hear it ringing. The specialist hasn't picked up yet. While you wait, chat casually with the caller: answer their small talk in a sentence or two, like the weather or your day. Don't raise new objections and don't hang up.)",
+        joinsMessage:
+            '(A licensed Medicare specialist just picked up and says: "Hi, who am I speaking with?" Answer the specialist.)',
+    },
+    warm: {
+        line: 'Hi, this is the licensed agent. Who do I have on the line?',
+        audioUrl: '/audio/roleplay/aca-agent-intro.m4a',
+        label: 'Licensed agent',
+        transferringLine:
+            'Conferencing… ringing the licensed agent. Keep them talking.',
+        transferStartedMessage:
+            "(The caller is conferencing in a licensed agent and you can hear it ringing. The licensed agent hasn't picked up yet. While you wait, chat casually with the caller: answer their small talk in a sentence or two. Don't raise new objections and don't hang up.)",
+        joinsMessage:
+            '(A licensed agent just picked up and said: "Hi, this is the licensed agent. Who do I have on the line?" Stay quiet while the caller introduces you to them. Once the caller has introduced you, greet the licensed agent briefly with your first name and nothing else.)',
+    },
+};
 
 const RECORDING_MIME_CANDIDATES: { mimeType: string; extension: string }[] = [
     { mimeType: 'audio/webm;codecs=opus', extension: 'webm' },
@@ -251,7 +300,10 @@ export type RoleplayCallPhase =
 
 export type RoleplayEndReason = 'agent' | 'hung_up';
 
-/** Where a cold transfer is: ringing (fluff), specialist talking, lead answered. */
+/**
+ * Where a transfer is: ringing (fluff), the specialist or licensed agent
+ * on the line, lead answered them.
+ */
 export type TransferStage = 'ringing' | 'specialist' | 'answered';
 
 export type LiveTranscriptLine = {
@@ -302,6 +354,7 @@ type CallEvent =
           heard: number;
           heard_ms: number;
           peak_rms: number;
+          audio_started: number;
       };
 
 function rmsOf(
@@ -392,11 +445,16 @@ export function useRoleplayRealtimeCall({
     sessionId,
     level,
     startingPatience,
+    vertical,
 }: {
     sessionId: number;
     level: number;
     startingPatience: number;
+    vertical: RoleplayVertical;
 }) {
+    const handoff = HANDOFFS[vertical.handoff];
+    const isWarmHandoff = vertical.handoff === 'warm';
+    const routes = roleplayRoutes(vertical.id);
     const [phase, setPhase] = useState<RoleplayCallPhase>('idle');
     const [muted, setMuted] = useState(false);
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -508,6 +566,10 @@ export function useRoleplayRealtimeCall({
     /** The greeting being played, until it's been heard (or given up on). */
     const greetingRef = useRef<{
         attempt: number;
+        /** Retries of this attempt because the audio never reached the browser. */
+        lostRetries: number;
+        /** OpenAI started streaming its audio (`output_audio_buffer.started`). */
+        audioStarted: boolean;
         itemId: string | null;
         /** How long the consumer's audio was above the speech level. */
         heardMs: number;
@@ -524,6 +586,11 @@ export function useRoleplayRealtimeCall({
     const greetingWatchIntervalRef = useRef<ReturnType<
         typeof setInterval
     > | null>(null);
+    const greetingStallTimeoutRef = useRef<ReturnType<
+        typeof setTimeout
+    > | null>(null);
+    /** `checkGreeting`, for the stall watchdog set up before it exists. */
+    const checkGreetingRef = useRef<() => void>(() => {});
     const greetingCheckTimeoutRef = useRef<ReturnType<
         typeof setTimeout
     > | null>(null);
@@ -728,8 +795,11 @@ export function useRoleplayRealtimeCall({
             greetingMicTimeoutRef.current = null;
         }
 
+        // Drop the silence sent while the mic was held, so it isn't
+        // committed with the trainee's first turn.
+        sendEvent({ type: 'input_audio_buffer.clear' });
         void heldMic.sender.replaceTrack(heldMic.track);
-    }, []);
+    }, [sendEvent]);
 
     const removeLine = useCallback((lineId: number) => {
         transcriptRef.current = transcriptRef.current.filter(
@@ -1219,10 +1289,22 @@ export function useRoleplayRealtimeCall({
         );
     }, [logEvent, msIntoCall, sendEvent, stopHelloWatch]);
 
-    /** The consumer picks up the phone ("Hello?"). */
-    const sendGreeting = useCallback(() => {
+    /**
+     * The consumer picks up the phone ("Hello?"). A retry because the last
+     * one never reached the browser keeps the same attempt number. If it
+     * still hasn't been heard after `GREETING_STALL_MS`, it's checked (and
+     * retried) even though OpenAI never said it finished.
+     */
+    const sendGreeting = useCallback((lostRetries: number = 0) => {
+        const previousAttempt = greetingRef.current?.attempt ?? 0;
+
         greetingRef.current = {
-            attempt: (greetingRef.current?.attempt ?? 0) + 1,
+            attempt:
+                lostRetries > 0
+                    ? Math.max(previousAttempt, 1)
+                    : previousAttempt + 1,
+            lostRetries,
+            audioStarted: false,
             itemId: null,
             heardMs: 0,
             receivedHeardMs: 0,
@@ -1237,6 +1319,39 @@ export function useRoleplayRealtimeCall({
             releaseMic,
             GREETING_MIC_HOLD_MAX_MS,
         );
+
+        const greeting = greetingRef.current;
+
+        if (greetingStallTimeoutRef.current) {
+            clearTimeout(greetingStallTimeoutRef.current);
+        }
+
+        greetingStallTimeoutRef.current = setTimeout(() => {
+            greetingStallTimeoutRef.current = null;
+
+            if (endingRef.current || greetingRef.current !== greeting) {
+                return;
+            }
+
+            const heardMs = Math.max(
+                greeting.heardMs,
+                greeting.receivedHeardMs,
+            );
+
+            // Heard and still playing: the usual events will check it.
+            if (heardMs >= GREETING_MIN_HEARD_MS) {
+                return;
+            }
+
+            if (responseActiveRef.current) {
+                cancelledByUsRef.current = true;
+                sendEvent({ type: 'response.cancel' });
+                sendEvent({ type: 'output_audio_buffer.clear' });
+                responseActiveRef.current = false;
+            }
+
+            checkGreetingRef.current();
+        }, GREETING_STALL_MS);
     }, [releaseMic, sendEvent, startGreetingWatch]);
 
     /**
@@ -1271,6 +1386,7 @@ export function useRoleplayRealtimeCall({
             heard: wasHeard ? 1 : 0,
             heard_ms: heardMs,
             peak_rms: Number(greeting.peakRms.toFixed(4)),
+            audio_started: greeting.audioStarted ? 1 : 0,
         });
 
         if (import.meta.env.DEV) {
@@ -1327,6 +1443,17 @@ export function useRoleplayRealtimeCall({
             }
         }
 
+        // Never streamed, or streamed into an element that is playing:
+        // the audio was lost on the way, not blocked by the browser. Ask
+        // again without counting it against the browser.
+        if (
+            (!greeting.audioStarted || isRemoteAudioPlaying()) &&
+            greeting.lostRetries < GREETING_MAX_LOST_RETRIES
+        ) {
+            sendGreeting(greeting.lostRetries + 1);
+            return;
+        }
+
         if (greeting.attempt < GREETING_MAX_ATTEMPTS) {
             remoteAudioElRef.current?.play().catch(() => {
                 // The next check finds it still silent.
@@ -1351,6 +1478,10 @@ export function useRoleplayRealtimeCall({
         stopGreetingWatch,
         watchForHelloAnswer,
     ]);
+
+    useEffect(() => {
+        checkGreetingRef.current = checkGreeting;
+    }, [checkGreeting]);
 
     const scheduleGreetingCheck = useCallback(
         (delayMs: number) => {
@@ -1401,6 +1532,7 @@ export function useRoleplayRealtimeCall({
             transferTimeoutRef,
             greetingMicTimeoutRef,
             greetingCheckTimeoutRef,
+            greetingStallTimeoutRef,
             helloRepeatTimeoutRef,
         ]) {
             if (timeout.current) {
@@ -1814,6 +1946,14 @@ export function useRoleplayRealtimeCall({
                 return;
             }
 
+            // WebRTC only: OpenAI started streaming the consumer's audio.
+            if (type === 'output_audio_buffer.started') {
+                if (greetingRef.current) {
+                    greetingRef.current.audioStarted = true;
+                }
+                return;
+            }
+
             // WebRTC only: the consumer's audio finished playing (or was cut).
             if (
                 type === 'output_audio_buffer.stopped' ||
@@ -1890,9 +2030,14 @@ export function useRoleplayRealtimeCall({
                     spokeSinceAgentTurnRef.current = true;
                 }
 
-                // Backstop for a greeting whose audio never starts or stops.
+                // Backstop for a greeting whose audio never starts or stops;
+                // sooner when OpenAI hasn't started streaming it at all.
                 if (greetingRef.current && !greetingCheckTimeoutRef.current) {
-                    scheduleGreetingCheck(GREETING_DONE_GRACE_MS);
+                    scheduleGreetingCheck(
+                        greetingRef.current.audioStarted
+                            ? GREETING_DONE_GRACE_MS
+                            : GREETING_UNSENT_GRACE_MS,
+                    );
                 }
 
                 // The trainee spoke while the consumer was answering.
@@ -2063,7 +2208,7 @@ export function useRoleplayRealtimeCall({
                     }
 
                     const utterance = new SpeechSynthesisUtterance(
-                        SPECIALIST_LINE,
+                        handoff.line,
                     );
                     utterance.onend = () => resolve();
                     utterance.onerror = () => resolve();
@@ -2074,7 +2219,7 @@ export function useRoleplayRealtimeCall({
 
                 const clip =
                     specialistAudioRef.current ??
-                    new Audio(SPECIALIST_AUDIO_URL);
+                    new Audio(handoff.audioUrl);
                 specialistAudioRef.current = clip;
                 clip.onended = () => resolve();
                 clip.play().catch((playError: unknown) => {
@@ -2090,7 +2235,7 @@ export function useRoleplayRealtimeCall({
                 const destination = recordingDestinationRef.current;
 
                 if (audioContext && destination) {
-                    void fetch(SPECIALIST_AUDIO_URL)
+                    void fetch(handoff.audioUrl)
                         .then((response) => response.arrayBuffer())
                         .then((buffer) => audioContext.decodeAudioData(buffer))
                         .then((decoded) => {
@@ -2104,13 +2249,15 @@ export function useRoleplayRealtimeCall({
                         });
                 }
             }),
-        [],
+        [handoff],
     );
 
     /**
-     * The specialist picks up after the fluff window. The trainee's mic
-     * comes off the call (they should be silent now), the specialist asks
-     * who they're speaking with, and the consumer answers.
+     * The specialist picks up after the fluff window. Cold: the trainee's
+     * mic comes off the call (they should be silent now), the specialist
+     * asks who they're speaking with, and the consumer answers. Warm: the
+     * mic stays on, the licensed agent asks who they have, the trainee
+     * introduces the consumer, and the consumer greets them.
      */
     const specialistJoins = useCallback(() => {
         if (endingRef.current) {
@@ -2123,17 +2270,37 @@ export function useRoleplayRealtimeCall({
         setTransferStage('specialist');
         appendLine(
             'system',
-            `Specialist: “${SPECIALIST_LINE}”`,
+            `${handoff.label}: “${handoff.line}”`,
             secondsIntoCall(),
         );
 
-        void micSenderRef.current?.replaceTrack(null);
-        micOffCallRef.current = true;
-        specialistOnLineRef.current = true;
         if (responseActiveRef.current) {
             cancelledByUsRef.current = true;
             sendEvent({ type: 'response.cancel' });
         }
+
+        if (isWarmHandoff) {
+            // The consumer waits for the introduction; the trainee's next
+            // turn asks for their reply as usual.
+            awaitingSpecialistReplyRef.current = true;
+            sendEvent({
+                type: 'conversation.item.create',
+                item: {
+                    type: 'message',
+                    role: 'system',
+                    content: [
+                        { type: 'input_text', text: handoff.joinsMessage },
+                    ],
+                },
+            });
+            void playSpecialistLine();
+
+            return;
+        }
+
+        void micSenderRef.current?.replaceTrack(null);
+        micOffCallRef.current = true;
+        specialistOnLineRef.current = true;
 
         void playSpecialistLine().then(() => {
             if (endingRef.current || awaitingSpecialistReplyRef.current) {
@@ -2148,7 +2315,7 @@ export function useRoleplayRealtimeCall({
                     type: 'message',
                     role: 'user',
                     content: [
-                        { type: 'input_text', text: SPECIALIST_JOINS_MESSAGE },
+                        { type: 'input_text', text: handoff.joinsMessage },
                     ],
                 },
             });
@@ -2156,6 +2323,8 @@ export function useRoleplayRealtimeCall({
         });
     }, [
         appendLine,
+        handoff,
+        isWarmHandoff,
         logEvent,
         msIntoCall,
         playSpecialistLine,
@@ -2164,8 +2333,8 @@ export function useRoleplayRealtimeCall({
     ]);
 
     /**
-     * Cold transfer: it rings for `TRANSFER_FLUFF_MS` while the trainee
-     * fluffs with the consumer, then the specialist joins. The trainee
+     * The transfer rings for `TRANSFER_FLUFF_MS` while the trainee fluffs
+     * with the consumer, then the specialist (or licensed agent) joins. The trainee
      * completes the transfer themselves once both have spoken. When
      * Transfer was clicked is sent with the call so grading can check the
      * consumer said yes first.
@@ -2180,11 +2349,7 @@ export function useRoleplayRealtimeCall({
         logEvent({ type: 'transfer_clicked', at: msIntoCall() });
         setPhase('transferring');
         setTransferStage('ringing');
-        appendLine(
-            'system',
-            'Transferring… ringing the specialist. Keep them talking.',
-            at,
-        );
+        appendLine('system', handoff.transferringLine, at);
 
         sendEvent({
             type: 'conversation.item.create',
@@ -2192,13 +2357,16 @@ export function useRoleplayRealtimeCall({
                 type: 'message',
                 role: 'system',
                 content: [
-                    { type: 'input_text', text: TRANSFER_STARTED_MESSAGE },
+                    {
+                        type: 'input_text',
+                        text: handoff.transferStartedMessage,
+                    },
                 ],
             },
         });
 
         // Load the specialist's clip during the ringing so it's ready.
-        const specialistClip = new Audio(SPECIALIST_AUDIO_URL);
+        const specialistClip = new Audio(handoff.audioUrl);
         specialistClip.preload = 'auto';
         specialistClip.load();
         specialistAudioRef.current = specialistClip;
@@ -2214,6 +2382,7 @@ export function useRoleplayRealtimeCall({
         );
     }, [
         appendLine,
+        handoff,
         logEvent,
         msIntoCall,
         phase,
@@ -2258,7 +2427,7 @@ export function useRoleplayRealtimeCall({
             localStreamRef.current = localStream;
 
             const sessionResponse = await fetch(
-                createCallSession.url(sessionId),
+                routes.call.session.url(sessionId),
                 {
                     method: 'POST',
                     headers: { Accept: 'application/json', ...xsrfHeader() },
@@ -2308,6 +2477,18 @@ export function useRoleplayRealtimeCall({
             micSource.connect(micRecordingGain);
             micRecordingGain.connect(destination);
             micRecordingGainRef.current = micRecordingGain;
+
+            // While the mic is held, OpenAI still gets a (silent) audio
+            // stream, as from any WebRTC caller. With nothing sent at all,
+            // its first replies were sometimes lost or stalled.
+            const heldMic = heldMicRef.current;
+
+            if (heldMic) {
+                const silence = audioContext.createMediaStreamDestination();
+                void heldMic.sender.replaceTrack(
+                    silence.stream.getAudioTracks()[0],
+                );
+            }
 
             const micAnalyser = audioContext.createAnalyser();
             micAnalyser.fftSize = 512;
@@ -2473,6 +2654,7 @@ export function useRoleplayRealtimeCall({
         cleanup,
         handleServerEvent,
         logEvent,
+        routes,
         secondsIntoCall,
         sendGreeting,
         sessionId,
@@ -2512,7 +2694,7 @@ export function useRoleplayRealtimeCall({
                 );
             }
 
-            const response = await fetch(completeCall.url(sessionId), {
+            const response = await fetch(routes.call.complete.url(sessionId), {
                 method: 'POST',
                 body: formData,
                 headers: { Accept: 'application/json', ...xsrfHeader() },
@@ -2527,7 +2709,7 @@ export function useRoleplayRealtimeCall({
 
             return (await response.json()) as RoleplaySessionResult;
         },
-        [endReason, sessionId],
+        [endReason, routes, sessionId],
     );
 
     useEffect(() => cleanup, [cleanup]);

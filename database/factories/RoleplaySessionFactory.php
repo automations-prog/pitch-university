@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\Outcome;
 use App\Enums\RealtimeVoice;
+use App\Enums\RoleplayVertical;
 use App\Models\RoleplaySession;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,6 +23,7 @@ class RoleplaySessionFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
+            'vertical' => RoleplayVertical::Medicare,
             'level' => 2,
             'persona' => [
                 'lead' => ['name' => 'Dorothy Miller', 'state' => 'Florida', 'zip' => '33511', 'gender' => 'female'],
@@ -68,6 +70,25 @@ class RoleplaySessionFactory extends Factory
             'persona' => [
                 ...$attributes['persona'],
                 'dq_trap' => ['id' => $trapId, 'hidden_truth' => $hiddenTruth],
+            ],
+        ]);
+    }
+
+    /**
+     * An ACA call: a working-age lead who is a Marketplace plan holder.
+     */
+    public function aca(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'vertical' => RoleplayVertical::Aca,
+            'persona' => [
+                'lead' => ['name' => 'Ashley Turner', 'state' => 'Texas', 'zip' => '75217', 'gender' => 'female'],
+                'objections' => ['what_is_subsidy'],
+                'quirk' => 'kids shouting in the background',
+                'patience' => 8,
+                'dq_trap' => null,
+                'age' => 34,
+                'coverage' => ['has_marketplace_plan' => true, 'carrier' => null, 'knows_what_they_have' => true, 'receives_ssi' => false],
             ],
         ]);
     }

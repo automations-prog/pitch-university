@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, setLayoutProps } from '@inertiajs/react';
 import { ChevronLeft } from 'lucide-react';
 import { ResultCard } from '@/components/roleplay/call-result';
 import { DeliveryCard } from '@/components/roleplay/delivery-card';
@@ -10,14 +10,18 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { RoleplayContentContext } from '@/lib/roleplay-content';
+import {
+    RoleplayContentContext,
+    RoleplayVerticalContext,
+} from '@/lib/roleplay-content';
 import type {
     RoleplayContent,
     RoleplaySessionResult,
+    RoleplayVertical,
 } from '@/lib/roleplay-data';
+import { roleplayRoutes } from '@/lib/roleplay-routes';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
-import { index as roleplayIndex } from '@/routes/roleplay';
 
 const TRANSCRIPT_LINE = /^\[(\d+:\d{2})\] (agent|consumer): (.*)$/;
 
@@ -26,53 +30,66 @@ const TRANSCRIPT_LINE = /^\[(\d+:\d{2})\] (agent|consumer): (.*)$/;
  * recording.
  */
 export default function RoleplaySessionShow({
+    vertical,
     content,
     session,
 }: {
+    vertical: RoleplayVertical;
     content: RoleplayContent;
     session: RoleplaySessionResult;
 }) {
+    const roleplayIndex = roleplayRoutes(vertical.id).index;
+
+    setLayoutProps({
+        breadcrumbs: [
+            { title: 'Dashboard', href: dashboard() },
+            { title: `${vertical.label} Roleplay`, href: roleplayIndex() },
+        ],
+    });
+
     const level = content.levels.find(
         (candidate) => candidate.level === session.level,
     );
 
     return (
-        <RoleplayContentContext value={content}>
-            <Head title={`Roleplay · ${session.lead.name}`} />
+        <RoleplayVerticalContext value={vertical}>
+            <RoleplayContentContext value={content}>
+                <Head title={`${vertical.label} Roleplay · ${session.lead.name}`} />
 
-            <div className="flex h-full flex-1 flex-col gap-6 p-4">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="space-y-0.5">
-                        <h2 className="text-xl font-semibold tracking-tight">
-                            Call with {session.lead.name}
-                        </h2>
-                        <p className="text-muted-foreground text-sm">
-                            Level {session.level}
-                            {level && ` · ${level.name}`}
-                            {session.ended_at &&
-                                ` · ${new Date(session.ended_at).toLocaleString()}`}
-                        </p>
+                <div className="flex h-full flex-1 flex-col gap-6 p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="space-y-0.5">
+                            <h2 className="text-xl font-semibold tracking-tight">
+                                Call with {session.lead.name}
+                            </h2>
+                            <p className="text-muted-foreground text-sm">
+                                Level {session.level}
+                                {level && ` · ${level.name}`}
+                                {session.ended_at &&
+                                    ` · ${new Date(session.ended_at).toLocaleString()}`}
+                            </p>
+                        </div>
+                        <Button variant="outline" asChild>
+                            <Link href={roleplayIndex()}>
+                                <ChevronLeft />
+                                Back to roleplay
+                            </Link>
+                        </Button>
                     </div>
-                    <Button variant="outline" asChild>
-                        <Link href={roleplayIndex()}>
-                            <ChevronLeft />
-                            Back to roleplay
-                        </Link>
-                    </Button>
-                </div>
 
-                <div className="grid items-start gap-4 lg:grid-cols-[1fr_24rem]">
-                    <div className="flex flex-col gap-4">
-                        <DeliveryCard
-                            status={session.delivery_status ?? null}
-                            delivery={session.delivery ?? null}
-                        />
-                        <Transcript transcript={session.transcript ?? ''} />
+                    <div className="grid items-start gap-4 lg:grid-cols-[1fr_24rem]">
+                        <div className="flex flex-col gap-4">
+                            <DeliveryCard
+                                status={session.delivery_status ?? null}
+                                delivery={session.delivery ?? null}
+                            />
+                            <Transcript transcript={session.transcript ?? ''} />
+                        </div>
+                        <ResultCard result={session} />
                     </div>
-                    <ResultCard result={session} />
                 </div>
-            </div>
-        </RoleplayContentContext>
+            </RoleplayContentContext>
+        </RoleplayVerticalContext>
     );
 }
 
@@ -126,10 +143,3 @@ function Transcript({ transcript }: { transcript: string }) {
         </Card>
     );
 }
-
-RoleplaySessionShow.layout = {
-    breadcrumbs: [
-        { title: 'Dashboard', href: dashboard() },
-        { title: 'Roleplay', href: roleplayIndex() },
-    ],
-};

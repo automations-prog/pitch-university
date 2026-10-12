@@ -88,21 +88,21 @@ function completePayload(array $overrides = []): array
 test('guests are redirected to login on every roleplay endpoint', function (string $method, string $route) {
     $session = RoleplaySession::factory()->create();
 
-    $response = $this->{$method}(route($route, $route === 'roleplay.sessions.store' ? [] : $session));
+    $response = $this->{$method}(route($route, $route === 'medicare-roleplay.sessions.store' ? [] : $session));
 
     $response->assertRedirect(route('login'));
 })->with([
-    ['post', 'roleplay.sessions.store'],
-    ['post', 'roleplay.call.session'],
-    ['post', 'roleplay.call.complete'],
-    ['get', 'roleplay.sessions.recording'],
-    ['get', 'roleplay.sessions.show'],
+    ['post', 'medicare-roleplay.sessions.store'],
+    ['post', 'medicare-roleplay.call.session'],
+    ['post', 'medicare-roleplay.call.complete'],
+    ['get', 'medicare-roleplay.sessions.recording'],
+    ['get', 'medicare-roleplay.sessions.show'],
 ]);
 
 test('starting a session saves a persona and returns only its public part', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->postJson(route('roleplay.sessions.store'), ['level' => 3]);
+    $response = $this->actingAs($user)->postJson(route('medicare-roleplay.sessions.store'), ['level' => 3]);
 
     $response->assertCreated();
     expect($response->json())->toHaveKeys(['id', 'level', 'lead', 'quirk', 'patience'])
@@ -117,7 +117,7 @@ test('starting a session saves a persona and returns only its public part', func
 
 test('starting a session requires a level from 1 to 5', function (mixed $level) {
     $response = $this->actingAs(User::factory()->create())
-        ->postJson(route('roleplay.sessions.store'), ['level' => $level]);
+        ->postJson(route('medicare-roleplay.sessions.store'), ['level' => $level]);
 
     $response->assertJsonValidationErrors(['level']);
 })->with([0, 6, 'hard']);
@@ -126,9 +126,9 @@ test('starting sessions past the daily cap is rejected', function () {
     config(['services.openai.roleplay_daily_limit' => 2]);
     $user = User::factory()->create();
 
-    $this->actingAs($user)->postJson(route('roleplay.sessions.store'), ['level' => 1])->assertCreated();
-    $this->actingAs($user)->postJson(route('roleplay.sessions.store'), ['level' => 1])->assertCreated();
-    $response = $this->actingAs($user)->postJson(route('roleplay.sessions.store'), ['level' => 1]);
+    $this->actingAs($user)->postJson(route('medicare-roleplay.sessions.store'), ['level' => 1])->assertCreated();
+    $this->actingAs($user)->postJson(route('medicare-roleplay.sessions.store'), ['level' => 1])->assertCreated();
+    $response = $this->actingAs($user)->postJson(route('medicare-roleplay.sessions.store'), ['level' => 1]);
 
     $response->assertTooManyRequests();
     expect(RoleplaySession::count())->toBe(2);
@@ -138,7 +138,7 @@ test('minting a call session sends the persona prompt, tools and voice to OpenAI
     fakeClientSecrets();
     $session = RoleplaySession::factory()->disqualified()->create(['level' => 4]);
 
-    $response = $this->actingAs($session->user)->postJson(route('roleplay.call.session', $session));
+    $response = $this->actingAs($session->user)->postJson(route('medicare-roleplay.call.session', $session));
 
     $response->assertOk();
     $response->assertJson(['value' => 'ek_abc123']);
@@ -149,6 +149,7 @@ test('minting a call session sends the persona prompt, tools and voice to OpenAI
         && str_contains($request['session']['instructions'], 'Dorothy Miller')
         && str_contains($request['session']['instructions'], 'You are a woman.')
         && str_contains($request['session']['instructions'], 'Has VA health care')
+        && str_contains($request['session']['instructions'], 'never add echo, reverb')
         && collect($request['session']['tools'])->pluck('name')->all() === ['patience_changed', 'objection_raised', 'objection_resolved', 'hang_up']
         && array_key_exists('turn_detection', $request['session']['audio']['input'])
         && $request['session']['audio']['input']['turn_detection'] === null
@@ -175,7 +176,7 @@ test('minting uses a voice of the lead\'s gender when the session has none', fun
     fakeClientSecrets();
     $session = RoleplaySession::factory()->create(['voice' => null]);
 
-    $this->actingAs($session->user)->postJson(route('roleplay.call.session', $session))->assertOk();
+    $this->actingAs($session->user)->postJson(route('medicare-roleplay.call.session', $session))->assertOk();
 
     Http::assertSent(fn ($request) => $request['session']['audio']['output']['voice'] === 'marin'
         && str_contains($request['session']['instructions'], 'You are a woman.'));
@@ -185,7 +186,7 @@ test('minting replaces a voice that could pass for either gender', function (Rea
     fakeClientSecrets();
     $session = RoleplaySession::factory()->create(['voice' => $voice]);
 
-    $this->actingAs($session->user)->postJson(route('roleplay.call.session', $session))->assertOk();
+    $this->actingAs($session->user)->postJson(route('medicare-roleplay.call.session', $session))->assertOk();
 
     Http::assertSent(fn ($request) => $request['session']['audio']['output']['voice'] === 'marin');
 })->with([RealtimeVoice::Sage, RealtimeVoice::Alloy]);
@@ -203,7 +204,7 @@ test('minting never gives a lead a voice of the other gender', function () {
         'voice' => RealtimeVoice::Coral,
     ]);
 
-    $this->actingAs($session->user)->postJson(route('roleplay.call.session', $session))->assertOk();
+    $this->actingAs($session->user)->postJson(route('medicare-roleplay.call.session', $session))->assertOk();
 
     Http::assertSent(fn ($request) => $request['session']['audio']['output']['voice'] === 'cedar'
         && str_contains($request['session']['instructions'], 'You are a man.'));
@@ -213,7 +214,7 @@ test('a session can only be minted once', function () {
     fakeClientSecrets();
     $session = RoleplaySession::factory()->started()->create();
 
-    $response = $this->actingAs($session->user)->postJson(route('roleplay.call.session', $session));
+    $response = $this->actingAs($session->user)->postJson(route('medicare-roleplay.call.session', $session));
 
     $response->assertConflict();
     Http::assertNothingSent();
@@ -225,21 +226,21 @@ test('a user cannot mint, complete or listen to another user\'s session', functi
     $session = RoleplaySession::factory()->started()->create(['recording_path' => 'roleplay-recordings/call.wav']);
 
     $response = $this->actingAs(User::factory()->create())
-        ->{$method}(route($route, $session), $route === 'roleplay.call.complete' ? completePayload() : []);
+        ->{$method}(route($route, $session), $route === 'medicare-roleplay.call.complete' ? completePayload() : []);
 
     $response->assertNotFound();
     Http::assertNothingSent();
 })->with([
-    ['postJson', 'roleplay.call.session'],
-    ['postJson', 'roleplay.call.complete'],
-    ['getJson', 'roleplay.sessions.recording'],
-    ['getJson', 'roleplay.sessions.show'],
+    ['postJson', 'medicare-roleplay.call.session'],
+    ['postJson', 'medicare-roleplay.call.complete'],
+    ['getJson', 'medicare-roleplay.sessions.recording'],
+    ['getJson', 'medicare-roleplay.sessions.show'],
 ]);
 
 test('completing requires a recording, a known disposition and an end reason', function () {
     $session = RoleplaySession::factory()->started()->create();
 
-    $response = $this->actingAs($session->user)->postJson(route('roleplay.call.complete', $session), [
+    $response = $this->actingAs($session->user)->postJson(route('medicare-roleplay.call.complete', $session), [
         'disposition' => 'transferred-ish',
         'end_reason' => 'bored',
     ]);
@@ -252,7 +253,7 @@ test('completing stores the call, grades it and reveals the persona', function (
     Queue::fake([GradeRoleplayDelivery::class]);
     $session = RoleplaySession::factory()->started()->create();
 
-    $response = $this->actingAs($session->user)->post(route('roleplay.call.complete', $session), completePayload());
+    $response = $this->actingAs($session->user)->post(route('medicare-roleplay.call.complete', $session), completePayload());
 
     $response->assertOk();
     $response->assertJson([
@@ -286,7 +287,7 @@ test('completing stores a CRLF transcript with plain line breaks so every line p
     $transcript = str_replace("\n", "\r\n", completePayload()['transcript']);
 
     $response = $this->actingAs($session->user)
-        ->post(route('roleplay.call.complete', $session), completePayload(['transcript' => $transcript]));
+        ->post(route('medicare-roleplay.call.complete', $session), completePayload(['transcript' => $transcript]));
 
     $response->assertOk();
     $response->assertJson(['passed' => true]);
@@ -300,7 +301,7 @@ test('completing rejects an event log that isn\'t JSON', function () {
     $session = RoleplaySession::factory()->started()->create();
 
     $response = $this->actingAs($session->user)
-        ->postJson(route('roleplay.call.complete', $session), completePayload(['events' => 'not json']));
+        ->postJson(route('medicare-roleplay.call.complete', $session), completePayload(['events' => 'not json']));
 
     $response->assertJsonValidationErrors(['events']);
 });
@@ -308,10 +309,10 @@ test('completing rejects an event log that isn\'t JSON', function () {
 test('the owner can open a finished call, as a page or as JSON for polling', function () {
     $session = RoleplaySession::factory()->ended()->create(['delivery_status' => 'done', 'delivery' => ['criteria' => [], 'metrics' => [], 'overall' => 4.2]]);
 
-    $this->actingAs($session->user)->get(route('roleplay.sessions.show', $session))
+    $this->actingAs($session->user)->get(route('medicare-roleplay.sessions.show', $session))
         ->assertInertia(fn ($page) => $page->component('roleplay/sessions/show')->where('session.delivery.overall', 4.2));
 
-    $this->actingAs($session->user)->getJson(route('roleplay.sessions.show', $session))
+    $this->actingAs($session->user)->getJson(route('medicare-roleplay.sessions.show', $session))
         ->assertOk()
         ->assertJsonPath('delivery_status', 'done');
 });
@@ -319,14 +320,14 @@ test('the owner can open a finished call, as a page or as JSON for polling', fun
 test('a call still in progress has no results page', function () {
     $session = RoleplaySession::factory()->started()->create();
 
-    $this->actingAs($session->user)->getJson(route('roleplay.sessions.show', $session))->assertNotFound();
+    $this->actingAs($session->user)->getJson(route('medicare-roleplay.sessions.show', $session))->assertNotFound();
 });
 
 test('a session cannot be completed twice or before it was minted', function (array $attributes) {
     Storage::fake('local');
     $session = RoleplaySession::factory()->create($attributes);
 
-    $response = $this->actingAs($session->user)->post(route('roleplay.call.complete', $session), completePayload());
+    $response = $this->actingAs($session->user)->post(route('medicare-roleplay.call.complete', $session), completePayload());
 
     $response->assertConflict();
 })->with([
@@ -339,7 +340,7 @@ test('the owner can play back their recording', function () {
     Storage::disk('local')->put('roleplay-recordings/call.wav', 'audio');
     $session = RoleplaySession::factory()->ended()->create(['recording_path' => 'roleplay-recordings/call.wav']);
 
-    $response = $this->actingAs($session->user)->get(route('roleplay.sessions.recording', $session));
+    $response = $this->actingAs($session->user)->get(route('medicare-roleplay.sessions.recording', $session));
 
     $response->assertOk();
     expect($response->streamedContent())->toBe('audio');

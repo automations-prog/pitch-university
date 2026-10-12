@@ -19,7 +19,7 @@ use RuntimeException;
  * @phpstan-type DqTrap array{id: string, hiddenTruth: string}
  * @phpstan-type Disposition array{id: string, name: string, description: string}
  * @phpstan-type DeliveryCriterion array{key: string, label: string, description: string}
- * @phpstan-type Content array{deliveryCriteria: list<DeliveryCriterion>, scriptSections: list<ScriptSection>, rebuttalCloser: string, rebuttals: list<Rebuttal>, complianceGuidelines: list<string>, dispositions: list<Disposition>, objections: list<Objection>, levels: list<Level>, dqTraps: list<DqTrap>, quirks: list<string>, quirkMinLevel: int}
+ * @phpstan-type Content array{objectionRiskLabel: string, deliveryCriteria: list<DeliveryCriterion>, scriptSections: list<ScriptSection>, rebuttalCloser: string, rebuttals: list<Rebuttal>, complianceGuidelines: list<string>, dispositions: list<Disposition>, objections: list<Objection>, levels: list<Level>, dqTraps: list<DqTrap>, quirks: list<string>, quirkMinLevel: int}
  */
 class RoleplayScript
 {
@@ -29,11 +29,21 @@ class RoleplayScript
     /** A quirk is attached to every persona at this level and up. */
     public const int QUIRK_MIN_LEVEL = 2;
 
-    private const string SCRIPT_FILE = 'medicare_script.md';
+    protected const string SCRIPT_FILE = 'medicare_script.md';
 
-    private const string OBJECTIONS_FILE = 'OBJECTIONS_AND_PERSONAS.md';
+    protected const string OBJECTIONS_FILE = 'OBJECTIONS_AND_PERSONAS.md';
 
-    private const string GUIDE_FILE = 'guide.md';
+    protected const string GUIDE_FILE = 'guide.md';
+
+    /** The headings the script and its rebuttals live under. */
+    protected const string SCRIPT_HEADING = '# Medicare Script';
+
+    protected const string REBUTTALS_HEADING = '# Medicare Rebuttals';
+
+    protected const string DQ_TRAPS_HEADING = '## Disqualifier traps';
+
+    /** How the objection stats label how often an objection goes wrong. */
+    protected const string OBJECTION_RISK_LABEL = 'Lost';
 
     /**
      * The `guide.md` criteria delivery scoring maps to a measurement or the
@@ -45,9 +55,9 @@ class RoleplayScript
     ];
 
     /** @var Content|null */
-    private ?array $content = null;
+    protected ?array $content = null;
 
-    public function __construct(private readonly ?string $directory = null) {}
+    public function __construct(protected readonly ?string $directory = null) {}
 
     /**
      * All roleplay content, cached until either doc changes.
@@ -57,12 +67,23 @@ class RoleplayScript
     public function content(): array
     {
         return $this->content ??= Cache::rememberForever(
-            'roleplay.script.'.md5(implode('|', array_map(
+            'roleplay.script.'.md5(static::class.implode('|', array_map(
                 fn (string $file): string => $this->path($file).filemtime($this->path($file)),
-                [self::SCRIPT_FILE, self::OBJECTIONS_FILE, self::GUIDE_FILE],
+                $this->sourceFiles(),
             ))),
             fn (): array => $this->parse(),
         );
+    }
+
+    /**
+     * The docs the content is parsed from, so the cache resets when one
+     * changes.
+     *
+     * @return list<string>
+     */
+    protected function sourceFiles(): array
+    {
+        return [static::SCRIPT_FILE, static::OBJECTIONS_FILE, static::GUIDE_FILE];
     }
 
     /**
@@ -122,23 +143,24 @@ class RoleplayScript
      */
     public function parse(): array
     {
-        $script = $this->read(self::SCRIPT_FILE);
-        $personas = $this->read(self::OBJECTIONS_FILE);
+        $script = $this->read(static::SCRIPT_FILE);
+        $personas = $this->read(static::OBJECTIONS_FILE);
 
         [$rebuttalCloser, $rebuttals] = $this->parseRebuttals($script);
 
         return [
-            'deliveryCriteria' => $this->parseDeliveryCriteria($this->read(self::GUIDE_FILE)),
+            'deliveryCriteria' => $this->parseDeliveryCriteria($this->read(static::GUIDE_FILE)),
             'scriptSections' => $this->parseScriptSections($script),
             'rebuttalCloser' => $rebuttalCloser,
             'rebuttals' => $rebuttals,
-            'complianceGuidelines' => $this->bullets($this->section($script, '# Compliance Guidelines', self::SCRIPT_FILE)),
+            'complianceGuidelines' => $this->bullets($this->section($script, '# Compliance Guidelines', static::SCRIPT_FILE)),
             'dispositions' => $this->parseDispositions($script),
             'objections' => $this->parseObjections($personas, $rebuttals),
             'levels' => $this->parseLevels($personas),
             'dqTraps' => $this->parseDqTraps($personas),
-            'quirks' => $this->bullets($this->section($personas, '## Quirks', self::OBJECTIONS_FILE)),
+            'quirks' => $this->bullets($this->section($personas, '## Quirks', static::OBJECTIONS_FILE)),
             'quirkMinLevel' => self::QUIRK_MIN_LEVEL,
+            'objectionRiskLabel' => static::OBJECTION_RISK_LABEL,
         ];
     }
 
@@ -147,7 +169,7 @@ class RoleplayScript
      *
      * @return list<DeliveryCriterion>
      */
-    private function parseDeliveryCriteria(string $guide): array
+    protected function parseDeliveryCriteria(string $guide): array
     {
         preg_match_all('/^([^:\n]+):\s*(.+)$/m', $guide, $rows, PREG_SET_ORDER);
 
@@ -159,7 +181,7 @@ class RoleplayScript
 
         foreach (self::DELIVERY_CRITERIA as $required) {
             if (! in_array($required, array_column($criteria, 'key'), true)) {
-                throw $this->missing("criterion [{$required}]", self::GUIDE_FILE);
+                throw $this->missing("criterion [{$required}]", static::GUIDE_FILE);
             }
         }
 
@@ -169,9 +191,9 @@ class RoleplayScript
     /**
      * @return list<ScriptSection>
      */
-    private function parseScriptSections(string $script): array
+    protected function parseScriptSections(string $script): array
     {
-        $body = $this->section($script, '# Medicare Script', self::SCRIPT_FILE, prefix: true);
+        $body = $this->section($script, static::SCRIPT_HEADING, static::SCRIPT_FILE, prefix: true);
         $sections = [];
 
         foreach (preg_split('/^## /m', $body) ?: [] as $index => $chunk) {
@@ -213,7 +235,7 @@ class RoleplayScript
 
         foreach (['opening', self::TRANSFER_ASK_SECTION] as $required) {
             if (! in_array($required, $ids, true)) {
-                throw $this->missing("script section [{$required}]", self::SCRIPT_FILE);
+                throw $this->missing("script section [{$required}]", static::SCRIPT_FILE);
             }
         }
 
@@ -223,12 +245,12 @@ class RoleplayScript
     /**
      * @return array{0: string, 1: list<Rebuttal>}
      */
-    private function parseRebuttals(string $script): array
+    protected function parseRebuttals(string $script): array
     {
         $closer = null;
         $rebuttals = [];
 
-        foreach (explode("\n", $this->section($script, '# Medicare Rebuttals', self::SCRIPT_FILE)) as $row) {
+        foreach (explode("\n", $this->section($script, static::REBUTTALS_HEADING, static::SCRIPT_FILE)) as $row) {
             $row = trim($row);
 
             if ($row === '' || $row === '---') {
@@ -251,7 +273,7 @@ class RoleplayScript
         }
 
         if ($closer === null || $rebuttals === []) {
-            throw $this->missing('rebuttals', self::SCRIPT_FILE);
+            throw $this->missing('rebuttals', static::SCRIPT_FILE);
         }
 
         return [$closer, $rebuttals];
@@ -260,11 +282,11 @@ class RoleplayScript
     /**
      * @return list<Disposition>
      */
-    private function parseDispositions(string $script): array
+    protected function parseDispositions(string $script): array
     {
         $dispositions = [];
 
-        foreach (explode("\n", $this->section($script, '## Dispositions', self::SCRIPT_FILE)) as $row) {
+        foreach (explode("\n", $this->section($script, '## Dispositions', static::SCRIPT_FILE)) as $row) {
             if (preg_match('/^- \*\*(.+?)\*\*\s*[–-]\s*(.+)$/u', $row, $matches)) {
                 $name = $this->clean($matches[1]);
                 $dispositions[] = [
@@ -283,7 +305,7 @@ class RoleplayScript
 
         foreach (['transfer', 'dq', 'dnc'] as $required) {
             if (! in_array($required, array_column($dispositions, 'id'), true)) {
-                throw $this->missing("disposition [{$required}]", self::SCRIPT_FILE);
+                throw $this->missing("disposition [{$required}]", static::SCRIPT_FILE);
             }
         }
 
@@ -294,9 +316,9 @@ class RoleplayScript
      * @param  list<Rebuttal>  $rebuttals
      * @return list<Objection>
      */
-    private function parseObjections(string $personas, array $rebuttals): array
+    protected function parseObjections(string $personas, array $rebuttals): array
     {
-        $library = $this->section($personas, '# Medicare objection library', self::OBJECTIONS_FILE, prefix: true);
+        $library = $this->section($personas, '# Medicare objection library', static::OBJECTIONS_FILE, prefix: true);
         $objections = [];
 
         preg_match_all(
@@ -318,7 +340,7 @@ class RoleplayScript
             );
 
             if ($consumerLines === [] || ! isset($rebuttalMatch[1])) {
-                throw $this->missing("consumer lines or official rebuttal for objection [{$id}]", self::OBJECTIONS_FILE);
+                throw $this->missing("consumer lines or official rebuttal for objection [{$id}]", static::OBJECTIONS_FILE);
             }
 
             $objections[] = [
@@ -334,7 +356,7 @@ class RoleplayScript
         }
 
         if ($objections === []) {
-            throw $this->missing('objection table', self::OBJECTIONS_FILE);
+            throw $this->missing('objection table', static::OBJECTIONS_FILE);
         }
 
         return $objections;
@@ -348,7 +370,7 @@ class RoleplayScript
      * @param  list<Rebuttal>  $rebuttals
      * @return Rebuttal
      */
-    private function matchRebuttal(string $line, array $rebuttals): array
+    protected function matchRebuttal(string $line, array $rebuttals): array
     {
         foreach ($rebuttals as $rebuttal) {
             if (in_array($line, $rebuttal['lines'], true)) {
@@ -359,10 +381,10 @@ class RoleplayScript
         return ['title' => 'Script line', 'lines' => [$line]];
     }
 
-    private function objectionBlock(string $personas, string $id): string
+    protected function objectionBlock(string $personas, string $id): string
     {
         if (! preg_match('/^### `'.preg_quote($id, '/').'`.*?(?=^### |^---|\z)/ms', $personas, $matches)) {
-            throw $this->missing("### `{$id}` section", self::OBJECTIONS_FILE);
+            throw $this->missing("### `{$id}` section", static::OBJECTIONS_FILE);
         }
 
         return $matches[0];
@@ -371,11 +393,11 @@ class RoleplayScript
     /**
      * @return list<Level>
      */
-    private function parseLevels(string $personas): array
+    protected function parseLevels(string $personas): array
     {
         preg_match_all(
             '/^\|\s*(\d)\s*\|\s*([^|]+?)\s*\|\s*(\d)\s*[–-]\s*(\d)\s*\|\s*(.+?)\s*\|$/mu',
-            $this->section($personas, '## Difficulty levels', self::OBJECTIONS_FILE),
+            $this->section($personas, '## Difficulty levels', static::OBJECTIONS_FILE),
             $rows,
             PREG_SET_ORDER,
         );
@@ -387,7 +409,7 @@ class RoleplayScript
             $level = (int) $level;
 
             if (! isset($mix[$level])) {
-                throw $this->missing("outcome mix for level [{$level}]", self::OBJECTIONS_FILE);
+                throw $this->missing("outcome mix for level [{$level}]", static::OBJECTIONS_FILE);
             }
 
             $levels[] = [
@@ -400,7 +422,7 @@ class RoleplayScript
         }
 
         if (array_column($levels, 'level') !== [1, 2, 3, 4, 5]) {
-            throw $this->missing('levels 1–5 in the difficulty table', self::OBJECTIONS_FILE);
+            throw $this->missing('levels 1–5 in the difficulty table', static::OBJECTIONS_FILE);
         }
 
         return $levels;
@@ -409,11 +431,11 @@ class RoleplayScript
     /**
      * @return array<int, array{transfer: int, dq: int, dnc: int}>
      */
-    private function parseOutcomeMix(string $personas): array
+    protected function parseOutcomeMix(string $personas): array
     {
         preg_match_all(
             '/^\|\s*(\d)(?:\s*[–-]\s*(\d))?\s*\|\s*(\S+)\s*\|\s*(\S+)\s*\|\s*(\S+)\s*\|$/mu',
-            $this->section($personas, '## Outcome mix by level', self::OBJECTIONS_FILE),
+            $this->section($personas, '## Outcome mix by level', static::OBJECTIONS_FILE),
             $rows,
             PREG_SET_ORDER,
         );
@@ -437,17 +459,17 @@ class RoleplayScript
     /**
      * @return list<DqTrap>
      */
-    private function parseDqTraps(string $personas): array
+    protected function parseDqTraps(string $personas): array
     {
         preg_match_all(
             '/^\|\s*`(\w+)`\s*\|\s*(.+?)\s*\|$/m',
-            $this->section($personas, '## Disqualifier traps', self::OBJECTIONS_FILE),
+            $this->section($personas, static::DQ_TRAPS_HEADING, static::OBJECTIONS_FILE),
             $rows,
             PREG_SET_ORDER,
         );
 
         if ($rows === []) {
-            throw $this->missing('DQ trap table', self::OBJECTIONS_FILE);
+            throw $this->missing('DQ trap table', static::OBJECTIONS_FILE);
         }
 
         return array_map(fn (array $row): array => [
@@ -460,7 +482,7 @@ class RoleplayScript
      * The body under a heading, up to the next heading of the same or a
      * higher level.
      */
-    private function section(string $markdown, string $heading, string $file, bool $prefix = false): string
+    protected function section(string $markdown, string $heading, string $file, bool $prefix = false): string
     {
         $hashes = strspn($heading, '#');
         $title = preg_quote($heading, '/').($prefix ? '[^\n]*' : '');
@@ -478,7 +500,7 @@ class RoleplayScript
      *
      * @return list<string>
      */
-    private function bullets(string $block): array
+    protected function bullets(string $block): array
     {
         preg_match_all('/^\s*- (.+)$/m', $block, $matches);
 
@@ -489,12 +511,12 @@ class RoleplayScript
      * Strip markdown emphasis and escapes, and straighten curly single
      * quotes, so the text reads like the script.
      */
-    private function clean(string $text): string
+    protected function clean(string $text): string
     {
         return trim(str_replace(['**', '\\_', '\\*', '‘', '’'], ['', '_', '*', "'", "'"], $text));
     }
 
-    private function read(string $file): string
+    protected function read(string $file): string
     {
         $path = $this->path($file);
 
@@ -505,12 +527,12 @@ class RoleplayScript
         return str_replace("\r\n", "\n", (string) file_get_contents($path));
     }
 
-    private function path(string $file): string
+    protected function path(string $file): string
     {
         return ($this->directory ?? base_path('ai-roleplay')).'/'.$file;
     }
 
-    private function missing(string $what, string $file): RuntimeException
+    protected function missing(string $what, string $file): RuntimeException
     {
         return new RuntimeException("Roleplay parser could not find the {$what} in {$file}. Was a heading renamed?");
     }

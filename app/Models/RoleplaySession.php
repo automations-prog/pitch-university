@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Outcome;
 use App\Enums\RealtimeVoice;
+use App\Enums\RoleplayVertical;
 use Database\Factories\RoleplaySessionFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,8 +15,9 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property int $user_id
+ * @property RoleplayVertical $vertical
  * @property int $level
- * @property array{lead: array{name: string, state: string, zip: string}, objections: list<string>, quirk: string|null, patience: int, dq_trap: array{id: string, hidden_truth: string}|null} $persona
+ * @property array{lead: array{name: string, state: string, zip: string, gender?: 'male'|'female'}, objections: list<string>, quirk: string|null, patience: int, dq_trap: array{id: string, hidden_truth: string}|null, age?: int, coverage?: array{has_marketplace_plan: bool, carrier: string|null, knows_what_they_have: bool, receives_ssi: bool}} $persona
  * @property Outcome $expected_outcome
  * @property RealtimeVoice|null $voice
  * @property string|null $disposition
@@ -32,7 +34,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['level', 'persona', 'expected_outcome', 'voice', 'disposition', 'end_reason', 'transcript', 'events', 'recording_path', 'score', 'delivery', 'delivery_status', 'passed', 'started_at', 'ended_at'])]
+#[Fillable(['vertical', 'level', 'persona', 'expected_outcome', 'voice', 'disposition', 'end_reason', 'transcript', 'events', 'recording_path', 'score', 'delivery', 'delivery_status', 'passed', 'started_at', 'ended_at'])]
 class RoleplaySession extends Model
 {
     /** @use HasFactory<RoleplaySessionFactory> */
@@ -46,6 +48,7 @@ class RoleplaySession extends Model
     protected function casts(): array
     {
         return [
+            'vertical' => RoleplayVertical::class,
             'persona' => 'array',
             'expected_outcome' => Outcome::class,
             'voice' => RealtimeVoice::class,

@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\RoleplayVertical;
 use App\Services\RoleplayDeliveryMetrics;
-use App\Services\RoleplayScript;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -14,11 +14,19 @@ class StoreRoleplayCallRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request. Returns the
-     * policy response so another user's session 404s instead of 403ing.
+     * policy response so another user's session 404s instead of 403ing,
+     * and a session 404s under another vertical's routes.
      */
     public function authorize(): Response
     {
-        return Gate::inspect('update', $this->route('roleplaySession'));
+        $session = $this->route('roleplaySession');
+        $vertical = $this->route('vertical');
+
+        if ($session->vertical !== ($vertical instanceof RoleplayVertical ? $vertical : RoleplayVertical::from($vertical))) {
+            return Response::denyAsNotFound();
+        }
+
+        return Gate::inspect('update', $session);
     }
 
     /**
@@ -44,7 +52,7 @@ class StoreRoleplayCallRequest extends FormRequest
         return [
             'transcript' => ['nullable', 'string', 'max:200000'],
             'recording' => ['required', 'file', 'mimes:webm,wav,ogg,mp3,m4a', 'max:51200'],
-            'disposition' => ['required', 'string', Rule::in(app(RoleplayScript::class)->dispositionIds())],
+            'disposition' => ['required', 'string', Rule::in($this->route('roleplaySession')->vertical->script()->dispositionIds())],
             'end_reason' => ['required', Rule::in(['agent', 'hung_up'])],
             'transfer_clicked_at' => ['nullable', 'integer', 'min:0'],
             'events' => ['nullable', 'json', 'max:1000000'],

@@ -21,7 +21,14 @@ export type EndReason = 'agent' | 'hung_up';
 /** DQ traps that surface at the opening (no Parts A & B) vs. Work / VA. */
 const OPENING_DQ_TRAPS = new Set(['no_part_b', 'medicaid_only']);
 
-const WORK_VA_SECTION = 'work_va_insurance';
+/**
+ * The step where a disqualifier comes out when it isn't an opening one:
+ * Work / VA on Medicare, the first coverage check on ACA.
+ */
+const DQ_REVEAL_SECTIONS = new Set([
+    'work_va_insurance',
+    'confirm_no_medicare_medicaid_or_work_insurance',
+]);
 
 /**
  * How the consumer answers each script step when they have nothing to
@@ -35,6 +42,10 @@ const CONSUMER_REPLIES: Record<string, string> = {
     work_va_insurance: "No, I don't.",
     ask_for_the_transfer: 'Okay, sure.',
     cold_transfer: "Oh, it's not bad out today.",
+    confirm_the_state: 'Yeah.',
+    confirm_no_medicare_medicaid_or_work_insurance: 'No, none of that.',
+    double_confirm_and_age: 'Correct.',
+    conference_and_warm_handoff: 'Hi, yes, this is me.',
 };
 
 /**
@@ -73,8 +84,8 @@ export function useRoleplayCall(
     const transferAskStep = scriptSections.findIndex(
         (section) => section.id === TRANSFER_ASK_SECTION,
     );
-    const workVaStep = scriptSections.findIndex(
-        (section) => section.id === WORK_VA_SECTION,
+    const dqRevealStep = scriptSections.findIndex(
+        (section) => DQ_REVEAL_SECTIONS.has(section.id),
     );
     const schedule = useMemo(
         () => scheduleObjections(persona.objections, transferAskStep),
@@ -139,7 +150,7 @@ export function useRoleplayCall(
             trap !== null &&
             (OPENING_DQ_TRAPS.has(trap.id)
                 ? currentStep === 0
-                : currentStep === workVaStep);
+                : currentStep === dqRevealStep);
         const saysDnc = persona.outcome === 'dnc' && currentStep === dncStep;
 
         // An objection, the DQ truth or a DNC takes the place of the
@@ -197,7 +208,7 @@ export function useRoleplayCall(
         persona,
         schedule,
         scriptSections,
-        workVaStep,
+        dqRevealStep,
     ]);
 
     /**
