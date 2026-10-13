@@ -1,0 +1,254 @@
+{
+    "id": "meals_dispositions",
+    "title": "Dispositions",
+    "est_minutes": 16,
+    "summary": "The ten codes, and the edge cases that get miscoded.",
+    "badge": {
+        "id": "badge_meals_dispositions",
+        "name": "Clean Coder",
+        "icon": "🗂️"
+    },
+    "lessons": [
+        {
+            "id": "m6_1",
+            "title": "The ten codes",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<table><tr><th>Code</th><th>Use when</th></tr><tr><td><strong>Transfer</strong></td><td>The screener took the call and the handoff was completed</td></tr><tr><td><strong>DQ</strong></td><td>No Medicaid, copays, a non-qualifying plan, Medicare only, or outside the five boroughs</td></tr><tr><td><strong>Not Interested</strong></td><td>They decline, or hang up after acknowledging who they are</td></tr><tr><td><strong>Call Back</strong></td><td>They ask to be called back</td></tr><tr><td><strong>DNC</strong></td><td>Stop calling, remove me, or a threat</td></tr><tr><td><strong>Hung-Up Transfer</strong></td><td>They hang up after the transfer starts</td></tr><tr><td><strong>Dead Air</strong></td><td>No response at all</td></tr><tr><td><strong>Answering Machine</strong></td><td>Voicemail — leave no message</td></tr><tr><td><strong>Wrong Number</strong></td><td>The person asked for isn't there</td></tr><tr><td><strong>No English</strong></td><td>Can't continue in English</td></tr></table>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer says “yes, that's me” then hangs up. Code?",
+                    "choices": [
+                        "Wrong Number",
+                        "Not Interested",
+                        "Dead Air",
+                        "Hung-Up Transfer"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "They acknowledged, so it's Not Interested."
+                }
+            ]
+        },
+        {
+            "id": "m6_2",
+            "title": "DQ is the one that matters",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>DQ is the code that protects the campaign. Five reasons: no Medicaid, copays at the doctor, a plan that isn't on the list, Medicare only, or living outside the five boroughs.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "38 disqualified consumers were transferred anyway",
+                    "html": "<p>Out of 169 who should have been DQ'd, 99 were caught. The rest were sent to a screener who couldn't help them — wasting the screener's time and billing a transfer that shouldn't exist.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Read the DQ line, code it DQ, move to the next call. It takes ten seconds and it's a correct outcome.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Someone is in Yonkers. Code?",
+                    "choices": [
+                        "Transfer — it's near NYC",
+                        "Call Back",
+                        "DQ — outside the five boroughs",
+                        "Wrong Number"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Only the five boroughs qualify."
+                }
+            ]
+        },
+        {
+            "id": "m6_3",
+            "title": "The ones that get mixed up",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p><strong>Not Interested vs Dead Air:</strong> did they acknowledge? If they said anything that showed they were there, it's Not Interested. Silence throughout is Dead Air.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Not Interested vs Hung-Up Transfer:</strong> did you start the transfer? Before — Not Interested. After — Hung-Up Transfer.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Call Back vs Not Interested:</strong> “call me back” during a brush-off that you then rebut and lose is Not Interested. An actual request to be called at a specific time is a Call Back.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Code what happened",
+                    "html": "<p>Not what you hoped happened. Miscoding patterns get noticed, and on this campaign they've cost people their seats.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "You hit transfer, the screener's line rings, and the consumer hangs up. Code?",
+                    "choices": [
+                        "Hung-Up Transfer",
+                        "Not Interested",
+                        "Dead Air",
+                        "Conference Ending"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "After the transfer starts, it's a Hung-Up Transfer."
+                }
+            ]
+        },
+        {
+            "id": "m6_4",
+            "title": "Voicemail and wrong numbers",
+            "est_minutes": 2,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p><strong>Answering Machine:</strong> you reach voicemail. <strong>Do not leave a message.</strong></p><p><strong>Wrong Number:</strong> the person you asked for isn't at this number. Don't pitch whoever answered — they aren't the lead and they haven't consented to anything.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Someone else answers and says the person you asked for doesn't live there. What do you do?",
+                    "choices": [
+                        "Ask for a forwarding number",
+                        "Code Wrong Number and move on",
+                        "Code Not Interested",
+                        "Pitch them instead"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "They're not your lead."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "m6q1",
+                "question": "Acknowledged then hung up?",
+                "choices": [
+                    "Dead Air",
+                    "DNC",
+                    "Not Interested",
+                    "Wrong Number"
+                ],
+                "answer_index": 2,
+                "explanation": "Acknowledgement makes it Not Interested.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "m6q2",
+                "question": "Hangs up after the transfer begins?",
+                "choices": [
+                    "Transfer",
+                    "Not Interested",
+                    "Dead Air",
+                    "Hung-Up Transfer"
+                ],
+                "answer_index": 3,
+                "explanation": "Hung-Up Transfer.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "m6q3",
+                "question": "Pays copays at the doctor?",
+                "choices": [
+                    "Call Back",
+                    "Not Interested",
+                    "Transfer",
+                    "DQ"
+                ],
+                "answer_index": 3,
+                "explanation": "Copays means not Medicaid.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "m6q4",
+                "question": "Lives in Jersey City?",
+                "choices": [
+                    "Wrong Number",
+                    "Call Back",
+                    "Transfer",
+                    "DQ"
+                ],
+                "answer_index": 3,
+                "explanation": "Outside the five boroughs.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "m6q5",
+                "question": "Voicemail?",
+                "choices": [
+                    "Dead Air",
+                    "Answering Machine, no message",
+                    "Leave a short message",
+                    "Leave a callback number"
+                ],
+                "answer_index": 1,
+                "explanation": "Never leave a message.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "m6q6",
+                "question": "Someone else answers and the lead doesn't live there?",
+                "choices": [
+                    "Call Back",
+                    "Not Interested",
+                    "Wrong Number",
+                    "Pitch them"
+                ],
+                "answer_index": 2,
+                "explanation": "They aren't your lead.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "m6q7",
+                "question": "How many disqualified consumers were transferred anyway in the sample?",
+                "choices": [
+                    "38",
+                    "169",
+                    "None",
+                    "99"
+                ],
+                "answer_index": 0,
+                "explanation": "38 of 169.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "m6q8",
+                "question": "“Take me off your list.”",
+                "choices": [
+                    "DQ",
+                    "DNC",
+                    "Call Back",
+                    "Not Interested"
+                ],
+                "answer_index": 1,
+                "explanation": "DNC, no rebuttal.",
+                "tags": [
+                    "dispositions"
+                ]
+            }
+        ]
+    }
+}

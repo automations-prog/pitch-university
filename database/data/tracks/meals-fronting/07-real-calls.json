@@ -1,0 +1,335 @@
+{
+    "id": "meals_real_calls",
+    "title": "What Real Calls Look Like",
+    "est_minutes": 20,
+    "summary": "Patterns from 3,263 recorded calls: where they are won, where they are lost, and the five gaps that show up most.",
+    "badge": {
+        "id": "badge_meals_real",
+        "name": "Floor Ready",
+        "icon": "🎧"
+    },
+    "lessons": [
+        {
+            "id": "m7_1",
+            "title": "Won and lost, side by side",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Everything in this module comes from <strong>3,263 recorded calls</strong> — 1,196 that transferred and 2,067 that didn't. Unusually, we can show you both.</p>"
+                },
+                {
+                    "type": "script",
+                    "title": "Lost in 27 seconds",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Hi, am I speaking with Robert? This is Dana with America's Health on a recorded line, I'm calling about the Medicaid meal service, I just need to confirm you're still receiving Medicaid —"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "I'm not interested."
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "Okay, no problem. Have a good day."
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(Not Interested)"
+                        }
+                    ]
+                },
+                {
+                    "type": "script",
+                    "title": "Same objection, saved",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Hi, am I speaking with Robert? This is Dana with America's Health on a recorded line, calling about the Medicaid meal service. I just need to confirm you're still receiving Medicaid, correct?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "I'm not interested."
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "I understand, but groceries are NOT getting any cheaper. You are ALREADY approved for up to three meals at NO cost and this is INCLUDED in your Medicaid. I just need to confirm — you are still receiving Medicaid, correct?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "...yeah, I am."
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(continues to borough, ZIP, double confirm, transfer)"
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Same objection, same opening. The difference is one sentence and no pause.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "What separates the two calls above?",
+                    "choices": [
+                        "The consumer was friendlier",
+                        "The opening was better in the second",
+                        "The agent rebutted immediately instead of accepting the no",
+                        "The second agent talked longer"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "One rebuttal, delivered without pausing."
+                }
+            ]
+        },
+        {
+            "id": "m7_2",
+            "title": "The five gaps",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<table><tr><th>Gap</th><th>Share of calls</th></tr><tr><td>Transferred without permission</td><td><strong>32.3%</strong></td></tr><tr><td>ZIP never confirmed</td><td><strong>24.7%</strong></td></tr><tr><td>Medicaid question asked but talked over</td><td><strong>26.7%</strong></td></tr><tr><td>Double confirm skipped</td><td><strong>18.4%</strong></td></tr><tr><td>Medicaid question never asked</td><td>10.4%</td></tr></table>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Four of the five are the same habit",
+                    "html": "<p>Asking and not waiting. The question gets said, the agent keeps talking, and nothing is actually verified. The dialer records it as asked.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>The fix isn't more words. It's stopping after each question until you hear an answer.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "An agent asks about Medicaid and immediately continues into the borough question. How does that score?",
+                    "choices": [
+                        "Skipped",
+                        "Not reached",
+                        "Asked but not waited — nothing was verified",
+                        "Done — the question was asked"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Saying it isn't verifying it."
+                }
+            ]
+        },
+        {
+            "id": "m7_3",
+            "title": "Where calls actually die",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Of the 2,067 lost calls, the loss almost always happens in one of three places:</p><ol><li><strong>The first five seconds</strong> — consumer disengages during the identity check, before they know what the call is</li><li><strong>The first brush-off</strong> — “not interested”, “I don't need it”, “I'm busy”, unrebutted</li><li><strong>The confusion point</strong> — stacked questions with no pauses, and the consumer never understands what is being offered</li></ol>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "The third one is self-inflicted",
+                    "html": "<p>One real loss was summarised as: <em>“stacked questions with no pauses; consumer never understood the offer and declined.”</em> Slowing down is not the opposite of speed — pausing after a question is what keeps the call alive.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Say what the call is about <em>early</em>. A consumer who knows free meals are on the table behaves differently from one who thinks they're being sold something.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Where is the single most common place a call is lost?",
+                    "choices": [
+                        "During the double confirm",
+                        "At the ZIP question",
+                        "During the handoff",
+                        "At the first brush-off"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "And more than half of those got no rebuttal at all."
+                }
+            ]
+        },
+        {
+            "id": "m7_4",
+            "title": "Inbound calls",
+            "est_minutes": 3,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>About one call in five on this campaign comes in rather than goes out. The consumer rang you.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Everything else is identical: all nine steps, the Medicaid question, the borough, the ZIP, the double confirm, permission, handoff. What changes is only the opening — don't tell someone who just called you that you're giving them a quick call.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "On an inbound call, which steps can you skip?",
+                    "choices": [
+                        "The recorded line",
+                        "The double confirm",
+                        "The Medicaid question",
+                        "None of them"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Same nine steps, different opening."
+                }
+            ]
+        },
+        {
+            "id": "m7_5",
+            "title": "What the best agents do differently",
+            "est_minutes": 2,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Across the top performers' calls, three habits stand out, and none of them are clever:</p><ul><li>They say what the call is about in the first sentence</li><li>They never let a brush-off sit — the rebuttal lands immediately</li><li>They stop talking after each question</li></ul>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "That's it",
+                    "html": "<p>No special lines, no tricks. The approved script, delivered without pauses in the wrong places and with pauses in the right ones.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "What do the top performers have in common?",
+                    "choices": [
+                        "They rebut immediately and wait after each question",
+                        "Custom rebuttals they wrote themselves",
+                        "Longer calls",
+                        "They skip the ZIP to save time"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "The script, delivered properly."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "m7q1",
+                "question": "Share of calls transferred without permission?",
+                "choices": [
+                    "32%",
+                    "60%",
+                    "3%",
+                    "12%"
+                ],
+                "answer_index": 0,
+                "explanation": "32.3% — the biggest procedural gap.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "m7q2",
+                "question": "“Asked but not waited” means…",
+                "choices": [
+                    "The consumer refused",
+                    "It was asked and talked over, verifying nothing",
+                    "The question was forgotten",
+                    "It was asked twice"
+                ],
+                "answer_index": 1,
+                "explanation": "Saying it isn't verifying it.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "m7q3",
+                "question": "Most common place a call is lost?",
+                "choices": [
+                    "The double confirm",
+                    "The first brush-off",
+                    "The handoff",
+                    "The ZIP"
+                ],
+                "answer_index": 1,
+                "explanation": "And over half get no rebuttal.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "m7q4",
+                "question": "Roughly what share of calls are inbound?",
+                "choices": [
+                    "1 in 5",
+                    "None",
+                    "Half",
+                    "1 in 50"
+                ],
+                "answer_index": 0,
+                "explanation": "About 20%.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "m7q5",
+                "question": "On inbound, which steps apply?",
+                "choices": [
+                    "Only the Medicaid question",
+                    "None",
+                    "All nine",
+                    "Only the handoff"
+                ],
+                "answer_index": 2,
+                "explanation": "Every step, every call.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "m7q6",
+                "question": "ZIP is skipped on roughly…",
+                "choices": [
+                    "Half of calls",
+                    "1 in 50 calls",
+                    "1 in 4 calls",
+                    "Never"
+                ],
+                "answer_index": 2,
+                "explanation": "24.7%.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "m7q7",
+                "question": "What do top performers do differently?",
+                "choices": [
+                    "Use their own scripts",
+                    "Skip steps to move faster",
+                    "Talk longer",
+                    "Rebut instantly and pause after questions"
+                ],
+                "answer_index": 3,
+                "explanation": "The script, delivered properly.",
+                "tags": [
+                    "role"
+                ]
+            },
+            {
+                "id": "m7q8",
+                "question": "A consumer who doesn't understand the offer…",
+                "choices": [
+                    "Should be transferred",
+                    "Usually declines — often because questions were stacked without pauses",
+                    "Is a DQ",
+                    "Should be called back"
+                ],
+                "answer_index": 1,
+                "explanation": "A real recorded loss pattern.",
+                "tags": [
+                    "rebuttals"
+                ]
+            }
+        ]
+    }
+}

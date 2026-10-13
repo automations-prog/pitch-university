@@ -1,0 +1,3142 @@
+{
+ "vertical": "meals",
+ "title": "Pitch University: Meals",
+ "modules": [
+  {
+   "id": "meals_101",
+   "title": "The Benefit & Your Role",
+   "est_minutes": 20,
+   "summary": "What the Medicaid meal benefit is, what you may say about it, and the four things every call has to establish.",
+   "badge": {
+    "id": "badge_meals_101",
+    "name": "Meals Basics",
+    "icon": "🥗"
+   },
+   "lessons": [
+    {
+     "id": "m1_1",
+     "title": "What you're actually offering",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>This is a <strong>meal delivery benefit that is already included in the consumer's Medicaid</strong>. Up to 3 meals a day, at no cost to them, delivered to their door, with no change to their coverage.</p><p>You are not selling it. You are not signing anyone up. You confirm four things and hand the consumer to a screener.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>The four things:</p><ol><li>They still receive <strong>Medicaid</strong></li><li>Their <strong>borough</strong></li><li>Their <strong>ZIP code</strong></li><li>All of it again, as a <strong>double confirm</strong></li></ol><p>Then you get their okay and bring the screener on.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "What you may say",
+       "html": "<p>Up to 3 meals a day · at no cost · included in your Medicaid · delivered to your doorstep · no change to your coverage · you're already approved. All of that is approved wording.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "What you may never say",
+       "html": "<p>That it costs anything. That their coverage changes. A delivery date. A dollar amount. A specific menu. The screener handles all of that — and two of those are simply untrue.</p>"
+      },
+      {
+       "type": "check",
+       "question": "What is this benefit?",
+       "choices": [
+        "A new insurance plan you're enrolling them in",
+        "A meal delivery benefit already included in their Medicaid",
+        "A grocery discount card",
+        "A food stamps application"
+       ],
+       "answer_index": 1,
+       "explanation": "Already included in their Medicaid. Nothing is being sold or changed."
+      }
+     ]
+    },
+    {
+     "id": "m1_2",
+     "title": "The call is short — much shorter than you think",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Across 3,263 real calls, a typical one runs about <strong>a minute and a half</strong>. When a consumer brushes you off and the agent doesn't come straight back, the median call is <strong>27 seconds</strong>.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>That is the whole reason the script says <strong>GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE</strong> after every rebuttal. It isn't a style note. You have seconds.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Consumers answer in two or three words",
+       "html": "<p>“Yes.” “No.” “What?” “Who's this?” That is normal on this campaign. Don't mistake a short answer for rudeness, and don't fill the silence with a speech.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer says “not interested” four seconds into the call. What does the data say happens next?",
+       "choices": [
+        "Most agents rebut and recover the call",
+        "Most of these calls end within seconds",
+        "The consumer usually asks a question",
+        "It makes no difference to the outcome"
+       ],
+       "answer_index": 1,
+       "explanation": "97.5% of calls where “not interested” comes up never reach a transfer. The window is tiny."
+      }
+     ]
+    },
+    {
+     "id": "m1_3",
+     "title": "Who you're calling",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>New York City Medicaid recipients across the five boroughs. Many are older. Many are hard of hearing. Many speak English as a second language. A lot of them have had several calls like this already.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Expect to repeat yourself, and expect suspicion — the most common single reaction on these calls is some version of <em>“What?”</em></p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Slow down rather than speed up",
+       "html": "<p>If someone can't hear you, talking faster loses the call. The verifications are short; say them clearly and wait.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer asks you to repeat yourself twice in the first fifteen seconds. What's the right move?",
+       "choices": [
+        "Speed up to save time",
+        "Slow down and repeat clearly",
+        "Transfer them to the screener early",
+        "End the call"
+       ],
+       "answer_index": 1,
+       "explanation": "Hard of hearing is normal here, not a brush-off."
+      }
+     ]
+    },
+    {
+     "id": "m1_4",
+     "title": "What the screener does, and what you don't",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>The screener sets up the service. They cover delivery, menus, timing and anything specific. Your job ends when they're talking to the consumer.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>So when a consumer asks <em>“when do the meals come?”</em> or <em>“can I pick what I get?”</em>, the honest and compliant answer is the same: the screener will go over that — and then straight back to your verification.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Guessing is how agents get in trouble",
+       "html": "<p>Promising a delivery date or a specific menu is a compliance failure even when you're trying to be helpful. You genuinely don't know, and the consumer remembers what you told them.</p>"
+      },
+      {
+       "type": "check",
+       "question": "“When will my first delivery come?”",
+       "choices": [
+        "“Usually within a week.”",
+        "“Tomorrow or the next day.”",
+        "“The screener will go over all of that with you — I just need to confirm…”",
+        "“I can check that for you.”"
+       ],
+       "answer_index": 2,
+       "explanation": "You don't know, and the script sends it to the screener."
+      }
+     ]
+    },
+    {
+     "id": "m1_5",
+     "title": "What good looks like",
+     "est_minutes": 3,
+     "blocks": [
+      {
+       "type": "script",
+       "title": "A clean call",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Hey, good morning, am I speaking with Maria?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Yes, who's this?"
+        },
+        {
+         "speaker": "agent",
+         "text": "Hey Maria, this is Nate, I'm with America's Health on a recorded line. We were just giving you a quick call today about the Medicaid meal service for you and your family. I just need to confirm you ARE still receiving Medicaid, correct?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Yes."
+        },
+        {
+         "speaker": "agent",
+         "text": "Okay perfect, and you're still in the Bronx, with the zip code 10457, correct?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "That's right."
+        },
+        {
+         "speaker": "agent",
+         "text": "Okay LAST question here, JUST to double confirm, you ARE receiving Medicaid and you ARE still in the Bronx, correct?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Yes."
+        },
+        {
+         "speaker": "agent",
+         "text": "Perfect, that's everything I need. The screener is coming on the line now to help you set that up, once that's finished they'll have you on your way, okay?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Okay."
+        },
+        {
+         "speaker": "note",
+         "text": "(warm handoff naming the consumer, borough and ZIP)"
+        }
+       ]
+      },
+      {
+       "type": "text",
+       "html": "<p>Four verifications, a permission, a handoff. Under ninety seconds. That's the job.</p>"
+      },
+      {
+       "type": "check",
+       "question": "How many separate times is Medicaid confirmed on a correct call?",
+       "choices": [
+        "Once",
+        "Twice — the first ask and the double confirm",
+        "Three times",
+        "Only if they sound unsure"
+       ],
+       "answer_index": 1,
+       "explanation": "The first ask, then again in the double confirm before the transfer."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "m1q1",
+      "question": "What is the meal benefit?",
+      "choices": [
+       "A new plan you enrol them in",
+       "A benefit already included in their Medicaid",
+       "A discount card",
+       "A food stamps application"
+      ],
+      "answer_index": 1,
+      "explanation": "Already included in their Medicaid.",
+      "tags": [
+       "product"
+      ]
+     },
+     {
+      "id": "m1q2",
+      "question": "How many meals a day may you mention?",
+      "choices": [
+       "One",
+       "Two",
+       "Up to three",
+       "Unlimited"
+      ],
+      "answer_index": 2,
+      "explanation": "Up to 3 meals a day is approved wording.",
+      "tags": [
+       "product"
+      ]
+     },
+     {
+      "id": "m1q3",
+      "question": "Which of these may you NOT say?",
+      "choices": [
+       "It's at no cost",
+       "It's included in your Medicaid",
+       "Your first delivery is Tuesday",
+       "There's no change to your coverage"
+      ],
+      "answer_index": 2,
+      "explanation": "Delivery dates belong to the screener and you don't know them.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "m1q4",
+      "question": "A typical call on this campaign runs about…",
+      "choices": [
+       "20 seconds",
+       "90 seconds",
+       "5 minutes",
+       "10 minutes"
+      ],
+      "answer_index": 1,
+      "explanation": "Around a minute and a half. Brush-off calls that aren't rebutted die at 27 seconds.",
+      "tags": [
+       "product"
+      ]
+     },
+     {
+      "id": "m1q5",
+      "question": "What are the four things you confirm?",
+      "choices": [
+       "Name, age, income, borough",
+       "Medicaid, borough, ZIP, then all of it again",
+       "Medicaid, income, address, phone",
+       "Borough, ZIP, meals wanted, delivery day"
+      ],
+      "answer_index": 1,
+      "explanation": "Medicaid, borough, ZIP, double confirm.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "m1q6",
+      "question": "Who handles delivery and menu questions?",
+      "choices": [
+       "You",
+       "The screener",
+       "The consumer's doctor",
+       "Medicaid"
+      ],
+      "answer_index": 1,
+      "explanation": "The screener. Redirect and go back to verifying.",
+      "tags": [
+       "role"
+      ]
+     },
+     {
+      "id": "m1q7",
+      "question": "A consumer answers “yes” in one word. That is…",
+      "choices": [
+       "Rude",
+       "Normal on this campaign",
+       "A sign they're confused",
+       "A reason to slow the pitch"
+      ],
+      "answer_index": 1,
+      "explanation": "Two or three word answers are the norm here.",
+      "tags": [
+       "product"
+      ]
+     },
+     {
+      "id": "m1q8",
+      "question": "Why does the script say “don't stop or pause”?",
+      "choices": [
+       "To sound confident",
+       "Because brush-off calls end in seconds if you hesitate",
+       "To finish the shift faster",
+       "Because the dialer times out"
+      ],
+      "answer_index": 1,
+      "explanation": "27 seconds is the median when a brush-off goes unrebutted.",
+      "tags": [
+       "rebuttals"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "meals_qualify",
+   "title": "The Medicaid Question",
+   "est_minutes": 26,
+   "summary": "The one question the whole campaign rests on, its three-way branch, the ten qualifying plans, and the boroughs.",
+   "badge": {
+    "id": "badge_meals_qualify",
+    "name": "Qualifier",
+    "icon": "✅"
+   },
+   "lessons": [
+    {
+     "id": "m2_1",
+     "title": "Never skipping the question",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Everything on this campaign rests on one question:</p><p><strong>“I just need to confirm you ARE still receiving Medicaid, correct?”</strong></p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Skipping it is not a missed step — it's treated as fraud",
+       "html": "<p>Management's position is unambiguous. Transferring someone without ever asking whether they have Medicaid is the most serious failure on this campaign, and the simulator fails the call outright no matter how good the rest was.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>It is also not hypothetical. On an offshore floor that was shut down over it, <strong>88% of transfers never asked the question</strong>. On the named floor it still happens on about 1 in 16 transfers.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Ask it. Wait for the answer. The whole thing takes four seconds.</p>"
+      },
+      {
+       "type": "check",
+       "question": "You've confirmed the borough and ZIP, the consumer is friendly, and you never got around to the Medicaid question. What now?",
+       "choices": [
+        "Transfer — they're clearly fine",
+        "Ask it before you do anything else",
+        "Let the screener ask",
+        "Mark it a callback"
+       ],
+       "answer_index": 1,
+       "explanation": "No Medicaid question, no transfer. Ever."
+      }
+     ]
+    },
+    {
+     "id": "m2_2",
+     "title": "Yes, no, and “I don't know”",
+     "est_minutes": 6,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Three answers, three paths.</p>"
+      },
+      {
+       "type": "script",
+       "title": "The branch",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "I just need to confirm you ARE still receiving Medicaid, correct?"
+        },
+        {
+         "speaker": "note",
+         "text": "YES → continue to the borough"
+        },
+        {
+         "speaker": "consumer",
+         "text": "No, I don't have that."
+        },
+        {
+         "speaker": "agent",
+         "text": "Oh there must have been a mistake, thank you for your time, have a great day. (END AND CODE AS DQ)"
+        },
+        {
+         "speaker": "note",
+         "text": "I DON'T KNOW → use the fallback question"
+        },
+        {
+         "speaker": "agent",
+         "text": "Okay, well let me ask you this, when you go to the doctor, do you have to pay anything, or is it usually free?"
+        },
+        {
+         "speaker": "note",
+         "text": "Free / from the state → continue. Copays → DQ line."
+        }
+       ]
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "“I don't know” is not a dead end",
+       "html": "<p>It's the most misplayed answer on the campaign. People genuinely don't know what their coverage is called — but they know whether they pay at the doctor. That's what the fallback question is for.</p><p>Roughly one consumer in five doesn't know. Learn this branch cold.</p>"
+      },
+      {
+       "type": "check",
+       "question": "“I'm not sure what I have.” What's your next sentence?",
+       "choices": [
+        "“No problem, let me get you to the screener.”",
+        "“Okay, well let me ask you this — when you go to the doctor, do you have to pay anything, or is it usually free?”",
+        "“Then you probably don't qualify.”",
+        "“Can you go and check?”"
+       ],
+       "answer_index": 1,
+       "explanation": "The copay fallback. Free or from the state qualifies; copays is a DQ."
+      }
+     ]
+    },
+    {
+     "id": "m2_3",
+     "title": "When they name a plan instead",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Plenty of consumers don't say “Medicaid” — they say the name of their plan. These ten count as Medicaid:</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Healthfirst · Fidelis · MetroPlus · Emblem · VNS · Molina · UHC Community · Anthem HealthPlus · Aetna Better Health · Amida Care</strong></p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "A bare brand name is not enough",
+       "html": "<p>“United”, “Aetna” or “Anthem” on their own do <strong>not</strong> qualify. Those companies sell Medicaid plans and ordinary plans. You need the Medicaid version — “UHC Community”, “Aetna Better Health”, “Anthem HealthPlus” — or a plain yes to the Medicaid question.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>And <strong>Medicare is not Medicaid.</strong> They sound alike and plenty of consumers mix them up. Medicare on its own does not qualify for this benefit.</p>"
+      },
+      {
+       "type": "check",
+       "question": "“I've got Aetna.” What do you do?",
+       "choices": [
+        "Continue — Aetna is on the list",
+        "Establish whether it's Aetna Better Health or an ordinary Aetna plan",
+        "DQ immediately",
+        "Ask for their member number"
+       ],
+       "answer_index": 1,
+       "explanation": "Aetna Better Health qualifies; a plain Aetna plan doesn't. Establish which."
+      }
+     ]
+    },
+    {
+     "id": "m2_4",
+     "title": "The five boroughs",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>The service covers <strong>Bronx, Brooklyn, Manhattan, Queens and Staten Island</strong>. Nothing else.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<table><tr><th>They say</th><th>Outcome</th></tr><tr><td>Bronx / Brooklyn / Manhattan / Queens / Staten Island</td><td>Continue</td></tr><tr><td><strong>Long Island</strong></td><td>Outside the area — DQ</td></tr><tr><td><strong>Long Island City</strong></td><td>That's Queens — continue</td></tr><tr><td>Yonkers, New Jersey, upstate</td><td>Outside the area — DQ</td></tr><tr><td>“New York” / “NYC”</td><td>Too vague — ask which borough</td></tr></table>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Long Island and Long Island City are different places",
+       "html": "<p>One is outside the service area and one is in Queens. Hear the difference before you DQ someone who qualifies, or transfer someone who doesn't.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>The ZIP code comes with the borough in the same breath, and it's skipped on a quarter of real calls. It's one short question — ask it.</p>"
+      },
+      {
+       "type": "check",
+       "question": "“I'm in Long Island City.”",
+       "choices": [
+        "Outside the area, DQ",
+        "That's Queens — continue",
+        "Ask them to be more specific",
+        "Transfer without the ZIP"
+       ],
+       "answer_index": 1,
+       "explanation": "Long Island City is in Queens and qualifies."
+      }
+     ]
+    },
+    {
+     "id": "m2_5",
+     "title": "The double confirm",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "script",
+       "title": "The last question",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Okay LAST question here, JUST to double confirm, you ARE receiving Medicaid and you ARE still in (their borough), correct?"
+        },
+        {
+         "speaker": "note",
+         "text": "(wait for the answer — then the transfer ask)"
+        }
+       ]
+      },
+      {
+       "type": "text",
+       "html": "<p>Medicaid and borough, together, as the final question before the transfer. It's skipped or rushed on <strong>38%</strong> of real calls.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Why it exists",
+       "html": "<p>The first time you ask, people answer on autopilot while they work out who you are. The second time, they're listening. A meaningful number correct themselves — and that correction is the difference between a clean transfer and one that gets docked.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Is the double confirm the same question as the first Medicaid ask?",
+       "choices": [
+        "Yes, it's a repeat",
+        "No — it's a separate, deliberate last check of both facts",
+        "Only needed if they hesitated",
+        "Only needed on transfers"
+       ],
+       "answer_index": 1,
+       "explanation": "A separate ask covering Medicaid AND borough, every call."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "m2q1",
+      "question": "What happens if you transfer without ever asking about Medicaid?",
+      "choices": [
+       "Points off",
+       "Automatic fail — it's treated as fraud",
+       "Nothing if they qualified",
+       "A coaching note"
+      ],
+      "answer_index": 1,
+      "explanation": "The most serious failure on the campaign.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "m2q2",
+      "question": "“I don't know” — what's the fallback question?",
+      "choices": [
+       "Ask for their member ID",
+       "Ask whether they pay anything at the doctor",
+       "Ask if they're on Medicare",
+       "DQ them"
+      ],
+      "answer_index": 1,
+      "explanation": "Free or from the state qualifies; copays is a DQ.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "m2q3",
+      "question": "A consumer pays copays at the doctor. Outcome?",
+      "choices": [
+       "Continue",
+       "DQ",
+       "Callback",
+       "Transfer and let the screener check"
+      ],
+      "answer_index": 1,
+      "explanation": "Copays means it isn't Medicaid.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "m2q4",
+      "question": "Which qualifies as Medicaid?",
+      "choices": [
+       "United",
+       "Aetna",
+       "Amida Care",
+       "Anthem"
+      ],
+      "answer_index": 2,
+      "explanation": "Amida Care is on the list. Bare parent brands are not.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "m2q5",
+      "question": "Medicare with no Medicaid?",
+      "choices": [
+       "Qualifies",
+       "Does not qualify",
+       "Qualifies if over 65",
+       "Qualifies in the Bronx"
+      ],
+      "answer_index": 1,
+      "explanation": "Medicare is not Medicaid.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "m2q6",
+      "question": "Long Island?",
+      "choices": [
+       "Qualifies",
+       "Outside the service area",
+       "Queens",
+       "Ask for the ZIP"
+      ],
+      "answer_index": 1,
+      "explanation": "Outside the five boroughs.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "m2q7",
+      "question": "Long Island City?",
+      "choices": [
+       "Outside the area",
+       "In Queens — qualifies",
+       "In Brooklyn",
+       "Too vague"
+      ],
+      "answer_index": 1,
+      "explanation": "Long Island City is Queens.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "m2q8",
+      "question": "A consumer says just “New York”. What do you do?",
+      "choices": [
+       "Accept it",
+       "Ask which borough",
+       "DQ",
+       "Transfer"
+      ],
+      "answer_index": 1,
+      "explanation": "Not specific enough — pin down the borough.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "m2q9",
+      "question": "How many plans are on the qualifying list?",
+      "choices": [
+       "Five",
+       "Eight",
+       "Ten",
+       "Twelve"
+      ],
+      "answer_index": 2,
+      "explanation": "Ten.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "m2q10",
+      "question": "The double confirm covers…",
+      "choices": [
+       "Medicaid only",
+       "Borough only",
+       "Medicaid AND borough",
+       "ZIP only"
+      ],
+      "answer_index": 2,
+      "explanation": "Both, as a separate last question.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "m2q11",
+      "question": "Roughly how often does a consumer not know whether they're on Medicaid?",
+      "choices": [
+       "Almost never",
+       "About 1 in 5",
+       "About half",
+       "Most calls"
+      ],
+      "answer_index": 1,
+      "explanation": "Which is why the fallback question matters.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "m2q12",
+      "question": "How often is the ZIP skipped on real calls?",
+      "choices": [
+       "Almost never",
+       "About 1 in 4",
+       "Half",
+       "Most"
+      ],
+      "answer_index": 1,
+      "explanation": "24.7% — and it's one short question.",
+      "tags": [
+       "script"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "meals_script",
+   "title": "The Script, Line by Line",
+   "est_minutes": 22,
+   "summary": "Every line in order, and the step that breaks on a third of real calls.",
+   "badge": {
+    "id": "badge_meals_script",
+    "name": "On Script",
+    "icon": "📜"
+   },
+   "lessons": [
+    {
+     "id": "m3_1",
+     "title": "The opening",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "script",
+       "title": "Opening",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Hey, good morning (Customer's Name)?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "Yeah?"
+        },
+        {
+         "speaker": "agent",
+         "text": "Hey, good morning (Customer's Name), this is _______, I'm with America's Health on a recorded line. We were just giving you a quick call today about the Medicaid meal service for you and your family. I just need to confirm you ARE still receiving Medicaid, correct?"
+        },
+        {
+         "speaker": "note",
+         "text": "(WAIT for the answer)"
+        }
+       ]
+      },
+      {
+       "type": "text",
+       "html": "<p>Four things in one breath: who you're speaking to, your company, the recorded line, and what the call is about — then straight into the Medicaid question.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Don't lose the recorded line",
+       "html": "<p>It's missing from the opening on about 1 in 20 real calls, and skipped or rushed on far more. It costs you two seconds.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Which belongs in the opening?",
+       "choices": [
+        "Their ZIP code",
+        "That the call is on a recorded line",
+        "The delivery schedule",
+        "Their income"
+       ],
+       "answer_index": 1,
+       "explanation": "Name, company, recorded line, what the call is about."
+      }
+     ]
+    },
+    {
+     "id": "m3_2",
+     "title": "Borough and ZIP",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "script",
+       "title": "Location",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Okay perfect, and you're still in (Customer's Borough), with the zip code (Customer's Zip Code), correct?"
+        },
+        {
+         "speaker": "note",
+         "text": "(WAIT)"
+        }
+       ]
+      },
+      {
+       "type": "text",
+       "html": "<p>One sentence, two facts. The borough decides whether they're in the service area; the ZIP goes to the screener.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "The ZIP is the most skipped verification",
+       "html": "<p>Missing on 24.7% of real calls, and rushed on another 18.7%. It's in the same sentence as the borough — there's no reason for it to go missing except speed.</p>"
+      },
+      {
+       "type": "check",
+       "question": "The consumer gives the borough but not the ZIP. What do you do?",
+       "choices": [
+        "Move on — borough is the important one",
+        "Ask for the ZIP before continuing",
+        "Read them the ZIP from the screen and move on",
+        "Let the screener get it"
+       ],
+       "answer_index": 1,
+       "explanation": "Both, every call."
+      }
+     ]
+    },
+    {
+     "id": "m3_3",
+     "title": "Permission to transfer — the broken step",
+     "est_minutes": 6,
+     "blocks": [
+      {
+       "type": "script",
+       "title": "The transfer ask",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Perfect, that's everything I need. The screener is coming on the line now to help you set that up, once that's finished, they'll have you on your way, okay?"
+        },
+        {
+         "speaker": "note",
+         "text": "AFFIRM — MUST GET PERMISSION TO TRANSFER"
+        }
+       ]
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "A third of real calls skip this entirely",
+       "html": "<p>Permission was never obtained on <strong>32.3%</strong> of calls, and rushed on another 19.9%. It is the single biggest procedural gap on this campaign — 446 calls in the sample were transferred with no okay from the consumer.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>The word “okay?” is in the script for a reason. Say it, then stop talking until you hear an answer. Silence is not permission, and neither is the consumer still being on the line.</p>"
+      },
+      {
+       "type": "check",
+       "question": "You say “…they'll have you on your way, okay?” and hear nothing. What now?",
+       "choices": [
+        "Transfer — they didn't object",
+        "Ask again and wait for an answer",
+        "Disposition as Not Interested",
+        "Start again"
+       ],
+       "answer_index": 1,
+       "explanation": "No answer is not permission."
+      }
+     ]
+    },
+    {
+     "id": "m3_4",
+     "title": "The warm handoff",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "script",
+       "title": "Handoff",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Hey agent, I have (Customer's Name) in (Customer's Borough), the zip code for them is (Customer's Zip). Can you take the call from here? Okay, I'll drop the line and let you two finish up, you both have a great day!"
+        },
+        {
+         "speaker": "note",
+         "text": "(wait until they're talking, then drop)"
+        }
+       ]
+      },
+      {
+       "type": "text",
+       "html": "<p>Three facts in the handoff: who, which borough, which ZIP. This is the step agents are best at — 83% do it properly — so it's mostly a matter of not letting it slip.</p>"
+      },
+      {
+       "type": "check",
+       "question": "What goes in the handoff?",
+       "choices": [
+        "Name only",
+        "Name and borough",
+        "Name, borough and ZIP",
+        "Name and Medicaid status"
+       ],
+       "answer_index": 2,
+       "explanation": "All three, then wait for them to engage before dropping."
+      }
+     ]
+    },
+    {
+     "id": "m3_5",
+     "title": "The DQ line",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>When someone doesn't qualify, there is one approved line:</p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "No Medicaid / copays / outside the boroughs",
+       "response": "Oh there must have been a mistake, thank you for your time, have a great day.",
+       "coach_note": "Warm, short, and then end the call. No arguing, no trying to find a way around it, no transferring to see what the screener says."
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "A DQ is a correct outcome, not a loss",
+       "html": "<p>169 consumers in the sample should have been DQ'd. 99 were caught. <strong>38 were transferred anyway</strong> — mostly people who said plainly they don't have Medicaid. Catching a DQ is a good call; transferring one is the failure.</p>"
+      },
+      {
+       "type": "check",
+       "question": "“No, I don't have Medicaid.” What do you do?",
+       "choices": [
+        "Ask if they have Medicare instead",
+        "Read the DQ line and end the call",
+        "Transfer and let the screener decide",
+        "Offer a callback"
+       ],
+       "answer_index": 1,
+       "explanation": "Read the line, code it DQ, move on."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "m3q1",
+      "question": "What must be in your opening?",
+      "choices": [
+       "Their ZIP",
+       "Company name and recorded line",
+       "The menu",
+       "Delivery times"
+      ],
+      "answer_index": 1,
+      "explanation": "Name, company, recorded line, purpose.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "m3q2",
+      "question": "Which step is skipped most often?",
+      "choices": [
+       "The handoff",
+       "The opening",
+       "Permission to transfer",
+       "The borough"
+      ],
+      "answer_index": 2,
+      "explanation": "32.3% — the biggest gap on the campaign.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "m3q3",
+      "question": "Silence after the transfer ask means…",
+      "choices": [
+       "Permission",
+       "Not permission — ask again",
+       "Code as Dead Air",
+       "Transfer anyway"
+      ],
+      "answer_index": 1,
+      "explanation": "They have to say okay.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "m3q4",
+      "question": "The ZIP is skipped on roughly…",
+      "choices": [
+       "1 in 50 calls",
+       "1 in 4 calls",
+       "Half of calls",
+       "Almost never"
+      ],
+      "answer_index": 1,
+      "explanation": "24.7%.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "m3q5",
+      "question": "What three facts go in the handoff?",
+      "choices": [
+       "Name, age, ZIP",
+       "Name, borough, ZIP",
+       "Name, Medicaid, borough",
+       "Borough, ZIP, plan"
+      ],
+      "answer_index": 1,
+      "explanation": "Who, which borough, which ZIP.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "m3q6",
+      "question": "A consumer doesn't qualify. You should…",
+      "choices": [
+       "Transfer anyway",
+       "Read the DQ line and end",
+       "Argue the point",
+       "Offer a callback"
+      ],
+      "answer_index": 1,
+      "explanation": "The approved DQ line, then end.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "m3q7",
+      "question": "How many consumers in the sample were transferred despite not qualifying?",
+      "choices": [
+       "None",
+       "38",
+       "169",
+       "446"
+      ],
+      "answer_index": 1,
+      "explanation": "38 of the 169 who should have been DQ'd.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "m3q8",
+      "question": "When can you drop the line on the handoff?",
+      "choices": [
+       "As soon as the screener answers",
+       "Once the screener and consumer are talking",
+       "After you say the ZIP",
+       "Immediately"
+      ],
+      "answer_index": 1,
+      "explanation": "Wait until they're engaged.",
+      "tags": [
+       "script"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "meals_rebuttals",
+   "title": "Rebuttals — Where the Money Is",
+   "est_minutes": 30,
+   "summary": "The eight approved rebuttals, which objections actually lose calls, and why speed matters more here than anywhere else.",
+   "badge": {
+    "id": "badge_meals_rebuttals",
+    "name": "Unshakeable",
+    "icon": "🛡"
+   },
+   "lessons": [
+    {
+     "id": "m4_1",
+     "title": "What each objection costs",
+     "est_minutes": 6,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>This is measured from 3,263 real calls — 1,196 that transferred and 2,067 that didn't. For the first time we can say not just how often an objection comes up, but what it costs.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<table><tr><th>Objection</th><th>Comes up on</th><th>Calls lost</th></tr><tr><td><strong>Not interested</strong></td><td>14.9%</td><td><strong>97.5%</strong></td></tr><tr><td><strong>I don't need it</strong></td><td>8.5%</td><td><strong>89.6%</strong></td></tr><tr><td><strong>I'm busy / call me back</strong></td><td>10.6%</td><td><strong>82.6%</strong></td></tr><tr><td>Who are you with?</td><td>13.5%</td><td>68.9%</td></tr><tr><td>I already have it</td><td>4.0%</td><td>63.1%</td></tr><tr><td>What is this?</td><td>19.8%</td><td>51.9%</td></tr></table>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "The most common objection is the safest",
+       "html": "<p>“What is this?” comes up on one call in five and agents handle it well. The dangerous ones are the brush-offs — less frequent, far more expensive.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>And on more than half the “not interested” calls, <strong>no rebuttal was attempted at all</strong>. That's not a skill gap. That's agents letting the call go.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Which objection loses the highest share of the calls it appears on?",
+       "choices": [
+        "What is this?",
+        "Who are you with?",
+        "Not interested",
+        "I already have it"
+       ],
+       "answer_index": 2,
+       "explanation": "97.5%. And over half the time nobody even tries a rebuttal."
+      }
+     ]
+    },
+    {
+     "id": "m4_2",
+     "title": "The three brush-offs",
+     "est_minutes": 7,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Real consumers say it like this: <em>“No, thank you.”</em>, <em>“I'm not interested.”</em></p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "Not interested",
+       "response": "I understand, but groceries are NOT getting any cheaper. You are ALREADY approved for up to three meals at NO cost and this is INCLUDED in your Medicaid. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+       "coach_note": "Don't acknowledge the no and pause — that's the pause the call dies in. Lead with groceries not getting cheaper, land “already approved” and “no cost”, and go straight back to the verification."
+      },
+      {
+       "type": "rebuttal",
+       "objection": "I'm busy / Call me back",
+       "response": "Oh let me assure you this will be SUPER brief, I just have 3 SUPER quick questions and I'll bring the screener on. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+       "coach_note": "Promise brevity and prove it. Three quick questions, then the screener. Agents who stop to arrange a callback lose 82.6% of these."
+      },
+      {
+       "type": "rebuttal",
+       "objection": "I don't need it",
+       "response": "I understand, but with groceries and the cost of living going up, having three meals delivered at NO cost can take a little pressure off your grocery budget. And if you don't personally need them, you could ALWAYS give them to someone in your family or someone who could use the help. You're already approved for it, so there's nothing extra you're paying for. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+       "coach_note": "The give-it-to-someone-else angle is the one that works — it removes the need to admit they need help. 89.6% of these calls are lost, so this rebuttal is worth knowing word for word."
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "27 seconds",
+       "html": "<p>When no rebuttal comes, the median brush-off call lasts 27 seconds. When one does, 43. You are not having a conversation — you are getting one sentence in before the line goes dead.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer says “I don't need it, give it to someone who needs it more.” What does the approved rebuttal do?",
+       "choices": [
+        "Agrees and ends the call politely",
+        "Points out they could pass the meals to family, and that they're already approved",
+        "Explains the delivery schedule",
+        "Asks why they don't need it"
+       ],
+       "answer_index": 1,
+       "explanation": "It removes the need to admit they need help, which is what the objection is really about."
+      }
+     ]
+    },
+    {
+     "id": "m4_3",
+     "title": "Explaining the benefit",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>The most common objection on the campaign, on 19.8% of calls: <em>“What?”</em>, <em>“What is this about?”</em></p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "What is this / Why are you calling me?",
+       "response": "This is a meal delivery benefit included in your Medicaid. It provides up to 3 meals daily at no cost, and no change to coverage. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+       "coach_note": "Short and concrete. Meal delivery, included in their Medicaid, no cost, no change to coverage — then straight back to verifying."
+      },
+      {
+       "type": "rebuttal",
+       "objection": "Who are you with?",
+       "response": "Oh I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+       "coach_note": "Name the company and move. This one is handled well on real calls and rarely needs more than a sentence."
+      },
+      {
+       "type": "rebuttal",
+       "objection": "How much is this going to cost me?",
+       "response": "Oh this is ALREADY included in your Medicaid. There is NO cost to you and there is NO change to your coverage. You're ALREADY preapproved for up to 3 meals a day, delivered to your doorstep, I just need to activate it. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+       "coach_note": "The honest answer is the strong one: nothing. It's already included. Note this objection barely loses any calls — people ask it to check for a catch, and the plain answer satisfies them."
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Why these are safe",
+       "html": "<p>These three are questions, not refusals. The consumer is engaging. Answer briefly and keep going — the mistake here is over-explaining, not under-explaining.</p>"
+      },
+      {
+       "type": "check",
+       "question": "“How much is this going to cost me?”",
+       "choices": [
+        "“It depends on your plan.”",
+        "“Nothing — it's already included in your Medicaid, no cost and no change to your coverage.”",
+        "“The screener will tell you.”",
+        "“Usually about twenty dollars.”"
+       ],
+       "answer_index": 1,
+       "explanation": "True, and it's approved wording."
+      }
+     ]
+    },
+    {
+     "id": "m4_4",
+     "title": "Already getting meals",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>On 4.0% of calls, and 63.1% of those are lost: <em>“This is in reference to Medicaid meals. I already get.”</em></p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "I already have it",
+       "response": "Yes of course, we were just calling about the EXTRA support, this isn't a replacement. There's actually been some NEW varieties that JUST released so MORE food coming in, we just need to activate it. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+       "coach_note": "The key word is EXTRA. This isn't a replacement for what they have, and new varieties have just been released. Then back to the verification."
+      },
+      {
+       "type": "rebuttal",
+       "objection": "I don't like the meals",
+       "response": "I understand, but there's actually some new varieties that JUST became available. From healthier options to hot, cold and frozen. Just let the screener know when we get there. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+       "coach_note": "Don't argue about the food. New varieties, let the screener know what they prefer, keep moving."
+      },
+      {
+       "type": "rebuttal",
+       "objection": "I already signed up with someone",
+       "response": "Yes of course, we were just calling about the EXTRA support, this isn't a replacement. There's actually been some NEW varieties that JUST released so MORE food coming in, we just need to activate it. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+       "coach_note": "Same shape as “I already have it” — this is extra support, and the screener sorts out the detail."
+      },
+      {
+       "type": "check",
+       "question": "“I already get meals delivered.” What's the angle?",
+       "choices": [
+        "Tell them they're wrong",
+        "This is EXTRA support, not a replacement, and new varieties just released",
+        "Ask who delivers them",
+        "DQ them — they're already served"
+       ],
+       "answer_index": 1,
+       "explanation": "Extra, not instead of. Then straight back to the verification."
+      }
+     ]
+    },
+    {
+     "id": "m4_5",
+     "title": "Suspicion, and where the script runs out",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p><em>“I just don't understand why it's in my name. Is this a scam?”</em> — suspicion is constant on these calls, and the strongest answer is simply naming who you are and what you need.</p>"
+      },
+      {
+       "type": "rebuttal",
+       "objection": "Who are you with? (used for scam and personal-info pushback)",
+       "response": "Oh I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+       "coach_note": "You're not asking for a social security number, a bank account or a card. Say so — it's true and it's the fastest way to defuse this."
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Two gaps in the script worth knowing",
+       "html": "<p><strong>“I was told I don't qualify”</strong> comes up on 1.7% of calls and loses 66% of them — and there is no approved rebuttal for it. Until there is, the closest approved line is the “what is this” explanation.</p><p>And <strong>there is no written do-not-call line</strong> on this script, unlike Medicare and ACA. Use a plain removal statement and end the call.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Both have been flagged to management. If an approved line lands for either, it goes into the script file and flows through automatically.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer says to stop calling them. What do you do?",
+       "choices": [
+        "One more rebuttal first",
+        "Tell them they'll be removed, end the call, code DNC",
+        "Transfer to the screener",
+        "Ask why"
+       ],
+       "answer_index": 1,
+       "explanation": "Never rebuttal a do-not-call request."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "m4q1",
+      "question": "Which objection loses the most calls?",
+      "choices": [
+       "What is this?",
+       "Not interested",
+       "How much does it cost?",
+       "Who are you with?"
+      ],
+      "answer_index": 1,
+      "explanation": "97.5% of calls it appears on.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "m4q2",
+      "question": "How often is no rebuttal even attempted on “not interested”?",
+      "choices": [
+       "Rarely",
+       "About a quarter of the time",
+       "More than half the time",
+       "Always"
+      ],
+      "answer_index": 2,
+      "explanation": "286 of 541 occurrences got no response at all.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "m4q3",
+      "question": "Median length of a brush-off call with no rebuttal?",
+      "choices": [
+       "10 seconds",
+       "27 seconds",
+       "60 seconds",
+       "2 minutes"
+      ],
+      "answer_index": 1,
+      "explanation": "43 seconds when the agent does rebut.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "m4q4",
+      "question": "The “I don't need it” rebuttal works by…",
+      "choices": [
+       "Insisting they do need it",
+       "Suggesting they pass the meals to family and reminding them it's already approved",
+       "Explaining the menu",
+       "Offering a callback"
+      ],
+      "answer_index": 1,
+      "explanation": "It removes the need to admit they need help.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "m4q5",
+      "question": "“I already have it” — what's the key word?",
+      "choices": [
+       "Free",
+       "Extra",
+       "Approved",
+       "Medicaid"
+      ],
+      "answer_index": 1,
+      "explanation": "EXTRA support, not a replacement.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "m4q6",
+      "question": "What ends every rebuttal?",
+      "choices": [
+       "A question about their health",
+       "Going right back to the verification without pausing",
+       "Asking if they have questions",
+       "The transfer ask"
+      ],
+      "answer_index": 1,
+      "explanation": "Don't stop or pause.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "m4q7",
+      "question": "“How much will this cost me?” is…",
+      "choices": [
+       "One of the most dangerous objections",
+       "One of the least dangerous — the plain answer satisfies people",
+       "A DQ",
+       "A reason to transfer early"
+      ],
+      "answer_index": 1,
+      "explanation": "It loses few calls. People are checking for a catch.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "m4q8",
+      "question": "Which objection currently has no approved rebuttal?",
+      "choices": [
+       "Not interested",
+       "I was told I don't qualify",
+       "Who are you with?",
+       "I'm busy"
+      ],
+      "answer_index": 1,
+      "explanation": "Flagged to management; use the “what is this” explanation meanwhile.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "m4q9",
+      "question": "A consumer swears at you but doesn't ask you to stop calling.",
+      "choices": [
+       "DNC",
+       "Rebut and keep going",
+       "Hang up",
+       "Transfer"
+      ],
+      "answer_index": 1,
+      "explanation": "Swearing is an objection, not a do-not-call request.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "m4q10",
+      "question": "“I'm busy, call me back” — best response?",
+      "choices": [
+       "Arrange the callback",
+       "Promise brevity, three quick questions, keep going",
+       "Apologise and end",
+       "Transfer immediately"
+      ],
+      "answer_index": 1,
+      "explanation": "82.6% of these are lost when the agent stops to arrange a callback.",
+      "tags": [
+       "rebuttals"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "meals_compliance",
+   "title": "Compliance",
+   "est_minutes": 20,
+   "summary": "What you may and may not say about a benefit the consumer already has, and the one failure treated as fraud.",
+   "badge": {
+    "id": "badge_meals_compliance",
+    "name": "Compliance Clean",
+    "icon": "🛡️"
+   },
+   "lessons": [
+    {
+     "id": "m5_1",
+     "title": "Every call, no exceptions",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Compliance applies to outbound, inbound, callbacks and immediate re-dials alike. The call where you already spoke to someone ten minutes ago is the one agents skip — do it anyway.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>The nine required steps:</p><ol><li>Correct person</li><li>America's Health</li><li>On a recorded line</li><li>The Medicaid meal service</li><li><strong>Ask about Medicaid</strong></li><li>Borough</li><li>ZIP</li><li>Double confirm</li><li>Permission, then warm handoff</li></ol>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Two of these are failing badly on real calls",
+       "html": "<p>Permission to transfer is missing on 32.3% of calls. The recorded line is missing on 4.4%. Neither takes more than a few seconds.</p>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer rings back twenty minutes after you spoke. Which steps apply?",
+       "choices": [
+        "None — you already did them",
+        "Just the Medicaid question",
+        "All nine",
+        "Only the handoff"
+       ],
+       "answer_index": 2,
+       "explanation": "Every call means every call."
+      }
+     ]
+    },
+    {
+     "id": "m5_2",
+     "title": "The fraud line",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Never asking about Medicaid is treated as fraud",
+       "html": "<p>Not a missed step. Not points off. Management's position is that transferring someone without ever asking whether they have Medicaid is fraud, because it bills a transfer for a consumer nobody established as eligible.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>An offshore floor was shut down over exactly this — 88% of their transfers never asked. On the named floor it still shows up on about 6% of transfers.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>In the simulator, a transfer with no Medicaid question fails outright, whatever else you did well.</p>"
+      },
+      {
+       "type": "check",
+       "question": "You had a great call, perfect rapport, consumer agreed to everything — but you never asked about Medicaid and transferred. Result?",
+       "choices": [
+        "High score",
+        "Points off for one missed step",
+        "Automatic fail",
+        "Depends on whether they qualified"
+       ],
+       "answer_index": 2,
+       "explanation": "Automatic fail. It's the one rule with no exceptions."
+      }
+     ]
+    },
+    {
+     "id": "m5_3",
+     "title": "What you may say",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>All of this is approved, straight from the script:</p><ul><li>Up to 3 meals a day</li><li>At no cost</li><li>Included in your Medicaid</li><li>Delivered to your doorstep</li><li>No change to your coverage</li><li>You're already approved / preapproved</li><li>New varieties have been released</li></ul>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "You don't need to oversell it",
+       "html": "<p>Free food, already paid for, no catch. The plain truth is the strongest thing you have — which is why “how much does it cost” barely loses any calls when answered straight.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Which of these is approved wording?",
+       "choices": [
+        "“Your first delivery will be Monday.”",
+        "“You're already approved for up to 3 meals a day at no cost.”",
+        "“You'll get about $200 of food a month.”",
+        "“This replaces your food stamps.”"
+       ],
+       "answer_index": 1,
+       "explanation": "Straight from the script."
+      }
+     ]
+    },
+    {
+     "id": "m5_4",
+     "title": "What you may never say",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<table><tr><th>Never say</th><th>Why</th></tr><tr><td>It costs anything</td><td>Untrue, and it loses the consumer</td></tr><tr><td>Their coverage changes</td><td>Untrue, and it frightens people</td></tr><tr><td>A delivery date</td><td>You don't know. The screener does</td></tr><tr><td>A dollar amount</td><td>Not yours to promise</td></tr><tr><td>Specific meals or menus</td><td>Screener's job</td></tr><tr><td>That you're from Medicaid or the state</td><td>You're with America's Health</td></tr><tr><td>Pitch Perfect</td><td>Never named on a call</td></tr></table>"
+      },
+      {
+       "type": "text",
+       "html": "<p>And never ask for a Social Security number, a Medicaid number, or bank details. You don't need them, and asking frightens people who are right to be careful.</p>"
+      },
+      {
+       "type": "check",
+       "question": "“I'm calling from Medicaid about your meal benefit.”",
+       "choices": [
+        "Fine — it is a Medicaid benefit",
+        "An instant fail — you're with America's Health",
+        "Fine if they ask",
+        "Fine on callbacks"
+       ],
+       "answer_index": 1,
+       "explanation": "The benefit is through their Medicaid; you are not Medicaid."
+      }
+     ]
+    },
+    {
+     "id": "m5_5",
+     "title": "Pressure and refusals",
+     "est_minutes": 3,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Rebutting a brush-off is the job. Pushing someone who has clearly, firmly refused is not — and on this campaign the line is drawn at a do-not-call request or a threat.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Swearing is not a do-not-call",
+       "html": "<p>Someone annoyed at being called is raising an objection. Stay warm, rebut, keep going. Someone telling you to stop calling is a DNC — tell them they'll be removed, end the call, and never rebuttal it.</p>"
+      },
+      {
+       "type": "check",
+       "question": "“What the hell is this, why do you people keep calling?”",
+       "choices": [
+        "DNC",
+        "An objection — rebut and keep going",
+        "Hang up",
+        "Transfer"
+       ],
+       "answer_index": 1,
+       "explanation": "Annoyance is an objection. Only a stop-calling request or threat is a DNC."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "m5q1",
+      "question": "How many required steps are there?",
+      "choices": [
+       "Five",
+       "Seven",
+       "Nine",
+       "Twelve"
+      ],
+      "answer_index": 2,
+      "explanation": "Nine, ending with permission and the warm handoff.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "m5q2",
+      "question": "Transferring without asking about Medicaid is…",
+      "choices": [
+       "A missed step",
+       "Treated as fraud — automatic fail",
+       "Fine if they qualified",
+       "A coaching note"
+      ],
+      "answer_index": 1,
+      "explanation": "The one rule with no exceptions.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "m5q3",
+      "question": "Which is approved?",
+      "choices": [
+       "“Delivery starts Monday”",
+       "“No cost and no change to your coverage”",
+       "“About $200 a month”",
+       "“This replaces food stamps”"
+      ],
+      "answer_index": 1,
+      "explanation": "Straight from the script.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "m5q4",
+      "question": "Permission to transfer is missing on roughly…",
+      "choices": [
+       "1 in 50 calls",
+       "1 in 10 calls",
+       "1 in 3 calls",
+       "Almost never"
+      ],
+      "answer_index": 2,
+      "explanation": "32.3% — the biggest procedural gap.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "m5q5",
+      "question": "Can you tell a consumer when their meals will arrive?",
+      "choices": [
+       "Yes, roughly",
+       "Yes if they insist",
+       "No — that's the screener's",
+       "Yes on callbacks"
+      ],
+      "answer_index": 2,
+      "explanation": "You don't know it.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "m5q6",
+      "question": "Who are you with?",
+      "choices": [
+       "Medicaid",
+       "The state",
+       "America's Health",
+       "Pitch Perfect"
+      ],
+      "answer_index": 2,
+      "explanation": "America's Health, on a recorded line.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "m5q7",
+      "question": "A consumer asks you to stop calling.",
+      "choices": [
+       "Rebut once",
+       "Tell them they'll be removed and end the call",
+       "Transfer",
+       "Ask why"
+      ],
+      "answer_index": 1,
+      "explanation": "Never rebuttal a do-not-call.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "m5q8",
+      "question": "Do you ever need their Social Security number?",
+      "choices": [
+       "Yes, to verify",
+       "Only for the screener",
+       "Never",
+       "Only on inbound"
+      ],
+      "answer_index": 2,
+      "explanation": "Never ask for it.",
+      "tags": [
+       "compliance"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "meals_dispositions",
+   "title": "Dispositions",
+   "est_minutes": 16,
+   "summary": "The ten codes, and the edge cases that get miscoded.",
+   "badge": {
+    "id": "badge_meals_dispositions",
+    "name": "Clean Coder",
+    "icon": "🗂️"
+   },
+   "lessons": [
+    {
+     "id": "m6_1",
+     "title": "The ten codes",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<table><tr><th>Code</th><th>Use when</th></tr><tr><td><strong>Transfer</strong></td><td>The screener took the call and the handoff was completed</td></tr><tr><td><strong>DQ</strong></td><td>No Medicaid, copays, a non-qualifying plan, Medicare only, or outside the five boroughs</td></tr><tr><td><strong>Not Interested</strong></td><td>They decline, or hang up after acknowledging who they are</td></tr><tr><td><strong>Call Back</strong></td><td>They ask to be called back</td></tr><tr><td><strong>DNC</strong></td><td>Stop calling, remove me, or a threat</td></tr><tr><td><strong>Hung-Up Transfer</strong></td><td>They hang up after the transfer starts</td></tr><tr><td><strong>Dead Air</strong></td><td>No response at all</td></tr><tr><td><strong>Answering Machine</strong></td><td>Voicemail — leave no message</td></tr><tr><td><strong>Wrong Number</strong></td><td>The person asked for isn't there</td></tr><tr><td><strong>No English</strong></td><td>Can't continue in English</td></tr></table>"
+      },
+      {
+       "type": "check",
+       "question": "A consumer says “yes, that's me” then hangs up. Code?",
+       "choices": [
+        "Dead Air",
+        "Not Interested",
+        "Wrong Number",
+        "Hung-Up Transfer"
+       ],
+       "answer_index": 1,
+       "explanation": "They acknowledged, so it's Not Interested."
+      }
+     ]
+    },
+    {
+     "id": "m6_2",
+     "title": "DQ is the one that matters",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>DQ is the code that protects the campaign. Five reasons: no Medicaid, copays at the doctor, a plan that isn't on the list, Medicare only, or living outside the five boroughs.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "38 disqualified consumers were transferred anyway",
+       "html": "<p>Out of 169 who should have been DQ'd, 99 were caught. The rest were sent to a screener who couldn't help them — wasting the screener's time and billing a transfer that shouldn't exist.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Read the DQ line, code it DQ, move to the next call. It takes ten seconds and it's a correct outcome.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Someone is in Yonkers. Code?",
+       "choices": [
+        "Transfer — it's near NYC",
+        "DQ — outside the five boroughs",
+        "Call Back",
+        "Wrong Number"
+       ],
+       "answer_index": 1,
+       "explanation": "Only the five boroughs qualify."
+      }
+     ]
+    },
+    {
+     "id": "m6_3",
+     "title": "The ones that get mixed up",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p><strong>Not Interested vs Dead Air:</strong> did they acknowledge? If they said anything that showed they were there, it's Not Interested. Silence throughout is Dead Air.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Not Interested vs Hung-Up Transfer:</strong> did you start the transfer? Before — Not Interested. After — Hung-Up Transfer.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Call Back vs Not Interested:</strong> “call me back” during a brush-off that you then rebut and lose is Not Interested. An actual request to be called at a specific time is a Call Back.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "Code what happened",
+       "html": "<p>Not what you hoped happened. Miscoding patterns get noticed, and on this campaign they've cost people their seats.</p>"
+      },
+      {
+       "type": "check",
+       "question": "You hit transfer, the screener's line rings, and the consumer hangs up. Code?",
+       "choices": [
+        "Not Interested",
+        "Hung-Up Transfer",
+        "Dead Air",
+        "Conference Ending"
+       ],
+       "answer_index": 1,
+       "explanation": "After the transfer starts, it's a Hung-Up Transfer."
+      }
+     ]
+    },
+    {
+     "id": "m6_4",
+     "title": "Voicemail and wrong numbers",
+     "est_minutes": 2,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p><strong>Answering Machine:</strong> you reach voicemail. <strong>Do not leave a message.</strong></p><p><strong>Wrong Number:</strong> the person you asked for isn't at this number. Don't pitch whoever answered — they aren't the lead and they haven't consented to anything.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Someone else answers and says the person you asked for doesn't live there. What do you do?",
+       "choices": [
+        "Pitch them instead",
+        "Code Wrong Number and move on",
+        "Ask for a forwarding number",
+        "Code Not Interested"
+       ],
+       "answer_index": 1,
+       "explanation": "They're not your lead."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "m6q1",
+      "question": "Acknowledged then hung up?",
+      "choices": [
+       "Dead Air",
+       "Not Interested",
+       "Wrong Number",
+       "DNC"
+      ],
+      "answer_index": 1,
+      "explanation": "Acknowledgement makes it Not Interested.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "m6q2",
+      "question": "Hangs up after the transfer begins?",
+      "choices": [
+       "Not Interested",
+       "Hung-Up Transfer",
+       "Dead Air",
+       "Transfer"
+      ],
+      "answer_index": 1,
+      "explanation": "Hung-Up Transfer.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "m6q3",
+      "question": "Pays copays at the doctor?",
+      "choices": [
+       "Transfer",
+       "DQ",
+       "Call Back",
+       "Not Interested"
+      ],
+      "answer_index": 1,
+      "explanation": "Copays means not Medicaid.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "m6q4",
+      "question": "Lives in Jersey City?",
+      "choices": [
+       "Transfer",
+       "DQ",
+       "Wrong Number",
+       "Call Back"
+      ],
+      "answer_index": 1,
+      "explanation": "Outside the five boroughs.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "m6q5",
+      "question": "Voicemail?",
+      "choices": [
+       "Leave a short message",
+       "Leave a callback number",
+       "Answering Machine, no message",
+       "Dead Air"
+      ],
+      "answer_index": 2,
+      "explanation": "Never leave a message.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "m6q6",
+      "question": "Someone else answers and the lead doesn't live there?",
+      "choices": [
+       "Pitch them",
+       "Wrong Number",
+       "Not Interested",
+       "Call Back"
+      ],
+      "answer_index": 1,
+      "explanation": "They aren't your lead.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "m6q7",
+      "question": "How many disqualified consumers were transferred anyway in the sample?",
+      "choices": [
+       "None",
+       "38",
+       "99",
+       "169"
+      ],
+      "answer_index": 1,
+      "explanation": "38 of 169.",
+      "tags": [
+       "qualifying"
+      ]
+     },
+     {
+      "id": "m6q8",
+      "question": "“Take me off your list.”",
+      "choices": [
+       "Not Interested",
+       "DNC",
+       "Call Back",
+       "DQ"
+      ],
+      "answer_index": 1,
+      "explanation": "DNC, no rebuttal.",
+      "tags": [
+       "dispositions"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "meals_real_calls",
+   "title": "What Real Calls Look Like",
+   "est_minutes": 20,
+   "summary": "Patterns from 3,263 recorded calls: where they are won, where they are lost, and the five gaps that show up most.",
+   "badge": {
+    "id": "badge_meals_real",
+    "name": "Floor Ready",
+    "icon": "🎧"
+   },
+   "lessons": [
+    {
+     "id": "m7_1",
+     "title": "Won and lost, side by side",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Everything in this module comes from <strong>3,263 recorded calls</strong> — 1,196 that transferred and 2,067 that didn't. Unusually, we can show you both.</p>"
+      },
+      {
+       "type": "script",
+       "title": "Lost in 27 seconds",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Hi, am I speaking with Robert? This is Dana with America's Health on a recorded line, I'm calling about the Medicaid meal service, I just need to confirm you're still receiving Medicaid —"
+        },
+        {
+         "speaker": "consumer",
+         "text": "I'm not interested."
+        },
+        {
+         "speaker": "agent",
+         "text": "Okay, no problem. Have a good day."
+        },
+        {
+         "speaker": "note",
+         "text": "(Not Interested)"
+        }
+       ]
+      },
+      {
+       "type": "script",
+       "title": "Same objection, saved",
+       "lines": [
+        {
+         "speaker": "agent",
+         "text": "Hi, am I speaking with Robert? This is Dana with America's Health on a recorded line, calling about the Medicaid meal service. I just need to confirm you're still receiving Medicaid, correct?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "I'm not interested."
+        },
+        {
+         "speaker": "agent",
+         "text": "I understand, but groceries are NOT getting any cheaper. You are ALREADY approved for up to three meals at NO cost and this is INCLUDED in your Medicaid. I just need to confirm — you are still receiving Medicaid, correct?"
+        },
+        {
+         "speaker": "consumer",
+         "text": "...yeah, I am."
+        },
+        {
+         "speaker": "note",
+         "text": "(continues to borough, ZIP, double confirm, transfer)"
+        }
+       ]
+      },
+      {
+       "type": "text",
+       "html": "<p>Same objection, same opening. The difference is one sentence and no pause.</p>"
+      },
+      {
+       "type": "check",
+       "question": "What separates the two calls above?",
+       "choices": [
+        "The opening was better in the second",
+        "The agent rebutted immediately instead of accepting the no",
+        "The consumer was friendlier",
+        "The second agent talked longer"
+       ],
+       "answer_index": 1,
+       "explanation": "One rebuttal, delivered without pausing."
+      }
+     ]
+    },
+    {
+     "id": "m7_2",
+     "title": "The five gaps",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<table><tr><th>Gap</th><th>Share of calls</th></tr><tr><td>Transferred without permission</td><td><strong>32.3%</strong></td></tr><tr><td>ZIP never confirmed</td><td><strong>24.7%</strong></td></tr><tr><td>Medicaid question asked but talked over</td><td><strong>26.7%</strong></td></tr><tr><td>Double confirm skipped</td><td><strong>18.4%</strong></td></tr><tr><td>Medicaid question never asked</td><td>10.4%</td></tr></table>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Four of the five are the same habit",
+       "html": "<p>Asking and not waiting. The question gets said, the agent keeps talking, and nothing is actually verified. The dialer records it as asked.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>The fix isn't more words. It's stopping after each question until you hear an answer.</p>"
+      },
+      {
+       "type": "check",
+       "question": "An agent asks about Medicaid and immediately continues into the borough question. How does that score?",
+       "choices": [
+        "Done — the question was asked",
+        "Asked but not waited — nothing was verified",
+        "Skipped",
+        "Not reached"
+       ],
+       "answer_index": 1,
+       "explanation": "Saying it isn't verifying it."
+      }
+     ]
+    },
+    {
+     "id": "m7_3",
+     "title": "Where calls actually die",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Of the 2,067 lost calls, the loss almost always happens in one of three places:</p><ol><li><strong>The first five seconds</strong> — consumer disengages during the identity check, before they know what the call is</li><li><strong>The first brush-off</strong> — “not interested”, “I don't need it”, “I'm busy”, unrebutted</li><li><strong>The confusion point</strong> — stacked questions with no pauses, and the consumer never understands what is being offered</li></ol>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "The third one is self-inflicted",
+       "html": "<p>One real loss was summarised as: <em>“stacked questions with no pauses; consumer never understood the offer and declined.”</em> Slowing down is not the opposite of speed — pausing after a question is what keeps the call alive.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Say what the call is about <em>early</em>. A consumer who knows free meals are on the table behaves differently from one who thinks they're being sold something.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Where is the single most common place a call is lost?",
+       "choices": [
+        "During the handoff",
+        "At the first brush-off",
+        "At the ZIP question",
+        "During the double confirm"
+       ],
+       "answer_index": 1,
+       "explanation": "And more than half of those got no rebuttal at all."
+      }
+     ]
+    },
+    {
+     "id": "m7_4",
+     "title": "Inbound calls",
+     "est_minutes": 3,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>About one call in five on this campaign comes in rather than goes out. The consumer rang you.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Everything else is identical: all nine steps, the Medicaid question, the borough, the ZIP, the double confirm, permission, handoff. What changes is only the opening — don't tell someone who just called you that you're giving them a quick call.</p>"
+      },
+      {
+       "type": "check",
+       "question": "On an inbound call, which steps can you skip?",
+       "choices": [
+        "The recorded line",
+        "The Medicaid question",
+        "None of them",
+        "The double confirm"
+       ],
+       "answer_index": 2,
+       "explanation": "Same nine steps, different opening."
+      }
+     ]
+    },
+    {
+     "id": "m7_5",
+     "title": "What the best agents do differently",
+     "est_minutes": 2,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Across the top performers' calls, three habits stand out, and none of them are clever:</p><ul><li>They say what the call is about in the first sentence</li><li>They never let a brush-off sit — the rebuttal lands immediately</li><li>They stop talking after each question</li></ul>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "That's it",
+       "html": "<p>No special lines, no tricks. The approved script, delivered without pauses in the wrong places and with pauses in the right ones.</p>"
+      },
+      {
+       "type": "check",
+       "question": "What do the top performers have in common?",
+       "choices": [
+        "Longer calls",
+        "Custom rebuttals they wrote themselves",
+        "They rebut immediately and wait after each question",
+        "They skip the ZIP to save time"
+       ],
+       "answer_index": 2,
+       "explanation": "The script, delivered properly."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "m7q1",
+      "question": "Share of calls transferred without permission?",
+      "choices": [
+       "3%",
+       "12%",
+       "32%",
+       "60%"
+      ],
+      "answer_index": 2,
+      "explanation": "32.3% — the biggest procedural gap.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "m7q2",
+      "question": "“Asked but not waited” means…",
+      "choices": [
+       "The question was forgotten",
+       "It was asked and talked over, verifying nothing",
+       "The consumer refused",
+       "It was asked twice"
+      ],
+      "answer_index": 1,
+      "explanation": "Saying it isn't verifying it.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "m7q3",
+      "question": "Most common place a call is lost?",
+      "choices": [
+       "The handoff",
+       "The first brush-off",
+       "The ZIP",
+       "The double confirm"
+      ],
+      "answer_index": 1,
+      "explanation": "And over half get no rebuttal.",
+      "tags": [
+       "rebuttals"
+      ]
+     },
+     {
+      "id": "m7q4",
+      "question": "Roughly what share of calls are inbound?",
+      "choices": [
+       "1 in 50",
+       "1 in 5",
+       "Half",
+       "None"
+      ],
+      "answer_index": 1,
+      "explanation": "About 20%.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "m7q5",
+      "question": "On inbound, which steps apply?",
+      "choices": [
+       "Only the Medicaid question",
+       "Only the handoff",
+       "All nine",
+       "None"
+      ],
+      "answer_index": 2,
+      "explanation": "Every step, every call.",
+      "tags": [
+       "compliance"
+      ]
+     },
+     {
+      "id": "m7q6",
+      "question": "ZIP is skipped on roughly…",
+      "choices": [
+       "1 in 4 calls",
+       "1 in 50 calls",
+       "Half of calls",
+       "Never"
+      ],
+      "answer_index": 0,
+      "explanation": "24.7%.",
+      "tags": [
+       "script"
+      ]
+     },
+     {
+      "id": "m7q7",
+      "question": "What do top performers do differently?",
+      "choices": [
+       "Talk longer",
+       "Use their own scripts",
+       "Rebut instantly and pause after questions",
+       "Skip steps to move faster"
+      ],
+      "answer_index": 2,
+      "explanation": "The script, delivered properly.",
+      "tags": [
+       "role"
+      ]
+     },
+     {
+      "id": "m7q8",
+      "question": "A consumer who doesn't understand the offer…",
+      "choices": [
+       "Is a DQ",
+       "Usually declines — often because questions were stacked without pauses",
+       "Should be transferred",
+       "Should be called back"
+      ],
+      "answer_index": 1,
+      "explanation": "A real recorded loss pattern.",
+      "tags": [
+       "rebuttals"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "meals_dialer",
+   "title": "The Convoso Dialer",
+   "est_minutes": 18,
+   "summary": "Logging in, your status, the agent screen, the transfer flow and dispositioning for the Meals campaign.",
+   "badge": {
+    "id": "badge_meals_dialer",
+    "name": "Dialer Ready",
+    "icon": "☎️"
+   },
+   "lessons": [
+    {
+     "id": "m8_1",
+     "title": "Logging in",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Use Google Chrome",
+       "html": "<p>Other browsers cause audio problems that look like dialer faults and waste your shift.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Sign in with your email and password. In the pop-up choose the <strong>Meals</strong> campaign and set your status to <strong>Available</strong> or <strong>Break</strong>, then Login.</p><p>Check the campaign every time — the wrong one means the wrong leads and the wrong script.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>You are Available or Break at all times, nothing else. Allow the browser's audio permission when it asks, or calls connect to silence.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>Logging out: set status to <strong>Break</strong> first (top right), then Logout at the bottom.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Before logging out you should…",
+       "choices": [
+        "Just close the tab",
+        "Set status to Break, then Logout",
+        "Disposition and walk away",
+        "Switch campaign"
+       ],
+       "answer_index": 1,
+       "explanation": "Break first, then Logout."
+      }
+     ]
+    },
+    {
+     "id": "m8_2",
+     "title": "The agent screen",
+     "est_minutes": 4,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p><strong>Top left</strong> — call status, and on a live call the consumer's name and a running timer.</p><p><strong>Top right</strong> — the blue <strong>Transfer</strong> button brings the conference tab back; the red <strong>Wrap Up</strong> button ends a call.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p><strong>Left sidebar</strong> — Availability (change it before a call lands, you can't while you're on one) and the dispositions.</p><p><strong>Tabs</strong> — Script holds your script and the conference button; Contact holds the consumer's details including their borough and ZIP.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "Dispositioning ends the call",
+       "html": "<p>Make sure you're finished before you click, and code what actually happened.</p>"
+      },
+      {
+       "type": "check",
+       "question": "Where's the conference transfer button?",
+       "choices": [
+        "Contact tab",
+        "Script tab",
+        "Left sidebar",
+        "Dial pad"
+       ],
+       "answer_index": 1,
+       "explanation": "On the Script tab."
+      }
+     ]
+    },
+    {
+     "id": "m8_3",
+     "title": "The transfer",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Once all four verifications are done and the consumer has said okay:</p><ol><li>Click the conference transfer button on the Script tab</li><li>Stay on the line while it rings</li><li>When the screener answers, do the warm handoff — name, borough, ZIP</li><li>Wait until they're talking to each other</li><li>Leave the conference, then disposition</li></ol>"
+      },
+      {
+       "type": "callout",
+       "tone": "tip",
+       "title": "The Contact tab has the borough and ZIP",
+       "html": "<p>If they've gone out of your head mid-transfer, they're one click away. Guessing the borough in a handoff is how a Queens consumer ends up with a Bronx screener.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>If the consumer hangs up during the transfer, clear the screener's line first, then code it Hung-Up Transfer.</p>"
+      },
+      {
+       "type": "check",
+       "question": "The consumer hangs up while the screener's line is ringing.",
+       "choices": [
+        "Disposition as Not Interested",
+        "Clear the screener's line, then code Hung-Up Transfer",
+        "Leave both lines open",
+        "Try the transfer again"
+       ],
+       "answer_index": 1,
+       "explanation": "Clear the line, then code it correctly."
+      }
+     ]
+    },
+    {
+     "id": "m8_4",
+     "title": "Coding and miscodes",
+     "est_minutes": 5,
+     "blocks": [
+      {
+       "type": "text",
+       "html": "<p>Disposition every call, and code what happened. On this campaign the codes feed both pay and QA, so a miscode isn't an admin slip — it changes the numbers.</p>"
+      },
+      {
+       "type": "callout",
+       "tone": "warning",
+       "title": "DQ is not a failure",
+       "html": "<p>There's a temptation to code a DQ as something softer, or to transfer it and let the screener deal with it. Both are worse than the DQ. Catching a disqualified consumer is a correct outcome and it's counted as one.</p>"
+      },
+      {
+       "type": "text",
+       "html": "<p>If you miscode by accident, report it simply: the number, then the correction. Keep it short and clear for QA.</p>"
+      },
+      {
+       "type": "check",
+       "question": "You realise you coded a DQ as Not Interested. What do you do?",
+       "choices": [
+        "Leave it",
+        "Report the number and the correction to QA",
+        "Call the consumer back",
+        "Change it quietly next time"
+       ],
+       "answer_index": 1,
+       "explanation": "Report it — short and clear."
+      }
+     ]
+    }
+   ],
+   "quiz": {
+    "pass_pct": 80,
+    "questions": [
+     {
+      "id": "m8q1",
+      "question": "Which browser?",
+      "choices": [
+       "Safari",
+       "Firefox",
+       "Chrome",
+       "Any"
+      ],
+      "answer_index": 2,
+      "explanation": "Chrome.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "m8q2",
+      "question": "The only two statuses you use?",
+      "choices": [
+       "Available and Lunch",
+       "Available and Break",
+       "Ready and Wrap",
+       "On and Off"
+      ],
+      "answer_index": 1,
+      "explanation": "Available or Break.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "m8q3",
+      "question": "Where's the conference button?",
+      "choices": [
+       "Contact tab",
+       "Script tab",
+       "Sidebar",
+       "Top right"
+      ],
+      "answer_index": 1,
+      "explanation": "Script tab.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "m8q4",
+      "question": "What does selecting a disposition do?",
+      "choices": [
+       "Saves a note",
+       "Ends the call",
+       "Pauses the dialer",
+       "Opens the CRM"
+      ],
+      "answer_index": 1,
+      "explanation": "It ends the call.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "m8q5",
+      "question": "Forgot the borough mid-transfer?",
+      "choices": [
+       "Guess it",
+       "Check the Contact tab",
+       "Ask the screener",
+       "Skip it"
+      ],
+      "answer_index": 1,
+      "explanation": "It's one click away.",
+      "tags": [
+       "operations"
+      ]
+     },
+     {
+      "id": "m8q6",
+      "question": "Consumer hangs up during the transfer?",
+      "choices": [
+       "Not Interested",
+       "Clear the screener's line, code Hung-Up Transfer",
+       "Dead Air",
+       "Retry"
+      ],
+      "answer_index": 1,
+      "explanation": "Clear the line first.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "m8q7",
+      "question": "A DQ should be coded as…",
+      "choices": [
+       "Not Interested",
+       "DQ",
+       "Call Back",
+       "Whatever looks better"
+      ],
+      "answer_index": 1,
+      "explanation": "DQ is a correct outcome.",
+      "tags": [
+       "dispositions"
+      ]
+     },
+     {
+      "id": "m8q8",
+      "question": "You miscoded a call. What now?",
+      "choices": [
+       "Leave it",
+       "Report the number and correction",
+       "Call back",
+       "Nothing"
+      ],
+      "answer_index": 1,
+      "explanation": "Short and clear to QA.",
+      "tags": [
+       "operations"
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "final_exam": {
+  "product": {
+   "pass_pct": 80,
+   "draw": 20,
+   "pool": [
+    {
+     "id": "fx_meals_1",
+     "question": "What is the meal benefit?",
+     "choices": [
+      "A new plan",
+      "A benefit already included in their Medicaid",
+      "A discount card",
+      "Food stamps"
+     ],
+     "answer_index": 1,
+     "explanation": "Already included in their Medicaid.",
+     "tags": [
+      "product"
+     ]
+    },
+    {
+     "id": "fx_meals_2",
+     "question": "How many meals a day may you mention?",
+     "choices": [
+      "One",
+      "Two",
+      "Up to three",
+      "Unlimited"
+     ],
+     "answer_index": 2,
+     "explanation": "Up to 3.",
+     "tags": [
+      "product"
+     ]
+    },
+    {
+     "id": "fx_meals_3",
+     "question": "Transferring without asking about Medicaid is…",
+     "choices": [
+      "A missed step",
+      "Treated as fraud — automatic fail",
+      "Fine if they qualify",
+      "A coaching note"
+     ],
+     "answer_index": 1,
+     "explanation": "No exceptions.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_meals_4",
+     "question": "“I don't know” — next question?",
+     "choices": [
+      "Member ID",
+      "Do you pay anything at the doctor?",
+      "Are you on Medicare?",
+      "DQ them"
+     ],
+     "answer_index": 1,
+     "explanation": "The copay fallback.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_meals_5",
+     "question": "Pays copays at the doctor?",
+     "choices": [
+      "Continue",
+      "DQ",
+      "Call Back",
+      "Transfer"
+     ],
+     "answer_index": 1,
+     "explanation": "Not Medicaid.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_meals_6",
+     "question": "Which qualifies?",
+     "choices": [
+      "United",
+      "Anthem",
+      "Amida Care",
+      "Cigna"
+     ],
+     "answer_index": 2,
+     "explanation": "On the list of ten.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_meals_7",
+     "question": "Medicare with no Medicaid?",
+     "choices": [
+      "Qualifies",
+      "Does not qualify",
+      "Qualifies at 65+",
+      "Qualifies in Queens"
+     ],
+     "answer_index": 1,
+     "explanation": "Medicare is not Medicaid.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_meals_8",
+     "question": "Long Island?",
+     "choices": [
+      "Qualifies",
+      "Outside the area",
+      "Queens",
+      "Brooklyn"
+     ],
+     "answer_index": 1,
+     "explanation": "Outside the five boroughs.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_meals_9",
+     "question": "Long Island City?",
+     "choices": [
+      "Outside the area",
+      "Queens — qualifies",
+      "Brooklyn",
+      "Too vague"
+     ],
+     "answer_index": 1,
+     "explanation": "It's Queens.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_meals_10",
+     "question": "A consumer says just “New York”?",
+     "choices": [
+      "Accept it",
+      "Ask which borough",
+      "DQ",
+      "Transfer"
+     ],
+     "answer_index": 1,
+     "explanation": "Pin down the borough.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_meals_11",
+     "question": "The double confirm covers…",
+     "choices": [
+      "Medicaid only",
+      "Borough only",
+      "Medicaid and borough",
+      "ZIP only"
+     ],
+     "answer_index": 2,
+     "explanation": "Both, as a separate last question.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_meals_12",
+     "question": "Silence after the transfer ask is…",
+     "choices": [
+      "Permission",
+      "Not permission",
+      "Dead Air",
+      "A DQ"
+     ],
+     "answer_index": 1,
+     "explanation": "They must say okay.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_meals_13",
+     "question": "Which objection loses the most calls?",
+     "choices": [
+      "What is this?",
+      "Not interested",
+      "How much?",
+      "Who are you?"
+     ],
+     "answer_index": 1,
+     "explanation": "97.5%.",
+     "tags": [
+      "rebuttals"
+     ]
+    },
+    {
+     "id": "fx_meals_14",
+     "question": "What ends every rebuttal?",
+     "choices": [
+      "A question about their health",
+      "Going straight back to the verification",
+      "Asking if they have questions",
+      "The transfer"
+     ],
+     "answer_index": 1,
+     "explanation": "Don't stop or pause.",
+     "tags": [
+      "rebuttals"
+     ]
+    },
+    {
+     "id": "fx_meals_15",
+     "question": "“I already have it” — key word?",
+     "choices": [
+      "Free",
+      "Extra",
+      "Approved",
+      "New"
+     ],
+     "answer_index": 1,
+     "explanation": "EXTRA, not a replacement.",
+     "tags": [
+      "rebuttals"
+     ]
+    },
+    {
+     "id": "fx_meals_16",
+     "question": "Which may you NOT say?",
+     "choices": [
+      "No cost",
+      "Included in your Medicaid",
+      "Delivery starts Monday",
+      "No change to coverage"
+     ],
+     "answer_index": 2,
+     "explanation": "Delivery dates are the screener's.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_meals_17",
+     "question": "Who are you with?",
+     "choices": [
+      "Medicaid",
+      "The state",
+      "America's Health",
+      "Pitch Perfect"
+     ],
+     "answer_index": 2,
+     "explanation": "America's Health, on a recorded line.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_meals_18",
+     "question": "Acknowledged then hung up?",
+     "choices": [
+      "Dead Air",
+      "Not Interested",
+      "Wrong Number",
+      "DNC"
+     ],
+     "answer_index": 1,
+     "explanation": "Not Interested.",
+     "tags": [
+      "dispositions"
+     ]
+    },
+    {
+     "id": "fx_meals_19",
+     "question": "Hangs up after the transfer starts?",
+     "choices": [
+      "Not Interested",
+      "Hung-Up Transfer",
+      "Dead Air",
+      "Transfer"
+     ],
+     "answer_index": 1,
+     "explanation": "Hung-Up Transfer.",
+     "tags": [
+      "dispositions"
+     ]
+    },
+    {
+     "id": "fx_meals_20",
+     "question": "Voicemail?",
+     "choices": [
+      "Leave a message",
+      "Leave a number",
+      "Answering Machine, no message",
+      "Dead Air"
+     ],
+     "answer_index": 2,
+     "explanation": "Never leave a message.",
+     "tags": [
+      "dispositions"
+     ]
+    },
+    {
+     "id": "fx_meals_21",
+     "question": "How many plans are on the qualifying list?",
+     "choices": [
+      "Five",
+      "Eight",
+      "Ten",
+      "Twelve"
+     ],
+     "answer_index": 2,
+     "explanation": "Ten.",
+     "tags": [
+      "qualifying"
+     ]
+    },
+    {
+     "id": "fx_meals_22",
+     "question": "Permission to transfer is missing on roughly…",
+     "choices": [
+      "3% of calls",
+      "12%",
+      "A third",
+      "Two thirds"
+     ],
+     "answer_index": 2,
+     "explanation": "32.3%.",
+     "tags": [
+      "compliance"
+     ]
+    },
+    {
+     "id": "fx_meals_23",
+     "question": "A consumer swears but doesn't ask you to stop calling.",
+     "choices": [
+      "DNC",
+      "Rebut and continue",
+      "Hang up",
+      "Transfer"
+     ],
+     "answer_index": 1,
+     "explanation": "An objection, not a DNC.",
+     "tags": [
+      "dispositions"
+     ]
+    },
+    {
+     "id": "fx_meals_24",
+     "question": "Do you ever need their Social Security number?",
+     "choices": [
+      "Yes",
+      "For the screener",
+      "Never",
+      "On inbound"
+     ],
+     "answer_index": 2,
+     "explanation": "Never.",
+     "tags": [
+      "compliance"
+     ]
+    }
+   ]
+  },
+  "script": {
+   "pass_pct": 80,
+   "draw": 8,
+   "pool": [
+    {
+     "id": "fx_mscript_1",
+     "question": "What's the first question after the opening?",
+     "choices": [
+      "Their borough",
+      "Whether they still receive Medicaid",
+      "Their ZIP",
+      "Their age"
+     ],
+     "answer_index": 1,
+     "explanation": "The Medicaid question.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_mscript_2",
+     "question": "What comes with the borough in the same sentence?",
+     "choices": [
+      "Their age",
+      "The ZIP code",
+      "Their plan",
+      "The meal count"
+     ],
+     "answer_index": 1,
+     "explanation": "Borough and ZIP together.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_mscript_3",
+     "question": "The last question before the transfer is…",
+     "choices": [
+      "The ZIP",
+      "The double confirm",
+      "Their name",
+      "The menu"
+     ],
+     "answer_index": 1,
+     "explanation": "Medicaid and borough, double confirmed.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_mscript_4",
+     "question": "What must you get before conferencing?",
+     "choices": [
+      "Their ZIP",
+      "Permission — they must say okay",
+      "Their plan name",
+      "Their age"
+     ],
+     "answer_index": 1,
+     "explanation": "Verbal permission.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_mscript_5",
+     "question": "What three facts go in the handoff?",
+     "choices": [
+      "Name, age, ZIP",
+      "Name, borough, ZIP",
+      "Name, plan, borough",
+      "Borough, ZIP, meals"
+     ],
+     "answer_index": 1,
+     "explanation": "Who, where, ZIP.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_mscript_6",
+     "question": "The DQ line is…",
+     "choices": [
+      "“You don't qualify, goodbye.”",
+      "“Oh there must have been a mistake, thank you for your time, have a great day.”",
+      "“Let me get my manager.”",
+      "“I'll call you back.”"
+     ],
+     "answer_index": 1,
+     "explanation": "Warm, short, then end.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_mscript_7",
+     "question": "When can you drop the line?",
+     "choices": [
+      "When the screener answers",
+      "Once the screener and consumer are talking",
+      "After the ZIP",
+      "Immediately"
+     ],
+     "answer_index": 1,
+     "explanation": "Wait for both voices.",
+     "tags": [
+      "script"
+     ]
+    },
+    {
+     "id": "fx_mscript_8",
+     "question": "After a rebuttal you should…",
+     "choices": [
+      "Pause for them to think",
+      "Go right back where you were without pausing",
+      "Ask if that makes sense",
+      "Offer a callback"
+     ],
+     "answer_index": 1,
+     "explanation": "Don't stop or pause.",
+     "tags": [
+      "rebuttals"
+     ]
+    }
+   ]
+  }
+ }
+}

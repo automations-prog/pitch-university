@@ -1,0 +1,349 @@
+{
+    "id": "meals_101",
+    "title": "The Benefit & Your Role",
+    "est_minutes": 20,
+    "summary": "What the Medicaid meal benefit is, what you may say about it, and the four things every call has to establish.",
+    "badge": {
+        "id": "badge_meals_101",
+        "name": "Meals Basics",
+        "icon": "🥗"
+    },
+    "lessons": [
+        {
+            "id": "m1_1",
+            "title": "What you're actually offering",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>This is a <strong>meal delivery benefit that is already included in the consumer's Medicaid</strong>. Up to 3 meals a day, at no cost to them, delivered to their door, with no change to their coverage.</p><p>You are not selling it. You are not signing anyone up. You confirm four things and hand the consumer to a screener.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>The four things:</p><ol><li>They still receive <strong>Medicaid</strong></li><li>Their <strong>borough</strong></li><li>Their <strong>ZIP code</strong></li><li>All of it again, as a <strong>double confirm</strong></li></ol><p>Then you get their okay and bring the screener on.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "What you may say",
+                    "html": "<p>Up to 3 meals a day · at no cost · included in your Medicaid · delivered to your doorstep · no change to your coverage · you're already approved. All of that is approved wording.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "What you may never say",
+                    "html": "<p>That it costs anything. That their coverage changes. A delivery date. A dollar amount. A specific menu. The screener handles all of that — and two of those are simply untrue.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "What is this benefit?",
+                    "choices": [
+                        "A food stamps application",
+                        "A meal delivery benefit already included in their Medicaid",
+                        "A new insurance plan you're enrolling them in",
+                        "A grocery discount card"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Already included in their Medicaid. Nothing is being sold or changed."
+                }
+            ]
+        },
+        {
+            "id": "m1_2",
+            "title": "The call is short — much shorter than you think",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Across 3,263 real calls, a typical one runs about <strong>a minute and a half</strong>. When a consumer brushes you off and the agent doesn't come straight back, the median call is <strong>27 seconds</strong>.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>That is the whole reason the script says <strong>GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE</strong> after every rebuttal. It isn't a style note. You have seconds.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Consumers answer in two or three words",
+                    "html": "<p>“Yes.” “No.” “What?” “Who's this?” That is normal on this campaign. Don't mistake a short answer for rudeness, and don't fill the silence with a speech.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer says “not interested” four seconds into the call. What does the data say happens next?",
+                    "choices": [
+                        "The consumer usually asks a question",
+                        "It makes no difference to the outcome",
+                        "Most agents rebut and recover the call",
+                        "Most of these calls end within seconds"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "97.5% of calls where “not interested” comes up never reach a transfer. The window is tiny."
+                }
+            ]
+        },
+        {
+            "id": "m1_3",
+            "title": "Who you're calling",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>New York City Medicaid recipients across the five boroughs. Many are older. Many are hard of hearing. Many speak English as a second language. A lot of them have had several calls like this already.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Expect to repeat yourself, and expect suspicion — the most common single reaction on these calls is some version of <em>“What?”</em></p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Slow down rather than speed up",
+                    "html": "<p>If someone can't hear you, talking faster loses the call. The verifications are short; say them clearly and wait.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer asks you to repeat yourself twice in the first fifteen seconds. What's the right move?",
+                    "choices": [
+                        "Slow down and repeat clearly",
+                        "End the call",
+                        "Transfer them to the screener early",
+                        "Speed up to save time"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Hard of hearing is normal here, not a brush-off."
+                }
+            ]
+        },
+        {
+            "id": "m1_4",
+            "title": "What the screener does, and what you don't",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>The screener sets up the service. They cover delivery, menus, timing and anything specific. Your job ends when they're talking to the consumer.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>So when a consumer asks <em>“when do the meals come?”</em> or <em>“can I pick what I get?”</em>, the honest and compliant answer is the same: the screener will go over that — and then straight back to your verification.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Guessing is how agents get in trouble",
+                    "html": "<p>Promising a delivery date or a specific menu is a compliance failure even when you're trying to be helpful. You genuinely don't know, and the consumer remembers what you told them.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "“When will my first delivery come?”",
+                    "choices": [
+                        "“Tomorrow or the next day.”",
+                        "“Usually within a week.”",
+                        "“I can check that for you.”",
+                        "“The screener will go over all of that with you — I just need to confirm…”"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "You don't know, and the script sends it to the screener."
+                }
+            ]
+        },
+        {
+            "id": "m1_5",
+            "title": "What good looks like",
+            "est_minutes": 3,
+            "blocks": [
+                {
+                    "type": "script",
+                    "title": "A clean call",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Hey, good morning, am I speaking with Maria?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Yes, who's this?"
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "Hey Maria, this is Nate, I'm with America's Health on a recorded line. We were just giving you a quick call today about the Medicaid meal service for you and your family. I just need to confirm you ARE still receiving Medicaid, correct?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Yes."
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "Okay perfect, and you're still in the Bronx, with the zip code 10457, correct?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "That's right."
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "Okay LAST question here, JUST to double confirm, you ARE receiving Medicaid and you ARE still in the Bronx, correct?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Yes."
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "Perfect, that's everything I need. The screener is coming on the line now to help you set that up, once that's finished they'll have you on your way, okay?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Okay."
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(warm handoff naming the consumer, borough and ZIP)"
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Four verifications, a permission, a handoff. Under ninety seconds. That's the job.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "How many separate times is Medicaid confirmed on a correct call?",
+                    "choices": [
+                        "Three times",
+                        "Twice — the first ask and the double confirm",
+                        "Once",
+                        "Only if they sound unsure"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "The first ask, then again in the double confirm before the transfer."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "m1q1",
+                "question": "What is the meal benefit?",
+                "choices": [
+                    "A food stamps application",
+                    "A discount card",
+                    "A benefit already included in their Medicaid",
+                    "A new plan you enrol them in"
+                ],
+                "answer_index": 2,
+                "explanation": "Already included in their Medicaid.",
+                "tags": [
+                    "product"
+                ]
+            },
+            {
+                "id": "m1q2",
+                "question": "How many meals a day may you mention?",
+                "choices": [
+                    "Up to three",
+                    "Unlimited",
+                    "One",
+                    "Two"
+                ],
+                "answer_index": 0,
+                "explanation": "Up to 3 meals a day is approved wording.",
+                "tags": [
+                    "product"
+                ]
+            },
+            {
+                "id": "m1q3",
+                "question": "Which of these may you NOT say?",
+                "choices": [
+                    "It's included in your Medicaid",
+                    "Your first delivery is Tuesday",
+                    "It's at no cost",
+                    "There's no change to your coverage"
+                ],
+                "answer_index": 1,
+                "explanation": "Delivery dates belong to the screener and you don't know them.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "m1q4",
+                "question": "A typical call on this campaign runs about…",
+                "choices": [
+                    "10 minutes",
+                    "90 seconds",
+                    "5 minutes",
+                    "20 seconds"
+                ],
+                "answer_index": 1,
+                "explanation": "Around a minute and a half. Brush-off calls that aren't rebutted die at 27 seconds.",
+                "tags": [
+                    "product"
+                ]
+            },
+            {
+                "id": "m1q5",
+                "question": "What are the four things you confirm?",
+                "choices": [
+                    "Name, age, income, borough",
+                    "Medicaid, income, address, phone",
+                    "Medicaid, borough, ZIP, then all of it again",
+                    "Borough, ZIP, meals wanted, delivery day"
+                ],
+                "answer_index": 2,
+                "explanation": "Medicaid, borough, ZIP, double confirm.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "m1q6",
+                "question": "Who handles delivery and menu questions?",
+                "choices": [
+                    "The screener",
+                    "The consumer's doctor",
+                    "You",
+                    "Medicaid"
+                ],
+                "answer_index": 0,
+                "explanation": "The screener. Redirect and go back to verifying.",
+                "tags": [
+                    "role"
+                ]
+            },
+            {
+                "id": "m1q7",
+                "question": "A consumer answers “yes” in one word. That is…",
+                "choices": [
+                    "A reason to slow the pitch",
+                    "Normal on this campaign",
+                    "Rude",
+                    "A sign they're confused"
+                ],
+                "answer_index": 1,
+                "explanation": "Two or three word answers are the norm here.",
+                "tags": [
+                    "product"
+                ]
+            },
+            {
+                "id": "m1q8",
+                "question": "Why does the script say “don't stop or pause”?",
+                "choices": [
+                    "To finish the shift faster",
+                    "Because the dialer times out",
+                    "Because brush-off calls end in seconds if you hesitate",
+                    "To sound confident"
+                ],
+                "answer_index": 2,
+                "explanation": "27 seconds is the median when a brush-off goes unrebutted.",
+                "tags": [
+                    "rebuttals"
+                ]
+            }
+        ]
+    }
+}

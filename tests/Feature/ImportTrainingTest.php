@@ -103,13 +103,12 @@ test('it imports the bundled training tracks', function () {
         ->and($dialerConduct->lessons->pluck('slug')->all())->toBe(['dial_1', 'dial_2', 'dial_3', 'dial_4']);
 });
 
-test('it imports the bundled aca track after the medicare track', function () {
+test('it imports the bundled aca track', function () {
     $this->artisan('training:import')->assertSuccessful();
 
     $track = CourseTrack::where('slug', 'aca-fronting')->sole();
 
-    expect(CourseTrack::orderBy('position')->pluck('slug')->all())->toBe(['medicare-fronting', 'aca-fronting'])
-        ->and($track->name)->toBe('ACA Fronting')
+    expect($track->name)->toBe('ACA Fronting')
         ->and($track->modules->pluck('slug')->all())->toBe(['aca_101', 'aca_qualify', 'aca_script', 'aca_rebuttals', 'aca_compliance', 'aca_dispositions', 'aca_real_calls', 'aca_dialer'])
         ->and($track->modules->sum(fn (CourseModule $module) => $module->lessons->count()))->toBe(41)
         ->and($track->modules->sum(fn (CourseModule $module) => count($module->quiz['questions'])))->toBe(88)
@@ -117,6 +116,22 @@ test('it imports the bundled aca track after the medicare track', function () {
         ->and($track->exam->section('product')['pool'])->toHaveCount(24)
         ->and($track->exam->questionCount('script'))->toBe(8)
         ->and($track->exam->section('script')['pool'])->toHaveCount(10);
+});
+
+test('it imports the bundled meals track after the aca track', function () {
+    $this->artisan('training:import')->assertSuccessful();
+
+    $track = CourseTrack::where('slug', 'meals-fronting')->sole();
+
+    expect(CourseTrack::orderBy('position')->pluck('slug')->all())->toBe(['medicare-fronting', 'aca-fronting', 'meals-fronting'])
+        ->and($track->name)->toBe('Meals Fronting')
+        ->and($track->modules->pluck('slug')->all())->toBe(['meals_101', 'meals_qualify', 'meals_script', 'meals_rebuttals', 'meals_compliance', 'meals_dispositions', 'meals_real_calls', 'meals_dialer'])
+        ->and($track->modules->sum(fn (CourseModule $module) => $module->lessons->count()))->toBe(38)
+        ->and($track->modules->sum(fn (CourseModule $module) => count($module->quiz['questions'])))->toBe(70)
+        ->and($track->exam->questionCount('product'))->toBe(20)
+        ->and($track->exam->section('product')['pool'])->toHaveCount(24)
+        ->and($track->exam->questionCount('script'))->toBe(8)
+        ->and($track->exam->section('script')['pool'])->toHaveCount(8);
 });
 
 test('track.json position overrides folder order', function () {

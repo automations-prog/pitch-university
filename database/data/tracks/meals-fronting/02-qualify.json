@@ -1,0 +1,415 @@
+{
+    "id": "meals_qualify",
+    "title": "The Medicaid Question",
+    "est_minutes": 26,
+    "summary": "The one question the whole campaign rests on, its three-way branch, the ten qualifying plans, and the boroughs.",
+    "badge": {
+        "id": "badge_meals_qualify",
+        "name": "Qualifier",
+        "icon": "✅"
+    },
+    "lessons": [
+        {
+            "id": "m2_1",
+            "title": "Never skipping the question",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Everything on this campaign rests on one question:</p><p><strong>“I just need to confirm you ARE still receiving Medicaid, correct?”</strong></p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Skipping it is not a missed step — it's treated as fraud",
+                    "html": "<p>Management's position is unambiguous. Transferring someone without ever asking whether they have Medicaid is the most serious failure on this campaign, and the simulator fails the call outright no matter how good the rest was.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>It is also not hypothetical. On an offshore floor that was shut down over it, <strong>88% of transfers never asked the question</strong>. On the named floor it still happens on about 1 in 16 transfers.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Ask it. Wait for the answer. The whole thing takes four seconds.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "You've confirmed the borough and ZIP, the consumer is friendly, and you never got around to the Medicaid question. What now?",
+                    "choices": [
+                        "Mark it a callback",
+                        "Ask it before you do anything else",
+                        "Transfer — they're clearly fine",
+                        "Let the screener ask"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "No Medicaid question, no transfer. Ever."
+                }
+            ]
+        },
+        {
+            "id": "m2_2",
+            "title": "Yes, no, and “I don't know”",
+            "est_minutes": 6,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Three answers, three paths.</p>"
+                },
+                {
+                    "type": "script",
+                    "title": "The branch",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "I just need to confirm you ARE still receiving Medicaid, correct?"
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "YES → continue to the borough"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "No, I don't have that."
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "Oh there must have been a mistake, thank you for your time, have a great day. (END AND CODE AS DQ)"
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "I DON'T KNOW → use the fallback question"
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "Okay, well let me ask you this, when you go to the doctor, do you have to pay anything, or is it usually free?"
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "Free / from the state → continue. Copays → DQ line."
+                        }
+                    ]
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "“I don't know” is not a dead end",
+                    "html": "<p>It's the most misplayed answer on the campaign. People genuinely don't know what their coverage is called — but they know whether they pay at the doctor. That's what the fallback question is for.</p><p>Roughly one consumer in five doesn't know. Learn this branch cold.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "“I'm not sure what I have.” What's your next sentence?",
+                    "choices": [
+                        "“Okay, well let me ask you this — when you go to the doctor, do you have to pay anything, or is it usually free?”",
+                        "“Then you probably don't qualify.”",
+                        "“Can you go and check?”",
+                        "“No problem, let me get you to the screener.”"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "The copay fallback. Free or from the state qualifies; copays is a DQ."
+                }
+            ]
+        },
+        {
+            "id": "m2_3",
+            "title": "When they name a plan instead",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Plenty of consumers don't say “Medicaid” — they say the name of their plan. These ten count as Medicaid:</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Healthfirst · Fidelis · MetroPlus · Emblem · VNS · Molina · UHC Community · Anthem HealthPlus · Aetna Better Health · Amida Care</strong></p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "A bare brand name is not enough",
+                    "html": "<p>“United”, “Aetna” or “Anthem” on their own do <strong>not</strong> qualify. Those companies sell Medicaid plans and ordinary plans. You need the Medicaid version — “UHC Community”, “Aetna Better Health”, “Anthem HealthPlus” — or a plain yes to the Medicaid question.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>And <strong>Medicare is not Medicaid.</strong> They sound alike and plenty of consumers mix them up. Medicare on its own does not qualify for this benefit.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "“I've got Aetna.” What do you do?",
+                    "choices": [
+                        "Ask for their member number",
+                        "Establish whether it's Aetna Better Health or an ordinary Aetna plan",
+                        "Continue — Aetna is on the list",
+                        "DQ immediately"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Aetna Better Health qualifies; a plain Aetna plan doesn't. Establish which."
+                }
+            ]
+        },
+        {
+            "id": "m2_4",
+            "title": "The five boroughs",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>The service covers <strong>Bronx, Brooklyn, Manhattan, Queens and Staten Island</strong>. Nothing else.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<table><tr><th>They say</th><th>Outcome</th></tr><tr><td>Bronx / Brooklyn / Manhattan / Queens / Staten Island</td><td>Continue</td></tr><tr><td><strong>Long Island</strong></td><td>Outside the area — DQ</td></tr><tr><td><strong>Long Island City</strong></td><td>That's Queens — continue</td></tr><tr><td>Yonkers, New Jersey, upstate</td><td>Outside the area — DQ</td></tr><tr><td>“New York” / “NYC”</td><td>Too vague — ask which borough</td></tr></table>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Long Island and Long Island City are different places",
+                    "html": "<p>One is outside the service area and one is in Queens. Hear the difference before you DQ someone who qualifies, or transfer someone who doesn't.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>The ZIP code comes with the borough in the same breath, and it's skipped on a quarter of real calls. It's one short question — ask it.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "“I'm in Long Island City.”",
+                    "choices": [
+                        "Ask them to be more specific",
+                        "Transfer without the ZIP",
+                        "Outside the area, DQ",
+                        "That's Queens — continue"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Long Island City is in Queens and qualifies."
+                }
+            ]
+        },
+        {
+            "id": "m2_5",
+            "title": "The double confirm",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "script",
+                    "title": "The last question",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Okay LAST question here, JUST to double confirm, you ARE receiving Medicaid and you ARE still in (their borough), correct?"
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(wait for the answer — then the transfer ask)"
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Medicaid and borough, together, as the final question before the transfer. It's skipped or rushed on <strong>38%</strong> of real calls.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Why it exists",
+                    "html": "<p>The first time you ask, people answer on autopilot while they work out who you are. The second time, they're listening. A meaningful number correct themselves — and that correction is the difference between a clean transfer and one that gets docked.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Is the double confirm the same question as the first Medicaid ask?",
+                    "choices": [
+                        "No — it's a separate, deliberate last check of both facts",
+                        "Only needed if they hesitated",
+                        "Only needed on transfers",
+                        "Yes, it's a repeat"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "A separate ask covering Medicaid AND borough, every call."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "m2q1",
+                "question": "What happens if you transfer without ever asking about Medicaid?",
+                "choices": [
+                    "A coaching note",
+                    "Automatic fail — it's treated as fraud",
+                    "Nothing if they qualified",
+                    "Points off"
+                ],
+                "answer_index": 1,
+                "explanation": "The most serious failure on the campaign.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "m2q2",
+                "question": "“I don't know” — what's the fallback question?",
+                "choices": [
+                    "Ask whether they pay anything at the doctor",
+                    "Ask if they're on Medicare",
+                    "DQ them",
+                    "Ask for their member ID"
+                ],
+                "answer_index": 0,
+                "explanation": "Free or from the state qualifies; copays is a DQ.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "m2q3",
+                "question": "A consumer pays copays at the doctor. Outcome?",
+                "choices": [
+                    "DQ",
+                    "Callback",
+                    "Continue",
+                    "Transfer and let the screener check"
+                ],
+                "answer_index": 0,
+                "explanation": "Copays means it isn't Medicaid.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "m2q4",
+                "question": "Which qualifies as Medicaid?",
+                "choices": [
+                    "Aetna",
+                    "Amida Care",
+                    "United",
+                    "Anthem"
+                ],
+                "answer_index": 1,
+                "explanation": "Amida Care is on the list. Bare parent brands are not.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "m2q5",
+                "question": "Medicare with no Medicaid?",
+                "choices": [
+                    "Qualifies in the Bronx",
+                    "Qualifies",
+                    "Does not qualify",
+                    "Qualifies if over 65"
+                ],
+                "answer_index": 2,
+                "explanation": "Medicare is not Medicaid.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "m2q6",
+                "question": "Long Island?",
+                "choices": [
+                    "Qualifies",
+                    "Ask for the ZIP",
+                    "Outside the service area",
+                    "Queens"
+                ],
+                "answer_index": 2,
+                "explanation": "Outside the five boroughs.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "m2q7",
+                "question": "Long Island City?",
+                "choices": [
+                    "Too vague",
+                    "In Queens — qualifies",
+                    "In Brooklyn",
+                    "Outside the area"
+                ],
+                "answer_index": 1,
+                "explanation": "Long Island City is Queens.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "m2q8",
+                "question": "A consumer says just “New York”. What do you do?",
+                "choices": [
+                    "Ask which borough",
+                    "DQ",
+                    "Transfer",
+                    "Accept it"
+                ],
+                "answer_index": 0,
+                "explanation": "Not specific enough — pin down the borough.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "m2q9",
+                "question": "How many plans are on the qualifying list?",
+                "choices": [
+                    "Five",
+                    "Ten",
+                    "Eight",
+                    "Twelve"
+                ],
+                "answer_index": 1,
+                "explanation": "Ten.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "m2q10",
+                "question": "The double confirm covers…",
+                "choices": [
+                    "ZIP only",
+                    "Medicaid AND borough",
+                    "Medicaid only",
+                    "Borough only"
+                ],
+                "answer_index": 1,
+                "explanation": "Both, as a separate last question.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "m2q11",
+                "question": "Roughly how often does a consumer not know whether they're on Medicaid?",
+                "choices": [
+                    "About half",
+                    "Most calls",
+                    "About 1 in 5",
+                    "Almost never"
+                ],
+                "answer_index": 2,
+                "explanation": "Which is why the fallback question matters.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "m2q12",
+                "question": "How often is the ZIP skipped on real calls?",
+                "choices": [
+                    "Half",
+                    "Almost never",
+                    "About 1 in 4",
+                    "Most"
+                ],
+                "answer_index": 2,
+                "explanation": "24.7% — and it's one short question.",
+                "tags": [
+                    "script"
+                ]
+            }
+        ]
+    }
+}

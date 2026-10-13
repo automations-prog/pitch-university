@@ -1,0 +1,289 @@
+{
+    "id": "meals_compliance",
+    "title": "Compliance",
+    "est_minutes": 20,
+    "summary": "What you may and may not say about a benefit the consumer already has, and the one failure treated as fraud.",
+    "badge": {
+        "id": "badge_meals_compliance",
+        "name": "Compliance Clean",
+        "icon": "🛡️"
+    },
+    "lessons": [
+        {
+            "id": "m5_1",
+            "title": "Every call, no exceptions",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Compliance applies to outbound, inbound, callbacks and immediate re-dials alike. The call where you already spoke to someone ten minutes ago is the one agents skip — do it anyway.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>The nine required steps:</p><ol><li>Correct person</li><li>America's Health</li><li>On a recorded line</li><li>The Medicaid meal service</li><li><strong>Ask about Medicaid</strong></li><li>Borough</li><li>ZIP</li><li>Double confirm</li><li>Permission, then warm handoff</li></ol>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Two of these are failing badly on real calls",
+                    "html": "<p>Permission to transfer is missing on 32.3% of calls. The recorded line is missing on 4.4%. Neither takes more than a few seconds.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer rings back twenty minutes after you spoke. Which steps apply?",
+                    "choices": [
+                        "All nine",
+                        "Only the handoff",
+                        "None — you already did them",
+                        "Just the Medicaid question"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Every call means every call."
+                }
+            ]
+        },
+        {
+            "id": "m5_2",
+            "title": "The fraud line",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Never asking about Medicaid is treated as fraud",
+                    "html": "<p>Not a missed step. Not points off. Management's position is that transferring someone without ever asking whether they have Medicaid is fraud, because it bills a transfer for a consumer nobody established as eligible.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>An offshore floor was shut down over exactly this — 88% of their transfers never asked. On the named floor it still shows up on about 6% of transfers.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>In the simulator, a transfer with no Medicaid question fails outright, whatever else you did well.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "You had a great call, perfect rapport, consumer agreed to everything — but you never asked about Medicaid and transferred. Result?",
+                    "choices": [
+                        "Points off for one missed step",
+                        "Automatic fail",
+                        "High score",
+                        "Depends on whether they qualified"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Automatic fail. It's the one rule with no exceptions."
+                }
+            ]
+        },
+        {
+            "id": "m5_3",
+            "title": "What you may say",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>All of this is approved, straight from the script:</p><ul><li>Up to 3 meals a day</li><li>At no cost</li><li>Included in your Medicaid</li><li>Delivered to your doorstep</li><li>No change to your coverage</li><li>You're already approved / preapproved</li><li>New varieties have been released</li></ul>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "You don't need to oversell it",
+                    "html": "<p>Free food, already paid for, no catch. The plain truth is the strongest thing you have — which is why “how much does it cost” barely loses any calls when answered straight.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Which of these is approved wording?",
+                    "choices": [
+                        "“You're already approved for up to 3 meals a day at no cost.”",
+                        "“This replaces your food stamps.”",
+                        "“Your first delivery will be Monday.”",
+                        "“You'll get about $200 of food a month.”"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Straight from the script."
+                }
+            ]
+        },
+        {
+            "id": "m5_4",
+            "title": "What you may never say",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<table><tr><th>Never say</th><th>Why</th></tr><tr><td>It costs anything</td><td>Untrue, and it loses the consumer</td></tr><tr><td>Their coverage changes</td><td>Untrue, and it frightens people</td></tr><tr><td>A delivery date</td><td>You don't know. The screener does</td></tr><tr><td>A dollar amount</td><td>Not yours to promise</td></tr><tr><td>Specific meals or menus</td><td>Screener's job</td></tr><tr><td>That you're from Medicaid or the state</td><td>You're with America's Health</td></tr><tr><td>Pitch Perfect</td><td>Never named on a call</td></tr></table>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>And never ask for a Social Security number, a Medicaid number, or bank details. You don't need them, and asking frightens people who are right to be careful.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "“I'm calling from Medicaid about your meal benefit.”",
+                    "choices": [
+                        "Fine — it is a Medicaid benefit",
+                        "Fine on callbacks",
+                        "Fine if they ask",
+                        "An instant fail — you're with America's Health"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "The benefit is through their Medicaid; you are not Medicaid."
+                }
+            ]
+        },
+        {
+            "id": "m5_5",
+            "title": "Pressure and refusals",
+            "est_minutes": 3,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Rebutting a brush-off is the job. Pushing someone who has clearly, firmly refused is not — and on this campaign the line is drawn at a do-not-call request or a threat.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Swearing is not a do-not-call",
+                    "html": "<p>Someone annoyed at being called is raising an objection. Stay warm, rebut, keep going. Someone telling you to stop calling is a DNC — tell them they'll be removed, end the call, and never rebuttal it.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "“What the hell is this, why do you people keep calling?”",
+                    "choices": [
+                        "DNC",
+                        "Hang up",
+                        "An objection — rebut and keep going",
+                        "Transfer"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Annoyance is an objection. Only a stop-calling request or threat is a DNC."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "m5q1",
+                "question": "How many required steps are there?",
+                "choices": [
+                    "Nine",
+                    "Five",
+                    "Twelve",
+                    "Seven"
+                ],
+                "answer_index": 0,
+                "explanation": "Nine, ending with permission and the warm handoff.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "m5q2",
+                "question": "Transferring without asking about Medicaid is…",
+                "choices": [
+                    "A coaching note",
+                    "A missed step",
+                    "Treated as fraud — automatic fail",
+                    "Fine if they qualified"
+                ],
+                "answer_index": 2,
+                "explanation": "The one rule with no exceptions.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "m5q3",
+                "question": "Which is approved?",
+                "choices": [
+                    "“About $200 a month”",
+                    "“No cost and no change to your coverage”",
+                    "“This replaces food stamps”",
+                    "“Delivery starts Monday”"
+                ],
+                "answer_index": 1,
+                "explanation": "Straight from the script.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "m5q4",
+                "question": "Permission to transfer is missing on roughly…",
+                "choices": [
+                    "1 in 50 calls",
+                    "1 in 3 calls",
+                    "1 in 10 calls",
+                    "Almost never"
+                ],
+                "answer_index": 1,
+                "explanation": "32.3% — the biggest procedural gap.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "m5q5",
+                "question": "Can you tell a consumer when their meals will arrive?",
+                "choices": [
+                    "Yes on callbacks",
+                    "Yes if they insist",
+                    "Yes, roughly",
+                    "No — that's the screener's"
+                ],
+                "answer_index": 3,
+                "explanation": "You don't know it.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "m5q6",
+                "question": "Who are you with?",
+                "choices": [
+                    "Medicaid",
+                    "Pitch Perfect",
+                    "The state",
+                    "America's Health"
+                ],
+                "answer_index": 3,
+                "explanation": "America's Health, on a recorded line.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "m5q7",
+                "question": "A consumer asks you to stop calling.",
+                "choices": [
+                    "Rebut once",
+                    "Tell them they'll be removed and end the call",
+                    "Ask why",
+                    "Transfer"
+                ],
+                "answer_index": 1,
+                "explanation": "Never rebuttal a do-not-call.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "m5q8",
+                "question": "Do you ever need their Social Security number?",
+                "choices": [
+                    "Yes, to verify",
+                    "Only on inbound",
+                    "Only for the screener",
+                    "Never"
+                ],
+                "answer_index": 3,
+                "explanation": "Never ask for it.",
+                "tags": [
+                    "compliance"
+                ]
+            }
+        ]
+    }
+}

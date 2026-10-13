@@ -1,0 +1,347 @@
+{
+    "id": "meals_script",
+    "title": "The Script, Line by Line",
+    "est_minutes": 22,
+    "summary": "Every line in order, and the step that breaks on a third of real calls.",
+    "badge": {
+        "id": "badge_meals_script",
+        "name": "On Script",
+        "icon": "📜"
+    },
+    "lessons": [
+        {
+            "id": "m3_1",
+            "title": "The opening",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "script",
+                    "title": "Opening",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Hey, good morning (Customer's Name)?"
+                        },
+                        {
+                            "speaker": "consumer",
+                            "text": "Yeah?"
+                        },
+                        {
+                            "speaker": "agent",
+                            "text": "Hey, good morning (Customer's Name), this is _______, I'm with America's Health on a recorded line. We were just giving you a quick call today about the Medicaid meal service for you and your family. I just need to confirm you ARE still receiving Medicaid, correct?"
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(WAIT for the answer)"
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Four things in one breath: who you're speaking to, your company, the recorded line, and what the call is about — then straight into the Medicaid question.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Don't lose the recorded line",
+                    "html": "<p>It's missing from the opening on about 1 in 20 real calls, and skipped or rushed on far more. It costs you two seconds.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Which belongs in the opening?",
+                    "choices": [
+                        "Their income",
+                        "That the call is on a recorded line",
+                        "Their ZIP code",
+                        "The delivery schedule"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Name, company, recorded line, what the call is about."
+                }
+            ]
+        },
+        {
+            "id": "m3_2",
+            "title": "Borough and ZIP",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "script",
+                    "title": "Location",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Okay perfect, and you're still in (Customer's Borough), with the zip code (Customer's Zip Code), correct?"
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(WAIT)"
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "html": "<p>One sentence, two facts. The borough decides whether they're in the service area; the ZIP goes to the screener.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "The ZIP is the most skipped verification",
+                    "html": "<p>Missing on 24.7% of real calls, and rushed on another 18.7%. It's in the same sentence as the borough — there's no reason for it to go missing except speed.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "The consumer gives the borough but not the ZIP. What do you do?",
+                    "choices": [
+                        "Ask for the ZIP before continuing",
+                        "Move on — borough is the important one",
+                        "Let the screener get it",
+                        "Read them the ZIP from the screen and move on"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Both, every call."
+                }
+            ]
+        },
+        {
+            "id": "m3_3",
+            "title": "Permission to transfer — the broken step",
+            "est_minutes": 6,
+            "blocks": [
+                {
+                    "type": "script",
+                    "title": "The transfer ask",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Perfect, that's everything I need. The screener is coming on the line now to help you set that up, once that's finished, they'll have you on your way, okay?"
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "AFFIRM — MUST GET PERMISSION TO TRANSFER"
+                        }
+                    ]
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "A third of real calls skip this entirely",
+                    "html": "<p>Permission was never obtained on <strong>32.3%</strong> of calls, and rushed on another 19.9%. It is the single biggest procedural gap on this campaign — 446 calls in the sample were transferred with no okay from the consumer.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>The word “okay?” is in the script for a reason. Say it, then stop talking until you hear an answer. Silence is not permission, and neither is the consumer still being on the line.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "You say “…they'll have you on your way, okay?” and hear nothing. What now?",
+                    "choices": [
+                        "Ask again and wait for an answer",
+                        "Start again",
+                        "Transfer — they didn't object",
+                        "Disposition as Not Interested"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "No answer is not permission."
+                }
+            ]
+        },
+        {
+            "id": "m3_4",
+            "title": "The warm handoff",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "script",
+                    "title": "Handoff",
+                    "lines": [
+                        {
+                            "speaker": "agent",
+                            "text": "Hey agent, I have (Customer's Name) in (Customer's Borough), the zip code for them is (Customer's Zip). Can you take the call from here? Okay, I'll drop the line and let you two finish up, you both have a great day!"
+                        },
+                        {
+                            "speaker": "note",
+                            "text": "(wait until they're talking, then drop)"
+                        }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Three facts in the handoff: who, which borough, which ZIP. This is the step agents are best at — 83% do it properly — so it's mostly a matter of not letting it slip.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "What goes in the handoff?",
+                    "choices": [
+                        "Name, borough and ZIP",
+                        "Name and Medicaid status",
+                        "Name and borough",
+                        "Name only"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "All three, then wait for them to engage before dropping."
+                }
+            ]
+        },
+        {
+            "id": "m3_5",
+            "title": "The DQ line",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>When someone doesn't qualify, there is one approved line:</p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "No Medicaid / copays / outside the boroughs",
+                    "response": "Oh there must have been a mistake, thank you for your time, have a great day.",
+                    "coach_note": "Warm, short, and then end the call. No arguing, no trying to find a way around it, no transferring to see what the screener says."
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "A DQ is a correct outcome, not a loss",
+                    "html": "<p>169 consumers in the sample should have been DQ'd. 99 were caught. <strong>38 were transferred anyway</strong> — mostly people who said plainly they don't have Medicaid. Catching a DQ is a good call; transferring one is the failure.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "“No, I don't have Medicaid.” What do you do?",
+                    "choices": [
+                        "Transfer and let the screener decide",
+                        "Offer a callback",
+                        "Read the DQ line and end the call",
+                        "Ask if they have Medicare instead"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Read the line, code it DQ, move on."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "m3q1",
+                "question": "What must be in your opening?",
+                "choices": [
+                    "The menu",
+                    "Their ZIP",
+                    "Company name and recorded line",
+                    "Delivery times"
+                ],
+                "answer_index": 2,
+                "explanation": "Name, company, recorded line, purpose.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "m3q2",
+                "question": "Which step is skipped most often?",
+                "choices": [
+                    "The opening",
+                    "The handoff",
+                    "The borough",
+                    "Permission to transfer"
+                ],
+                "answer_index": 3,
+                "explanation": "32.3% — the biggest gap on the campaign.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "m3q3",
+                "question": "Silence after the transfer ask means…",
+                "choices": [
+                    "Not permission — ask again",
+                    "Transfer anyway",
+                    "Permission",
+                    "Code as Dead Air"
+                ],
+                "answer_index": 0,
+                "explanation": "They have to say okay.",
+                "tags": [
+                    "compliance"
+                ]
+            },
+            {
+                "id": "m3q4",
+                "question": "The ZIP is skipped on roughly…",
+                "choices": [
+                    "Half of calls",
+                    "1 in 50 calls",
+                    "1 in 4 calls",
+                    "Almost never"
+                ],
+                "answer_index": 2,
+                "explanation": "24.7%.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "m3q5",
+                "question": "What three facts go in the handoff?",
+                "choices": [
+                    "Name, Medicaid, borough",
+                    "Name, age, ZIP",
+                    "Borough, ZIP, plan",
+                    "Name, borough, ZIP"
+                ],
+                "answer_index": 3,
+                "explanation": "Who, which borough, which ZIP.",
+                "tags": [
+                    "script"
+                ]
+            },
+            {
+                "id": "m3q6",
+                "question": "A consumer doesn't qualify. You should…",
+                "choices": [
+                    "Offer a callback",
+                    "Transfer anyway",
+                    "Argue the point",
+                    "Read the DQ line and end"
+                ],
+                "answer_index": 3,
+                "explanation": "The approved DQ line, then end.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "m3q7",
+                "question": "How many consumers in the sample were transferred despite not qualifying?",
+                "choices": [
+                    "None",
+                    "446",
+                    "169",
+                    "38"
+                ],
+                "answer_index": 3,
+                "explanation": "38 of the 169 who should have been DQ'd.",
+                "tags": [
+                    "qualifying"
+                ]
+            },
+            {
+                "id": "m3q8",
+                "question": "When can you drop the line on the handoff?",
+                "choices": [
+                    "Immediately",
+                    "Once the screener and consumer are talking",
+                    "As soon as the screener answers",
+                    "After you say the ZIP"
+                ],
+                "answer_index": 1,
+                "explanation": "Wait until they're engaged.",
+                "tags": [
+                    "script"
+                ]
+            }
+        ]
+    }
+}

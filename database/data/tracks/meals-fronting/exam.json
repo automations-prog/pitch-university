@@ -1,0 +1,499 @@
+{
+    "title": "Final Exam",
+    "sections": {
+        "product": {
+            "title": "Product Quiz",
+            "pass_pct": 80,
+            "draw": 20,
+            "pool": [
+                {
+                    "id": "fx_meals_1",
+                    "question": "What is the meal benefit?",
+                    "choices": [
+                        "A new plan",
+                        "A discount card",
+                        "A benefit already included in their Medicaid",
+                        "Food stamps"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Already included in their Medicaid.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_meals_2",
+                    "question": "How many meals a day may you mention?",
+                    "choices": [
+                        "Up to three",
+                        "Unlimited",
+                        "Two",
+                        "One"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Up to 3.",
+                    "tags": [
+                        "product"
+                    ]
+                },
+                {
+                    "id": "fx_meals_3",
+                    "question": "Transferring without asking about Medicaid is…",
+                    "choices": [
+                        "Fine if they qualify",
+                        "A coaching note",
+                        "A missed step",
+                        "Treated as fraud — automatic fail"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "No exceptions.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_meals_4",
+                    "question": "“I don't know” — next question?",
+                    "choices": [
+                        "Are you on Medicare?",
+                        "Member ID",
+                        "Do you pay anything at the doctor?",
+                        "DQ them"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "The copay fallback.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_meals_5",
+                    "question": "Pays copays at the doctor?",
+                    "choices": [
+                        "Call Back",
+                        "DQ",
+                        "Transfer",
+                        "Continue"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Not Medicaid.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_meals_6",
+                    "question": "Which qualifies?",
+                    "choices": [
+                        "Anthem",
+                        "Cigna",
+                        "United",
+                        "Amida Care"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "On the list of ten.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_meals_7",
+                    "question": "Medicare with no Medicaid?",
+                    "choices": [
+                        "Qualifies at 65+",
+                        "Does not qualify",
+                        "Qualifies",
+                        "Qualifies in Queens"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Medicare is not Medicaid.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_meals_8",
+                    "question": "Long Island?",
+                    "choices": [
+                        "Outside the area",
+                        "Brooklyn",
+                        "Qualifies",
+                        "Queens"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Outside the five boroughs.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_meals_9",
+                    "question": "Long Island City?",
+                    "choices": [
+                        "Queens — qualifies",
+                        "Brooklyn",
+                        "Too vague",
+                        "Outside the area"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "It's Queens.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_meals_10",
+                    "question": "A consumer says just “New York”?",
+                    "choices": [
+                        "DQ",
+                        "Ask which borough",
+                        "Accept it",
+                        "Transfer"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Pin down the borough.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_meals_11",
+                    "question": "The double confirm covers…",
+                    "choices": [
+                        "Borough only",
+                        "Medicaid and borough",
+                        "ZIP only",
+                        "Medicaid only"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Both, as a separate last question.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_meals_12",
+                    "question": "Silence after the transfer ask is…",
+                    "choices": [
+                        "Permission",
+                        "Not permission",
+                        "A DQ",
+                        "Dead Air"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "They must say okay.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_meals_13",
+                    "question": "Which objection loses the most calls?",
+                    "choices": [
+                        "How much?",
+                        "What is this?",
+                        "Who are you?",
+                        "Not interested"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "97.5%.",
+                    "tags": [
+                        "rebuttals"
+                    ]
+                },
+                {
+                    "id": "fx_meals_14",
+                    "question": "What ends every rebuttal?",
+                    "choices": [
+                        "Asking if they have questions",
+                        "A question about their health",
+                        "Going straight back to the verification",
+                        "The transfer"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Don't stop or pause.",
+                    "tags": [
+                        "rebuttals"
+                    ]
+                },
+                {
+                    "id": "fx_meals_15",
+                    "question": "“I already have it” — key word?",
+                    "choices": [
+                        "Extra",
+                        "New",
+                        "Approved",
+                        "Free"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "EXTRA, not a replacement.",
+                    "tags": [
+                        "rebuttals"
+                    ]
+                },
+                {
+                    "id": "fx_meals_16",
+                    "question": "Which may you NOT say?",
+                    "choices": [
+                        "No cost",
+                        "Delivery starts Monday",
+                        "Included in your Medicaid",
+                        "No change to coverage"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Delivery dates are the screener's.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_meals_17",
+                    "question": "Who are you with?",
+                    "choices": [
+                        "Medicaid",
+                        "The state",
+                        "America's Health",
+                        "Pitch Perfect"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "America's Health, on a recorded line.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_meals_18",
+                    "question": "Acknowledged then hung up?",
+                    "choices": [
+                        "DNC",
+                        "Dead Air",
+                        "Not Interested",
+                        "Wrong Number"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Not Interested.",
+                    "tags": [
+                        "dispositions"
+                    ]
+                },
+                {
+                    "id": "fx_meals_19",
+                    "question": "Hangs up after the transfer starts?",
+                    "choices": [
+                        "Hung-Up Transfer",
+                        "Dead Air",
+                        "Transfer",
+                        "Not Interested"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Hung-Up Transfer.",
+                    "tags": [
+                        "dispositions"
+                    ]
+                },
+                {
+                    "id": "fx_meals_20",
+                    "question": "Voicemail?",
+                    "choices": [
+                        "Leave a number",
+                        "Dead Air",
+                        "Leave a message",
+                        "Answering Machine, no message"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Never leave a message.",
+                    "tags": [
+                        "dispositions"
+                    ]
+                },
+                {
+                    "id": "fx_meals_21",
+                    "question": "How many plans are on the qualifying list?",
+                    "choices": [
+                        "Twelve",
+                        "Five",
+                        "Ten",
+                        "Eight"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Ten.",
+                    "tags": [
+                        "qualifying"
+                    ]
+                },
+                {
+                    "id": "fx_meals_22",
+                    "question": "Permission to transfer is missing on roughly…",
+                    "choices": [
+                        "12%",
+                        "A third",
+                        "3% of calls",
+                        "Two thirds"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "32.3%.",
+                    "tags": [
+                        "compliance"
+                    ]
+                },
+                {
+                    "id": "fx_meals_23",
+                    "question": "A consumer swears but doesn't ask you to stop calling.",
+                    "choices": [
+                        "Hang up",
+                        "Transfer",
+                        "DNC",
+                        "Rebut and continue"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "An objection, not a DNC.",
+                    "tags": [
+                        "dispositions"
+                    ]
+                },
+                {
+                    "id": "fx_meals_24",
+                    "question": "Do you ever need their Social Security number?",
+                    "choices": [
+                        "For the screener",
+                        "On inbound",
+                        "Never",
+                        "Yes"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Never.",
+                    "tags": [
+                        "compliance"
+                    ]
+                }
+            ]
+        },
+        "script": {
+            "title": "Script Quiz",
+            "pass_pct": 80,
+            "draw": 8,
+            "pool": [
+                {
+                    "id": "fx_mscript_1",
+                    "question": "What's the first question after the opening?",
+                    "choices": [
+                        "Their ZIP",
+                        "Their age",
+                        "Their borough",
+                        "Whether they still receive Medicaid"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "The Medicaid question.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_mscript_2",
+                    "question": "What comes with the borough in the same sentence?",
+                    "choices": [
+                        "The ZIP code",
+                        "Their plan",
+                        "The meal count",
+                        "Their age"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Borough and ZIP together.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_mscript_3",
+                    "question": "The last question before the transfer is…",
+                    "choices": [
+                        "The ZIP",
+                        "Their name",
+                        "The double confirm",
+                        "The menu"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Medicaid and borough, double confirmed.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_mscript_4",
+                    "question": "What must you get before conferencing?",
+                    "choices": [
+                        "Their plan name",
+                        "Their age",
+                        "Their ZIP",
+                        "Permission — they must say okay"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "Verbal permission.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_mscript_5",
+                    "question": "What three facts go in the handoff?",
+                    "choices": [
+                        "Name, borough, ZIP",
+                        "Name, age, ZIP",
+                        "Name, plan, borough",
+                        "Borough, ZIP, meals"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Who, where, ZIP.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_mscript_6",
+                    "question": "The DQ line is…",
+                    "choices": [
+                        "“Oh there must have been a mistake, thank you for your time, have a great day.”",
+                        "“Let me get my manager.”",
+                        "“You don't qualify, goodbye.”",
+                        "“I'll call you back.”"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Warm, short, then end.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_mscript_7",
+                    "question": "When can you drop the line?",
+                    "choices": [
+                        "When the screener answers",
+                        "Once the screener and consumer are talking",
+                        "Immediately",
+                        "After the ZIP"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Wait for both voices.",
+                    "tags": [
+                        "script"
+                    ]
+                },
+                {
+                    "id": "fx_mscript_8",
+                    "question": "After a rebuttal you should…",
+                    "choices": [
+                        "Pause for them to think",
+                        "Go right back where you were without pausing",
+                        "Ask if that makes sense",
+                        "Offer a callback"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Don't stop or pause.",
+                    "tags": [
+                        "rebuttals"
+                    ]
+                }
+            ]
+        }
+    }
+}

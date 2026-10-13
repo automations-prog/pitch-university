@@ -1,0 +1,379 @@
+{
+    "id": "meals_rebuttals",
+    "title": "Rebuttals — Where the Money Is",
+    "est_minutes": 30,
+    "summary": "The eight approved rebuttals, which objections actually lose calls, and why speed matters more here than anywhere else.",
+    "badge": {
+        "id": "badge_meals_rebuttals",
+        "name": "Unshakeable",
+        "icon": "🛡"
+    },
+    "lessons": [
+        {
+            "id": "m4_1",
+            "title": "What each objection costs",
+            "est_minutes": 6,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>This is measured from 3,263 real calls — 1,196 that transferred and 2,067 that didn't. For the first time we can say not just how often an objection comes up, but what it costs.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<table><tr><th>Objection</th><th>Comes up on</th><th>Calls lost</th></tr><tr><td><strong>Not interested</strong></td><td>14.9%</td><td><strong>97.5%</strong></td></tr><tr><td><strong>I don't need it</strong></td><td>8.5%</td><td><strong>89.6%</strong></td></tr><tr><td><strong>I'm busy / call me back</strong></td><td>10.6%</td><td><strong>82.6%</strong></td></tr><tr><td>Who are you with?</td><td>13.5%</td><td>68.9%</td></tr><tr><td>I already have it</td><td>4.0%</td><td>63.1%</td></tr><tr><td>What is this?</td><td>19.8%</td><td>51.9%</td></tr></table>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "The most common objection is the safest",
+                    "html": "<p>“What is this?” comes up on one call in five and agents handle it well. The dangerous ones are the brush-offs — less frequent, far more expensive.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>And on more than half the “not interested” calls, <strong>no rebuttal was attempted at all</strong>. That's not a skill gap. That's agents letting the call go.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Which objection loses the highest share of the calls it appears on?",
+                    "choices": [
+                        "Not interested",
+                        "I already have it",
+                        "What is this?",
+                        "Who are you with?"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "97.5%. And over half the time nobody even tries a rebuttal."
+                }
+            ]
+        },
+        {
+            "id": "m4_2",
+            "title": "The three brush-offs",
+            "est_minutes": 7,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Real consumers say it like this: <em>“No, thank you.”</em>, <em>“I'm not interested.”</em></p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "Not interested",
+                    "response": "I understand, but groceries are NOT getting any cheaper. You are ALREADY approved for up to three meals at NO cost and this is INCLUDED in your Medicaid. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+                    "coach_note": "Don't acknowledge the no and pause — that's the pause the call dies in. Lead with groceries not getting cheaper, land “already approved” and “no cost”, and go straight back to the verification."
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "I'm busy / Call me back",
+                    "response": "Oh let me assure you this will be SUPER brief, I just have 3 SUPER quick questions and I'll bring the screener on. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+                    "coach_note": "Promise brevity and prove it. Three quick questions, then the screener. Agents who stop to arrange a callback lose 82.6% of these."
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "I don't need it",
+                    "response": "I understand, but with groceries and the cost of living going up, having three meals delivered at NO cost can take a little pressure off your grocery budget. And if you don't personally need them, you could ALWAYS give them to someone in your family or someone who could use the help. You're already approved for it, so there's nothing extra you're paying for. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+                    "coach_note": "The give-it-to-someone-else angle is the one that works — it removes the need to admit they need help. 89.6% of these calls are lost, so this rebuttal is worth knowing word for word."
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "27 seconds",
+                    "html": "<p>When no rebuttal comes, the median brush-off call lasts 27 seconds. When one does, 43. You are not having a conversation — you are getting one sentence in before the line goes dead.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer says “I don't need it, give it to someone who needs it more.” What does the approved rebuttal do?",
+                    "choices": [
+                        "Points out they could pass the meals to family, and that they're already approved",
+                        "Asks why they don't need it",
+                        "Agrees and ends the call politely",
+                        "Explains the delivery schedule"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "It removes the need to admit they need help, which is what the objection is really about."
+                }
+            ]
+        },
+        {
+            "id": "m4_3",
+            "title": "Explaining the benefit",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>The most common objection on the campaign, on 19.8% of calls: <em>“What?”</em>, <em>“What is this about?”</em></p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "What is this / Why are you calling me?",
+                    "response": "This is a meal delivery benefit included in your Medicaid. It provides up to 3 meals daily at no cost, and no change to coverage. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+                    "coach_note": "Short and concrete. Meal delivery, included in their Medicaid, no cost, no change to coverage — then straight back to verifying."
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "Who are you with?",
+                    "response": "Oh I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+                    "coach_note": "Name the company and move. This one is handled well on real calls and rarely needs more than a sentence."
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "How much is this going to cost me?",
+                    "response": "Oh this is ALREADY included in your Medicaid. There is NO cost to you and there is NO change to your coverage. You're ALREADY preapproved for up to 3 meals a day, delivered to your doorstep, I just need to activate it. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+                    "coach_note": "The honest answer is the strong one: nothing. It's already included. Note this objection barely loses any calls — people ask it to check for a catch, and the plain answer satisfies them."
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "Why these are safe",
+                    "html": "<p>These three are questions, not refusals. The consumer is engaging. Answer briefly and keep going — the mistake here is over-explaining, not under-explaining.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "“How much is this going to cost me?”",
+                    "choices": [
+                        "“Usually about twenty dollars.”",
+                        "“Nothing — it's already included in your Medicaid, no cost and no change to your coverage.”",
+                        "“The screener will tell you.”",
+                        "“It depends on your plan.”"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "True, and it's approved wording."
+                }
+            ]
+        },
+        {
+            "id": "m4_4",
+            "title": "Already getting meals",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>On 4.0% of calls, and 63.1% of those are lost: <em>“This is in reference to Medicaid meals. I already get.”</em></p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "I already have it",
+                    "response": "Yes of course, we were just calling about the EXTRA support, this isn't a replacement. There's actually been some NEW varieties that JUST released so MORE food coming in, we just need to activate it. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+                    "coach_note": "The key word is EXTRA. This isn't a replacement for what they have, and new varieties have just been released. Then back to the verification."
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "I don't like the meals",
+                    "response": "I understand, but there's actually some new varieties that JUST became available. From healthier options to hot, cold and frozen. Just let the screener know when we get there. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+                    "coach_note": "Don't argue about the food. New varieties, let the screener know what they prefer, keep moving."
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "I already signed up with someone",
+                    "response": "Yes of course, we were just calling about the EXTRA support, this isn't a replacement. There's actually been some NEW varieties that JUST released so MORE food coming in, we just need to activate it. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+                    "coach_note": "Same shape as “I already have it” — this is extra support, and the screener sorts out the detail."
+                },
+                {
+                    "type": "check",
+                    "question": "“I already get meals delivered.” What's the angle?",
+                    "choices": [
+                        "This is EXTRA support, not a replacement, and new varieties just released",
+                        "Ask who delivers them",
+                        "DQ them — they're already served",
+                        "Tell them they're wrong"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Extra, not instead of. Then straight back to the verification."
+                }
+            ]
+        },
+        {
+            "id": "m4_5",
+            "title": "Suspicion, and where the script runs out",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p><em>“I just don't understand why it's in my name. Is this a scam?”</em> — suspicion is constant on these calls, and the strongest answer is simply naming who you are and what you need.</p>"
+                },
+                {
+                    "type": "rebuttal",
+                    "objection": "Who are you with? (used for scam and personal-info pushback)",
+                    "response": "Oh I'm with America's Health. We work with over 25 different health insurance providers. We're just here to facilitate your free review. I just need to confirm... (GO RIGHT BACK WHERE YOU WERE, DON'T STOP OR PAUSE)",
+                    "coach_note": "You're not asking for a social security number, a bank account or a card. Say so — it's true and it's the fastest way to defuse this."
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Two gaps in the script worth knowing",
+                    "html": "<p><strong>“I was told I don't qualify”</strong> comes up on 1.7% of calls and loses 66% of them — and there is no approved rebuttal for it. Until there is, the closest approved line is the “what is this” explanation.</p><p>And <strong>there is no written do-not-call line</strong> on this script, unlike Medicare and ACA. Use a plain removal statement and end the call.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Both have been flagged to management. If an approved line lands for either, it goes into the script file and flows through automatically.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "A consumer says to stop calling them. What do you do?",
+                    "choices": [
+                        "One more rebuttal first",
+                        "Ask why",
+                        "Tell them they'll be removed, end the call, code DNC",
+                        "Transfer to the screener"
+                    ],
+                    "answer_index": 2,
+                    "explanation": "Never rebuttal a do-not-call request."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "m4q1",
+                "question": "Which objection loses the most calls?",
+                "choices": [
+                    "Not interested",
+                    "How much does it cost?",
+                    "Who are you with?",
+                    "What is this?"
+                ],
+                "answer_index": 0,
+                "explanation": "97.5% of calls it appears on.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "m4q2",
+                "question": "How often is no rebuttal even attempted on “not interested”?",
+                "choices": [
+                    "More than half the time",
+                    "Always",
+                    "Rarely",
+                    "About a quarter of the time"
+                ],
+                "answer_index": 0,
+                "explanation": "286 of 541 occurrences got no response at all.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "m4q3",
+                "question": "Median length of a brush-off call with no rebuttal?",
+                "choices": [
+                    "10 seconds",
+                    "27 seconds",
+                    "2 minutes",
+                    "60 seconds"
+                ],
+                "answer_index": 1,
+                "explanation": "43 seconds when the agent does rebut.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "m4q4",
+                "question": "The “I don't need it” rebuttal works by…",
+                "choices": [
+                    "Offering a callback",
+                    "Suggesting they pass the meals to family and reminding them it's already approved",
+                    "Insisting they do need it",
+                    "Explaining the menu"
+                ],
+                "answer_index": 1,
+                "explanation": "It removes the need to admit they need help.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "m4q5",
+                "question": "“I already have it” — what's the key word?",
+                "choices": [
+                    "Approved",
+                    "Extra",
+                    "Free",
+                    "Medicaid"
+                ],
+                "answer_index": 1,
+                "explanation": "EXTRA support, not a replacement.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "m4q6",
+                "question": "What ends every rebuttal?",
+                "choices": [
+                    "Going right back to the verification without pausing",
+                    "A question about their health",
+                    "Asking if they have questions",
+                    "The transfer ask"
+                ],
+                "answer_index": 0,
+                "explanation": "Don't stop or pause.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "m4q7",
+                "question": "“How much will this cost me?” is…",
+                "choices": [
+                    "A DQ",
+                    "One of the most dangerous objections",
+                    "One of the least dangerous — the plain answer satisfies people",
+                    "A reason to transfer early"
+                ],
+                "answer_index": 2,
+                "explanation": "It loses few calls. People are checking for a catch.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "m4q8",
+                "question": "Which objection currently has no approved rebuttal?",
+                "choices": [
+                    "I'm busy",
+                    "Not interested",
+                    "I was told I don't qualify",
+                    "Who are you with?"
+                ],
+                "answer_index": 2,
+                "explanation": "Flagged to management; use the “what is this” explanation meanwhile.",
+                "tags": [
+                    "rebuttals"
+                ]
+            },
+            {
+                "id": "m4q9",
+                "question": "A consumer swears at you but doesn't ask you to stop calling.",
+                "choices": [
+                    "Transfer",
+                    "Hang up",
+                    "DNC",
+                    "Rebut and keep going"
+                ],
+                "answer_index": 3,
+                "explanation": "Swearing is an objection, not a do-not-call request.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "m4q10",
+                "question": "“I'm busy, call me back” — best response?",
+                "choices": [
+                    "Arrange the callback",
+                    "Apologise and end",
+                    "Promise brevity, three quick questions, keep going",
+                    "Transfer immediately"
+                ],
+                "answer_index": 2,
+                "explanation": "82.6% of these are lost when the agent stops to arrange a callback.",
+                "tags": [
+                    "rebuttals"
+                ]
+            }
+        ]
+    }
+}

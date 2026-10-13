@@ -1,0 +1,274 @@
+{
+    "id": "meals_dialer",
+    "title": "The Convoso Dialer",
+    "est_minutes": 18,
+    "summary": "Logging in, your status, the agent screen, the transfer flow and dispositioning for the Meals campaign.",
+    "badge": {
+        "id": "badge_meals_dialer",
+        "name": "Dialer Ready",
+        "icon": "☎️"
+    },
+    "lessons": [
+        {
+            "id": "m8_1",
+            "title": "Logging in",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Use Google Chrome",
+                    "html": "<p>Other browsers cause audio problems that look like dialer faults and waste your shift.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Sign in with your email and password. In the pop-up choose the <strong>Meals</strong> campaign and set your status to <strong>Available</strong> or <strong>Break</strong>, then Login.</p><p>Check the campaign every time — the wrong one means the wrong leads and the wrong script.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>You are Available or Break at all times, nothing else. Allow the browser's audio permission when it asks, or calls connect to silence.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>Logging out: set status to <strong>Break</strong> first (top right), then Logout at the bottom.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Before logging out you should…",
+                    "choices": [
+                        "Switch campaign",
+                        "Set status to Break, then Logout",
+                        "Disposition and walk away",
+                        "Just close the tab"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Break first, then Logout."
+                }
+            ]
+        },
+        {
+            "id": "m8_2",
+            "title": "The agent screen",
+            "est_minutes": 4,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p><strong>Top left</strong> — call status, and on a live call the consumer's name and a running timer.</p><p><strong>Top right</strong> — the blue <strong>Transfer</strong> button brings the conference tab back; the red <strong>Wrap Up</strong> button ends a call.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p><strong>Left sidebar</strong> — Availability (change it before a call lands, you can't while you're on one) and the dispositions.</p><p><strong>Tabs</strong> — Script holds your script and the conference button; Contact holds the consumer's details including their borough and ZIP.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "Dispositioning ends the call",
+                    "html": "<p>Make sure you're finished before you click, and code what actually happened.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "Where's the conference transfer button?",
+                    "choices": [
+                        "Dial pad",
+                        "Left sidebar",
+                        "Contact tab",
+                        "Script tab"
+                    ],
+                    "answer_index": 3,
+                    "explanation": "On the Script tab."
+                }
+            ]
+        },
+        {
+            "id": "m8_3",
+            "title": "The transfer",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Once all four verifications are done and the consumer has said okay:</p><ol><li>Click the conference transfer button on the Script tab</li><li>Stay on the line while it rings</li><li>When the screener answers, do the warm handoff — name, borough, ZIP</li><li>Wait until they're talking to each other</li><li>Leave the conference, then disposition</li></ol>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "tip",
+                    "title": "The Contact tab has the borough and ZIP",
+                    "html": "<p>If they've gone out of your head mid-transfer, they're one click away. Guessing the borough in a handoff is how a Queens consumer ends up with a Bronx screener.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>If the consumer hangs up during the transfer, clear the screener's line first, then code it Hung-Up Transfer.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "The consumer hangs up while the screener's line is ringing.",
+                    "choices": [
+                        "Clear the screener's line, then code Hung-Up Transfer",
+                        "Try the transfer again",
+                        "Leave both lines open",
+                        "Disposition as Not Interested"
+                    ],
+                    "answer_index": 0,
+                    "explanation": "Clear the line, then code it correctly."
+                }
+            ]
+        },
+        {
+            "id": "m8_4",
+            "title": "Coding and miscodes",
+            "est_minutes": 5,
+            "blocks": [
+                {
+                    "type": "text",
+                    "html": "<p>Disposition every call, and code what happened. On this campaign the codes feed both pay and QA, so a miscode isn't an admin slip — it changes the numbers.</p>"
+                },
+                {
+                    "type": "callout",
+                    "tone": "warning",
+                    "title": "DQ is not a failure",
+                    "html": "<p>There's a temptation to code a DQ as something softer, or to transfer it and let the screener deal with it. Both are worse than the DQ. Catching a disqualified consumer is a correct outcome and it's counted as one.</p>"
+                },
+                {
+                    "type": "text",
+                    "html": "<p>If you miscode by accident, report it simply: the number, then the correction. Keep it short and clear for QA.</p>"
+                },
+                {
+                    "type": "check",
+                    "question": "You realise you coded a DQ as Not Interested. What do you do?",
+                    "choices": [
+                        "Leave it",
+                        "Report the number and the correction to QA",
+                        "Change it quietly next time",
+                        "Call the consumer back"
+                    ],
+                    "answer_index": 1,
+                    "explanation": "Report it — short and clear."
+                }
+            ]
+        }
+    ],
+    "quiz": {
+        "pass_pct": 80,
+        "questions": [
+            {
+                "id": "m8q1",
+                "question": "Which browser?",
+                "choices": [
+                    "Chrome",
+                    "Firefox",
+                    "Any",
+                    "Safari"
+                ],
+                "answer_index": 0,
+                "explanation": "Chrome.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "m8q2",
+                "question": "The only two statuses you use?",
+                "choices": [
+                    "Available and Lunch",
+                    "Available and Break",
+                    "On and Off",
+                    "Ready and Wrap"
+                ],
+                "answer_index": 1,
+                "explanation": "Available or Break.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "m8q3",
+                "question": "Where's the conference button?",
+                "choices": [
+                    "Script tab",
+                    "Contact tab",
+                    "Sidebar",
+                    "Top right"
+                ],
+                "answer_index": 0,
+                "explanation": "Script tab.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "m8q4",
+                "question": "What does selecting a disposition do?",
+                "choices": [
+                    "Ends the call",
+                    "Opens the CRM",
+                    "Pauses the dialer",
+                    "Saves a note"
+                ],
+                "answer_index": 0,
+                "explanation": "It ends the call.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "m8q5",
+                "question": "Forgot the borough mid-transfer?",
+                "choices": [
+                    "Ask the screener",
+                    "Guess it",
+                    "Skip it",
+                    "Check the Contact tab"
+                ],
+                "answer_index": 3,
+                "explanation": "It's one click away.",
+                "tags": [
+                    "operations"
+                ]
+            },
+            {
+                "id": "m8q6",
+                "question": "Consumer hangs up during the transfer?",
+                "choices": [
+                    "Retry",
+                    "Dead Air",
+                    "Not Interested",
+                    "Clear the screener's line, code Hung-Up Transfer"
+                ],
+                "answer_index": 3,
+                "explanation": "Clear the line first.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "m8q7",
+                "question": "A DQ should be coded as…",
+                "choices": [
+                    "Not Interested",
+                    "Whatever looks better",
+                    "DQ",
+                    "Call Back"
+                ],
+                "answer_index": 2,
+                "explanation": "DQ is a correct outcome.",
+                "tags": [
+                    "dispositions"
+                ]
+            },
+            {
+                "id": "m8q8",
+                "question": "You miscoded a call. What now?",
+                "choices": [
+                    "Call back",
+                    "Nothing",
+                    "Report the number and correction",
+                    "Leave it"
+                ],
+                "answer_index": 2,
+                "explanation": "Short and clear to QA.",
+                "tags": [
+                    "operations"
+                ]
+            }
+        ]
+    }
+}
