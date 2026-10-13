@@ -243,6 +243,11 @@ class RoleplayDeliveryMetrics
     }
 
     /**
+     * Seconds from each objection to its resolution, and how many were
+     * still open at the end. The consumer raises an objection again each
+     * time they repeat it; a repeat before it's resolved is the same
+     * objection, not another one.
+     *
      * @param  list<array<string, mixed>>  $events
      * @return array{0: list<float>, 1: int|null}
      */
@@ -257,25 +262,35 @@ class RoleplayDeliveryMetrics
         $resolved = $this->ofType($events, 'objection_resolved');
         $seconds = [];
         $unresolved = 0;
+        /** @var array<string, int|null> $openUntil When each open objection was resolved, null if never. */
+        $openUntil = [];
 
         foreach ($raised as $objection) {
-            $match = null;
+            $id = $objection['id'];
+
+            if (array_key_exists($id, $openUntil) && ($openUntil[$id] === null || $openUntil[$id] >= $objection['at'])) {
+                continue;
+            }
+
+            $resolvedAt = null;
 
             foreach ($resolved as $candidate) {
-                if ($candidate['id'] === $objection['id'] && $candidate['at'] >= $objection['at']) {
-                    $match = $candidate;
+                if ($candidate['id'] === $id && $candidate['at'] >= $objection['at']) {
+                    $resolvedAt = $candidate['at'];
 
                     break;
                 }
             }
 
-            if ($match === null) {
+            $openUntil[$id] = $resolvedAt;
+
+            if ($resolvedAt === null) {
                 $unresolved++;
 
                 continue;
             }
 
-            $seconds[] = round(($match['at'] - $objection['at']) / 1000, 1);
+            $seconds[] = round(($resolvedAt - $objection['at']) / 1000, 1);
         }
 
         return [$seconds, $unresolved];

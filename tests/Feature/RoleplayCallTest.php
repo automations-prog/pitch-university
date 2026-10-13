@@ -6,6 +6,7 @@ use App\Models\RoleplaySession;
 use App\Models\User;
 use App\Services\RoleplayConsumerPrompt;
 use App\Services\RoleplayGrader;
+use App\Services\RoleplayScript;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
@@ -169,6 +170,28 @@ test('the consumer raises "I already got it" at the Parts A and B question with 
         ->toContain('"I get my OTC card with Humana." / "I already signed up with Aetna for 2026."')
         ->toContain('"I get the Flex Card with Humana."')
         ->toContain('- `busy`: I\'m busy / call me back. Say something like: "');
+});
+
+test('the consumer knows each objection\'s approved rebuttal and keeps patience when the caller follows the script', function () {
+    $session = RoleplaySession::factory()->create([
+        'persona' => [...RoleplaySession::factory()->raw()['persona'], 'objections' => ['busy']],
+    ]);
+
+    $instructions = app(RoleplayConsumerPrompt::class)->instructions($session);
+    $rebuttal = implode(' ', app(RoleplayScript::class)->objection('busy')['rebuttal']['lines']);
+
+    expect($instructions)
+        ->toContain("Approved rebuttal: \"{$rebuttal}\"")
+        ->toContain('never lose patience for any of these')
+        ->toContain('One more try after you say no to waiting for the specialist.');
+});
+
+test('the consumer is told to sound like a real person, not an assistant', function () {
+    $instructions = app(RoleplayConsumerPrompt::class)->instructions(RoleplaySession::factory()->create());
+
+    expect($instructions)
+        ->toContain('Talk like a real person on the phone, not an assistant or a voice actor.')
+        ->toContain('Never use customer-service phrases');
 });
 
 test('minting uses a voice of the lead\'s gender when the session has none', function () {

@@ -114,6 +114,23 @@ const GREETING_STATS_INTERVAL_MS = 200;
  * headset. Like someone on a real phone, the consumer says hello again
  * when the trainee stays silent this long after it, up to this many times.
  */
+/**
+ * The greeting is asked for with its own instructions, so the consumer
+ * picks up with exactly "Hello?" after the ringing, and a greeting that
+ * says anything else is taken back and asked for again.
+ */
+const GREETING_INSTRUCTIONS =
+    'You just picked up the phone after it rang. Say exactly "Hello?" and nothing else: no other words, no name, no question.';
+
+function isHelloLine(text: string): boolean {
+    return /^(hello\s*)+$/.test(
+        text
+            .toLowerCase()
+            .replace(/[^a-z\s]/g, '')
+            .trim(),
+    );
+}
+
 const GREETING_ANSWER_WAIT_MS = 5_000;
 const GREETING_REPEAT_MAX = 2;
 const GREETING_REPEAT_MESSAGE =
@@ -143,7 +160,9 @@ const AGENT_TRANSCRIPT_FAILED_EVENT =
  *
  * A turn starts once the mic is above the threshold for `START_MS` (a
  * quiet stretch of `START_QUIET_RESET_MS` resets that), and ends after
- * `END_SILENCE_MS` of quiet. It's committed and answered only if the mic
+ * `END_SILENCE_MS` of quiet. That has to outlast a breath mid-sentence:
+ * at 500–800ms the consumer answered half-read script lines ("We were
+ * just giving you a."), so trainees could never finish the opener. It's committed and answered only if the mic
  * was loud for `MIN_LOUD_MS` in total; anything less was noise and is
  * cleared. While the trainee is quiet, the buffer is cleared every
  * `IDLE_CLEAR_MS` so room noise doesn't pile up into their next turn.
@@ -151,10 +170,7 @@ const AGENT_TRANSCRIPT_FAILED_EVENT =
 const AGENT_TURN_RMS_THRESHOLD = 0.02;
 const AGENT_TURN_START_MS = 200;
 const AGENT_TURN_START_QUIET_RESET_MS = 300;
-const AGENT_TURN_END_SILENCE_MS = 800;
-/** Levels 4–5 answer sooner, so the consumer feels pushier. */
-const PUSHY_AGENT_TURN_END_SILENCE_MS = 500;
-const PUSHY_MIN_LEVEL = 4;
+const AGENT_TURN_END_SILENCE_MS = 1_300;
 const AGENT_TURN_MIN_LOUD_MS = 300;
 const AGENT_TURN_IDLE_CLEAR_MS = 2_000;
 const AGENT_TURN_WATCH_INTERVAL_MS = 50;
@@ -443,12 +459,10 @@ function parseArguments(raw: string | undefined): Record<string, unknown> {
 
 export function useRoleplayRealtimeCall({
     sessionId,
-    level,
     startingPatience,
     vertical,
 }: {
     sessionId: number;
-    level: number;
     startingPatience: number;
     vertical: RoleplayVertical;
 }) {
@@ -459,7 +473,13 @@ export function useRoleplayRealtimeCall({
     const [muted, setMuted] = useState(false);
     const [elapsedSeconds, setElapsedSeconds] = useState(0);
     const [patience, setPatience] = useState(startingPatience);
-    const [openObjections, setOpenObjections] = useState<string[]>([]);
+    const [openObjections, setOpenObjectionsState] = useState<string[]>([]);
+    /** Mirrors `openObjections` for the realtime event handlers. */
+    const openObjectionsRef = useRef<string[]>([]);
+    const setOpenObjections = useCallback((next: string[]) => {
+        openObjectionsRef.current = next;
+        setOpenObjectionsState(next);
+    }, []);
     const [transcript, setTranscript] = useState<LiveTranscriptLine[]>([]);
     const [endReason, setEndReason] = useState<RoleplayEndReason | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -893,10 +913,6 @@ export function useRoleplayRealtimeCall({
         }
 
         const levels = new Uint8Array(512);
-        const endSilenceMs =
-            level >= PUSHY_MIN_LEVEL
-                ? PUSHY_AGENT_TURN_END_SILENCE_MS
-                : AGENT_TURN_END_SILENCE_MS;
         let startLoudMs = 0;
         let startQuietMs = 0;
         let firstLoudAt: number | null = null;
@@ -993,7 +1009,7 @@ export function useRoleplayRealtimeCall({
                 if (isLoud) {
                     turn.loudMs += AGENT_TURN_WATCH_INTERVAL_MS;
                     turn.lastLoudAt = now;
-                } else if (now - turn.lastLoudAt >= endSilenceMs) {
+                } else if (now - turn.lastLoudAt >= AGENT_TURN_END_SILENCE_MS) {
                     endAgentTurn();
                     quietSince = now;
                 }
@@ -1063,7 +1079,6 @@ export function useRoleplayRealtimeCall({
     }, [
         endAgentTurn,
         isRemoteAudioPlaying,
-        level,
         msIntoCall,
         recordTalkOver,
         sendEvent,
@@ -1314,7 +1329,13 @@ export function useRoleplayRealtimeCall({
             transcript: null,
         };
         startGreetingWatch();
-        sendEvent({ type: 'response.create' });
+        sendEvent({
+            type: 'response.create',
+            response: {
+                instructions: GREETING_INSTRUCTIONS,
+                tool_choice: 'none',
+            },
+        });
         greetingMicTimeoutRef.current ??= setTimeout(
             releaseMic,
             GREETING_MIC_HOLD_MAX_MS,
@@ -1378,6 +1399,9 @@ export function useRoleplayRealtimeCall({
         const heardMs = Math.max(greeting.heardMs, greeting.receivedHeardMs);
         const wasHeard =
             greeting.couldMeasure && heardMs >= GREETING_MIN_HEARD_MS;
+        const saidOtherWords =
+            greeting.transcript !== null &&
+            !isHelloLine(greeting.transcript.text);
 
         logEvent({
             type: 'greeting_checked',
@@ -1399,7 +1423,7 @@ export function useRoleplayRealtimeCall({
             });
         }
 
-        if (wasHeard) {
+        if (wasHeard && !saidOtherWords) {
             greetingRef.current = null;
             stopGreetingWatch();
 
@@ -1424,10 +1448,16 @@ export function useRoleplayRealtimeCall({
         }
 
         // eslint-disable-next-line no-console
-        console.warn('[roleplay-call] greeting was not heard', {
-            attempt: greeting.attempt,
-            peakRms: greeting.peakRms,
-        });
+        console.warn(
+            saidOtherWords
+                ? '[roleplay-call] greeting said something other than "Hello?"'
+                : '[roleplay-call] greeting was not heard',
+            {
+                attempt: greeting.attempt,
+                peakRms: greeting.peakRms,
+                transcript: greeting.transcript?.text,
+            },
+        );
 
         if (greeting.itemId) {
             discardedItemsRef.current.add(greeting.itemId);
@@ -1443,11 +1473,13 @@ export function useRoleplayRealtimeCall({
             }
         }
 
-        // Never streamed, or streamed into an element that is playing:
-        // the audio was lost on the way, not blocked by the browser. Ask
-        // again without counting it against the browser.
+        // The wrong words, never streamed, or streamed into an element
+        // that is playing: nothing the browser blocked. Ask again without
+        // counting it against the browser.
         if (
-            (!greeting.audioStarted || isRemoteAudioPlaying()) &&
+            (saidOtherWords ||
+                !greeting.audioStarted ||
+                isRemoteAudioPlaying()) &&
             greeting.lostRetries < GREETING_MAX_LOST_RETRIES
         ) {
             sendGreeting(greeting.lostRetries + 1);
@@ -1742,6 +1774,44 @@ export function useRoleplayRealtimeCall({
         [finishCall],
     );
 
+    /**
+     * The consumer often moves on from an objection without calling
+     * `objection_resolved`, which left it open all call: the badge stuck
+     * and grading counted it unresolved. Once they speak again without
+     * raising it, it's been handled.
+     */
+    const resolveDroppedObjections = useCallback(
+        (output: (FunctionCall & { type?: string })[]) => {
+            const raisedNow = new Set(
+                output
+                    .filter(
+                        (item) =>
+                            item.type === 'function_call' &&
+                            item.name === 'objection_raised',
+                    )
+                    .map((item) => String(parseArguments(item.arguments).id)),
+            );
+            const dropped = openObjectionsRef.current.filter(
+                (id) => !raisedNow.has(id),
+            );
+
+            if (dropped.length === 0) {
+                return;
+            }
+
+            const at = msIntoCall();
+
+            for (const id of dropped) {
+                logEvent({ type: 'objection_resolved', id, at });
+            }
+
+            setOpenObjections(
+                openObjectionsRef.current.filter((id) => raisedNow.has(id)),
+            );
+        },
+        [logEvent, msIntoCall, setOpenObjections],
+    );
+
     const handleFunctionCall = useCallback(
         (call: FunctionCall) => {
             const args = parseArguments(call.arguments);
@@ -1780,11 +1850,12 @@ export function useRoleplayRealtimeCall({
                         id: String(args.id),
                         at: atMs,
                     });
-                    setOpenObjections((current) =>
-                        current.includes(String(args.id))
-                            ? current
-                            : [...current, String(args.id)],
-                    );
+                    if (!openObjectionsRef.current.includes(String(args.id))) {
+                        setOpenObjections([
+                            ...openObjectionsRef.current,
+                            String(args.id),
+                        ]);
+                    }
                     break;
                 case 'objection_resolved':
                     logEvent({
@@ -1792,8 +1863,10 @@ export function useRoleplayRealtimeCall({
                         id: String(args.id),
                         at: atMs,
                     });
-                    setOpenObjections((current) =>
-                        current.filter((id) => id !== String(args.id)),
+                    setOpenObjections(
+                        openObjectionsRef.current.filter(
+                            (id) => id !== String(args.id),
+                        ),
                     );
                     break;
                 case 'hang_up':
@@ -1822,6 +1895,7 @@ export function useRoleplayRealtimeCall({
             msIntoCall,
             secondsIntoCall,
             sendEvent,
+            setOpenObjections,
             startingPatience,
         ],
     );
@@ -2019,8 +2093,11 @@ export function useRoleplayRealtimeCall({
                 responseActiveRef.current = false;
 
                 const output =
-                    ((event.response as { output?: { type?: string }[] })
-                        ?.output as { type?: string }[] | undefined) ?? [];
+                    (
+                        event.response as
+                            | { output?: (FunctionCall & { type?: string })[] }
+                            | undefined
+                    )?.output ?? [];
                 const calledTools = output.some(
                     (item) => item.type === 'function_call',
                 );
@@ -2028,6 +2105,7 @@ export function useRoleplayRealtimeCall({
 
                 if (spoke) {
                     spokeSinceAgentTurnRef.current = true;
+                    resolveDroppedObjections(output);
                 }
 
                 // Backstop for a greeting whose audio never starts or stops;
@@ -2161,6 +2239,7 @@ export function useRoleplayRealtimeCall({
             appendLine,
             discardEchoTurn,
             handleFunctionCall,
+            resolveDroppedObjections,
             logEvent,
             markCutOff,
             msIntoCall,

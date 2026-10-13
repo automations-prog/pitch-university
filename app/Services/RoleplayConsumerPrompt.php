@@ -82,6 +82,14 @@ class RoleplayConsumerPrompt
             - Call `hang_up` only when your patience hits zero, right after you say a short goodbye line.
             Always say your line first, then call any tools in that same response. Never respond with only a tool call. Tool calls are silent. Never mention them out loud.
 
+            # How you sound
+            Talk like a real person on the phone, not an assistant or a voice actor. This call caught you off guard.
+            - Speak casually, with contractions and loose, everyday grammar. Short fragments are fine ("Card? What card?").
+            - Now and then start with a small "uh", "well", "hm" or "oh", or trail off, the way people do when they're thinking. Don't overdo it.
+            - Let your pace and energy follow your mood: slow and unsure when confused, quicker and clipped when annoyed. Never sound evenly upbeat or polished.
+            - Don't over-pronounce words or speak every word with the same care. Never sound like you're reading.
+            - Never use customer-service phrases like "I'd be happy to", "Great question" or "Absolutely".
+
             # Rules
             - Never break character. Never say you are an AI, a simulation, a test or a roleplay.
             - Never coach the caller or tell them what they should have said.
@@ -89,7 +97,7 @@ class RoleplayConsumerPrompt
             - Never repeat a line you already said. Once an objection has been handled, don't bring it back.
             - Keep the same voice the whole call: the same pitch, accent, age and way of speaking you started with. Show annoyance, confusion or yelling through your words and pace, never by switching to a different-sounding voice. Don't imitate anyone else's voice.
             - Your voice always sounds clean and close, like on a good phone line: never add echo, reverb, a speakerphone or room sound, background noise or sound effects.
-            - When the call connects, answer the phone with only a short "Hello?" or "Yeah?" and nothing else. Then stay quiet until the caller speaks. Don't raise objections or ask who's calling before they say anything.
+            - When the call connects, answer the phone with exactly "Hello?" and nothing else. Then stay quiet until the caller speaks. Don't raise objections or ask who's calling before they say anything.
             TEXT,
         ];
 
@@ -116,7 +124,7 @@ class RoleplayConsumerPrompt
                     'type' => 'object',
                     'properties' => [
                         'patience' => ['type' => 'integer', 'description' => 'Your new patience.'],
-                        'reason' => ['type' => 'string', 'description' => 'A few words on why.'],
+                        'reason' => ['type' => 'string', 'description' => 'A few plain words on why, never an objection id.'],
                     ],
                     'required' => ['patience', 'reason'],
                 ],
@@ -187,7 +195,7 @@ class RoleplayConsumerPrompt
             return "# Objections\nYou have no particular objections. Go along with the call once you understand what it's about.";
         }
 
-        $lines = ["# Objections\nRaise these naturally over the call, one at a time, in your own words. Each line is how someone like you says it. If the caller ignores an objection or answers it with the wrong thing, push back once more in different words. Once they answer it with the right rebuttal, drop it and move on."];
+        $lines = ["# Objections\nRaise these naturally over the call, one at a time, in your own words. Each line is how someone like you says it. Each one lists the caller's approved rebuttal: a reply that says roughly that, in any wording, is the right answer, even if it's short or they read it fast. If the caller ignores an objection or answers it with something else, push back once more in different words. Once they answer it with the approved rebuttal, drop it and move on."];
 
         foreach ($objectionIds as $id) {
             $objection = $this->script->objection($id);
@@ -196,7 +204,9 @@ class RoleplayConsumerPrompt
                 continue;
             }
 
-            $lines[] = "- `{$id}`: {$objection['meaning']}. {$this->objectionPhrasing($id, $objection['consumerLines'], $level)}{$this->objectionTiming($id)}";
+            $rebuttal = implode(' ', $objection['rebuttal']['lines']);
+
+            $lines[] = "- `{$id}`: {$objection['meaning']}. {$this->objectionPhrasing($id, $objection['consumerLines'], $level)}{$this->objectionTiming($id)} Approved rebuttal: \"{$rebuttal}\"";
         }
 
         return implode("\n", $lines);
@@ -275,7 +285,11 @@ class RoleplayConsumerPrompt
     {
         return <<<TEXT
         # Patience
-        You start with {$patience} patience. Lose one point each time the caller ignores your objection, answers it with the wrong thing, rambles off topic, or argues with you. When you reach zero, say a short goodbye and hang up.
+        You start with {$patience} patience. Lose one point each time the caller ignores your objection, answers it with something other than its approved rebuttal, rambles off topic, or argues with you. When you reach zero, say a short goodbye and hang up.
+        The caller is trained to give the approved rebuttal and then go straight back to their script, so never lose patience for any of these:
+        - Giving the approved rebuttal, then carrying on with their next question.
+        - Asking the questions their script asks, including right after a rebuttal.
+        - One more try after you say no to waiting for the specialist. Only pushing again after that counts against them.
         TEXT;
     }
 

@@ -6,6 +6,7 @@ import {
     XCircle,
 } from 'lucide-react';
 import { useState } from 'react';
+import type { SyntheticEvent } from 'react';
 import {
     DeliveryCard,
     useDeliveryPolling,
@@ -248,6 +249,7 @@ export function ResultCard({
                             controls
                             src={result.recording_url}
                             className="w-full"
+                            onLoadedMetadata={revealWebmDuration}
                         />
                     </div>
                 )}
@@ -266,4 +268,26 @@ export function ResultCard({
             )}
         </Card>
     );
+}
+
+/**
+ * Browser-recorded webm files don't store their length, so the player
+ * showed 0:00 until played through. Seeking past the end makes the
+ * browser work it out; then jump back to the start.
+ */
+function revealWebmDuration(event: SyntheticEvent<HTMLAudioElement>) {
+    const audio = event.currentTarget;
+
+    if (Number.isFinite(audio.duration)) {
+        return;
+    }
+
+    audio.addEventListener(
+        'timeupdate',
+        () => {
+            audio.currentTime = 0;
+        },
+        { once: true },
+    );
+    audio.currentTime = Number.MAX_SAFE_INTEGER;
 }

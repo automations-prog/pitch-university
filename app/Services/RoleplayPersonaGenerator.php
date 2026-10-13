@@ -17,22 +17,22 @@ class RoleplayPersonaGenerator
 {
     /**
      * Mock dialer leads so the script's (Customer Name), (state) and
-     * (zip code) placeholders have something to read back. Each lead keeps
-     * one voice of their gender, so a name always sounds the same; marin
-     * and cedar, OpenAI's steadiest voices, go to the first two. Only
-     * plainly gendered voices are used (no alloy or sage).
+     * (zip code) placeholders have something to read back. Women get marin
+     * and men cedar: the other voices sounded synthetic next to these two,
+     * OpenAI's most natural for gpt-realtime. The persona's quirk and
+     * temperament make each consumer sound like a different person.
      *
      * @var list<array{name: string, state: string, zip: string, gender: 'male'|'female', voice: string}>
      */
     private const array LEADS = [
         ['name' => 'Dorothy Miller', 'state' => 'Florida', 'zip' => '33511', 'gender' => 'female', 'voice' => 'marin'],
         ['name' => 'Harold Jenkins', 'state' => 'Ohio', 'zip' => '43204', 'gender' => 'male', 'voice' => 'cedar'],
-        ['name' => 'Linda Carter', 'state' => 'Texas', 'zip' => '75217', 'gender' => 'female', 'voice' => 'coral'],
-        ['name' => 'Robert Hayes', 'state' => 'Georgia', 'zip' => '30906', 'gender' => 'male', 'voice' => 'ash'],
+        ['name' => 'Linda Carter', 'state' => 'Texas', 'zip' => '75217', 'gender' => 'female', 'voice' => 'marin'],
+        ['name' => 'Robert Hayes', 'state' => 'Georgia', 'zip' => '30906', 'gender' => 'male', 'voice' => 'cedar'],
         ['name' => 'Barbara Nguyen', 'state' => 'Arizona', 'zip' => '85308', 'gender' => 'female', 'voice' => 'marin'],
-        ['name' => 'James Walker', 'state' => 'North Carolina', 'zip' => '27406', 'gender' => 'male', 'voice' => 'echo'],
-        ['name' => 'Patricia Moore', 'state' => 'Pennsylvania', 'zip' => '19143', 'gender' => 'female', 'voice' => 'shimmer'],
-        ['name' => 'Charles Robinson', 'state' => 'Michigan', 'zip' => '48219', 'gender' => 'male', 'voice' => 'verse'],
+        ['name' => 'James Walker', 'state' => 'North Carolina', 'zip' => '27406', 'gender' => 'male', 'voice' => 'cedar'],
+        ['name' => 'Patricia Moore', 'state' => 'Pennsylvania', 'zip' => '19143', 'gender' => 'female', 'voice' => 'marin'],
+        ['name' => 'Charles Robinson', 'state' => 'Michigan', 'zip' => '48219', 'gender' => 'male', 'voice' => 'cedar'],
     ];
 
     protected readonly Randomizer $randomizer;

@@ -113,6 +113,25 @@ test('only the stage criteria may come back unscored', function () {
         && $request['text']['format']['schema']['properties']['tonality']['properties']['score']['type'] === 'integer');
 });
 
+test('the AI review is told when the transfer happened, since the transcript leaves it out', function () {
+    fakeGraderReply(aiScores(4));
+    $session = gradableSession();
+    $session->update(['events' => [
+        ...$session->events,
+        ['type' => 'transfer_clicked', 'at' => 95_000],
+        ['type' => 'specialist_joined', 'at' => 125_000],
+        ['type' => 'transfer_completed', 'at' => 131_000],
+    ]]);
+
+    GradeRoleplayDelivery::dispatchSync($session);
+
+    Http::assertSent(fn (Request $request) => json_decode($request['input'][1]['content'], true)['transfer_events'] === [
+        '[1:35] Agent clicked Transfer; the line started ringing',
+        '[2:05] The specialist (licensed agent) picked up',
+        '[2:11] Agent completed the transfer',
+    ]);
+});
+
 test('pace allows confident fast talkers and loses a point per 20 wpm outside the range', function (int $wpm, int $score) {
     fakeGraderReply(aiScores(4));
     $session = gradableSession();

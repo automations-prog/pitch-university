@@ -232,7 +232,6 @@ function LiveRoleplaySession({
     const vertical = useRoleplayVertical();
     const call = useRoleplayRealtimeCall({
         sessionId: persona.id,
-        level: persona.level,
         startingPatience: persona.patience,
         vertical,
     });

@@ -27,13 +27,13 @@ class AcaRoleplayPersonaGenerator extends RoleplayPersonaGenerator
     private const array LEADS = [
         ['name' => 'Ashley Turner', 'state' => 'Texas', 'zip' => '75217', 'gender' => 'female', 'voice' => 'marin'],
         ['name' => 'Marcus Johnson', 'state' => 'Georgia', 'zip' => '30906', 'gender' => 'male', 'voice' => 'cedar'],
-        ['name' => 'Jessica Ramirez', 'state' => 'Florida', 'zip' => '33511', 'gender' => 'female', 'voice' => 'coral'],
-        ['name' => 'Tyler Brooks', 'state' => 'Ohio', 'zip' => '43204', 'gender' => 'male', 'voice' => 'ash'],
-        ['name' => 'Brittany Lewis', 'state' => 'North Carolina', 'zip' => '27406', 'gender' => 'female', 'voice' => 'shimmer'],
-        ['name' => 'Kevin Murphy', 'state' => 'Tennessee', 'zip' => '37211', 'gender' => 'male', 'voice' => 'echo'],
+        ['name' => 'Jessica Ramirez', 'state' => 'Florida', 'zip' => '33511', 'gender' => 'female', 'voice' => 'marin'],
+        ['name' => 'Tyler Brooks', 'state' => 'Ohio', 'zip' => '43204', 'gender' => 'male', 'voice' => 'cedar'],
+        ['name' => 'Brittany Lewis', 'state' => 'North Carolina', 'zip' => '27406', 'gender' => 'female', 'voice' => 'marin'],
+        ['name' => 'Kevin Murphy', 'state' => 'Tennessee', 'zip' => '37211', 'gender' => 'male', 'voice' => 'cedar'],
         ['name' => 'Danielle Price', 'state' => 'Arizona', 'zip' => '85308', 'gender' => 'female', 'voice' => 'marin'],
-        ['name' => 'Jordan Mitchell', 'state' => 'Louisiana', 'zip' => '70805', 'gender' => 'male', 'voice' => 'verse'],
-        ['name' => 'Crystal Howard', 'state' => 'Oklahoma', 'zip' => '73107', 'gender' => 'female', 'voice' => 'coral'],
+        ['name' => 'Jordan Mitchell', 'state' => 'Louisiana', 'zip' => '70805', 'gender' => 'male', 'voice' => 'cedar'],
+        ['name' => 'Crystal Howard', 'state' => 'Oklahoma', 'zip' => '73107', 'gender' => 'female', 'voice' => 'marin'],
         ['name' => 'Anthony Reed', 'state' => 'South Carolina', 'zip' => '29203', 'gender' => 'male', 'voice' => 'cedar'],
     ];
 

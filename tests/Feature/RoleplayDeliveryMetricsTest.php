@@ -59,6 +59,21 @@ test('an objection never resolved is counted', function () {
     expect((new RoleplayDeliveryMetrics)->compute($events, [])['unresolved_objections'])->toBe(1);
 });
 
+test('an objection repeated before it is resolved counts once', function () {
+    $events = RoleplayDeliveryMetrics::sanitize([
+        ['type' => 'objection_raised', 'id' => 'busy', 'at' => 5000],
+        ['type' => 'objection_raised', 'id' => 'busy', 'at' => 9000],
+        ['type' => 'objection_resolved', 'id' => 'busy', 'at' => 15000],
+        ['type' => 'objection_raised', 'id' => 'busy', 'at' => 40000],
+        ['type' => 'objection_resolved', 'id' => 'busy', 'at' => 44000],
+    ]);
+
+    $metrics = (new RoleplayDeliveryMetrics)->compute($events, []);
+
+    expect($metrics['objection_seconds'])->toBe([10.0, 4.0])
+        ->and($metrics['unresolved_objections'])->toBe(0);
+});
+
 test('a monotone delivery has near-zero loudness variation', function () {
     $flat = array_map(fn (int $second) => ['type' => 'agent_loudness', 'at' => $second * 1000, 'rms' => 0.1], range(1, 10));
     $lively = array_map(fn (int $second) => ['type' => 'agent_loudness', 'at' => $second * 1000, 'rms' => $second % 2 ? 0.05 : 0.15], range(1, 10));

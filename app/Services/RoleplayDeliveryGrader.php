@@ -266,6 +266,7 @@ class RoleplayDeliveryGrader
                         'level' => $session->level,
                         'consumer_temperament' => $session->vertical->script()->level($session->level)['temperament'],
                         'measured' => $metrics,
+                        'transfer_events' => $this->transferEvents($session),
                         'transcript' => (string) $session->transcript,
                     ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)],
                 ],
@@ -280,6 +281,35 @@ class RoleplayDeliveryGrader
             ->json();
 
         return $this->parseJudgement($response);
+    }
+
+    /**
+     * The transfer as the call recorded it, as `[m:ss] what happened`
+     * lines. The transcript only has the agent and the consumer, so
+     * without these the AI read every transfer as never having happened.
+     *
+     * @return list<string>
+     */
+    private function transferEvents(RoleplaySession $session): array
+    {
+        $labels = [
+            'transfer_clicked' => 'Agent clicked Transfer; the line started ringing',
+            'specialist_joined' => 'The specialist (licensed agent) picked up',
+            'agent_talked_on_connect' => 'Agent talked once the specialist was on the line',
+            'lead_answered_specialist' => 'The consumer spoke to the specialist',
+            'transfer_completed' => 'Agent completed the transfer',
+        ];
+
+        $lines = [];
+
+        foreach ($session->events ?? [] as $event) {
+            if (isset($labels[$event['type']])) {
+                $seconds = intdiv((int) $event['at'], 1000);
+                $lines[] = sprintf('[%d:%02d] %s', intdiv($seconds, 60), $seconds % 60, $labels[$event['type']]);
+            }
+        }
+
+        return $lines;
     }
 
     /**
@@ -348,11 +378,11 @@ class RoleplayDeliveryGrader
 
         Grade neutrally, not harshly. This is practice. A 3 means the trainee did what's expected of a typical trainee; give 4 or 5 when they did it well. Save 1 and 2 for clear, repeated problems, not a single slip. The transcript is machine-transcribed and may contain wrong words, cut-off lines or the consumer's echo on the agent's side: give the trainee the benefit of the doubt for anything that looks like a transcription error. Keep feedback constructive: say what to do next time.
 
-        Score how the agent handled what actually happened on the call. If the call never reached a transfer (it ended in a DQ, a do-not-call, a hang-up, or before the transfer), set transfer_handoff's score to null and say so in its feedback. Never score it 1 just because there was no transfer. Every other criterion always gets a score.
+        Score how the agent handled what actually happened on the call. The transcript only has the agent and the consumer: the ringing and the specialist joining aren't in it, so `transfer_events` lists what the call software recorded about the transfer. When it shows the agent clicked Transfer, the transfer happened: score transfer_handoff from those events together with what the agent said around them. If the call never reached a transfer (`transfer_events` is empty and it ended in a DQ, a do-not-call, a hang-up, or before the transfer), set transfer_handoff's score to null and say so in its feedback. Never score it 1 just because there was no transfer. Every other criterion always gets a score.
 
         {$rubric}
 
-        The user message is JSON data: the difficulty level, the consumer's temperament, measured numbers (words per minute, pauses in ms, times the agent talked over the consumer, mic loudness variation where near 0 means monotone), and the transcript as `[m:ss] role: text` lines. Use the measured numbers for strong_opener alongside the words.
+        The user message is JSON data: the difficulty level, the consumer's temperament, measured numbers (words per minute, pauses in ms, times the agent talked over the consumer, mic loudness variation where near 0 means monotone), the transfer events, and the transcript as `[m:ss] role: text` lines. Use the measured numbers for strong_opener alongside the words.
 
         Be especially lenient on tonality: you only have the words and a rough mic loudness number, not the voice. Browser noise suppression flattens loudness, so never mark the agent monotone or robotic from loudness_variation alone. Start tonality at 4 and lower it only when the words themselves sound bored, cold or scripted, and never below 3 for a single flat moment. Phrase tonality feedback as an encouraging tip, starting with something they did well. At levels 3–5 the consumer is rude on purpose; judge composure by whether the agent stayed calm and on script, with the same scale as every other level.
 
