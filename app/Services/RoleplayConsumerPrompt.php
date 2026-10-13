@@ -52,6 +52,9 @@ class RoleplayConsumerPrompt
                     // Verify on a live call; see AI_CALL_PLAN §9.1.
                     'transcription' => [
                         'model' => 'gpt-transcribe',
+                        // Left to guess, short or mumbled turns came back
+                        // in other languages ("Uh, ya enggak.").
+                        'language' => 'en',
                         'prompt' => static::TRANSCRIPTION_PROMPT,
                     ],
                 ],
@@ -289,7 +292,7 @@ class RoleplayConsumerPrompt
         The caller is trained to give the approved rebuttal and then go straight back to their script, so never lose patience for any of these:
         - Giving the approved rebuttal, then carrying on with their next question.
         - Asking the questions their script asks, including right after a rebuttal.
-        - One more try after you say no to waiting for the specialist. Only pushing again after that counts against them.
+        - One more try after you say no to being transferred. Only pushing again after that counts against them.
         TEXT;
     }
 

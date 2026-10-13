@@ -135,6 +135,17 @@ test('starting sessions past the daily cap is rejected', function () {
     expect(RoleplaySession::count())->toBe(2);
 });
 
+test('a daily cap of 0 lets sessions start without limit', function () {
+    config(['services.openai.roleplay_daily_limit' => 0]);
+    $user = User::factory()->create();
+
+    foreach (range(1, 3) as $attempt) {
+        $this->actingAs($user)->postJson(route('medicare-roleplay.sessions.store'), ['level' => 1])->assertCreated();
+    }
+
+    expect(RoleplaySession::count())->toBe(3);
+});
+
 test('minting a call session sends the persona prompt, tools and voice to OpenAI', function () {
     fakeClientSecrets();
     $session = RoleplaySession::factory()->disqualified()->create(['level' => 4]);
@@ -154,7 +165,8 @@ test('minting a call session sends the persona prompt, tools and voice to OpenAI
         && collect($request['session']['tools'])->pluck('name')->all() === ['patience_changed', 'objection_raised', 'objection_resolved', 'hang_up']
         && array_key_exists('turn_detection', $request['session']['audio']['input'])
         && $request['session']['audio']['input']['turn_detection'] === null
-        && $request['session']['audio']['input']['noise_reduction'] === ['type' => 'near_field']);
+        && $request['session']['audio']['input']['noise_reduction'] === ['type' => 'near_field']
+        && $request['session']['audio']['input']['transcription']['language'] === 'en');
 });
 
 test('the consumer raises "I already got it" at the Parts A and B question with any carrier line', function () {
@@ -183,7 +195,7 @@ test('the consumer knows each objection\'s approved rebuttal and keeps patience 
     expect($instructions)
         ->toContain("Approved rebuttal: \"{$rebuttal}\"")
         ->toContain('never lose patience for any of these')
-        ->toContain('One more try after you say no to waiting for the specialist.');
+        ->toContain('One more try after you say no to being transferred.');
 });
 
 test('the consumer is told to sound like a real person, not an assistant', function () {

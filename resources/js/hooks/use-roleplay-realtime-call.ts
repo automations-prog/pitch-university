@@ -1947,12 +1947,25 @@ export function useRoleplayRealtimeCall({
                 nextCommitRef.current = null;
                 awaitingFinalCommitRef.current = false;
                 pendingTranscriptsRef.current.add(itemId);
-                itemStartedAtRef.current.set(itemId, secondsIntoCall());
+                // When the trainee started talking, not when they stopped:
+                // a long opener was stamped 16s late in the transcript.
+                itemStartedAtRef.current.set(
+                    itemId,
+                    commit?.speechEvent && 'start' in commit.speechEvent
+                        ? Math.floor(commit.speechEvent.start / 1000)
+                        : secondsIntoCall(),
+                );
 
                 // May be the consumer's echo, or a breath or noise while
                 // the consumer was already answering (that made them answer
                 // twice): answered once its transcript shows real words.
-                if (commit?.mayBeEcho || responseActiveRef.current) {
+                // The consumer still talking counts too: echo that began a
+                // beat after their audio did slipped past the check.
+                if (
+                    commit?.mayBeEcho ||
+                    responseActiveRef.current ||
+                    consumerSpeechStartRef.current !== null
+                ) {
                     echoCheckItemsRef.current.set(
                         itemId,
                         commit?.speechEvent ?? null,

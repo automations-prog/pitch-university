@@ -45,13 +45,17 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Every roleplay session becomes a paid Realtime call, so cap how many
-     * a user can start per day.
+     * a user can start per day. A limit of 0 turns the cap off.
      */
     protected function configureRateLimiting(): void
     {
-        RateLimiter::for('roleplay-sessions', fn (Request $request): Limit => Limit::perDay(
-            config('services.openai.roleplay_daily_limit'),
-        )->by($request->user()->id));
+        RateLimiter::for('roleplay-sessions', function (Request $request): Limit {
+            $dailyLimit = (int) config('services.openai.roleplay_daily_limit');
+
+            return $dailyLimit > 0
+                ? Limit::perDay($dailyLimit)->by($request->user()->id)
+                : Limit::none();
+        });
     }
 
     /**
