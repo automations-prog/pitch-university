@@ -169,6 +169,48 @@ test('minting a call session sends the persona prompt, tools and voice to OpenAI
         && $request['session']['audio']['input']['transcription']['language'] === 'en');
 });
 
+test('with an ElevenLabs voice of the consumer\'s gender, OpenAI replies in text and the page gets a TTS token', function () {
+    config([
+        'services.elevenlabs.key' => 'xi-test',
+        'services.elevenlabs.enabled' => true,
+        'services.elevenlabs.voices' => ['female' => ['voice_female'], 'male' => ['voice_male']],
+    ]);
+    Http::preventStrayRequests();
+    Http::fake([
+        CLIENT_SECRETS_URL => Http::response(['value' => 'ek_abc123']),
+        'https://api.elevenlabs.io/v1/single-use-token/tts_websocket' => Http::response(['token' => 'sutkn_abc']),
+    ]);
+    $session = RoleplaySession::factory()->create();
+
+    $response = $this->actingAs($session->user)->postJson(route('medicare-roleplay.call.session', $session));
+
+    $response->assertOk()->assertJson([
+        'value' => 'ek_abc123',
+        'tts' => ['token' => 'sutkn_abc', 'voice_id' => 'voice_female', 'model_id' => 'eleven_flash_v2_5'],
+    ]);
+    Http::assertSent(fn ($request) => $request->url() === CLIENT_SECRETS_URL
+        && $request['session']['output_modalities'] === ['text']
+        && str_contains($request['session']['instructions'], 'Your lines are read aloud'));
+    Http::assertSent(fn ($request) => str_contains($request->url(), 'elevenlabs.io')
+        && $request->header('xi-api-key') === ['xi-test']);
+});
+
+test('without an ElevenLabs voice of the consumer\'s gender, the consumer keeps OpenAI\'s voice', function () {
+    config([
+        'services.elevenlabs.enabled' => true,
+        'services.elevenlabs.voices' => ['female' => [], 'male' => ['voice_male']],
+    ]);
+    Http::preventStrayRequests();
+    fakeClientSecrets();
+    $session = RoleplaySession::factory()->create();
+
+    $response = $this->actingAs($session->user)->postJson(route('medicare-roleplay.call.session', $session));
+
+    $response->assertOk()->assertJsonMissingPath('tts');
+    Http::assertSent(fn ($request) => ! isset($request['session']['output_modalities'])
+        && ! str_contains($request['session']['instructions'], 'Your lines are read aloud'));
+});
+
 test('the consumer raises "I already got it" at the Parts A and B question with any carrier line', function () {
     $session = RoleplaySession::factory()->create([
         'level' => 1,

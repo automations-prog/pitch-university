@@ -7,6 +7,7 @@ use App\Http\Requests\StoreRoleplayCallRequest;
 use App\Http\Resources\RoleplaySessionResource;
 use App\Jobs\GradeRoleplayDelivery;
 use App\Models\RoleplaySession;
+use App\Services\ElevenLabsClient;
 use App\Services\OpenAiRealtimeClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -18,8 +19,11 @@ class RoleplayCallController extends Controller
      * Mint an ephemeral Realtime API session with the consumer's prompt
      * baked in. One mint per session: every mint is a paid Realtime
      * session, so a failed call starts over with a new persona.
+     *
+     * With an ElevenLabs voice, OpenAI replies in text and the page speaks
+     * it through ElevenLabs, with the token and voice under `tts`.
      */
-    public function session(RoleplaySession $roleplaySession, RoleplayVertical $vertical, OpenAiRealtimeClient $client): JsonResponse
+    public function session(RoleplaySession $roleplaySession, RoleplayVertical $vertical, OpenAiRealtimeClient $client, ElevenLabsClient $elevenLabs): JsonResponse
     {
         Gate::authorize('update', $roleplaySession);
 
@@ -33,10 +37,22 @@ class RoleplayCallController extends Controller
 
         abort_if($claimed === 0, 409);
 
-        return response()->json($client->createEphemeralSession(
+        $elevenLabsVoice = $elevenLabs->voiceFor($roleplaySession);
+
+        $session = $client->createEphemeralSession(
             $roleplaySession->consumerVoice()?->value,
-            $vertical->consumerPrompt()->sessionConfig($roleplaySession),
-        ));
+            $vertical->consumerPrompt()->sessionConfig($roleplaySession, speaksAsText: $elevenLabsVoice !== null),
+        );
+
+        if ($elevenLabsVoice !== null) {
+            $session['tts'] = [
+                'token' => $elevenLabs->createTtsToken(),
+                'voice_id' => $elevenLabsVoice,
+                'model_id' => config('services.elevenlabs.model'),
+            ];
+        }
+
+        return response()->json($session);
     }
 
     /**

@@ -49,4 +49,18 @@ return [
         'roleplay_daily_limit' => (int) env('OPENAI_ROLEPLAY_DAILY_LIMIT', 20),
     ],
 
+    'elevenlabs' => [
+        'key' => env('ELEVENLABS_API_KEY'),
+        // Speaks the roleplay consumer instead of OpenAI's voice. OpenAI
+        // still listens and decides what the consumer says.
+        'enabled' => (bool) env('ELEVENLABS_ROLEPLAY_ENABLED', false),
+        'model' => env('ELEVENLABS_MODEL', 'eleven_flash_v2_5'),
+        // Comma-separated voice ids. A consumer gets a voice of their
+        // gender; with none of it, they keep OpenAI's voice.
+        'voices' => [
+            'female' => array_values(array_filter(explode(',', (string) env('ELEVENLABS_VOICES_FEMALE', '')))),
+            'male' => array_values(array_filter(explode(',', (string) env('ELEVENLABS_VOICES_MALE', '')))),
+        ],
+    ],
+
 ];

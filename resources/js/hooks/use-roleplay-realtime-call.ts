@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { xsrfHeader } from '@/lib/csrf';
+import { createElevenLabsSpeaker } from '@/lib/elevenlabs-speaker';
+import type { ElevenLabsSpeaker, TtsConfig } from '@/lib/elevenlabs-speaker';
 import {
     playRingback,
     remoteAudioPlayback,
@@ -28,6 +30,11 @@ import { roleplayRoutes } from '@/lib/roleplay-routes';
  *   answered with `function_call_output` so it keeps going.
  * - Nothing is uploaded when the call ends. The trainee codes the call
  *   first, then `complete()` uploads everything and returns the grade.
+ * - With an ElevenLabs voice (`tts` in the minted session), OpenAI replies
+ *   in text and `elevenlabs-speaker.ts` speaks it. The speaker reports its
+ *   playback as OpenAI's `output_audio_buffer.*` events, and the clears and
+ *   cancels sent to OpenAI also stop it, so the rest of the call runs the
+ *   same either way.
  *
  * IMPORTANT — as with the screening call, verify the event names and the
  * function-calling shapes below against the current OpenAI Realtime docs
@@ -149,7 +156,6 @@ const EMPTY_COMMIT_ERROR_CODE = 'input_audio_buffer_commit_empty';
 
 const AGENT_TRANSCRIPT_FAILED_EVENT =
     'conversation.item.input_audio_transcription.failed';
-
 
 /**
  * OpenAI's turn detection is off (`turn_detection: null`): on WebRTC it
@@ -299,6 +305,8 @@ function pickSupportedRecordingType(): {
 const ASSISTANT_TRANSCRIPT_EVENTS = new Set([
     'response.audio_transcript.done',
     'response.output_audio_transcript.done',
+    // Text replies, spoken by ElevenLabs.
+    'response.output_text.done',
 ]);
 const AGENT_TRANSCRIPT_EVENTS = new Set([
     'conversation.item.input_audio_transcription.completed',
@@ -330,7 +338,7 @@ export type LiveTranscriptLine = {
     at: number;
 };
 
-type EphemeralSession = { value?: string };
+type EphemeralSession = { value?: string; tts?: TtsConfig };
 
 type FunctionCall = { call_id?: string; name?: string; arguments?: string };
 
@@ -502,6 +510,8 @@ export function useRoleplayRealtimeCall({
         useRef<MediaStreamAudioDestinationNode | null>(null);
     const micSenderRef = useRef<RTCRtpSender | null>(null);
     const specialistAudioRef = useRef<HTMLAudioElement | null>(null);
+    /** Speaks the consumer when they have an ElevenLabs voice. */
+    const speakerRef = useRef<ElevenLabsSpeaker | null>(null);
     const recordingTypeRef = useRef({
         mimeType: 'audio/webm',
         extension: 'webm',
@@ -796,6 +806,14 @@ export function useRoleplayRealtimeCall({
     }, []);
 
     const sendEvent = useCallback((event: Record<string, unknown>) => {
+        // ElevenLabs is playing the consumer, not OpenAI: stop it too.
+        if (
+            event.type === 'output_audio_buffer.clear' ||
+            event.type === 'response.cancel'
+        ) {
+            speakerRef.current?.cancel();
+        }
+
         if (dataChannelRef.current?.readyState === 'open') {
             dataChannelRef.current.send(JSON.stringify(event));
         }
@@ -1310,70 +1328,73 @@ export function useRoleplayRealtimeCall({
      * still hasn't been heard after `GREETING_STALL_MS`, it's checked (and
      * retried) even though OpenAI never said it finished.
      */
-    const sendGreeting = useCallback((lostRetries: number = 0) => {
-        const previousAttempt = greetingRef.current?.attempt ?? 0;
+    const sendGreeting = useCallback(
+        (lostRetries: number = 0) => {
+            const previousAttempt = greetingRef.current?.attempt ?? 0;
 
-        greetingRef.current = {
-            attempt:
-                lostRetries > 0
-                    ? Math.max(previousAttempt, 1)
-                    : previousAttempt + 1,
-            lostRetries,
-            audioStarted: false,
-            itemId: null,
-            heardMs: 0,
-            receivedHeardMs: 0,
-            receivedBaseline: null,
-            couldMeasure: false,
-            peakRms: 0,
-            transcript: null,
-        };
-        startGreetingWatch();
-        sendEvent({
-            type: 'response.create',
-            response: {
-                instructions: GREETING_INSTRUCTIONS,
-                tool_choice: 'none',
-            },
-        });
-        greetingMicTimeoutRef.current ??= setTimeout(
-            releaseMic,
-            GREETING_MIC_HOLD_MAX_MS,
-        );
-
-        const greeting = greetingRef.current;
-
-        if (greetingStallTimeoutRef.current) {
-            clearTimeout(greetingStallTimeoutRef.current);
-        }
-
-        greetingStallTimeoutRef.current = setTimeout(() => {
-            greetingStallTimeoutRef.current = null;
-
-            if (endingRef.current || greetingRef.current !== greeting) {
-                return;
-            }
-
-            const heardMs = Math.max(
-                greeting.heardMs,
-                greeting.receivedHeardMs,
+            greetingRef.current = {
+                attempt:
+                    lostRetries > 0
+                        ? Math.max(previousAttempt, 1)
+                        : previousAttempt + 1,
+                lostRetries,
+                audioStarted: false,
+                itemId: null,
+                heardMs: 0,
+                receivedHeardMs: 0,
+                receivedBaseline: null,
+                couldMeasure: false,
+                peakRms: 0,
+                transcript: null,
+            };
+            startGreetingWatch();
+            sendEvent({
+                type: 'response.create',
+                response: {
+                    instructions: GREETING_INSTRUCTIONS,
+                    tool_choice: 'none',
+                },
+            });
+            greetingMicTimeoutRef.current ??= setTimeout(
+                releaseMic,
+                GREETING_MIC_HOLD_MAX_MS,
             );
 
-            // Heard and still playing: the usual events will check it.
-            if (heardMs >= GREETING_MIN_HEARD_MS) {
-                return;
+            const greeting = greetingRef.current;
+
+            if (greetingStallTimeoutRef.current) {
+                clearTimeout(greetingStallTimeoutRef.current);
             }
 
-            if (responseActiveRef.current) {
-                cancelledByUsRef.current = true;
-                sendEvent({ type: 'response.cancel' });
-                sendEvent({ type: 'output_audio_buffer.clear' });
-                responseActiveRef.current = false;
-            }
+            greetingStallTimeoutRef.current = setTimeout(() => {
+                greetingStallTimeoutRef.current = null;
 
-            checkGreetingRef.current();
-        }, GREETING_STALL_MS);
-    }, [releaseMic, sendEvent, startGreetingWatch]);
+                if (endingRef.current || greetingRef.current !== greeting) {
+                    return;
+                }
+
+                const heardMs = Math.max(
+                    greeting.heardMs,
+                    greeting.receivedHeardMs,
+                );
+
+                // Heard and still playing: the usual events will check it.
+                if (heardMs >= GREETING_MIN_HEARD_MS) {
+                    return;
+                }
+
+                if (responseActiveRef.current) {
+                    cancelledByUsRef.current = true;
+                    sendEvent({ type: 'response.cancel' });
+                    sendEvent({ type: 'output_audio_buffer.clear' });
+                    responseActiveRef.current = false;
+                }
+
+                checkGreetingRef.current();
+            }, GREETING_STALL_MS);
+        },
+        [releaseMic, sendEvent, startGreetingWatch],
+    );
 
     /**
      * Once the greeting has played: if it was heard, its line goes into the
@@ -1392,7 +1413,12 @@ export function useRoleplayRealtimeCall({
         const greeting = greetingRef.current;
 
         // Wait for whatever is still being said to finish.
-        if (!greeting || endingRef.current || responseActiveRef.current) {
+        if (
+            !greeting ||
+            endingRef.current ||
+            responseActiveRef.current ||
+            speakerRef.current?.isSpeaking()
+        ) {
             return;
         }
 
@@ -1580,6 +1606,8 @@ export function useRoleplayRealtimeCall({
         specialistAudioRef.current?.pause();
         specialistAudioRef.current = null;
         window.speechSynthesis?.cancel();
+        speakerRef.current?.close();
+        speakerRef.current = null;
         for (const interval of [
             elapsedIntervalRef,
             hangupWatchIntervalRef,
@@ -2017,6 +2045,18 @@ export function useRoleplayRealtimeCall({
                 return;
             }
 
+            // The consumer's line as text, for ElevenLabs to speak.
+            if (type === 'response.output_text.delta') {
+                if (itemId && typeof event.delta === 'string') {
+                    speakerRef.current?.append(itemId, event.delta);
+                }
+                return;
+            }
+
+            if (type === 'response.output_text.done' && itemId) {
+                speakerRef.current?.finish(itemId);
+            }
+
             // The consumer's audio was cut short (not by the VAD, which no
             // longer interrupts them); counted once with any talk-over.
             if (type === 'conversation.item.truncated') {
@@ -2158,7 +2198,9 @@ export function useRoleplayRealtimeCall({
                 return;
             }
 
-            const text = (event.transcript as string | undefined)?.trim();
+            const text = (
+                (event.transcript ?? event.text) as string | undefined
+            )?.trim();
 
             // A held turn with no words was noise: never answer it.
             if (
@@ -2310,8 +2352,7 @@ export function useRoleplayRealtimeCall({
                 setTimeout(resolve, SPECIALIST_AUDIO_MAX_MS);
 
                 const clip =
-                    specialistAudioRef.current ??
-                    new Audio(handoff.audioUrl);
+                    specialistAudioRef.current ?? new Audio(handoff.audioUrl);
                 specialistAudioRef.current = clip;
                 clip.onended = () => resolve();
                 clip.play().catch((playError: unknown) => {
@@ -2535,9 +2576,8 @@ export function useRoleplayRealtimeCall({
                 );
             }
 
-            const ephemeralKey = (
-                (await sessionResponse.json()) as EphemeralSession
-            ).value;
+            const { value: ephemeralKey, tts } =
+                (await sessionResponse.json()) as EphemeralSession;
 
             if (!ephemeralKey) {
                 throw new Error('Missing realtime session credentials.');
@@ -2602,8 +2642,63 @@ export function useRoleplayRealtimeCall({
                 pc,
                 '[roleplay-call]',
             );
+            let remotePlaybackStarted = remotePlayback.started;
+
+            if (tts) {
+                // ElevenLabs' audio goes everywhere OpenAI's would: the
+                // element (for echo cancellation), the level meter and the
+                // recording.
+                const ttsOutput = audioContext.createGain();
+                const ttsStream = audioContext.createMediaStreamDestination();
+                ttsOutput.connect(ttsStream);
+                ttsOutput.connect(destination);
+
+                const analyser = audioContext.createAnalyser();
+                analyser.fftSize = 512;
+                ttsOutput.connect(analyser);
+                remoteAnalyserRef.current = analyser;
+                remoteAudio.srcObject = ttsStream.stream;
+
+                const speaker = createElevenLabsSpeaker({
+                    config: tts,
+                    audioContext,
+                    output: ttsOutput,
+                    onStarted: () =>
+                        handleServerEvent({
+                            type: 'output_audio_buffer.started',
+                        }),
+                    onStopped: () =>
+                        handleServerEvent({
+                            type: 'output_audio_buffer.stopped',
+                        }),
+                    onCleared: () =>
+                        handleServerEvent({
+                            type: 'output_audio_buffer.cleared',
+                        }),
+                    onError: (message) => {
+                        // eslint-disable-next-line no-console
+                        console.error('[roleplay-call]', message);
+                        setError(message);
+                    },
+                });
+                speakerRef.current = speaker;
+
+                if (!(await speaker.ready)) {
+                    throw new Error("Could not connect the consumer's voice.");
+                }
+
+                remotePlaybackStarted = remoteAudio.play().then(
+                    () => true,
+                    () => false,
+                );
+            }
 
             pc.ontrack = (trackEvent) => {
+                // OpenAI only sends text; its audio track stays silent.
+                if (tts) {
+                    return;
+                }
+
                 const remoteStream = trackEvent.streams[0];
 
                 // Reassigning the same stream restarts the element, which
@@ -2656,7 +2751,7 @@ export function useRoleplayRealtimeCall({
                 // latency is the natural pause before "Hello?".
                 void Promise.all([
                     ringback.lastToneEnded,
-                    remotePlayback.started,
+                    remotePlaybackStarted,
                 ]).then(([, isPlaying]) => {
                     // Hung up or torn down while it was ringing.
                     if (dataChannelRef.current !== dataChannel) {
@@ -2674,12 +2769,8 @@ export function useRoleplayRealtimeCall({
                     logEvent({
                         type: 'audio_checked',
                         at: 0,
-                        echo_cancellation: micSettings.echoCancellation
-                            ? 1
-                            : 0,
-                        noise_suppression: micSettings.noiseSuppression
-                            ? 1
-                            : 0,
+                        echo_cancellation: micSettings.echoCancellation ? 1 : 0,
+                        noise_suppression: micSettings.noiseSuppression ? 1 : 0,
                         auto_gain_control: micSettings.autoGainControl ? 1 : 0,
                     });
                     startLevelWatch();

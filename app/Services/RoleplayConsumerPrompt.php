@@ -23,17 +23,31 @@ class RoleplayConsumerPrompt
      */
     protected const string TRANSCRIPTION_PROMPT = 'Um, so, uh, I was, like, calling about your, you know, Medicare card.';
 
+    /**
+     * When ElevenLabs speaks the consumer, the model writes its lines as
+     * text, and anything that isn't a spoken word would be read out loud.
+     */
+    protected const string SPOKEN_TEXT_RULES = <<<'TEXT'
+        # Your lines are read aloud
+        Everything you write is read out loud by your voice, word for word. Write only the words you say, the way you'd say them: no stage directions, actions or descriptions (never "*sighs*" or "(laughs)"), no emojis, lists or formatting. Write numbers the way you'd say them.
+        TEXT;
+
     public function __construct(protected readonly RoleplayScript $script) {}
 
     /**
      * The `session` overrides for `OpenAiRealtimeClient::createEphemeralSession()`.
+     * With `$speaksAsText`, the model replies in text for ElevenLabs to
+     * speak, instead of in its own voice.
      *
      * @return array<string, mixed>
      */
-    public function sessionConfig(RoleplaySession $session): array
+    public function sessionConfig(RoleplaySession $session, bool $speaksAsText = false): array
     {
+        $instructions = $this->instructions($session);
+
         return [
-            'instructions' => $this->instructions($session),
+            ...$speaksAsText ? ['output_modalities' => ['text']] : [],
+            'instructions' => $speaksAsText ? $instructions."\n\n".trim(static::SPOKEN_TEXT_RULES) : $instructions,
             'tools' => $this->tools(),
             'tool_choice' => 'auto',
             'audio' => [
