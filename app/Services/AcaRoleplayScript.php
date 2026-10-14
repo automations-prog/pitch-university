@@ -23,6 +23,9 @@ use RuntimeException;
  */
 class AcaRoleplayScript extends RoleplayScript
 {
+    /** Where the vertical's docs live, relative to the project root. */
+    protected const string DIRECTORY = 'ai-roleplay/aca';
+
     protected const string SCRIPT_FILE = 'script.md';
 
     protected const string OBJECTIONS_FILE = 'OBJECTIONS_AND_PERSONAS.md';
@@ -36,6 +39,9 @@ class AcaRoleplayScript extends RoleplayScript
     protected const string DQ_TRAPS_HEADING = '## The nine disqualifiers';
 
     protected const string OBJECTION_RISK_LABEL = 'Handled badly';
+
+    /** The objection library field the risk percentage is read from. */
+    protected const string OBJECTION_RISK_FIELD = 'badly_handled_pct';
 
     /**
      * The script has no closing line over its rebuttals, so the panel shows
@@ -121,7 +127,7 @@ class AcaRoleplayScript extends RoleplayScript
             throw $this->missing('rebuttals', static::SCRIPT_FILE);
         }
 
-        return [self::REBUTTAL_CLOSER, $rebuttals];
+        return [static::REBUTTAL_CLOSER, $rebuttals];
     }
 
     /**
@@ -220,7 +226,7 @@ class AcaRoleplayScript extends RoleplayScript
                 'id' => $id,
                 'meaning' => $this->clean((string) $objection['label']),
                 'seenPercent' => (float) $objection['seen_pct'],
-                'lostPercent' => (float) $objection['badly_handled_pct'],
+                'lostPercent' => (float) $objection[static::OBJECTION_RISK_FIELD],
                 'weight' => (int) $objection['draw_weight'],
                 'minLevel' => (int) $objection['unlocks_at_level'],
                 'consumerLines' => $consumerLines,
@@ -263,6 +269,6 @@ class AcaRoleplayScript extends RoleplayScript
             return $this->directory.'/'.$file;
         }
 
-        return base_path($file === static::GUIDE_FILE ? 'ai-roleplay' : 'ai-roleplay/aca').'/'.$file;
+        return base_path($file === static::GUIDE_FILE ? 'ai-roleplay' : static::DIRECTORY).'/'.$file;
     }
 }

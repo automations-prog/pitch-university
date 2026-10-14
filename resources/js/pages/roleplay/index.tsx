@@ -192,7 +192,9 @@ export default function RoleplayIndex({
                                 isStarting={isStarting}
                                 error={startError}
                                 practiceWithoutMic={practiceWithoutMic}
-                                onPracticeWithoutMicChange={setPracticeWithoutMic}
+                                onPracticeWithoutMicChange={
+                                    setPracticeWithoutMic
+                                }
                             />
                             <RecentCalls sessions={recentSessions} />
                         </>
@@ -306,7 +308,7 @@ function LiveRoleplaySession({
                         <AudioBlockedNotice onEnable={call.enableAudio} />
                     )}
                     <LiveFooter
-                        handoff={vertical.handoff}
+                        vertical={vertical}
                         phase={call.phase}
                         transferStage={call.transferStage}
                         error={call.error}
@@ -343,7 +345,7 @@ function AudioBlockedNotice({ onEnable }: { onEnable: () => void }) {
 }
 
 function LiveFooter({
-    handoff,
+    vertical,
     phase,
     transferStage,
     error,
@@ -354,7 +356,7 @@ function LiveFooter({
     onCompleteTransfer,
     onRetry,
 }: {
-    handoff: RoleplayVertical['handoff'];
+    vertical: RoleplayVertical;
     phase: RoleplayCallPhase;
     transferStage: TransferStage | null;
     error: string | null;
@@ -366,6 +368,7 @@ function LiveFooter({
     onRetry: () => void;
 }) {
     const row = 'flex flex-wrap items-center justify-between gap-3';
+    const { handoff, handoffParty, handoffIntro } = vertical;
 
     switch (phase) {
         case 'idle':
@@ -415,9 +418,9 @@ function LiveFooter({
                 <div className={row}>
                     <p className="text-muted-foreground text-sm">
                         {transferStage === 'ringing'
-                            ? `It's ringing. Fluff away and keep them talking until the ${handoff === 'warm' ? 'licensed agent' : 'specialist'} picks up.`
-                            : handoff === 'warm'
-                              ? `Introduce them: "Hi, I have (name) from (state), please take the call." Leave once you hear both of them speaking.`
+                            ? `It's ringing. Fluff away and keep them talking until the ${handoffParty} picks up.`
+                            : handoffIntro
+                              ? `Introduce them: "${handoffIntro}" Leave once you hear both of them speaking.`
                               : 'Stay quiet. Complete the transfer once you have heard both parties speak.'}
                     </p>
                     <Button
@@ -552,7 +555,7 @@ function MockRoleplaySession({
                     <div className={row}>
                         <p className="text-muted-foreground text-sm">
                             {vertical.handoff === 'warm'
-                                ? 'Script complete. Introduce them to the licensed agent, then leave.'
+                                ? `Script complete. Introduce them to the ${vertical.handoffParty}, then leave.`
                                 : 'Script complete. Stay quiet while the agent connects.'}
                         </p>
                         <Button

@@ -18,16 +18,28 @@ export type TranscriptLine = {
 
 export type EndReason = 'agent' | 'hung_up';
 
-/** DQ traps that surface at the opening (no Parts A & B) vs. Work / VA. */
-const OPENING_DQ_TRAPS = new Set(['no_part_b', 'medicaid_only']);
+/**
+ * DQ traps that surface at the opening (no Parts A & B on Medicare, the
+ * Medicaid question on Meals) vs. a later step.
+ */
+const OPENING_DQ_TRAPS = new Set([
+    'no_part_b',
+    'medicaid_only',
+    'no_medicaid',
+    'copays',
+    'medicare_only',
+    'non_qualifying_plan',
+]);
 
 /**
  * The step where a disqualifier comes out when it isn't an opening one:
- * Work / VA on Medicare, the first coverage check on ACA.
+ * Work / VA on Medicare, the first coverage check on ACA, the borough on
+ * Meals.
  */
 const DQ_REVEAL_SECTIONS = new Set([
     'work_va_insurance',
     'confirm_no_medicare_medicaid_or_work_insurance',
+    'borough_and_zip',
 ]);
 
 /**
@@ -46,6 +58,10 @@ const CONSUMER_REPLIES: Record<string, string> = {
     confirm_no_medicare_medicaid_or_work_insurance: 'No, none of that.',
     double_confirm_and_age: 'Correct.',
     conference_and_warm_handoff: 'Hi, yes, this is me.',
+    medicaid_branch: 'Yes.',
+    borough_and_zip: "Yes, that's right.",
+    double_confirm: 'Yes, I am.',
+    warm_handoff: 'Hi, yes, this is me.',
 };
 
 /**
@@ -84,8 +100,8 @@ export function useRoleplayCall(
     const transferAskStep = scriptSections.findIndex(
         (section) => section.id === TRANSFER_ASK_SECTION,
     );
-    const dqRevealStep = scriptSections.findIndex(
-        (section) => DQ_REVEAL_SECTIONS.has(section.id),
+    const dqRevealStep = scriptSections.findIndex((section) =>
+        DQ_REVEAL_SECTIONS.has(section.id),
     );
     const schedule = useMemo(
         () => scheduleObjections(persona.objections, transferAskStep),

@@ -17,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property int $user_id
  * @property RoleplayVertical $vertical
  * @property int $level
- * @property array{lead: array{name: string, state: string, zip: string, gender?: 'male'|'female'}, objections: list<string>, quirk: string|null, patience: int, dq_trap: array{id: string, hidden_truth: string}|null, age?: int, coverage?: array{has_marketplace_plan: bool, carrier: string|null, knows_what_they_have: bool, receives_ssi: bool}} $persona
+ * @property array{lead: array{name: string, state: string, zip: string, borough?: string, gender?: 'male'|'female'}, objections: list<string>, quirk: string|null, patience: int, dq_trap: array{id: string, hidden_truth: string}|null, age?: int, coverage?: array{has_marketplace_plan: bool, carrier: string|null, knows_what_they_have: bool, receives_ssi: bool}, medicaid?: array{status: string, plan: string|null, pays_copays: bool}, says_borough?: string} $persona
  * @property Outcome $expected_outcome
  * @property RealtimeVoice|null $voice
  * @property string|null $disposition

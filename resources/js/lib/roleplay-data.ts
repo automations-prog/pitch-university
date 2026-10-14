@@ -6,7 +6,7 @@
  */
 
 /** Matches `App\Enums\RoleplayVertical`. */
-export type RoleplayVerticalId = 'medicare' | 'aca';
+export type RoleplayVerticalId = 'medicare' | 'aca' | 'meals';
 
 /** `RoleplayVertical::toPage()`. */
 export type RoleplayVertical = {
@@ -14,6 +14,10 @@ export type RoleplayVertical = {
     label: string;
     /** Cold: stay silent once the specialist joins. Warm: introduce the consumer. */
     handoff: 'cold' | 'warm';
+    /** Who takes the call: "specialist", "licensed agent", "screener". */
+    handoffParty: string;
+    /** The script's warm-handoff introduction, with placeholders. */
+    handoffIntro: string | null;
 };
 
 export type DifficultyLevel = 1 | 2 | 3 | 4 | 5;
@@ -93,6 +97,8 @@ export type RoleplayContent = {
 export type Lead = {
     name: string;
     state: string;
+    /** The NYC borough the dialer list has (Meals). */
+    borough?: string;
     zip: string;
 };
 
@@ -150,7 +156,7 @@ export type RoleplaySessionResult = {
     delivery_status?: DeliveryStatus | null;
     delivery?: Delivery | null;
     dq_trap?: { id: string; hidden_truth: string } | null;
-    /** The persona's other hidden facts (ACA coverage), in words. */
+    /** The persona's other hidden facts (ACA coverage, Meals Medicaid), in words. */
     hidden_facts?: string[];
     objections?: Objection[];
     transcript?: string | null;
@@ -192,6 +198,7 @@ export function fillScriptPlaceholders(
     return text
         .replace(/\(Customer'?s? Name\)/gi, firstName)
         .replace(/\(state\)/gi, lead.state)
-        .replace(/\(zip code\)/gi, lead.zip)
+        .replace(/\(Customer'?s? Borough\)/gi, lead.borough ?? lead.state)
+        .replace(/\((Customer'?s? )?zip( code)?\)/gi, lead.zip)
         .replace(/_{3,}/g, agentName);
 }

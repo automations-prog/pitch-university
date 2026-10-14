@@ -24,6 +24,9 @@ class AcaRoleplayGrader extends RoleplayGrader
 {
     protected const array BUSY_OBJECTIONS = ['busy_callback'];
 
+    /** Who the consumer is handed to. */
+    protected const string HANDOFF_PARTY = 'the licensed agent';
+
     /** "America's Health" or a DBA on the script. "American Health" is wrong. */
     private const string COMPANY = '/\bamericas?[\s-]*health\b|\bhealth benefits? guide\b|\bbenefits? link\b/';
 
@@ -40,21 +43,21 @@ class AcaRoleplayGrader extends RoleplayGrader
     private const string AGE_19 = '/\b19\b|\bnineteen\b/';
 
     /** The agent's transfer ask, as the script words it. */
-    private const string ACA_TRANSFER_ASK = '/senior agent|licensed agent|(get|bring|have) (them|someone|somebody|him|her|the agent|an agent) on|on the line/';
+    protected const string WARM_TRANSFER_ASK = '/senior agent|licensed agent|(get|bring|have) (them|someone|somebody|him|her|the agent|an agent) on|on the line/';
 
     /** The DQ line, or anything telling the consumer they don't qualify. */
-    private const string DQ_LINE = '/\bnot (be )?qualified\b|\bwouldnt (be )?qualif|\bdont qualify\b|\bnot eligible\b/';
+    protected const string DQ_LINE = '/\bnot (be )?qualified\b|\bwouldnt (be )?qualif|\bdont qualify\b|\bnot eligible\b/';
 
     /** The DNC disclaimer, or anything promising no more calls. */
-    private const string DNC_DISCLAIMER = '/do not call|dont call|\bdnc\b|further calls|remove you|take you off|no more calls/';
+    protected const string DNC_DISCLAIMER = '/do not call|dont call|\bdnc\b|further calls|remove you|take you off|no more calls/';
 
     /** A DNC request with one of these is conditional ("if this is a scam, don't call me"). */
-    private const string CONDITIONAL = '/\b(if|unless|otherwise|or else)\b/';
+    protected const string CONDITIONAL = '/\b(if|unless|otherwise|or else)\b/';
 
     /** Rules where a preceding negative rescues the line ("I can't guarantee that"). */
-    private const array NEGATABLE_INSTANT_FAILS = ['guarantee', 'dollar_amount'];
+    protected const array NEGATABLE_INSTANT_FAILS = ['guarantee', 'dollar_amount'];
 
-    private const string NEGATIVE_BEFORE = '/\b(cant|cannot|can not|dont|do not|wont|will not|not|never|no)\b/';
+    protected const string NEGATIVE_BEFORE = '/\b(cant|cannot|can not|dont|do not|wont|will not|not|never|no)\b/';
 
     /**
      * Instant fails from `04_PROMPTS_ACA.md`, matched against the agent's
@@ -62,7 +65,7 @@ class AcaRoleplayGrader extends RoleplayGrader
      *
      * @var array<string, array{pattern: string, reason: string}>
      */
-    private const array INSTANT_FAILS = [
+    protected const array INSTANT_FAILS = [
         'free_money' => ['pattern' => '/\bfree\s+(money|cash)\b/', 'reason' => 'Promised free money'],
         'dollar_amount' => ['pattern' => '/\byou(ll| will|re going to| are going to)\s+(get|receive)\s+(up to\s+)?(\$\s?\d|\d[\d,]*\s*dollars)/', 'reason' => 'Promised a dollar amount'],
         'send_money' => ['pattern' => '/\b(well|ill|theyll|we will|i will|they will)\s+(send|mail)\s+you\s+(a\s+)?(check|cheque|card|money)\b/', 'reason' => 'Promised to send money or a card'],
@@ -142,7 +145,7 @@ class AcaRoleplayGrader extends RoleplayGrader
             $this->check('no_dq_transfer', 'Did not conference a disqualified consumer',
                 $isDisqualified ? $transferClickedAt === null : null),
             $this->check('dq_line', 'Read the DQ line',
-                $correctDisposition === Outcome::Dq->value ? (bool) preg_match(self::DQ_LINE, $agentText) : null),
+                $correctDisposition === Outcome::Dq->value ? (bool) preg_match(static::DQ_LINE, $agentText) : null),
             $this->check('dnc_respected', 'Read the DNC disclaimer and ended without a rebuttal',
                 $dncRequestIndex === null ? null : $this->respectedDnc($lines, $dncRequestIndex)),
             $this->check('no_promises', 'Kept benefit talk hedged ("may", "might", "could"), with no promises',
@@ -192,7 +195,7 @@ class AcaRoleplayGrader extends RoleplayGrader
      * @param  list<Event>  $events
      * @return array{0: string, 1: string|null, 2: int|null}
      */
-    private function correctAcaDisposition(RoleplaySession $session, array $lines, array $events, ?int $transferClickedAt): array
+    protected function correctAcaDisposition(RoleplaySession $session, array $lines, array $events, ?int $transferClickedAt): array
     {
         foreach ($lines as $index => $line) {
             if ($line['role'] === 'consumer' && $this->isDncRequest($line['text'])) {
@@ -202,7 +205,7 @@ class AcaRoleplayGrader extends RoleplayGrader
 
         if ($session->end_reason === 'hung_up') {
             return $transferClickedAt === null
-                ? ['not_interested', 'They hung up before you conferenced the licensed agent, so the call is Not Interested.', null]
+                ? ['not_interested', 'They hung up before you conferenced '.static::HANDOFF_PARTY.', so the call is Not Interested.', null]
                 : ['hung_up_transfer', 'They hung up after you clicked conference, so the call is a Hung-Up Transfer.', null];
         }
 
@@ -217,10 +220,10 @@ class AcaRoleplayGrader extends RoleplayGrader
      * A direct, unconditional request not to be called. "If this is a scam,
      * don't call me again" is not one, and neither is swearing.
      */
-    private function isDncRequest(string $text): bool
+    protected function isDncRequest(string $text): bool
     {
         foreach (preg_split('/[.!?]+/', $this->normalize($text)) ?: [] as $sentence) {
-            if (preg_match(self::DNC_REQUEST, $sentence) && ! preg_match(self::CONDITIONAL, $sentence)) {
+            if (preg_match(self::DNC_REQUEST, $sentence) && ! preg_match(static::CONDITIONAL, $sentence)) {
                 return true;
             }
         }
@@ -234,11 +237,11 @@ class AcaRoleplayGrader extends RoleplayGrader
      *
      * @param  list<Line>  $lines
      */
-    private function respectedDnc(array $lines, int $requestIndex): bool
+    protected function respectedDnc(array $lines, int $requestIndex): bool
     {
         foreach (array_slice($lines, $requestIndex + 1) as $line) {
             if ($line['role'] === 'agent') {
-                return (bool) preg_match(self::DNC_DISCLAIMER, $this->normalize($line['text']));
+                return (bool) preg_match(static::DNC_DISCLAIMER, $this->normalize($line['text']));
             }
         }
 
@@ -302,7 +305,7 @@ class AcaRoleplayGrader extends RoleplayGrader
      *
      * @param  list<Line>  $agent
      */
-    private function asksForLead(array $agent, string $name): bool
+    protected function asksForLead(array $agent, string $name): bool
     {
         $text = $this->normalize(implode("\n", array_column($agent, 'text')));
 
@@ -321,7 +324,7 @@ class AcaRoleplayGrader extends RoleplayGrader
      *
      * @param  list<Line>  $lines
      */
-    private function hasTransferConsent(array $lines, ?int $transferClickedAt): bool
+    protected function hasTransferConsent(array $lines, ?int $transferClickedAt): bool
     {
         if ($transferClickedAt === null) {
             return false;
@@ -334,7 +337,7 @@ class AcaRoleplayGrader extends RoleplayGrader
                 break;
             }
 
-            if ($line['role'] === 'agent' && preg_match(self::ACA_TRANSFER_ASK, $this->normalize($line['text']))) {
+            if ($line['role'] === 'agent' && preg_match(static::WARM_TRANSFER_ASK, $this->normalize($line['text']))) {
                 $askedAt = $index;
             }
         }
@@ -401,7 +404,7 @@ class AcaRoleplayGrader extends RoleplayGrader
             foreach (preg_split('/[.!?]+/', $this->normalize($line['text'])) ?: [] as $sentence) {
                 $promises = preg_match('/\byou(re| are)? (qualify|eligible|entitled)\b|\byou(ll| will| are going to|re going to) (get|receive|be getting)\b|\byou qualify\b/', $sentence);
 
-                if ($promises && ! preg_match('/\b(may|maybe|might|could)\b/', $sentence) && ! preg_match(self::NEGATIVE_BEFORE, $sentence)) {
+                if ($promises && ! preg_match('/\b(may|maybe|might|could)\b/', $sentence) && ! preg_match(static::NEGATIVE_BEFORE, $sentence)) {
                     return false;
                 }
             }
@@ -415,18 +418,18 @@ class AcaRoleplayGrader extends RoleplayGrader
      *
      * @param  list<Line>  $agent
      */
-    private function instantFail(array $agent): ?string
+    protected function instantFail(array $agent): ?string
     {
         foreach ($agent as $line) {
             foreach (preg_split('/(?<=[.!?])\s+/', $this->normalize($line['text'])) ?: [] as $sentence) {
-                foreach (self::INSTANT_FAILS as $key => $rule) {
+                foreach (static::INSTANT_FAILS as $key => $rule) {
                     if (! preg_match($rule['pattern'], $sentence, $match, PREG_OFFSET_CAPTURE)) {
                         continue;
                     }
 
                     $before = substr($sentence, 0, $match[0][1]);
 
-                    if (in_array($key, self::NEGATABLE_INSTANT_FAILS, true) && preg_match(self::NEGATIVE_BEFORE, $before)) {
+                    if (in_array($key, static::NEGATABLE_INSTANT_FAILS, true) && preg_match(static::NEGATIVE_BEFORE, $before)) {
                         continue;
                     }
 

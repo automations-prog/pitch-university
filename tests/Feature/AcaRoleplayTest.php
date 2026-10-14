@@ -37,7 +37,10 @@ test('a verified user can open the ACA roleplay page with the ACA script and onl
     $response->assertOk();
     $response->assertInertia(fn (Assert $page) => $page
         ->component('roleplay/index')
-        ->where('vertical', ['id' => 'aca', 'label' => 'ACA', 'handoff' => 'warm'])
+        ->where('vertical', [
+            'id' => 'aca', 'label' => 'ACA', 'handoff' => 'warm',
+            'handoffParty' => 'licensed agent', 'handoffIntro' => 'Hi, I have (name) from (state), please take the call.',
+        ])
         ->has('content.scriptSections', 6)
         ->has('content.objections', 22)
         ->where('content.objectionRiskLabel', 'Handled badly')

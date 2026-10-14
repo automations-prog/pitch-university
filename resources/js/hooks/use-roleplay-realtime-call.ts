@@ -236,7 +236,7 @@ const ACTIVE_RESPONSE_ERROR_CODE = 'conversation_already_has_active_response';
 /**
  * How the agent on the other end of the transfer joins. Cold (Medicare):
  * the specialist asks who they're speaking with and the trainee stays
- * silent. Warm (ACA): the licensed agent picks up and the trainee
+ * silent. Warm (ACA, Meals): the licensed agent picks up and the trainee
  * introduces the consumer, naming their state, before leaving.
  */
 type Handoff = {

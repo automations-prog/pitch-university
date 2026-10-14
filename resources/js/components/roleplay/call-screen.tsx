@@ -147,7 +147,8 @@ function CallBar({ view, actions }: { view: CallView; actions: ReactNode }) {
                             {view.lead.name}
                         </p>
                         <p className="text-sm text-white/70">
-                            {view.lead.state} · {view.lead.zip}
+                            {view.lead.borough ?? view.lead.state} ·{' '}
+                            {view.lead.zip}
                         </p>
                     </div>
                 </div>

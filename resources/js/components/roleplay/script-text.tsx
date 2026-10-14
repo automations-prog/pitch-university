@@ -9,7 +9,7 @@ const DIRECTION_PATTERN = /(\([^)]*\)|- AFFIRM)/g;
 const EMPHASIS_PATTERN = /(\b[A-Z][A-Z']+\b)/g;
 
 /** Capitalized words that are names, not stress. */
-const NOT_EMPHASIS = new Set(['VA', 'DQ', 'DNC', 'NI', 'ACA', 'SSI', 'SSDI', 'US']);
+const NOT_EMPHASIS = new Set(['VA', 'DQ', 'DNC', 'NI', 'ACA', 'SSI', 'SSDI', 'US', 'ZIP', 'NYC']);
 
 /**
  * Renders a script line the way the doc reads: stage directions muted, and

@@ -54,6 +54,7 @@ import {
     index as usersIndex,
 } from '@/routes/admin/users';
 import { index as acaRoleplayIndex } from '@/routes/aca-roleplay';
+import { index as mealsRoleplayIndex } from '@/routes/meals-roleplay';
 import { index as medicareRoleplayIndex } from '@/routes/medicare-roleplay';
 import {
     Award,
@@ -456,7 +457,7 @@ export default function Dashboard(props: Props) {
                     </form>
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                     <QuickActionCard
                         title="Review candidates"
                         description={`${screenings.stats.awaiting_review} ready now`}
@@ -488,6 +489,13 @@ export default function Dashboard(props: Props) {
                         tile={<Play className="size-4 fill-current" />}
                         color="rose"
                         href={acaRoleplayIndex()}
+                    />
+                    <QuickActionCard
+                        title="Start a Meals roleplay"
+                        description="Practice a call"
+                        tile={<Play className="size-4 fill-current" />}
+                        color="emerald"
+                        href={mealsRoleplayIndex()}
                     />
                     <QuickActionCard
                         title="Invite an agent"

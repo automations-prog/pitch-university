@@ -92,4 +92,23 @@ class RoleplaySessionFactory extends Factory
             ],
         ]);
     }
+
+    /**
+     * A Medicaid meals call: a Bronx lead who has Medicaid.
+     */
+    public function meals(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'vertical' => RoleplayVertical::Meals,
+            'persona' => [
+                'lead' => ['name' => 'Maria Rodriguez', 'state' => 'New York', 'borough' => 'Bronx', 'zip' => '10453', 'gender' => 'female'],
+                'objections' => ['what_is_this'],
+                'quirk' => 'TV loud in the background',
+                'patience' => 8,
+                'dq_trap' => null,
+                'age' => 67,
+                'medicaid' => ['status' => 'yes', 'plan' => null, 'pays_copays' => false],
+            ],
+        ]);
+    }
 }

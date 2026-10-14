@@ -50,4 +50,20 @@ return [
         'fluff_min_ms' => 5000,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Meals brush-offs
+    |--------------------------------------------------------------------------
+    |
+    | On Medicaid meals calls a brush-off ("not interested", "I don't need
+    | it", "call me back") is lost if the agent pauses: the median call with
+    | no rebuttal lasts 27 seconds. The longest silence after one that still
+    | counts as coming straight back.
+    |
+    */
+
+    'meals' => [
+        'brush_off_pause_max_ms' => 3000,
+    ],
+
 ];

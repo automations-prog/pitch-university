@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 
 const tileClasses = {
     amber: 'bg-amber-300 text-black',
+    emerald: 'bg-emerald-300 text-black',
     rose: 'bg-rose-300 text-black',
     sky: 'bg-sky-300 text-black',
     teal: 'bg-teal-300 text-black',

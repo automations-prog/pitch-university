@@ -32,6 +32,7 @@ import { index as trainingTracksIndex } from '@/routes/admin/training-tracks';
 import { index as usersIndex } from '@/routes/admin/users';
 import { index as verticalTrainingIndex } from '@/routes/admin/vertical-training';
 import { index as myLicensesIndex } from '@/routes/licenses';
+import { index as mealsRoleplayIndex } from '@/routes/meals-roleplay';
 import { index as medicareRoleplayIndex } from '@/routes/medicare-roleplay';
 import { index as trainingIndex } from '@/routes/training';
 import type { NavGroup } from '@/types';
@@ -93,6 +94,11 @@ export function AppSidebar() {
                 {
                     title: 'ACA Roleplay',
                     href: acaRoleplayIndex(),
+                    icon: Headphones,
+                },
+                {
+                    title: 'Meals Roleplay',
+                    href: mealsRoleplayIndex(),
                     icon: Headphones,
                 },
                 ...(SHOW_LICENSING && auth.user.licenses_count > 0

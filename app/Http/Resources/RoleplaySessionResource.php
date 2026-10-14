@@ -57,8 +57,9 @@ class RoleplaySessionResource extends JsonResource
     }
 
     /**
-     * The ACA persona's coverage facts the trainee had to uncover, in
-     * words, for the reveal after the call.
+     * The persona's hidden facts the trainee had to uncover (ACA coverage,
+     * the Meals Medicaid answer and borough), in words, for the reveal
+     * after the call.
      *
      * @return list<string>
      */
@@ -74,6 +75,10 @@ class RoleplaySessionResource extends JsonResource
 
         if (isset($persona['actual_state'])) {
             $facts[] = "Actually lives in {$persona['actual_state']}, not {$persona['lead']['state']}.";
+        }
+
+        if (isset($persona['medicaid'])) {
+            return [...$facts, ...$this->medicaidFacts()];
         }
 
         if ($coverage === null) {
@@ -94,6 +99,40 @@ class RoleplaySessionResource extends JsonResource
 
         if ($coverage['receives_ssi']) {
             $facts[] = 'Receives SSI (not a disqualifier, unlike SSDI).';
+        }
+
+        return $facts;
+    }
+
+    /**
+     * The Meals persona's Medicaid answer and borough, in words.
+     *
+     * @return list<string>
+     */
+    private function medicaidFacts(): array
+    {
+        $persona = $this->persona;
+        $medicaid = $persona['medicaid'];
+        $saysBorough = $persona['says_borough'] ?? null;
+
+        $facts = [match ($medicaid['status']) {
+            'yes' => 'Has Medicaid.',
+            'no' => 'Has no Medicaid.',
+            'medicare_only' => 'Has Medicare, not Medicaid.',
+            'names_plan' => $persona['dq_trap'] === null
+                ? "Named their plan, {$medicaid['plan']}, which is Medicaid."
+                : "Named {$medicaid['plan']}, a parent brand that settles nothing until you ask which plan.",
+            'dont_know' => $medicaid['pays_copays']
+                ? "Didn't know if they had Medicaid, and pays copays at the doctor (so not Medicaid)."
+                : "Didn't know if they had Medicaid, but the doctor is free (so Medicaid).",
+        }];
+
+        if ($saysBorough === 'Long Island City') {
+            $facts[] = 'Said Long Island City, which is in Queens and qualifies.';
+        } elseif ($saysBorough === 'New York') {
+            $facts[] = "Said just \"New York\": the borough had to be pinned down ({$persona['lead']['borough']}).";
+        } elseif ($saysBorough !== null) {
+            $facts[] = "Lives in {$saysBorough}, outside the five boroughs.";
         }
 
         return $facts;
