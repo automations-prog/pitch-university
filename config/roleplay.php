@@ -66,4 +66,26 @@ return [
         'brush_off_pause_max_ms' => 3000,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | ACA objection focus
+    |--------------------------------------------------------------------------
+    |
+    | Objections trainers want drilled: drawn more often than their real-call
+    | weight, and every call from `focus_guaranteed_from_level` up has at
+    | least one. Brush-offs are what lose calls (`ACA_objection_playbook.md`),
+    | so the hardest levels draw them more often too.
+    |
+    */
+
+    'aca' => [
+        'focus_objections' => ['dont_want_change', 'is_it_money', 'how_got_info'],
+        'focus_weight_multiplier' => 3,
+        'focus_guaranteed_from_level' => 4,
+
+        'brush_off_objections' => ['not_interested', 'busy_callback', 'hesitation'],
+        'brush_off_weight_multiplier' => 2,
+        'brush_off_from_level' => 4,
+    ],
+
 ];

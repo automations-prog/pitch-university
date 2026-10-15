@@ -141,6 +141,12 @@ export function ResultCard({
             disposition.id ===
             (result.correct_disposition ?? OUTCOME_DISPOSITION[outcome]),
     );
+    const codedDisposition = dispositions.find(
+        (disposition) => disposition.id === result.disposition,
+    );
+    const isCodedCorrectly =
+        correctDisposition !== undefined &&
+        codedDisposition?.id === correctDisposition.id;
 
     return (
         <Card>
@@ -153,19 +159,41 @@ export function ResultCard({
                     )}
                     {result.passed ? 'Call passed' : 'Call failed'}
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="flex flex-col gap-1">
                     {result.correct_reason ? (
-                        result.correct_reason
+                        <span>{result.correct_reason}</span>
                     ) : (
-                        <>
+                        <span>
                             This consumer should have ended as{' '}
                             <span className="text-foreground font-medium">
                                 {OUTCOME_LABELS[outcome]}
                             </span>
-                            {correctDisposition &&
-                                ` — coded as ${correctDisposition.name}`}
                             .
-                        </>
+                        </span>
+                    )}
+                    {correctDisposition && (
+                        <span>
+                            Correct code:{' '}
+                            <span className="text-foreground font-medium">
+                                {correctDisposition.name}
+                            </span>
+                            {codedDisposition && (
+                                <>
+                                    {' '}
+                                    · You coded:{' '}
+                                    <span className="text-foreground font-medium">
+                                        {codedDisposition.name}
+                                    </span>
+                                </>
+                            )}
+                            .
+                        </span>
+                    )}
+                    {!result.passed && isCodedCorrectly && (
+                        <span className="text-destructive">
+                            You coded it right, but the call failed on the
+                            compliance check marked below.
+                        </span>
                     )}
                 </CardDescription>
             </CardHeader>
@@ -237,6 +265,20 @@ export function ResultCard({
                                 <p className="text-muted-foreground mt-1 text-xs">
                                     {objection.rebuttal.lines[0]}
                                 </p>
+                                {!!objection.topAgentLines?.length && (
+                                    <div className="mt-2 text-xs">
+                                        <p className="font-medium">
+                                            How top agents said it
+                                        </p>
+                                        <ul className="text-muted-foreground mt-1 flex flex-col gap-1">
+                                            {objection.topAgentLines.map(
+                                                (line) => (
+                                                    <li key={line}>“{line}”</li>
+                                                ),
+                                            )}
+                                        </ul>
+                                    </div>
+                                )}
                             </div>
                         ))
                     )}

@@ -25,7 +25,7 @@ weight = seen_pct * 10 + badly_handled_pct * 1.5
 | 12 | `insurance_not_familiar` | They name a carrier | 2.7 | 12.7 | 46 | 2 |
 | 13 | `told_not_qualified` | They told me I don't qualify | 2.4 | 4.9 | 31 | 2 |
 | 14 | `personal_info` | I'm not giving personal information | 2.0 | 10.1 | 35 | 3 |
-| 15 | `how_got_info` | How did you get my information? | 2.0 | 26.9 | 60 | 3 |
+| 15 | `how_got_info` | How did you get my information? | 2.0 | 26.9 | 60 | 2 |
 | 16 | `not_interested` | I'm not interested | 2.0 | 9.2 | 34 | 1 |
 | 17 | `dont_want_change` | I don't want to change my insurance | 1.6 | 20.0 | 46 | 2 |
 | 18 | `didnt_apply` | I didn't apply for that | 1.5 | 9.7 | 30 | 2 |
@@ -192,6 +192,8 @@ dropped rather than shown to a trainee as an example worth copying.
 - “Are you talking about. Money? Any insurance or something like that? I don't know what?”
 - “Do I have to pay anything for anything?”
 - “It's something that costs money. So it's like, if it costs money, I can't do it because I have none.”
+- “How much is this?”
+- “Am I receiving some sort of cheque?”
 
 **Official rebuttal (from script.md → “What am I going to get / Is it money, cash, cheque, card, help with bills or groceries?”):** Since it's confidential between the licensed agent and yourself, once I verify everything you can go ahead and ask the licensed agent. Now, do you still not receive any Medicare, Medicaid or work insurance?
 
@@ -242,12 +244,13 @@ dropped rather than shown to a trainee as an example worth copying.
 - “I'm not asking you for any personal information, Rufus. Not none. I'm just asking you to confirm that you're in South Carolina with no Medicaid, Medicare, work insurance.”
 
 ### `how_got_info` — How did you get my information?
-*Seen on 2.0% of calls · handled badly 26.9% of the time · weight 60 · unlocks at level 3*
+*Seen on 2.0% of calls · handled badly 26.9% of the time · weight 60 · unlocks at level 2*
 
 **Consumer says:**
 - “And how did you get my number?”
 - “So who told you to get in contact with me?”
 - “I just got my number changed to this number right here... I never talked to anyone on this number.”
+- “How did you end up getting my information?”
 
 **Official rebuttal (from script.md → “How did you get my information / Where did you get my information?”):** I do have you here for a reason — we are actually only calling those that may qualify for a free subsidy with the Affordable Care Act. Now, you do not receive Medicare or Medicaid or any work insurance, correct?
 
@@ -276,6 +279,7 @@ dropped rather than shown to a trainee as an example worth copying.
 - “I'm okay. I don't want to say nothing out right now.”
 - “I don't want to speak to anybody because the last time I did, they changed my insurance.”
 - “Now, this won't affect my plan, right? ... Like the United Healthcare gold plan.”
+- “I don't want to change my insurance.”
 
 **Official rebuttal (from script.md → “I don't want to change my insurance / Will this change my plan?”):** You'd be the one to change anything, I can't do that. The purpose is simply to verify whether you still live in (STATE) and currently have no Medicare, Medicaid, or employer coverage.
 

@@ -42,8 +42,27 @@ class AcaRoleplayGrader extends RoleplayGrader
 
     private const string AGE_19 = '/\b19\b|\bnineteen\b/';
 
-    /** The agent's transfer ask, as the script words it. */
-    protected const string WARM_TRANSFER_ASK = '/senior agent|licensed agent|(get|bring|have) (them|someone|somebody|him|her|the agent|an agent) on|on the line/';
+    /**
+     * The agent's transfer ask, as the script words it or close to it
+     * ("grab the senior representative", "connect you with a licensed rep").
+     */
+    protected const string WARM_TRANSFER_ASK = '/\b(senior|licensed)\s+(agent|representative|rep|specialist|advisor|adviser)|(get|bring|have) (them|someone|somebody|him|her|the agent|an agent) on|on the line|\b(grab|get|connect|transfer|bring) (you )?(to |with )?(a|an|the|my|our) (senior|licensed|specialist|supervisor|manager)/';
+
+    /**
+     * Disqualifiers the script never asks about directly, with how the
+     * consumer brings each one up. Unless one comes up on the call, the
+     * agent had no way to catch it.
+     *
+     * @var array<string, string>
+     */
+    public const array VOLUNTEERED_DISQUALIFIERS = [
+        'spousal_work' => '/\b(husband|wife|spouse|partner|boyfriend|girlfriend)s?\b.*\b(job|work|employer|company)\b|\b(job|work|employer|company)\b.*\b(husband|wife|spouse|partner)/',
+        'military_va' => '/\bva\b|\bveteran|\bmilitary\b|\btricare\b/',
+        'private' => '/\bprivate\b|blue ?cross|\boscar\b|\bambetter\b|\banthem\b|united ?health/',
+        'state_insurance' => '/\bstate\s+(health\s+)?(plan|insurance|program|coverage)\b|\b(through|from) the state\b/',
+        'ssdi' => '/\bssdi?\b|\bdisability\b/',
+        'non_citizen' => '/\bcitizen|\bgreen card\b|\bimmigra|\bvisa\b|\bpermanent resident\b/',
+    ];
 
     /** The DQ line, or anything telling the consumer they don't qualify. */
     protected const string DQ_LINE = '/\bnot (be )?qualified\b|\bwouldnt (be )?qualif|\bdont qualify\b|\bnot eligible\b/';
@@ -112,7 +131,7 @@ class AcaRoleplayGrader extends RoleplayGrader
 
         [$correctDisposition, $correctReason, $dncRequestIndex] = $this->correctAcaDisposition($session, $lines, $events, $transferClickedAt);
         $expectsTransfer = $correctDisposition === Outcome::Transfer->value;
-        $isDisqualified = $persona['dq_trap'] !== null;
+        $isDisqualified = $persona['dq_trap'] !== null && $this->disqualifierCameUp($persona['dq_trap']['id'], $lines);
 
         $coverageAsks = $this->coverageAsks($lines);
         $handoff = $expectsTransfer ? $this->transferHandoff($events) : null;
@@ -158,6 +177,10 @@ class AcaRoleplayGrader extends RoleplayGrader
                 ? 'Kept forbidden words out of the small talk on hold (coaching note)'
                 : 'Kept forbidden words out of the small talk on hold (coaching note, you said: '.implode(', ', $holdWords).')',
                 $transferClickedAt === null ? null : $holdWords === []),
+            $this->check('back_to_verification', 'Went back to the verification after each objection (coaching note)',
+                $this->returnedToVerification($lines, $events, $state, $transferClickedAt)),
+            $this->check('waited_for_answers', 'Waited for the answer to every required question (coaching note)',
+                $this->waitedForAnswers($lines, $state, $transferClickedAt)),
             $this->check('no_instant_fail', $instantFail === null
                 ? 'No instant-fail lines'
                 : "No instant-fail lines (instant fail: {$instantFail})",
@@ -213,7 +236,37 @@ class AcaRoleplayGrader extends RoleplayGrader
             return ['call_back', 'They asked to be called back again after your rebuttal, so the call should be coded Call Back.', null];
         }
 
+        $trap = $session->persona['dq_trap'];
+
+        if ($trap !== null && ! $this->disqualifierCameUp($trap['id'], $lines)) {
+            return [Outcome::Transfer->value, "Their disqualifier ({$trap['hidden_truth']}) never came up on the call, so it's graded as a Transfer.", null];
+        }
+
         return [$session->expected_outcome->value, null, null];
+    }
+
+    /**
+     * Whether the consumer said something that gives the disqualifier
+     * away. Medicare, Medicaid and work insurance are asked about on every
+     * call, so missing those is on the agent.
+     *
+     * @param  list<Line>  $lines
+     */
+    protected function disqualifierCameUp(string $trapId, array $lines): bool
+    {
+        $pattern = self::VOLUNTEERED_DISQUALIFIERS[$trapId] ?? null;
+
+        if ($pattern === null) {
+            return true;
+        }
+
+        foreach ($lines as $line) {
+            if ($line['role'] === 'consumer' && preg_match($pattern, $this->normalize($line['text']))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -246,6 +299,99 @@ class AcaRoleplayGrader extends RoleplayGrader
         }
 
         return false;
+    }
+
+    /**
+     * After every objection before the conference, the agent's next turn
+     * brings the call back to the verification (state, coverage, age),
+     * the third beat of every approved rebuttal. Null without objections.
+     *
+     * @param  list<Line>  $lines
+     * @param  list<Event>  $events
+     */
+    private function returnedToVerification(array $lines, array $events, string $state, ?int $transferClickedAt): ?bool
+    {
+        $verification = '/'.preg_quote(strtolower($state), '/').'|\bstate\b|'.trim(self::MEDICARE, '/').'|'.trim(self::MEDICAID, '/').'|work insurance|employer|'.trim(self::AGE_19, '/').'|market ?place/';
+        $checked = false;
+
+        foreach ($events as $event) {
+            if ($event['type'] !== 'objection_raised') {
+                continue;
+            }
+
+            $raisedAt = intdiv($event['at'] ?? 0, 1000);
+
+            if ($transferClickedAt !== null && $raisedAt >= $transferClickedAt) {
+                continue;
+            }
+
+            $turn = $this->agentTurnAfter($lines, $raisedAt);
+
+            if ($turn === null) {
+                continue;
+            }
+
+            if (! preg_match($verification, $this->normalize($turn))) {
+                return false;
+            }
+
+            $checked = true;
+        }
+
+        return $checked ? true : null;
+    }
+
+    /**
+     * The agent's first turn starting at or after `$at`, consecutive agent
+     * lines joined, or null when they never spoke again.
+     *
+     * @param  list<Line>  $lines
+     */
+    private function agentTurnAfter(array $lines, int $at): ?string
+    {
+        $turn = [];
+
+        foreach ($lines as $line) {
+            if ($line['at'] < $at) {
+                continue;
+            }
+
+            if ($line['role'] === 'agent') {
+                $turn[] = $line['text'];
+            } elseif ($turn !== []) {
+                break;
+            }
+        }
+
+        return $turn === [] ? null : implode(' ', $turn);
+    }
+
+    /**
+     * Every required question (state, coverage, age, the transfer ask) that
+     * ends an agent line is followed by the consumer, not by the agent
+     * talking on.
+     *
+     * @param  list<Line>  $lines
+     */
+    private function waitedForAnswers(array $lines, string $state, ?int $transferClickedAt): bool
+    {
+        $required = '/'.preg_quote(strtolower($state), '/').'|'.trim(self::MEDICARE, '/').'|'.trim(self::MEDICAID, '/').'|'.trim(self::AGE_19, '/').'|'.trim(static::WARM_TRANSFER_ASK, '/').'/';
+
+        foreach ($lines as $index => $line) {
+            if ($line['role'] !== 'agent' || ($transferClickedAt !== null && $line['at'] >= $transferClickedAt)) {
+                continue;
+            }
+
+            $sentences = preg_split('/(?<=[.!?])\s+/', trim($this->normalize($line['text']))) ?: [];
+            $last = (string) end($sentences);
+            $next = $lines[$index + 1] ?? null;
+
+            if (str_ends_with($last, '?') && preg_match($required, $last) && $next !== null && $next['role'] === 'agent') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -320,7 +466,8 @@ class AcaRoleplayGrader extends RoleplayGrader
 
     /**
      * A consumer okay after the agent's last transfer ask and before the
-     * conference click. Silence is not consent.
+     * conference click. A question back ("what's this agent gonna do?")
+     * doesn't cancel an okay, but a later no does. Silence is not consent.
      *
      * @param  list<Line>  $lines
      */
@@ -346,17 +493,27 @@ class AcaRoleplayGrader extends RoleplayGrader
             return false;
         }
 
+        $consented = false;
+
         foreach (array_slice($lines, $askedAt + 1) as $line) {
             if ($line['at'] > $transferClickedAt) {
                 break;
             }
 
-            if ($line['role'] === 'consumer') {
-                return $this->isAffirmative($this->normalize($line['text']));
+            if ($line['role'] !== 'consumer') {
+                continue;
+            }
+
+            $text = $this->normalize($line['text']);
+
+            if ($this->isAffirmative($text)) {
+                $consented = true;
+            } elseif (preg_match('/^\W*(no|nope|nah|not now|not right now|dont)\b/', $text)) {
+                $consented = false;
             }
         }
 
-        return false;
+        return $consented;
     }
 
     /**

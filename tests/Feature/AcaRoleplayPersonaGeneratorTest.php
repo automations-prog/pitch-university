@@ -68,3 +68,30 @@ test('a qualified consumer\'s coverage matches the objections they raise', funct
         }
     }
 });
+
+test('every level 4 and 5 consumer raises at least one of the drilled objections', function (int $level) {
+    $focus = config('roleplay.aca.focus_objections');
+
+    foreach (range(1, 300) as $seed) {
+        $objections = seededAcaGenerator($seed)->generate($level)['persona']['objections'];
+
+        expect(array_intersect($objections, $focus))->not->toBeEmpty();
+    }
+})->with([4, 5]);
+
+test('how they got my information can come up from level 2', function () {
+    $drawn = collect(range(1, 300))
+        ->flatMap(fn (int $seed): array => seededAcaGenerator($seed)->generate(2)['persona']['objections']);
+
+    expect($drawn)->toContain('how_got_info');
+});
+
+test('a consumer who doesn\'t want to change their insurance has a plan to change', function () {
+    foreach (range(1, 300) as $seed) {
+        $persona = seededAcaGenerator($seed)->generate(4)['persona'];
+
+        if ($persona['dq_trap'] === null && in_array('dont_want_change', $persona['objections'], true)) {
+            expect($persona['coverage']['has_marketplace_plan'])->toBeTrue();
+        }
+    }
+});

@@ -14,7 +14,7 @@ use RuntimeException;
  *
  * @phpstan-type ScriptSection array{id: string, title: string, lines: list<string>, branches: list<array{answer: string, response: string}>}
  * @phpstan-type Rebuttal array{title: string, lines: list<string>}
- * @phpstan-type Objection array{id: string, meaning: string, seenPercent: float, lostPercent: float, weight: int, minLevel: int, consumerLines: list<string>, rebuttal: Rebuttal}
+ * @phpstan-type Objection array{id: string, meaning: string, seenPercent: float, lostPercent: float, weight: int, minLevel: int, consumerLines: list<string>, rebuttal: Rebuttal, topAgentLines?: list<string>}
  * @phpstan-type Level array{level: int, name: string, objectionRange: array{0: int, 1: int}, temperament: string, outcomeMix: array{transfer: int, dq: int, dnc: int}}
  * @phpstan-type DqTrap array{id: string, hiddenTruth: string}
  * @phpstan-type Disposition array{id: string, name: string, description: string}

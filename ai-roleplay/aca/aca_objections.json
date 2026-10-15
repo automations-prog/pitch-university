@@ -203,7 +203,9 @@
    "consumer_says": [
     "Are you talking about. Money? Any insurance or something like that? I don't know what?",
     "Do I have to pay anything for anything?",
-    "It's something that costs money. So it's like, if it costs money, I can't do it because I have none."
+    "It's something that costs money. So it's like, if it costs money, I can't do it because I have none.",
+    "How much is this?",
+    "Am I receiving some sort of cheque?"
    ],
    "script_heading": "What am I going to get / Is it money, cash, cheque, card, help with bills or groceries?",
    "official_rebuttal": "Since it's confidential between the licensed agent and yourself, once I verify everything you can go ahead and ask the licensed agent. Now, do you still not receive any Medicare, Medicaid or work insurance?",
@@ -275,11 +277,12 @@
    "seen_pct": 2.0,
    "badly_handled_pct": 26.9,
    "draw_weight": 60,
-   "unlocks_at_level": 3,
+   "unlocks_at_level": 2,
    "consumer_says": [
     "And how did you get my number?",
     "So who told you to get in contact with me?",
-    "I just got my number changed to this number right here... I never talked to anyone on this number."
+    "I just got my number changed to this number right here... I never talked to anyone on this number.",
+    "How did you end up getting my information?"
    ],
    "script_heading": "How did you get my information / Where did you get my information?",
    "official_rebuttal": "I do have you here for a reason — we are actually only calling those that may qualify for a free subsidy with the Affordable Care Act. Now, you do not receive Medicare or Medicaid or any work insurance, correct?",
@@ -317,7 +320,8 @@
    "consumer_says": [
     "I'm okay. I don't want to say nothing out right now.",
     "I don't want to speak to anybody because the last time I did, they changed my insurance.",
-    "Now, this won't affect my plan, right? ... Like the United Healthcare gold plan."
+    "Now, this won't affect my plan, right? ... Like the United Healthcare gold plan.",
+    "I don't want to change my insurance."
    ],
    "script_heading": "I don't want to change my insurance / Will this change my plan?",
    "official_rebuttal": "You'd be the one to change anything, I can't do that. The purpose is simply to verify whether you still live in (STATE) and currently have no Medicare, Medicaid, or employer coverage.",

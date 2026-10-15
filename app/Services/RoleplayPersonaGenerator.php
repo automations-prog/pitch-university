@@ -77,7 +77,7 @@ class RoleplayPersonaGenerator
         $objections = $this->weightedSample(
             $unlocked,
             $this->randomizer->getInt($min, $max),
-            fn (array $objection): int => $objection['weight'],
+            fn (array $objection): int => $this->objectionWeight($objection, $level),
         );
 
         $outcomes = array_filter($levelData['outcomeMix'], fn (int $percent): bool => $percent > 0);
@@ -104,6 +104,16 @@ class RoleplayPersonaGenerator
                 'dq_trap' => $trap === null ? null : ['id' => $trap['id'], 'hidden_truth' => $trap['hiddenTruth']],
             ],
         ];
+    }
+
+    /**
+     * How likely an objection is to be drawn at the level.
+     *
+     * @param  array{id: string, weight: int}  $objection
+     */
+    protected function objectionWeight(array $objection, int $level): int
+    {
+        return $objection['weight'];
     }
 
     /**

@@ -127,6 +127,29 @@ test('conferencing without hearing okay fails the call', function () {
         ->and($result['passed'])->toBeFalse();
 });
 
+test('an okay to a transfer ask worded off-script still counts as consent, even after a question back', function () {
+    $result = acaGradedCall(transcript: [
+        'ask' => "[0:30] agent: Okay, wonderful. So all the information is verified. I'll quickly grab the senior representative now to see what assistance you may receive, okay?",
+        'consent' => implode("\n", [
+            "[0:33] consumer: Fine, go ahead, let's get this over with.",
+            "[0:36] consumer: Hold on, the TV's loud, what's this senior agent gonna do exactly?",
+            "[0:38] agent: They're gonna go over what type of benefits and assistance you might be available to receive.",
+        ]),
+    ]);
+
+    expect($result['checks']['verbal_consent'])->toBeTrue()
+        ->and($result['passed'])->toBeTrue();
+});
+
+test('a no after an okay withdraws consent', function () {
+    $result = acaGradedCall(transcript: [
+        'consent' => "[0:33] consumer: Okay.\n[0:36] consumer: No, actually, not right now.",
+    ]);
+
+    expect($result['checks']['verbal_consent'])->toBeFalse()
+        ->and($result['passed'])->toBeFalse();
+});
+
 test('a handoff that does not name the state fails that check', function () {
     $result = acaGradedCall(transcript: ['handoff' => '[1:12] agent: Hi, I have Ashley on the line, please take the call.']);
 
@@ -141,6 +164,30 @@ test('a disqualified consumer who gets conferenced fails, however smooth the cal
         ->and($result['checks']['disposition'])->toBeFalse()
         ->and($result['passed'])->toBeFalse();
 });
+
+test('a disqualifier the script never asks about is graded as a Transfer when it never came up', function () {
+    $result = acaGradedCall(acaDisqualifiedAttributes('non_citizen', 'Is not a US citizen.'));
+
+    expect($result['correct'])->toBe('transfer')
+        ->and($result['checks']['no_dq_transfer'])->toBeNull()
+        ->and($result['checks']['disposition'])->toBeTrue()
+        ->and($result['passed'])->toBeTrue();
+});
+
+test('a disqualifier the consumer brought up must be caught', function (string $trapId, string $answer) {
+    $result = acaGradedCall(acaDisqualifiedAttributes($trapId, 'Hidden.'), ['first_answer' => "[0:22] consumer: {$answer}"]);
+
+    expect($result['correct'])->toBe('dq')
+        ->and($result['checks']['no_dq_transfer'])->toBeFalse()
+        ->and($result['passed'])->toBeFalse();
+})->with([
+    ['non_citizen', "No, but I'm not a US citizen, does that matter?"],
+    ['spousal_work', "No, but I'm covered through my husband's job."],
+    ['military_va', 'No, I just have the VA.'],
+    ['private', 'No, I have my own plan with Blue Cross.'],
+    ['state_insurance', "No, I'm on a state health plan."],
+    ['ssdi', 'No, but I do get disability, SSDI.'],
+]);
 
 test('reading the DQ line to a disqualified consumer and coding DQ passes', function () {
     $result = acaGradedCall(
@@ -318,4 +365,41 @@ test('a lead who moved must be confirmed and introduced in the state they live i
 
     expect($result['checks']['confirm_state'])->toBeTrue()
         ->and($result['checks']['handoff_names_state'])->toBeTrue();
+});
+
+test('a rebuttal that goes back to the verification passes the coaching check, one that stops short fails it', function (string $rebuttal, bool $passes) {
+    $result = acaGradedCall(
+        transcript: [
+            'intro_ok' => '[0:14] consumer: How did you end up getting my information?',
+            'state' => "[0:15] agent: {$rebuttal}",
+        ],
+        events: [['type' => 'objection_raised', 'id' => 'how_got_info', 'at' => 14_500], ...acaHandoffEvents()],
+    );
+
+    expect($result['checks']['back_to_verification'])->toBe($passes)
+        ->and($result['passed'])->toBeTrue();
+})->with([
+    'back to the verification' => ['I do have you here for a reason. Now, you do not receive Medicare or Medicaid or any work insurance, correct?', true],
+    'stops at the answer' => ['We got it from a list of people who looked into health coverage.', false],
+]);
+
+test('with no objections there is nothing to come back from', function () {
+    expect(acaGradedCall()['checks']['back_to_verification'])->toBeNull();
+});
+
+test('talking on after a required question fails the waiting coaching check without failing the call', function () {
+    $result = acaGradedCall(transcript: [
+        'state_yes' => '[0:17] agent: Because the benefits are different in every state.',
+    ]);
+
+    expect($result['checks']['waited_for_answers'])->toBeFalse()
+        ->and($result['passed'])->toBeTrue();
+});
+
+test('echoing "how much" or "cheque" is a forbidden word for the agent but not for the consumer', function () {
+    $consumerSaysIt = acaGradedCall(transcript: ['intro_ok' => '[0:14] consumer: How much is this? Am I receiving some sort of cheque?']);
+    $agentSaysIt = acaGradedCall(transcript: ['state' => "[0:15] agent: It's not about how much or a cheque. Are you still living in Texas to receive it?"]);
+
+    expect($consumerSaysIt['checks']['forbidden_words_pitch'])->toBeTrue()
+        ->and($agentSaysIt['checks']['forbidden_words_pitch'])->toBeFalse();
 });

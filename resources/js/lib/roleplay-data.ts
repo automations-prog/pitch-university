@@ -39,6 +39,8 @@ export type Objection = {
     consumerLines: string[];
     /** The official rebuttal the doc quotes from the script. */
     rebuttal: Rebuttal;
+    /** How top agents answered it on real calls (ACA only). */
+    topAgentLines?: string[];
 };
 
 export type Level = {

@@ -14,6 +14,12 @@ class AcaRoleplayConsumerPrompt extends RoleplayConsumerPrompt
 {
     protected const string BUSY_OBJECTION = 'busy_callback';
 
+    /**
+     * From this level the consumer sometimes stalls on a required question,
+     * so the agent learns to wait for, and get, a clear answer.
+     */
+    private const int STALLS_FROM_LEVEL = 3;
+
     protected const string TRANSCRIPTION_PROMPT = "Um, so, uh, this is, like, America's Health on a recorded line about your, you know, subsidy through the Affordable Care Act, the ACA, Marketplace, Obamacare. No Medicare, Medicaid or work insurance? Over 19? Okay, the licensed agent.";
 
     /** What real consumers on these calls sound like, from the ACA pack. */
@@ -32,6 +38,22 @@ class AcaRoleplayConsumerPrompt extends RoleplayConsumerPrompt
 
     Where people are (at work, driving, kids around) only ever shows in what you say, never as sound.
     TEXT;
+
+    /**
+     * How the consumer brings up a disqualifier the script never asks
+     * about. Keyed like `AcaRoleplayGrader::VOLUNTEERED_DISQUALIFIERS`,
+     * which listens for these.
+     *
+     * @var array<string, string>
+     */
+    private const array VOLUNTEERED_DISQUALIFIERS = [
+        'spousal_work' => '"No, but I\'m covered through my husband\'s job" (or wife\'s, whichever fits you).',
+        'military_va' => '"No, I just have the VA" or "I\'m on my military coverage".',
+        'private' => '"No, I have my own plan with my carrier" and name the carrier.',
+        'state_insurance' => '"No, I\'m on a state health plan".',
+        'ssdi' => '"No, but I do get disability, SSDI".',
+        'non_citizen' => '"No, but I\'m not a US citizen, does that matter?" or "I\'m on a green card".',
+    ];
 
     public function __construct(AcaRoleplayScript $script)
     {
@@ -75,6 +97,9 @@ class AcaRoleplayConsumerPrompt extends RoleplayConsumerPrompt
             // contradict a qualified consumer's coverage.
             'already_have_it' => 'Say you already have insurance, in your own words, without saying which kind. If they ask which kind, answer from "How you answer".',
             'insurance_not_familiar' => 'When they ask about your insurance, name your carrier (see "How you answer") instead of saying what kind of plan it is.',
+            // Its real phrasings ("Say it again", "I'm sorry, what?") are
+            // mishearings, not hesitation.
+            'hesitation' => 'Hesitate in your own words, like "I don\'t know, I need to think about it" or "I\'m not sure about this".',
             default => 'Say something like one of these: '.implode(' / ', array_map(fn (string $line): string => "\"{$line}\"", $consumerLines)),
         };
     }
@@ -115,6 +140,10 @@ class AcaRoleplayConsumerPrompt extends RoleplayConsumerPrompt
             $lines[] = 'You honestly aren\'t sure what coverage you have. At first answer coverage questions with "I don\'t know" or "I think so". Once the caller explains what Medicare, Medicaid and work insurance are, you can tell them which applies to you.';
         }
 
+        if ($session->level >= self::STALLS_FROM_LEVEL) {
+            $lines[] = 'Once or twice in the call, when the caller asks one of their required questions (your state, Medicare, Medicaid or work insurance, your age, or the okay to get the senior agent), don\'t answer it straight away: stall ("hm, hold on"), drift onto something else, or give a vague answer like "I think so" or "my '.($session->consumerGender() === 'female' ? 'husband' : 'wife').' handles that". Answer clearly once they ask again or pin you down.';
+        }
+
         if ($coverage['receives_ssi'] ?? false) {
             $lines[] = 'You receive SSI (Supplemental Security Income). If benefits, disability or Social Security come up, mention SSI. You do not get SSDI.';
         }
@@ -124,7 +153,9 @@ class AcaRoleplayConsumerPrompt extends RoleplayConsumerPrompt
                 ? "You have a {$carrier} plan you bought straight from the company, not through the Marketplace. Asked about insurance, say you have {$carrier}. If they ask whether it's through the Marketplace, say no."
                 : $trap['hidden_truth'];
 
-            $lines[] = "\nHidden truth, which overrides anything above: {$truth} Never volunteer it. Admit it truthfully as soon as the caller asks a question it answers. If the caller never asks the right question, never correct them.";
+            $lines[] = isset(self::VOLUNTEERED_DISQUALIFIERS[$trap['id']])
+                ? "\nHidden truth, which overrides anything above: {$truth} The caller's script never asks about this directly, so bring it up yourself the first time they ask about Medicare, Medicaid or work insurance, the way a real person would: ".self::VOLUNTEERED_DISQUALIFIERS[$trap['id']].' Say it once, plainly, then answer whatever they ask next.'
+                : "\nHidden truth, which overrides anything above: {$truth} Never volunteer it. Admit it truthfully as soon as the caller asks a question it answers. If the caller never asks the right question, never correct them.";
         }
 
         return implode("\n", $lines);

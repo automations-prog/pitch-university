@@ -92,6 +92,10 @@ class AcaRoleplayPersonaGenerator extends RoleplayPersonaGenerator
                 || ($trapId === 'private' && $id === 'insurance_not_familiar'),
         ));
 
+        if ($level >= (int) config('roleplay.aca.focus_guaranteed_from_level')) {
+            $persona['objections'] = $this->withFocusObjection($persona['objections'], $level);
+        }
+
         // Medicare DQs are 66–78 by design: age is a tell the agent should hear.
         $persona['age'] = $trapId === 'medicare'
             ? $this->randomizer->getInt(66, 78)
@@ -106,6 +110,61 @@ class AcaRoleplayPersonaGenerator extends RoleplayPersonaGenerator
         $generated['persona'] = $persona;
 
         return $generated;
+    }
+
+    /**
+     * Focus objections are drawn more often, and brush-offs more often at
+     * the hardest levels.
+     *
+     * @param  array{id: string, weight: int}  $objection
+     */
+    protected function objectionWeight(array $objection, int $level): int
+    {
+        $weight = $objection['weight'];
+
+        if (in_array($objection['id'], config('roleplay.aca.focus_objections'), true)) {
+            $weight *= (int) config('roleplay.aca.focus_weight_multiplier');
+        }
+
+        if ($level >= (int) config('roleplay.aca.brush_off_from_level')
+            && in_array($objection['id'], config('roleplay.aca.brush_off_objections'), true)) {
+            $weight *= (int) config('roleplay.aca.brush_off_weight_multiplier');
+        }
+
+        return $weight;
+    }
+
+    /**
+     * Swaps the last drawn objection for a focus one, by weight, when none
+     * was drawn.
+     *
+     * @param  list<string>  $objections
+     * @return list<string>
+     */
+    private function withFocusObjection(array $objections, int $level): array
+    {
+        $focusIds = config('roleplay.aca.focus_objections');
+
+        if (array_intersect($objections, $focusIds) !== []) {
+            return $objections;
+        }
+
+        $candidates = array_values(array_filter(
+            $this->script->content()['objections'],
+            fn (array $objection): bool => in_array($objection['id'], $focusIds, true) && $objection['minLevel'] <= $level,
+        ));
+
+        if ($candidates === []) {
+            return $objections;
+        }
+
+        $focus = $this->weightedSample($candidates, 1, fn (array $objection): int => $this->objectionWeight($objection, $level))[0];
+
+        if ($objections !== []) {
+            array_pop($objections);
+        }
+
+        return [...$objections, $focus['id']];
     }
 
     /**
@@ -127,7 +186,11 @@ class AcaRoleplayPersonaGenerator extends RoleplayPersonaGenerator
 
         $namesCarrier = in_array('insurance_not_familiar', $objections, true);
         $hasMarketplacePlan = $trapId === null
-            && ($namesCarrier || in_array('already_have_marketplace', $objections, true) || $this->chance(self::MARKETPLACE_PERCENT));
+            && ($namesCarrier
+                || in_array('already_have_marketplace', $objections, true)
+                // Not wanting to change their insurance means they have some.
+                || in_array('dont_want_change', $objections, true)
+                || $this->chance(self::MARKETPLACE_PERCENT));
 
         return [
             'has_marketplace_plan' => $hasMarketplacePlan,

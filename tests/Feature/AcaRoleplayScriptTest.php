@@ -56,3 +56,14 @@ test('the parser fails loudly when an objection points at a rebuttal heading tha
     'dispositions' => ['script.md', '**DNC**:', '**Do not call**:'],
     'disqualifiers' => ['OBJECTIONS_AND_PERSONAS.md', '## The nine disqualifiers', '## DQs'],
 ]);
+
+test('the drilled objections carry the trainers\' wording and the top agents\' lines', function () {
+    $script = new AcaRoleplayScript;
+
+    expect($script->objection('is_it_money')['consumerLines'])->toContain('How much is this?', 'Am I receiving some sort of cheque?')
+        ->and($script->objection('dont_want_change')['consumerLines'])->toContain("I don't want to change my insurance.")
+        ->and($script->objection('how_got_info')['consumerLines'])->toContain('How did you end up getting my information?')
+        ->and($script->objection('how_got_info')['minLevel'])->toBe(2)
+        ->and($script->objection('how_got_info')['topAgentLines'])->toHaveCount(2)
+        ->and($script->objection('didnt_apply')['topAgentLines'])->toBe([]);
+});

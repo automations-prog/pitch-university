@@ -231,6 +231,10 @@ class AcaRoleplayScript extends RoleplayScript
                 'minLevel' => (int) $objection['unlocks_at_level'],
                 'consumerLines' => $consumerLines,
                 'rebuttal' => $byTitle[$heading],
+                'topAgentLines' => array_values(array_map(
+                    fn (string $line): string => $this->clean($line),
+                    $objection['top_agent_lines'] ?? [],
+                )),
             ];
         }
 
