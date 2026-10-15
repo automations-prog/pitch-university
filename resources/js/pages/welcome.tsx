@@ -206,9 +206,9 @@ export default function Welcome() {
 
                 <div className="relative z-10 flex w-full max-w-2xl flex-col items-center gap-9 text-center">
                     <img
-                        src="/images/pitch-university-logo-white.png"
+                        src="/images/pitch-university-crest-white.png"
                         alt="Pitch University — Prepare, Pass, Produce"
-                        className="size-64 drop-shadow-[0_20px_40px_rgba(20,10,40,0.5)] sm:size-72"
+                        className="h-auto w-56 drop-shadow-[0_20px_40px_rgba(20,10,40,0.5)] sm:w-64"
                         style={{
                             animation: 'float-badge 5s ease-in-out infinite',
                         }}
