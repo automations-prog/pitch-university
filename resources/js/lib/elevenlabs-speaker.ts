@@ -45,6 +45,18 @@ const VOICE_SETTINGS = {
     use_speaker_boost: true,
 };
 
+/**
+ * Each line is generated on its own, and a one-word line like the opening
+ * "Hello?" varies the most at low stability, so it sounded like someone
+ * else from the lines after it. The first line is held closer to the
+ * voice; the rest keep their range for the consumer's mood.
+ */
+const FIRST_LINE_VOICE_SETTINGS = {
+    ...VOICE_SETTINGS,
+    stability: 0.75,
+    style: 0,
+};
+
 type Line = {
     id: string;
     hasStarted: boolean;
@@ -94,6 +106,7 @@ export function createElevenLabsSpeaker({
     let nextStartAt = 0;
     let isClosing = false;
     let lastSentAt = Date.now();
+    let hasStartedFirstLine = false;
 
     const send = (message: Record<string, unknown>) => {
         if (socket.readyState === WebSocket.OPEN) {
@@ -303,8 +316,11 @@ export function createElevenLabsSpeaker({
                 send({
                     text: ' ',
                     context_id: lineId,
-                    voice_settings: VOICE_SETTINGS,
+                    voice_settings: hasStartedFirstLine
+                        ? VOICE_SETTINGS
+                        : FIRST_LINE_VOICE_SETTINGS,
                 });
+                hasStartedFirstLine = true;
             }
 
             send({ text, context_id: lineId });

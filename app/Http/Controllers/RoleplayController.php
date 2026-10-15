@@ -7,6 +7,7 @@ use App\Http\Requests\StoreRoleplaySessionRequest;
 use App\Http\Resources\RoleplaySessionResource;
 use App\Models\RoleplaySession;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -18,12 +19,14 @@ class RoleplayController extends Controller
 {
     /**
      * Display the vertical's roleplay page with its script content and the
-     * user's recent calls on it.
+     * user's recent full calls on it. Training scenes are listed on their
+     * module's roleplay page.
      */
     public function index(Request $request, RoleplayVertical $vertical): Response
     {
         $recentSessions = $request->user()->roleplaySessions()
             ->where('vertical', $vertical)
+            ->whereNull('course_module_id')
             ->whereNotNull('ended_at')
             ->latest()
             ->limit(10)
@@ -60,7 +63,7 @@ class RoleplayController extends Controller
      * Show a finished call's score, transcript and recording. JSON requests
      * get the resource, which the wrap-up polls for the delivery score.
      */
-    public function show(Request $request, RoleplaySession $roleplaySession, RoleplayVertical $vertical): Response|RoleplaySessionResource
+    public function show(Request $request, RoleplaySession $roleplaySession, RoleplayVertical $vertical): Response|RoleplaySessionResource|RedirectResponse
     {
         Gate::authorize('view', $roleplaySession);
 
@@ -70,11 +73,40 @@ class RoleplayController extends Controller
             return RoleplaySessionResource::make($roleplaySession);
         }
 
+        // A trainee's scene lives under its training module.
+        $module = $roleplaySession->courseModule;
+
+        if ($module !== null && $request->user()->id === $roleplaySession->user_id) {
+            return to_route('training.roleplay.attempts.show', [$module->track, $module, $roleplaySession]);
+        }
+
         return Inertia::render('roleplay/sessions/show', [
             'vertical' => $vertical->toPage(),
             'content' => $vertical->script()->content(),
             'session' => RoleplaySessionResource::make($roleplaySession),
+            'trail' => $this->trail($request, $roleplaySession),
         ]);
+    }
+
+    /**
+     * Where the call was opened from, for the breadcrumbs and the back
+     * button: an admin reviewing an agent goes back to the agent's
+     * training. Null for the trainee's own calls, which belong to the
+     * roleplay page.
+     *
+     * @return list<array{title: string, href: string}>|null
+     */
+    private function trail(Request $request, RoleplaySession $roleplaySession): ?array
+    {
+        if ($request->user()->id === $roleplaySession->user_id) {
+            return null;
+        }
+
+        return [
+            ['title' => 'Dashboard', 'href' => route('dashboard')],
+            ['title' => 'Training Tracks', 'href' => route('admin.training-tracks.index')],
+            ['title' => $roleplaySession->user->name, 'href' => route('admin.training-tracks.show', $roleplaySession->user)],
+        ];
     }
 
     /**

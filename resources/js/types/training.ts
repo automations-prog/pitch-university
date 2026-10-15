@@ -32,14 +32,42 @@ export type CourseModule = {
     badge: CourseBadge | null;
 };
 
+export type CourseRoleplayStatus =
+    | 'locked'
+    | 'not_started'
+    | 'failed'
+    | 'passed'
+    | 'skipped';
+
+export type CourseModuleRoleplayProgress = {
+    title: string;
+    status: CourseRoleplayStatus;
+    attempts_count: number;
+};
+
 export type CourseModuleProgress = {
     is_unlocked: boolean;
     is_quiz_unlocked: boolean;
+    is_quiz_passed: boolean;
     is_passed: boolean;
     completed_lessons: number;
     total_lessons: number;
     best_score: number | null;
     attempts_count: number;
+    roleplay: CourseModuleRoleplayProgress | null;
+};
+
+export type CourseModuleRoleplay = {
+    title: string;
+    briefing: string;
+    context: string;
+    start_section: string;
+    end_section: string;
+    max_seconds: number;
+    transfer: boolean;
+    code_call: boolean;
+    level: number;
+    pass_criteria: string[];
 };
 
 export type CourseLessonSummary = {
@@ -141,7 +169,11 @@ export type CourseUserProgress = {
 };
 
 export type ExamStatus =
-    'locked' | 'not_started' | 'in_progress' | 'failed' | 'passed';
+    | 'locked'
+    | 'not_started'
+    | 'in_progress'
+    | 'failed'
+    | 'passed';
 
 export type ExamTagBreakdown = Record<
     string,

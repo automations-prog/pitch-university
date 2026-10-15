@@ -102,6 +102,8 @@ test('the opener checks accept how transcription writes the script', function (s
 })->with([
     ["I'm with Americas Health on a recorded line. You still have Medicare Part A and Part B?", 'That is the red white and blue card?'],
     ['This is America Health on a recorded line. You have your Medicare A & B?', 'The red, white, blue card, correct?'],
+    ["I'm with America's Health on a recorded line. That's exclusively for members of medical parts AMB.", 'That IS the red, white and blue card?'],
+    ["I'm with America's Health on a recorded line. You still have your Medicare A&B?", 'That IS the red, white and blue card?'],
 ]);
 
 test('the opener checks still fail when the script was skipped', function () {

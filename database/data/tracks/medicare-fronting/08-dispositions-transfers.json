@@ -378,5 +378,42 @@
                     ]
                 }
             ]
-        }
+        },
+    "roleplay": {
+        "vertical": "medicare",
+        "title": "Land the Transfer",
+        "briefing": "A short scene from the end of the call. Everything's confirmed. Read the transfer ask and wait for a clear yes before you click Transfer. Keep them talking while it rings, go quiet once the specialist joins, and complete the transfer after you've heard them both speak. If they ask to be taken off the list instead, end the call politely without a rebuttal. Then code the call.",
+        "context": "Everything's confirmed and they qualify. When they say \"Hello?\", read the transfer ask. Get a yes before you click Transfer, then complete it and code the call.",
+        "consumer_brief": null,
+        "start_section": "ask_for_the_transfer",
+        "end_section": "cold_transfer",
+        "max_seconds": 150,
+        "transfer": true,
+        "code_call": true,
+        "level": 2,
+        "outcomes": {
+            "transfer": 80,
+            "dnc": 20
+        },
+        "objections": [
+            "transfer_no"
+        ],
+        "objection_count": [
+            1,
+            1
+        ],
+        "required_checks": [
+            "transfer_permission",
+            "fluffed",
+            "silent_on_connect",
+            "completed_after_both_spoke"
+        ],
+        "judged": [
+            {
+                "key": "dnc_respected",
+                "label": "Ended politely without a rebuttal if they asked to be taken off the list",
+                "rubric": "If the consumer asked to stop being called or to be taken off the list, pass only if the agent told them they'd be removed and ended the call without trying to rebut or keep them on. If the consumer never asked that, pass."
+            }
+        ]
     }
+}

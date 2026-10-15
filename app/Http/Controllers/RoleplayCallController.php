@@ -6,9 +6,11 @@ use App\Enums\RoleplayVertical;
 use App\Http\Requests\StoreRoleplayCallRequest;
 use App\Http\Resources\RoleplaySessionResource;
 use App\Jobs\GradeRoleplayDelivery;
+use App\Jobs\JudgeRoleplayScene;
 use App\Models\RoleplaySession;
 use App\Services\ElevenLabsClient;
 use App\Services\OpenAiRealtimeClient;
+use App\Services\RoleplaySceneGrader;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -60,17 +62,18 @@ class RoleplayCallController extends Controller
      * Delivery is scored in the background. The row is locked so two
      * submits of the same call can't both get through.
      */
-    public function complete(StoreRoleplayCallRequest $request, RoleplaySession $roleplaySession): RoleplaySessionResource
+    public function complete(StoreRoleplayCallRequest $request, RoleplaySession $roleplaySession, RoleplaySceneGrader $sceneGrader): RoleplaySessionResource
     {
         $roleplaySession = DB::transaction(fn (): RoleplaySession => $this->store(
             $request,
             RoleplaySession::query()->lockForUpdate()->findOrFail($roleplaySession->id),
+            $sceneGrader,
         ));
 
         return RoleplaySessionResource::make($roleplaySession);
     }
 
-    private function store(StoreRoleplayCallRequest $request, RoleplaySession $roleplaySession): RoleplaySession
+    private function store(StoreRoleplayCallRequest $request, RoleplaySession $roleplaySession, RoleplaySceneGrader $sceneGrader): RoleplaySession
     {
         abort_if($roleplaySession->started_at === null || $roleplaySession->ended_at !== null, 409);
 
@@ -84,7 +87,13 @@ class RoleplayCallController extends Controller
         ]);
 
         $transferClickedAt = $request->validated('transfer_clicked_at');
-        $result = $roleplaySession->vertical->grader()->grade($roleplaySession, $transferClickedAt === null ? null : (int) $transferClickedAt);
+        $transferClickedAt = $transferClickedAt === null ? null : (int) $transferClickedAt;
+
+        if ($roleplaySession->isScene()) {
+            return $this->storeScene($roleplaySession, $transferClickedAt, $sceneGrader);
+        }
+
+        $result = $roleplaySession->vertical->grader()->grade($roleplaySession, $transferClickedAt);
 
         $roleplaySession->fill([
             'score' => [
@@ -98,6 +107,32 @@ class RoleplayCallController extends Controller
         ])->save();
 
         GradeRoleplayDelivery::dispatch($roleplaySession)->afterCommit();
+
+        return $roleplaySession;
+    }
+
+    /**
+     * Grade a training scene's word-matched checks now and leave the
+     * AI-judged ones to the background. A minute-long scene gets no
+     * delivery review.
+     */
+    private function storeScene(RoleplaySession $roleplaySession, ?int $transferClickedAt, RoleplaySceneGrader $sceneGrader): RoleplaySession
+    {
+        $result = $sceneGrader->grade($roleplaySession, $transferClickedAt);
+
+        $roleplaySession->fill([
+            'score' => [
+                'checks' => $result['checks'],
+                'transfer_clicked_at' => $transferClickedAt,
+                'correct_disposition' => $result['correct_disposition'],
+                'correct_reason' => $result['correct_reason'],
+            ],
+            'passed' => $result['passed'],
+        ])->save();
+
+        if ($result['passed'] === null) {
+            JudgeRoleplayScene::dispatch($roleplaySession)->afterCommit();
+        }
 
         return $roleplaySession;
     }

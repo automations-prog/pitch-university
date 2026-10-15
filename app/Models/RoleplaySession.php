@@ -16,8 +16,9 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $user_id
  * @property RoleplayVertical $vertical
+ * @property int|null $course_module_id
  * @property int $level
- * @property array{lead: array{name: string, state: string, zip: string, borough?: string, gender?: 'male'|'female'}, objections: list<string>, quirk: string|null, patience: int, dq_trap: array{id: string, hidden_truth: string}|null, age?: int, coverage?: array{has_marketplace_plan: bool, carrier: string|null, knows_what_they_have: bool, receives_ssi: bool}, medicaid?: array{status: string, plan: string|null, pays_copays: bool}, says_borough?: string} $persona
+ * @property array{lead: array{name: string, state: string, zip: string, borough?: string, gender?: 'male'|'female'}, objections: list<string>, quirk: string|null, patience: int, dq_trap: array{id: string, hidden_truth: string}|null, scene?: array{title: string, context: string, consumer_brief: string|null, start_section: string, max_seconds: int, transfer: bool, code_call: bool, required_checks: list<string>, judged: list<array{key: string, label: string, rubric: string}>}, age?: int, coverage?: array{has_marketplace_plan: bool, carrier: string|null, knows_what_they_have: bool, receives_ssi: bool}, medicaid?: array{status: string, plan: string|null, pays_copays: bool}, says_borough?: string} $persona
  * @property Outcome $expected_outcome
  * @property RealtimeVoice|null $voice
  * @property string|null $disposition
@@ -34,7 +35,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['vertical', 'level', 'persona', 'expected_outcome', 'voice', 'disposition', 'end_reason', 'transcript', 'events', 'recording_path', 'score', 'delivery', 'delivery_status', 'passed', 'started_at', 'ended_at'])]
+#[Fillable(['vertical', 'course_module_id', 'level', 'persona', 'expected_outcome', 'voice', 'disposition', 'end_reason', 'transcript', 'events', 'recording_path', 'score', 'delivery', 'delivery_status', 'passed', 'started_at', 'ended_at'])]
 class RoleplaySession extends Model
 {
     /** @use HasFactory<RoleplaySessionFactory> */
@@ -67,6 +68,34 @@ class RoleplaySession extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The training module this call was the roleplay for, if any.
+     *
+     * @return BelongsTo<CourseModule, $this>
+     */
+    public function courseModule(): BelongsTo
+    {
+        return $this->belongsTo(CourseModule::class);
+    }
+
+    /**
+     * Whether this is a training module's short scene rather than a full
+     * call.
+     */
+    public function isScene(): bool
+    {
+        return isset($this->persona['scene']);
+    }
+
+    /**
+     * Whether the trainee codes the call at the end of the scene. Full
+     * calls are always coded.
+     */
+    public function codesCall(): bool
+    {
+        return $this->persona['scene']['code_call'] ?? true;
     }
 
     /**

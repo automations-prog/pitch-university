@@ -679,5 +679,36 @@
                     ]
                 }
             ]
-        }
+        },
+    "roleplay": {
+        "vertical": "medicare",
+        "title": "Open the Call",
+        "briefing": "A one-minute scene: just the opening of the call. When the consumer says \"Hello?\", read the opening, confirm Medicare Parts A and B, and double-confirm the red, white and blue card. End the scene once they've confirmed the card.",
+        "context": "You've just dialed. When they say \"Hello?\", read the opening, then confirm Parts A and B and the card. End the scene once they confirm the card.",
+        "consumer_brief": "Answer the caller's questions simply and truthfully. Once they've asked about the red, white and blue card and you've confirmed it, say something short like \"Okay, what's this about?\" and wait.",
+        "start_section": "opening",
+        "end_section": "double_confirm_the_card",
+        "max_seconds": 75,
+        "transfer": false,
+        "code_call": false,
+        "level": 1,
+        "outcomes": {
+            "transfer": 100
+        },
+        "objection_count": [
+            0,
+            0
+        ],
+        "required_checks": [
+            "recorded_line",
+            "double_confirm"
+        ],
+        "judged": [
+            {
+                "key": "opening_delivery",
+                "label": "Read the opening confidently, without stalling",
+                "rubric": "Pass if the agent got through the opening, the Parts A and B question and the card double-confirm in order, sounding like they know the script: no long hesitation, restarting lines or asking the consumer to wait. A small stumble is fine."
+            }
+        ]
     }
+}

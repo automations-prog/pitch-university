@@ -33,19 +33,22 @@ export default function RoleplaySessionShow({
     vertical,
     content,
     session,
+    trail,
 }: {
     vertical: RoleplayVertical;
     content: RoleplayContent;
     session: RoleplaySessionResult;
+    /** Where the call was opened from, when not the roleplay page: a training module, or an agent's training for an admin. */
+    trail: { title: string; href: string }[] | null;
 }) {
     const roleplayIndex = roleplayRoutes(vertical.id).index;
+    const breadcrumbs = trail ?? [
+        { title: 'Dashboard', href: dashboard().url },
+        { title: `${vertical.label} Roleplay`, href: roleplayIndex().url },
+    ];
+    const back = breadcrumbs[breadcrumbs.length - 1];
 
-    setLayoutProps({
-        breadcrumbs: [
-            { title: 'Dashboard', href: dashboard() },
-            { title: `${vertical.label} Roleplay`, href: roleplayIndex() },
-        ],
-    });
+    setLayoutProps({ breadcrumbs });
 
     const level = content.levels.find(
         (candidate) => candidate.level === session.level,
@@ -54,13 +57,16 @@ export default function RoleplaySessionShow({
     return (
         <RoleplayVerticalContext value={vertical}>
             <RoleplayContentContext value={content}>
-                <Head title={`${vertical.label} Roleplay · ${session.lead.name}`} />
+                <Head
+                    title={`${vertical.label} Roleplay · ${session.lead.name}`}
+                />
 
                 <div className="flex h-full flex-1 flex-col gap-6 p-4">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="space-y-0.5">
                             <h2 className="text-xl font-semibold tracking-tight">
-                                Call with {session.lead.name}
+                                {session.scene ? 'Scene' : 'Call'} with{' '}
+                                {session.lead.name}
                             </h2>
                             <p className="text-muted-foreground text-sm">
                                 Level {session.level}
@@ -70,19 +76,23 @@ export default function RoleplaySessionShow({
                             </p>
                         </div>
                         <Button variant="outline" asChild>
-                            <Link href={roleplayIndex()}>
+                            <Link href={back.href}>
                                 <ChevronLeft />
-                                Back to roleplay
+                                {trail
+                                    ? `Back to ${back.title}`
+                                    : 'Back to roleplay'}
                             </Link>
                         </Button>
                     </div>
 
                     <div className="grid items-start gap-4 lg:grid-cols-[1fr_24rem]">
                         <div className="flex flex-col gap-4">
-                            <DeliveryCard
-                                status={session.delivery_status ?? null}
-                                delivery={session.delivery ?? null}
-                            />
+                            {!session.scene && (
+                                <DeliveryCard
+                                    status={session.delivery_status ?? null}
+                                    delivery={session.delivery ?? null}
+                                />
+                            )}
                             <Transcript transcript={session.transcript ?? ''} />
                         </div>
                         <ResultCard result={session} />

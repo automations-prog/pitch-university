@@ -61,17 +61,24 @@ class RoleplayPersonaGenerator
     }
 
     /**
+     * A training module's roleplay may narrow the draw: only its objections
+     * (whatever their level), its objection count, its outcome mix and its
+     * DQ traps. Anything it leaves out falls back to the level's rules.
+     *
+     * @param  array{outcomes?: array<string, int>, objections?: list<string>, objection_count?: array{0: int, 1: int}, dq_traps?: list<string>}|null  $scenario
      * @return array{outcome: Outcome, voice: RealtimeVoice, persona: array{lead: array{name: string, state: string, zip: string, gender: 'male'|'female'}, objections: list<string>, quirk: string|null, patience: int, dq_trap: array{id: string, hidden_truth: string}|null}}
      */
-    public function generate(int $level): array
+    public function generate(int $level, ?array $scenario = null): array
     {
         $content = $this->script->content();
         $levelData = $this->script->level($level);
-        [$min, $max] = $levelData['objectionRange'];
+        [$min, $max] = $scenario['objection_count'] ?? $levelData['objectionRange'];
 
         $unlocked = array_values(array_filter(
             $content['objections'],
-            fn (array $objection): bool => $objection['minLevel'] <= $level,
+            fn (array $objection): bool => isset($scenario['objections'])
+                ? in_array($objection['id'], $scenario['objections'], true)
+                : $objection['minLevel'] <= $level,
         ));
 
         $objections = $this->weightedSample(
@@ -80,7 +87,7 @@ class RoleplayPersonaGenerator
             fn (array $objection): int => $this->objectionWeight($objection, $level),
         );
 
-        $outcomes = array_filter($levelData['outcomeMix'], fn (int $percent): bool => $percent > 0);
+        $outcomes = array_filter($scenario['outcomes'] ?? $levelData['outcomeMix'], fn (int $percent): bool => $percent > 0);
         $outcomeKey = $this->weightedSample(
             array_keys($outcomes),
             1,
@@ -88,7 +95,11 @@ class RoleplayPersonaGenerator
         )[0];
         $outcome = Outcome::from($outcomeKey);
 
-        $trap = $outcome === Outcome::Dq ? $this->pick($content['dqTraps']) : null;
+        $traps = isset($scenario['dq_traps'])
+            ? array_values(array_filter($content['dqTraps'], fn (array $trap): bool => in_array($trap['id'], $scenario['dq_traps'], true)))
+            : $content['dqTraps'];
+
+        $trap = $outcome === Outcome::Dq ? $this->pick($traps) : null;
 
         ['voice' => $voice] = $lead = $this->pick($this->leads());
         unset($lead['voice']);

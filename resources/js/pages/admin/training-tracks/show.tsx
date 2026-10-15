@@ -5,6 +5,7 @@ import TrainingTrackController from '@/actions/App/Http/Controllers/Admin/Traini
 import UserTrackController from '@/actions/App/Http/Controllers/Admin/UserTrackController';
 import { CourseProgressBar } from '@/components/course-progress-bar';
 import { ExamStatusBadge } from '@/components/exam-status-badge';
+import { RoleplayStatusBadge } from '@/components/roleplay-status-badge';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -61,10 +62,20 @@ type QuizAttempt = {
     created_at: string;
 };
 
+type RoleplayCall = {
+    id: number;
+    /** Null while the AI is still judging the scene. */
+    passed: boolean | null;
+    ended_at: string;
+    missed_checks: string[];
+    url: string;
+};
+
 type ModuleProgress = CourseModuleProgress & {
     slug: string;
     title: string;
     attempts: QuizAttempt[];
+    roleplay_calls: RoleplayCall[];
 };
 
 type TrackProgress = {
@@ -192,12 +203,15 @@ function TrackProgressCard({
                                 <TableHead>Best score</TableHead>
                                 <TableHead>Attempts</TableHead>
                                 <TableHead>Last attempt</TableHead>
+                                <TableHead>Roleplay</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {track.modules.map((module) => {
                                 const isOpen = openModule === module.slug;
-                                const hasAttempts = module.attempts.length > 0;
+                                const hasAttempts =
+                                    module.attempts.length > 0 ||
+                                    module.roleplay_calls.length > 0;
 
                                 return (
                                     <Fragment key={module.slug}>
@@ -247,22 +261,63 @@ function TrackProgressCard({
                                                 {module.attempts_count}
                                             </TableCell>
                                             <TableCell>
-                                                {hasAttempts
+                                                {module.attempts.length > 0
                                                     ? formatDate(
                                                           module.attempts[0]
                                                               .created_at,
                                                       )
                                                     : '—'}
                                             </TableCell>
+                                            <TableCell>
+                                                {module.roleplay ? (
+                                                    <span className="inline-flex items-center gap-2">
+                                                        <RoleplayStatusBadge
+                                                            status={
+                                                                module.roleplay
+                                                                    .status
+                                                            }
+                                                        />
+                                                        {module.roleplay
+                                                            .attempts_count >
+                                                            0 && (
+                                                            <span className="text-muted-foreground text-xs">
+                                                                {
+                                                                    module
+                                                                        .roleplay
+                                                                        .attempts_count
+                                                                }{' '}
+                                                                {module.roleplay
+                                                                    .attempts_count ===
+                                                                1
+                                                                    ? 'call'
+                                                                    : 'calls'}
+                                                            </span>
+                                                        )}
+                                                    </span>
+                                                ) : (
+                                                    '—'
+                                                )}
+                                            </TableCell>
                                         </TableRow>
                                         {isOpen && (
                                             <TableRow className="bg-muted/30 hover:bg-muted/30">
-                                                <TableCell colSpan={6}>
-                                                    <AttemptHistory
-                                                        attempts={
-                                                            module.attempts
-                                                        }
-                                                    />
+                                                <TableCell colSpan={7}>
+                                                    {module.attempts.length >
+                                                        0 && (
+                                                        <AttemptHistory
+                                                            attempts={
+                                                                module.attempts
+                                                            }
+                                                        />
+                                                    )}
+                                                    {module.roleplay_calls
+                                                        .length > 0 && (
+                                                        <RoleplayCallHistory
+                                                            calls={
+                                                                module.roleplay_calls
+                                                            }
+                                                        />
+                                                    )}
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -450,6 +505,10 @@ function ModuleStatus({ module }: { module: ModuleProgress }) {
         );
     }
 
+    if (module.is_quiz_passed && module.roleplay) {
+        return <Badge variant="secondary">Roleplay next</Badge>;
+    }
+
     if (!module.is_unlocked) {
         return (
             <Badge variant="secondary" className="gap-1">
@@ -496,6 +555,61 @@ function AttemptHistory({ attempts }: { attempts: QuizAttempt[] }) {
                         <span className="text-muted-foreground">
                             {formatDate(attempt.created_at)}
                         </span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+/**
+ * The agent's calls for the module's roleplay, newest first, with the checks
+ * each failed one missed so a manager can see where they're stuck.
+ */
+function RoleplayCallHistory({ calls }: { calls: RoleplayCall[] }) {
+    return (
+        <div className="space-y-2 py-1 pl-5">
+            <p className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+                Roleplay attempts
+            </p>
+            <ul className="space-y-2">
+                {calls.map((call, index) => (
+                    <li key={call.id} className="space-y-1 text-sm">
+                        <div className="flex flex-wrap items-center gap-3">
+                            <span className="text-muted-foreground w-20">
+                                #{calls.length - index}
+                            </span>
+                            <Badge
+                                variant={
+                                    call.passed === false
+                                        ? 'destructive'
+                                        : call.passed
+                                          ? 'outline'
+                                          : 'secondary'
+                                }
+                            >
+                                {call.passed === null
+                                    ? 'Grading'
+                                    : call.passed
+                                      ? 'Passed'
+                                      : 'Failed'}
+                            </Badge>
+                            <span className="text-muted-foreground">
+                                {formatDate(call.ended_at)}
+                            </span>
+                            <Link
+                                href={call.url}
+                                className="text-primary text-sm underline-offset-4 hover:underline"
+                                onClick={(event) => event.stopPropagation()}
+                            >
+                                Open call
+                            </Link>
+                        </div>
+                        {call.missed_checks.length > 0 && (
+                            <p className="text-muted-foreground pl-23 text-xs">
+                                Missed: {call.missed_checks.join(' · ')}
+                            </p>
+                        )}
                     </li>
                 ))}
             </ul>

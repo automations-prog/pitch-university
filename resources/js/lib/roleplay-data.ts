@@ -118,6 +118,8 @@ export type GradingCheck = {
     label: string;
     /** `null` when the check doesn't apply to this persona. */
     passed: boolean | null;
+    /** The AI's note on a training scene's judged check. */
+    feedback?: string;
 };
 
 export type DeliveryScore = {
@@ -147,7 +149,10 @@ export type RoleplaySessionResult = {
     created_at: string;
     ended_at: string | null;
     disposition: string | null;
+    /** Null while a training scene's AI checks are still being judged. */
     passed: boolean | null;
+    /** A training module's short scene, which may not be coded. */
+    scene: { title: string; code_call: boolean } | null;
     expected_outcome?: Outcome;
     /** The disposition id the call should have been coded as. */
     correct_disposition?: string;

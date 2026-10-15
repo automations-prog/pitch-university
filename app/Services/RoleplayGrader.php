@@ -25,8 +25,8 @@ class RoleplayGrader
 
     protected const string NEGATIVE = '/\b(no|nope|nah|dont|cant|wont)\b/';
 
-    /** "Parts A and B" as transcription writes it: "Part A and Part B", "A & B", "Medicare A and B". */
-    protected const string PARTS_A_AND_B = '/\b(parts?|medicare) a,? (and|&) (part )?b\b/';
+    /** "Parts A and B" as transcription writes it: "Part A and Part B", "A & B", "A&B", "Medicare A and B", "medical parts AMB". */
+    protected const string PARTS_A_AND_B = '/\b(parts?|medicare|medical) (a,? ?(and|&|n) ?(part )?b|a[mn]b)\b/';
 
     /** "Red, white and blue", with or without commas or the "and". */
     protected const string RED_WHITE_BLUE = '/red,? white,?( and| &)? blue/';
@@ -53,6 +53,37 @@ class RoleplayGrader
      * and "don't call me back" is a busy, not a DNC.
      */
     protected const string DNC_REQUEST = '/\b(stop|quit) calling\b|\bnever call\b|\b(dont|do not) call (me|here|this number)\b(?! back)|\btake me off\b|\bremove me\b|\b(do not|dont) call list\b|\bdnc\b|\b(sue|lawyer|attorney)\b|\breport (you|this)\b/';
+
+    /**
+     * What each check grades, by key.
+     *
+     * @var array<string, string>
+     */
+    protected const array CHECK_LABELS = [
+        'recorded_line' => "Said you're on a recorded line with America's Health",
+        'double_confirm' => 'Asked about Parts A and B and double-confirmed the red, white and blue card',
+        'state_zip' => 'Confirmed state and ZIP',
+        'work_va' => 'Asked about insurance through work or the VA',
+        'specialist' => "Told them they're being transferred to a specialist",
+        'transfer_permission' => 'Got a yes after the transfer ask, before clicking Transfer',
+        'fluffed' => 'Kept them talking while the transfer rang',
+        'silent_on_connect' => 'Stayed quiet once the specialist joined',
+        'completed_after_both_spoke' => 'Completed the transfer after the lead and the specialist both spoke',
+        'may_maybe' => 'Used "may" or "maybe" on benefit claims',
+        'disposition' => 'Coded the call correctly',
+        'patience' => "Didn't run out of patience",
+    ];
+
+    /**
+     * The checks a training module's roleplay may require, with what each
+     * one grades.
+     *
+     * @return array<string, string>
+     */
+    public function checkLabels(): array
+    {
+        return static::CHECK_LABELS;
+    }
 
     /**
      * The checks that cover qualifying the lead, for the delivery score's
@@ -82,29 +113,29 @@ class RoleplayGrader
         $handoff = $expectsTransfer ? $this->transferHandoff($events) : null;
 
         $checks = [
-            $this->check('recorded_line', "Said you're on a recorded line with America's Health",
+            $this->check('recorded_line', self::CHECK_LABELS['recorded_line'],
                 str_contains($agentText, 'recorded line') && (bool) preg_match(self::AMERICAS_HEALTH, $agentText)),
-            $this->check('double_confirm', 'Asked about Parts A and B and double-confirmed the red, white and blue card',
+            $this->check('double_confirm', self::CHECK_LABELS['double_confirm'],
                 (bool) preg_match(self::PARTS_A_AND_B, $agentText) && (bool) preg_match(self::RED_WHITE_BLUE, $agentText)),
-            $this->check('state_zip', 'Confirmed state and ZIP',
+            $this->check('state_zip', self::CHECK_LABELS['state_zip'],
                 str_contains($agentText, strtolower($lead['state'])) && $this->mentionsZip($agent, $lead['zip'])),
-            $this->check('work_va', 'Asked about insurance through work or the VA',
+            $this->check('work_va', self::CHECK_LABELS['work_va'],
                 (bool) preg_match('/\b(work|employer)\b/', $agentText) && (bool) preg_match('/\bv\.? ?a\b|veteran/', $agentText)),
-            $this->check('specialist', "Told them they're being transferred to a specialist",
+            $this->check('specialist', self::CHECK_LABELS['specialist'],
                 str_contains($agentText, 'specialist')),
-            $this->check('transfer_permission', 'Got a yes after the transfer ask, before clicking Transfer',
+            $this->check('transfer_permission', self::CHECK_LABELS['transfer_permission'],
                 $expectsTransfer ? $this->hasTransferPermission($lines, $transferClickedAt) : null),
-            $this->check('fluffed', 'Kept them talking while the transfer rang',
+            $this->check('fluffed', self::CHECK_LABELS['fluffed'],
                 $handoff['fluffed'] ?? null),
-            $this->check('silent_on_connect', 'Stayed quiet once the specialist joined',
+            $this->check('silent_on_connect', self::CHECK_LABELS['silent_on_connect'],
                 $handoff['silent_on_connect'] ?? null),
-            $this->check('completed_after_both_spoke', 'Completed the transfer after the lead and the specialist both spoke',
+            $this->check('completed_after_both_spoke', self::CHECK_LABELS['completed_after_both_spoke'],
                 $handoff['completed_after_both_spoke'] ?? null),
-            $this->check('may_maybe', 'Used "may" or "maybe" on benefit claims',
+            $this->check('may_maybe', self::CHECK_LABELS['may_maybe'],
                 $this->hedgesBenefitClaims($agent)),
-            $this->check('disposition', 'Coded the call correctly',
+            $this->check('disposition', self::CHECK_LABELS['disposition'],
                 $session->disposition === $correctDisposition),
-            $this->check('patience', "Didn't run out of patience",
+            $this->check('patience', self::CHECK_LABELS['patience'],
                 $session->end_reason !== 'hung_up'),
         ];
 

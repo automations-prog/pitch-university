@@ -1585,5 +1585,46 @@
                     ]
                 }
             ]
-        }
+        },
+    "roleplay": {
+        "vertical": "medicare",
+        "title": "Stacked Objections",
+        "briefing": "A one-minute scene like the real calls you studied: a skeptical consumer throws two objections back to back. Keep each rebuttal short (acknowledge, bridge, next question), don't leave dead air, and keep control of the call. End the scene once you're back on the script.",
+        "context": "Parts A and B and the card are confirmed. When they say \"Hello?\", ask the Medicaid question. Handle both objections with short rebuttals, and end the scene once you're back on the script.",
+        "consumer_brief": null,
+        "start_section": "medicaid",
+        "end_section": "state_and_zip",
+        "max_seconds": 90,
+        "transfer": false,
+        "code_call": false,
+        "level": 3,
+        "outcomes": {
+            "transfer": 100
+        },
+        "objections": [
+            "already_have_it",
+            "not_interested",
+            "dont_want_change",
+            "scam",
+            "trying_to_sell_me",
+            "never_get_anything",
+            "just_did_best"
+        ],
+        "objection_count": [
+            2,
+            2
+        ],
+        "judged": [
+            {
+                "key": "short_rebuttals",
+                "label": "Kept each rebuttal short: acknowledge, bridge, next question",
+                "rubric": "Pass if each objection got a short answer (a sentence or two) that acknowledged it and went straight to the next script question. Fail for long explanations or a rebuttal that never got back to a question."
+            },
+            {
+                "key": "kept_control",
+                "label": "Kept control of the call",
+                "rubric": "Pass if the agent kept steering back to the script after both objections, without dead air, arguing or giving up on the call."
+            }
+        ]
     }
+}

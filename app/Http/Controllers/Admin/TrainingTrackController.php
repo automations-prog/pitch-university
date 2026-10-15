@@ -7,11 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Models\CourseModule;
 use App\Models\CourseQuizAttempt;
 use App\Models\CourseTrack;
+use App\Models\RoleplaySession;
 use App\Models\User;
 use App\Services\TrainingProgress;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -98,6 +100,14 @@ class TrainingTrackController extends Controller
             ->orderBy('position')
             ->get();
 
+        $roleplayCalls = RoleplaySession::query()
+            ->whereBelongsTo($user)
+            ->whereNotNull('course_module_id')
+            ->whereNotNull('ended_at')
+            ->latest('id')
+            ->get()
+            ->groupBy('course_module_id');
+
         return Inertia::render('admin/training-tracks/show', [
             'user' => [
                 'id' => $user->id,
@@ -106,7 +116,7 @@ class TrainingTrackController extends Controller
                 'role' => $user->role,
             ],
             'tracks' => TrainingProgress::forTracks($user, $assignedTracks->concat($unassignedTracksWithProgress))
-                ->map(fn (TrainingProgress $progress) => $this->trackProgress($progress, isAssigned: $assignedTracks->contains($progress->track))),
+                ->map(fn (TrainingProgress $progress) => $this->trackProgress($progress, isAssigned: $assignedTracks->contains($progress->track), roleplayCalls: $roleplayCalls)),
             'availableTracks' => CourseTrack::query()
                 ->orderBy('position')
                 ->get(['id', 'name'])
@@ -119,9 +129,10 @@ class TrainingTrackController extends Controller
     }
 
     /**
+     * @param  Collection<int, Collection<int, RoleplaySession>>  $roleplayCalls  the user's finished module roleplay calls by module id
      * @return array<string, mixed>
      */
-    private function trackProgress(TrainingProgress $progress, bool $isAssigned): array
+    private function trackProgress(TrainingProgress $progress, bool $isAssigned, Collection $roleplayCalls): array
     {
         $track = $progress->track;
         $examProgress = $progress->examProgress();
@@ -145,7 +156,30 @@ class TrainingTrackController extends Controller
                     'passed' => $attempt->passed,
                     'created_at' => $attempt->created_at,
                 ])->values(),
+                'roleplay_calls' => $roleplayCalls->get($module->id, collect())->map(fn (RoleplaySession $call) => [
+                    'id' => $call->id,
+                    // Null while the AI is still judging the scene.
+                    'passed' => $call->passed,
+                    'ended_at' => $call->ended_at,
+                    'missed_checks' => $this->missedChecks($call),
+                    'url' => route($call->vertical->routePrefix().'.sessions.show', $call),
+                ])->values(),
             ]),
         ];
+    }
+
+    /**
+     * The labels of the checks a module scene failed. A scene only keeps
+     * the checks it counts.
+     *
+     * @return list<string>
+     */
+    private function missedChecks(RoleplaySession $call): array
+    {
+        return collect($call->score['checks'] ?? [])
+            ->filter(fn (array $check) => $check['passed'] === false)
+            ->pluck('label')
+            ->values()
+            ->all();
     }
 }

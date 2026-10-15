@@ -37,6 +37,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('{track}/{module}/lessons/{lesson}/complete', [TrainingController::class, 'completeLesson'])->name('lessons.complete');
             Route::get('{track}/{module}/quiz', [TrainingController::class, 'showQuiz'])->name('quiz.show');
             Route::post('{track}/{module}/quiz', [TrainingController::class, 'submitQuiz'])->name('quiz.store');
+            Route::get('{track}/{module}/roleplay', [TrainingController::class, 'showRoleplay'])->name('roleplay.show');
+            Route::post('{track}/{module}/roleplay', [TrainingController::class, 'startRoleplay'])->middleware('throttle:roleplay-sessions')->name('roleplay.store');
+            Route::get('{track}/{module}/roleplay/attempts/{roleplaySession}', [TrainingController::class, 'showRoleplayAttempt'])->name('roleplay.attempts.show');
         });
 
     foreach (RoleplayVertical::cases() as $vertical) {

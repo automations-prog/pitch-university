@@ -510,5 +510,50 @@
                     ]
                 }
             ]
-        }
+        },
+    "roleplay": {
+        "vertical": "medicare",
+        "title": "Rebut and Move On",
+        "briefing": "A one-minute scene. You're in the middle of the script, about to confirm their state and ZIP, and the consumer pushes back. Answer the objection with the approved rebuttal (your own words are fine), stay friendly, and go straight back to the next script question. End the scene once they answer it.",
+        "context": "Parts A and B and the card are confirmed. When they say \"Hello?\", carry on with the benefits line and the state and ZIP. Rebut their objection, get back to the script, and end the scene once they answer.",
+        "consumer_brief": "Once the caller has answered your objection well, let it go and answer their next question.",
+        "start_section": "state_and_zip",
+        "end_section": "state_and_zip",
+        "max_seconds": 75,
+        "transfer": false,
+        "code_call": false,
+        "level": 2,
+        "outcomes": {
+            "transfer": 100
+        },
+        "objections": [
+            "already_have_it",
+            "dont_want_change",
+            "not_interested",
+            "who_are_you",
+            "doubts_eligibility",
+            "never_received_card"
+        ],
+        "objection_count": [
+            1,
+            1
+        ],
+        "judged": [
+            {
+                "key": "approved_rebuttal",
+                "label": "Answered the objection with the approved rebuttal",
+                "rubric": "Pass if the agent's answer to the objection makes the same point as the approved rebuttal, in any words. Fail if they ignored it, argued, or said something the rebuttal doesn't say."
+            },
+            {
+                "key": "back_to_script",
+                "label": "Went straight back to the next script question",
+                "rubric": "Pass if, right after the rebuttal, the agent asked the next script question (confirming the state and ZIP) instead of stopping, waiting or asking whether the consumer is okay to continue."
+            },
+            {
+                "key": "stayed_calm",
+                "label": "Stayed calm and friendly",
+                "rubric": "Pass unless the agent was rude, sarcastic, defensive or pushy."
+            }
+        ]
     }
+}

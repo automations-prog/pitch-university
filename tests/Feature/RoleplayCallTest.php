@@ -4,6 +4,7 @@ use App\Enums\RealtimeVoice;
 use App\Jobs\GradeRoleplayDelivery;
 use App\Models\RoleplaySession;
 use App\Models\User;
+use App\Services\AcaRoleplayConsumerPrompt;
 use App\Services\RoleplayConsumerPrompt;
 use App\Services\RoleplayGrader;
 use App\Services\RoleplayScript;
@@ -422,3 +423,28 @@ test('the owner can play back their recording', function () {
     $response->assertOk();
     expect($response->streamedContent())->toBe('audio');
 });
+
+test('completing drops trainee lines that are the transcription prompt read back', function () {
+    Storage::fake('local');
+    Queue::fake([GradeRoleplayDelivery::class]);
+    $session = RoleplaySession::factory()->started()->create();
+    $payload = completePayload();
+    $payload['transcript'] .= "\n[0:45] agent: Um, I was, like, calling about your, you know, Medicare card.\n[0:50] agent: Um, so, I'm just, like, checking in with you today.";
+
+    $this->actingAs($session->user)->post(route('medicare-roleplay.call.complete', $session), $payload)->assertOk();
+
+    expect($session->refresh()->transcript)->not->toContain('calling about your, you know')
+        ->toContain("[0:50] agent: Um, so, I'm just, like, checking in with you today.")
+        ->toContain('[0:38] consumer: Okay, sure.');
+});
+
+test('a transcription prompt read back is told apart from a real line', function (string $prompt, string $line, bool $isEcho) {
+    expect(app($prompt)->isTranscriptionEcho($line))->toBe($isEcho);
+})->with([
+    'the medicare prompt' => [RoleplayConsumerPrompt::class, 'Um, so, uh, I was, like, calling about your, you know, Medicare card.', true],
+    'part of the medicare prompt' => [RoleplayConsumerPrompt::class, 'Um, I was, like, calling about your, you know, Medicare card.', true],
+    'a real line with fillers' => [RoleplayConsumerPrompt::class, 'Um, so, like, you still have your Medicare Parts A and B?', false],
+    'a short real line' => [RoleplayConsumerPrompt::class, 'Um, so, like, okay.', false],
+    'the aca prompt naming the recorded line' => [AcaRoleplayConsumerPrompt::class, "Um, so, uh, this is, like, America's Health on a recorded line about your, you know, subsidy", true],
+    'a real aca opener' => [AcaRoleplayConsumerPrompt::class, "Hi, this is Tess with America's Health on a recorded line about your subsidy.", false],
+]);

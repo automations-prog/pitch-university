@@ -16,9 +16,10 @@ import { brandButtonClass } from '@/lib/brand-theme';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { index as trainingIndex } from '@/routes/training';
-import { ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ArrowRight, PhoneCall, RotateCcw } from 'lucide-react';
 import type {
     CourseModule,
+    CourseModuleRoleplayProgress,
     CourseTrack,
     CourseQuizAttempt,
     CourseQuizQuestion,
@@ -31,6 +32,7 @@ type Props = {
     questions: CourseQuizQuestion[];
     latestAttempt: CourseQuizAttempt | null;
     isPassed: boolean;
+    roleplay: CourseModuleRoleplayProgress | null;
     nextModule: { slug: string; title: string } | null;
 };
 
@@ -41,6 +43,7 @@ export default function TrainingQuiz({
     questions,
     latestAttempt,
     isPassed,
+    roleplay,
     nextModule,
 }: Props) {
     const [isRetaking, setIsRetaking] = useState(false);
@@ -102,6 +105,7 @@ export default function TrainingQuiz({
                         attempt={latestAttempt}
                         passPercentage={passPercentage}
                         isPassed={isPassed}
+                        roleplay={roleplay}
                         nextModule={nextModule}
                         onRetake={() => setIsRetaking(true)}
                     />
@@ -206,6 +210,7 @@ function QuizResults({
     attempt,
     passPercentage,
     isPassed,
+    roleplay,
     nextModule,
     onRetake,
 }: {
@@ -215,9 +220,16 @@ function QuizResults({
     attempt: CourseQuizAttempt;
     passPercentage: number;
     isPassed: boolean;
+    roleplay: CourseModuleRoleplayProgress | null;
     nextModule: { slug: string; title: string } | null;
     onRetake: () => void;
 }) {
+    // The module's roleplay comes before the next module.
+    const roleplayIsNext =
+        roleplay !== null &&
+        roleplay.status !== 'passed' &&
+        roleplay.status !== 'skipped';
+
     return (
         <div className="space-y-4">
             <Card
@@ -249,7 +261,21 @@ function QuizResults({
                             <RotateCcw />
                             Retake quiz
                         </Button>
-                        {isPassed && nextModule && (
+                        {isPassed && roleplayIsNext && (
+                            <Button asChild className={brandButtonClass}>
+                                <Link
+                                    href={TrainingController.showRoleplay([
+                                        track.slug,
+                                        module.slug,
+                                    ])}
+                                >
+                                    <PhoneCall />
+                                    Next: Roleplay
+                                    <ArrowRight />
+                                </Link>
+                            </Button>
+                        )}
+                        {isPassed && !roleplayIsNext && nextModule && (
                             <Button asChild className={brandButtonClass}>
                                 <Link
                                     href={TrainingController.showModule([
@@ -262,7 +288,7 @@ function QuizResults({
                                 </Link>
                             </Button>
                         )}
-                        {isPassed && !nextModule && (
+                        {isPassed && !roleplayIsNext && !nextModule && (
                             <Button asChild className={brandButtonClass}>
                                 <Link
                                     href={TrainingController.showTrack(

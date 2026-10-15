@@ -113,6 +113,17 @@ class AcaRoleplayGrader extends RoleplayGrader
 
     public function __construct(private readonly AcaRoleplayScript $script) {}
 
+    /**
+     * Training module roleplays aren't set up for ACA or Meals yet, so the
+     * importer rejects any check a module would require.
+     *
+     * @return array<string, string>
+     */
+    public function checkLabels(): array
+    {
+        return [];
+    }
+
     public function qualifyingCheckKeys(): array
     {
         return ['confirm_state', 'first_coverage_check', 'age_19', 'double_confirm'];

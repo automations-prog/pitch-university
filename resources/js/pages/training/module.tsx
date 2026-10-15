@@ -1,6 +1,7 @@
 import { Head, Link, setLayoutProps } from '@inertiajs/react';
 import TrainingController from '@/actions/App/Http/Controllers/TrainingController';
 import { CourseProgressBar } from '@/components/course-progress-bar';
+import { RoleplayStatusBadge } from '@/components/roleplay-status-badge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,6 +22,7 @@ import {
     Clock,
     ClipboardList,
     Lock,
+    PhoneCall,
 } from 'lucide-react';
 import type {
     CourseLessonSummary,
@@ -220,6 +222,64 @@ export default function TrainingModule({
                                 )}
                             </CardContent>
                         </Card>
+
+                        {progress.roleplay && (
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <PhoneCall className="size-5" />
+                                        Roleplay
+                                        <RoleplayStatusBadge
+                                            status={progress.roleplay.status}
+                                        />
+                                    </CardTitle>
+                                    <CardDescription>
+                                        {progress.roleplay.title} · pass a live
+                                        practice call to finish the module
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    {progress.roleplay.attempts_count > 0 && (
+                                        <p className="text-muted-foreground text-sm">
+                                            {progress.roleplay.attempts_count}{' '}
+                                            {progress.roleplay
+                                                .attempts_count === 1
+                                                ? 'call'
+                                                : 'calls'}{' '}
+                                            so far
+                                        </p>
+                                    )}
+                                    {progress.roleplay.status === 'locked' ? (
+                                        <Button
+                                            variant="outline"
+                                            className="w-full"
+                                            disabled
+                                        >
+                                            <Lock />
+                                            Pass the quiz to unlock
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            asChild
+                                            className={`w-full ${brandButtonClass}`}
+                                        >
+                                            <Link
+                                                href={TrainingController.showRoleplay(
+                                                    [track.slug, module.slug],
+                                                )}
+                                            >
+                                                {progress.is_passed
+                                                    ? 'View roleplay'
+                                                    : progress.roleplay
+                                                            .status === 'failed'
+                                                      ? 'Try the roleplay again'
+                                                      : 'Start the roleplay'}
+                                            </Link>
+                                        </Button>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        )}
                     </div>
                 </div>
             </div>

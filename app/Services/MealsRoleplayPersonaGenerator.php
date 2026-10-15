@@ -66,11 +66,12 @@ class MealsRoleplayPersonaGenerator extends RoleplayPersonaGenerator
     }
 
     /**
+     * @param  array<string, mixed>|null  $scenario  a training module's roleplay, see the parent
      * @return array{outcome: Outcome, voice: RealtimeVoice, persona: array<string, mixed>}
      */
-    public function generate(int $level): array
+    public function generate(int $level, ?array $scenario = null): array
     {
-        $generated = parent::generate($level);
+        $generated = parent::generate($level, $scenario);
         $persona = $generated['persona'];
         $trapId = $persona['dq_trap']['id'] ?? null;
 

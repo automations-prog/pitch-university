@@ -53,7 +53,10 @@ export function useDeliveryPolling(
 ): RoleplaySessionResult | null {
     const [latest, setLatest] = useState(result);
     const current = latest?.id === result?.id ? latest : result;
-    const isPending = current?.delivery_status === 'pending';
+    // A training scene is pending until the AI has judged whether it passed.
+    const isPending =
+        current?.delivery_status === 'pending' ||
+        (current?.ended_at != null && current.passed === null);
     const sessionId = current?.id;
     const vertical = current?.vertical ?? 'medicare';
 

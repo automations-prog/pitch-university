@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\RoleplayVertical;
+use App\Models\RoleplaySession;
 use App\Services\RoleplayDeliveryMetrics;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -37,9 +38,29 @@ class StoreRoleplayCallRequest extends FormRequest
     {
         if (is_string($this->input('transcript'))) {
             $this->merge([
-                'transcript' => str_replace(["\r\n", "\r"], "\n", $this->input('transcript')),
+                'transcript' => $this->withoutTranscriptionEchoes(str_replace(["\r\n", "\r"], "\n", $this->input('transcript'))),
             ]);
         }
+    }
+
+    /**
+     * Drop trainee lines that are the transcription prompt read back
+     * instead of what they said, so they're never graded as theirs.
+     */
+    private function withoutTranscriptionEchoes(string $transcript): string
+    {
+        $session = $this->route('roleplaySession');
+
+        if (! $session instanceof RoleplaySession) {
+            return $transcript;
+        }
+
+        $prompt = $session->vertical->consumerPrompt();
+
+        return implode("\n", array_filter(
+            explode("\n", $transcript),
+            fn (string $line): bool => ! (preg_match('/^\[\d+:\d{2}\] agent: (.*)$/', $line, $matches) && $prompt->isTranscriptionEcho($matches[1])),
+        ));
     }
 
     /**
@@ -52,7 +73,8 @@ class StoreRoleplayCallRequest extends FormRequest
         return [
             'transcript' => ['nullable', 'string', 'max:200000'],
             'recording' => ['required', 'file', 'mimes:webm,wav,ogg,mp3,m4a', 'max:51200'],
-            'disposition' => ['required', 'string', Rule::in($this->route('roleplaySession')->vertical->script()->dispositionIds())],
+            // A training scene that stops before the end of the call isn't coded.
+            'disposition' => [Rule::requiredIf($this->route('roleplaySession')->codesCall()), 'nullable', 'string', Rule::in($this->route('roleplaySession')->vertical->script()->dispositionIds())],
             'end_reason' => ['required', Rule::in(['agent', 'hung_up'])],
             'transfer_clicked_at' => ['nullable', 'integer', 'min:0'],
             'events' => ['nullable', 'json', 'max:1000000'],

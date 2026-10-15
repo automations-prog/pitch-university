@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubmitCourseQuizRequest;
+use App\Http\Resources\RoleplaySessionResource;
 use App\Models\CourseLesson;
 use App\Models\CourseModule;
 use App\Models\CourseQuizAttempt;
 use App\Models\CourseTrack;
+use App\Models\RoleplaySession;
 use App\Services\ExamProgress;
 use App\Services\TrainingProgress;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -140,9 +143,105 @@ class TrainingController extends Controller
                 'choices' => $question['choices'],
             ]),
             'latestAttempt' => $latestAttempt ? $this->attemptResult($module, $latestAttempt) : null,
-            'isPassed' => $progress->isModulePassed($module),
+            'isPassed' => $progress->isQuizPassed($module),
+            'roleplay' => $progress->summary($module)['roleplay'],
             'nextModule' => $this->nextModuleData($progress, $module),
         ]);
+    }
+
+    /**
+     * Display a module's roleplay: the briefing, the short scene, and the
+     * user's attempts at it so far.
+     */
+    public function showRoleplay(Request $request, CourseTrack $track, CourseModule $module): Response
+    {
+        $progress = $this->unlockedRoleplayProgress($request, $track, $module);
+        $module = $progress->module($module);
+        $vertical = $module->roleplayVertical();
+        $checkLabels = $vertical->grader()->checkLabels();
+
+        $recentSessions = $request->user()->roleplaySessions()
+            ->whereBelongsTo($module)
+            ->whereNotNull('ended_at')
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        return Inertia::render('training/roleplay', [
+            'track' => $this->trackData($track),
+            'module' => $this->moduleData($module),
+            'progress' => $progress->summary($module),
+            'roleplay' => [
+                'title' => $module->roleplay['title'],
+                'briefing' => $module->roleplay['briefing'],
+                'context' => $module->roleplay['context'],
+                'start_section' => $module->roleplay['start_section'],
+                'end_section' => $module->roleplay['end_section'],
+                'max_seconds' => $module->roleplay['max_seconds'],
+                'transfer' => $module->roleplay['transfer'],
+                'code_call' => $module->roleplay['code_call'],
+                'level' => $module->roleplay['level'],
+                'pass_criteria' => [
+                    ...collect($module->roleplay['required_checks'] ?? [])->map(fn (string $key) => $checkLabels[$key] ?? $key),
+                    ...array_column($module->roleplay['judged'] ?? [], 'label'),
+                ],
+            ],
+            'vertical' => $vertical->toPage(),
+            'content' => $vertical->script()->content(),
+            'recentSessions' => RoleplaySessionResource::collection($recentSessions),
+            'nextModule' => $this->nextModuleData($progress, $module),
+        ]);
+    }
+
+    /**
+     * Display one of the user's attempts at the module's scene: its grade,
+     * transcript and recording, on the call results page.
+     */
+    public function showRoleplayAttempt(Request $request, CourseTrack $track, CourseModule $module, RoleplaySession $roleplaySession): Response
+    {
+        Gate::authorize('view', $track);
+
+        abort_if($roleplaySession->user_id !== $request->user()->id || $roleplaySession->ended_at === null, 404);
+
+        $vertical = $roleplaySession->vertical;
+
+        return Inertia::render('roleplay/sessions/show', [
+            'vertical' => $vertical->toPage(),
+            'content' => $vertical->script()->content(),
+            'session' => RoleplaySessionResource::make($roleplaySession),
+            'trail' => [
+                ['title' => 'Dashboard', 'href' => route('dashboard')],
+                ['title' => 'Training', 'href' => route('training.index')],
+                ['title' => $track->name, 'href' => route('training.tracks.show', $track)],
+                ['title' => $module->title, 'href' => route('training.modules.show', [$track, $module])],
+                ['title' => 'Roleplay', 'href' => route('training.roleplay.show', [$track, $module])],
+            ],
+        ]);
+    }
+
+    /**
+     * Start an attempt at the module's scene. As on the roleplay page, the
+     * persona (with the scene it's graded by) stays server-side and only its
+     * public part goes back.
+     */
+    public function startRoleplay(Request $request, CourseTrack $track, CourseModule $module): JsonResponse
+    {
+        $progress = $this->unlockedRoleplayProgress($request, $track, $module);
+        $module = $progress->module($module);
+        $vertical = $module->roleplayVertical();
+        $level = $module->roleplay['level'];
+        $generated = $vertical->personaGenerator()->generate($level, $module->roleplay);
+
+        $session = $request->user()->roleplaySessions()->create([
+            'vertical' => $vertical,
+            'course_module_id' => $module->id,
+            'level' => $level,
+            'persona' => [...$generated['persona'], 'scene' => $module->roleplayScene()],
+            'expected_outcome' => $generated['outcome'],
+            'voice' => $generated['voice'],
+        ]);
+
+        return response()->json($session->publicPersona(), 201);
     }
 
     /**
@@ -195,6 +294,21 @@ class TrainingController extends Controller
         $progress = $this->unlockedModuleProgress($request, $track, $module);
 
         abort_unless($progress->isQuizUnlocked($module), 403, 'Complete every lesson to unlock the quiz.');
+
+        return $progress;
+    }
+
+    /**
+     * Authorize access to the track and ensure the module has a roleplay and
+     * its quiz is passed.
+     */
+    private function unlockedRoleplayProgress(Request $request, CourseTrack $track, CourseModule $module): TrainingProgress
+    {
+        abort_unless($module->hasRoleplay(), 404);
+
+        $progress = $this->unlockedModuleProgress($request, $track, $module);
+
+        abort_unless($progress->isRoleplayUnlocked($module), 403, 'Pass the quiz to unlock the roleplay.');
 
         return $progress;
     }

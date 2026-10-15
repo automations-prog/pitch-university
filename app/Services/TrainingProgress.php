@@ -16,8 +16,13 @@ use Illuminate\Support\Collection as SupportCollection;
  * Resolves a user's progress through one training track: which lessons are
  * complete, which quizzes are passed, and what is unlocked.
  *
- * A module unlocks once the previous module's quiz is passed, and a module's
- * quiz unlocks once every lesson in that module is complete.
+ * A module's quiz unlocks once every lesson in that module is complete. A
+ * module with a roleplay unlocks it once the quiz is passed, and the module
+ * only counts as passed once the roleplay is too. The next module unlocks
+ * once the previous module is passed.
+ *
+ * Trainees who passed a later module's quiz before a module got its
+ * roleplay skip that roleplay rather than being locked out again.
  */
 class TrainingProgress
 {
@@ -30,6 +35,9 @@ class TrainingProgress
     /** @var SupportCollection<int, SupportCollection<int, CourseQuizAttempt>> */
     private SupportCollection $attemptsByModule;
 
+    /** @var array<int, array{attempts_count: int, passed: bool}> */
+    private array $roleplayResults;
+
     private ?ExamProgress $examProgress = null;
 
     /**
@@ -40,6 +48,7 @@ class TrainingProgress
      * @param  array<int, bool>|null  $completedLessonIds
      * @param  SupportCollection<int, SupportCollection<int, CourseQuizAttempt>>|null  $attemptsByModule
      * @param  array{attempts: SupportCollection<int, CourseExamAttempt>, grants: array<string, int>}|null  $examData
+     * @param  array<int, array{attempts_count: int, passed: bool}>|null  $roleplayResults  finished module roleplay calls by module id
      */
     public function __construct(
         public User $user,
@@ -48,6 +57,7 @@ class TrainingProgress
         ?array $completedLessonIds = null,
         ?SupportCollection $attemptsByModule = null,
         private ?array $examData = null,
+        ?array $roleplayResults = null,
     ) {
         $this->modules = $modules ?? $track->modules()->with('lessons')->get();
 
@@ -62,6 +72,31 @@ class TrainingProgress
             ->get()
             ->toBase()
             ->groupBy('course_module_id');
+
+        $this->roleplayResults = $roleplayResults ?? self::roleplayResults($user, $this->modules->modelKeys());
+    }
+
+    /**
+     * How many finished roleplay calls the user made for each module, and
+     * whether any passed.
+     *
+     * @param  list<int>  $moduleIds
+     * @return array<int, array{attempts_count: int, passed: bool}>
+     */
+    private static function roleplayResults(User $user, array $moduleIds): array
+    {
+        return $user->roleplaySessions()
+            ->whereIn('course_module_id', $moduleIds)
+            ->whereNotNull('ended_at')
+            ->selectRaw('course_module_id, count(*) as attempts_count, max(passed) as passed')
+            ->groupBy('course_module_id')
+            ->toBase()
+            ->get()
+            ->mapWithKeys(fn (object $row) => [(int) $row->course_module_id => [
+                'attempts_count' => (int) $row->attempts_count,
+                'passed' => (bool) $row->passed,
+            ]])
+            ->all();
     }
 
     /**
@@ -107,7 +142,9 @@ class TrainingProgress
             ->groupBy('course_exam_id')
             ->map(fn (SupportCollection $rows) => $rows->mapWithKeys(fn (object $row) => [$row->section => (int) $row->grants_count])->all());
 
-        return $tracks->toBase()->map(function (CourseTrack $track) use ($user, $completedLessonIds, $attemptsByModule, $examAttempts, $examGrants) {
+        $roleplayResults = self::roleplayResults($user, $moduleIds);
+
+        return $tracks->toBase()->map(function (CourseTrack $track) use ($user, $completedLessonIds, $attemptsByModule, $examAttempts, $examGrants, $roleplayResults) {
             return new self(
                 $user,
                 $track,
@@ -118,6 +155,7 @@ class TrainingProgress
                     'attempts' => $examAttempts->get($track->exam->id, collect()),
                     'grants' => $examGrants->get($track->exam->id, []),
                 ],
+                $roleplayResults,
             );
         })->values();
     }
@@ -196,9 +234,67 @@ class TrainingProgress
             && $this->completedLessonCount($module) === $module->lessons->count();
     }
 
-    public function isModulePassed(CourseModule $module): bool
+    public function isQuizPassed(CourseModule $module): bool
     {
         return $this->attempts($module)->contains('passed', true);
+    }
+
+    /**
+     * Whether the module's quiz is passed and, when it has one, its roleplay
+     * is passed or skipped.
+     */
+    public function isModulePassed(CourseModule $module): bool
+    {
+        return $this->isQuizPassed($module)
+            && in_array($this->roleplayStatus($module), [null, 'passed', 'skipped'], true);
+    }
+
+    public function isRoleplayUnlocked(CourseModule $module): bool
+    {
+        $module = $this->module($module);
+
+        return $module->hasRoleplay()
+            && $this->isModuleUnlocked($module)
+            && $this->isQuizPassed($module);
+    }
+
+    /**
+     * Where the user stands on the module's roleplay, or null when the
+     * module has none.
+     *
+     * @return 'passed'|'skipped'|'locked'|'failed'|'not_started'|null
+     */
+    public function roleplayStatus(CourseModule $module): ?string
+    {
+        $module = $this->module($module);
+
+        if (! $module->hasRoleplay()) {
+            return null;
+        }
+
+        return match (true) {
+            $this->roleplayResults[$module->id]['passed'] ?? false => 'passed',
+            $this->isLaterQuizPassed($module) => 'skipped',
+            ! $this->isRoleplayUnlocked($module) => 'locked',
+            $this->roleplayAttemptsCount($module) > 0 => 'failed',
+            default => 'not_started',
+        };
+    }
+
+    public function roleplayAttemptsCount(CourseModule $module): int
+    {
+        return $this->roleplayResults[$module->id]['attempts_count'] ?? 0;
+    }
+
+    /**
+     * Whether the user passed the quiz of any module after this one, which
+     * only happens when they got there before this module had a roleplay.
+     */
+    private function isLaterQuizPassed(CourseModule $module): bool
+    {
+        return $this->modules
+            ->filter(fn (CourseModule $candidate) => $candidate->position > $module->position)
+            ->contains(fn (CourseModule $candidate) => $this->isQuizPassed($candidate));
     }
 
     public function bestScore(CourseModule $module): ?int
@@ -222,20 +318,27 @@ class TrainingProgress
     /**
      * The progress summary shown on module cards and module headers.
      *
-     * @return array{is_unlocked: bool, is_quiz_unlocked: bool, is_passed: bool, completed_lessons: int, total_lessons: int, best_score: int|null, attempts_count: int}
+     * @return array{is_unlocked: bool, is_quiz_unlocked: bool, is_quiz_passed: bool, is_passed: bool, completed_lessons: int, total_lessons: int, best_score: int|null, attempts_count: int, roleplay: array{title: string, status: string, attempts_count: int}|null}
      */
     public function summary(CourseModule $module): array
     {
         $module = $this->module($module);
+        $roleplayStatus = $this->roleplayStatus($module);
 
         return [
             'is_unlocked' => $this->isModuleUnlocked($module),
             'is_quiz_unlocked' => $this->isQuizUnlocked($module),
+            'is_quiz_passed' => $this->isQuizPassed($module),
             'is_passed' => $this->isModulePassed($module),
             'completed_lessons' => $this->completedLessonCount($module),
             'total_lessons' => $module->lessons->count(),
             'best_score' => $this->bestScore($module),
             'attempts_count' => $this->attempts($module)->count(),
+            'roleplay' => $roleplayStatus === null ? null : [
+                'title' => $module->roleplay['title'],
+                'status' => $roleplayStatus,
+                'attempts_count' => $this->roleplayAttemptsCount($module),
+            ],
         ];
     }
 

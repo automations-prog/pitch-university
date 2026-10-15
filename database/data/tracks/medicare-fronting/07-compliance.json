@@ -357,5 +357,45 @@
                     ]
                 }
             ]
-        }
+        },
+    "roleplay": {
+        "vertical": "medicare",
+        "title": "No Promises",
+        "briefing": "A one-minute scene. The consumer wants to know what they'll get and how much. You don't know, so don't guess: say \"may\" or \"maybe\", give no amount, promise nothing, and tell them the specialist will go over what they may qualify for. End the scene once you're back on the script.",
+        "context": "Parts A and B and the card are confirmed. When they say \"Hello?\", carry on with the benefits line. Answer their questions without promising anything, then get back to the script.",
+        "consumer_brief": "After the caller mentions benefits, push for specifics: how much you'll get, whether it's money, whether you'll definitely get it. Ask twice if they're vague, then let it go.",
+        "start_section": "state_and_zip",
+        "end_section": "state_and_zip",
+        "max_seconds": 75,
+        "transfer": false,
+        "code_call": false,
+        "level": 2,
+        "outcomes": {
+            "transfer": 100
+        },
+        "objections": [
+            "how_much",
+            "will_i_get_more",
+            "what_benefits"
+        ],
+        "objection_count": [
+            1,
+            1
+        ],
+        "required_checks": [
+            "may_maybe"
+        ],
+        "judged": [
+            {
+                "key": "no_promises",
+                "label": "Made no promise, gave no amount and said nothing untrue",
+                "rubric": "Fail if the agent promised a benefit, said the consumer will or does qualify, named any dollar amount, or said anything untrue about the call or the benefits. Pass otherwise."
+            },
+            {
+                "key": "sent_to_specialist",
+                "label": "Said the specialist will go over what they may get",
+                "rubric": "Pass if the agent pointed the consumer to the licensed specialist for the details instead of answering them."
+            }
+        ]
     }
+}

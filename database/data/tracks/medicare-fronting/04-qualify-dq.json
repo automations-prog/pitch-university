@@ -560,5 +560,42 @@
                     ]
                 }
             ]
-        }
+        },
+    "roleplay": {
+        "vertical": "medicare",
+        "title": "Catch the DQ",
+        "briefing": "A one-minute scene. You've already confirmed Parts A and B, the card, Medicaid, and their state and ZIP. Ask the last question about insurance through work or the VA and listen to the answer. If they have VA, Tricare, employer or retiree coverage, read the DQ line and end the call politely. If they don't, go to the transfer ask. Then code the call.",
+        "context": "Everything up to the state and ZIP is confirmed. When they say \"Hello?\", ask the work or VA question. DQ them or go to the transfer ask, then end the scene and code the call.",
+        "consumer_brief": "Answer the work or VA question truthfully, in your own words. If the caller then asks you to give a specialist a few minutes, say yes.",
+        "start_section": "work_va_insurance",
+        "end_section": "ask_for_the_transfer",
+        "max_seconds": 75,
+        "transfer": false,
+        "code_call": true,
+        "level": 1,
+        "outcomes": {
+            "transfer": 50,
+            "dq": 50
+        },
+        "objection_count": [
+            0,
+            0
+        ],
+        "dq_traps": [
+            "va",
+            "tricare",
+            "employer",
+            "retiree"
+        ],
+        "required_checks": [
+            "work_va"
+        ],
+        "judged": [
+            {
+                "key": "right_decision",
+                "label": "Made the right call after their answer",
+                "rubric": "If the consumer has a hidden disqualifier, pass only if the agent recognized it, read a polite DQ line (they don't qualify for this review) and did not go on to the transfer ask. If the consumer has no disqualifier, pass only if the agent moved on to the transfer ask without DQing them."
+            }
+        ]
     }
+}

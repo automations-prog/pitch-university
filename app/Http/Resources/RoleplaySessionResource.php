@@ -31,6 +31,11 @@ class RoleplaySessionResource extends JsonResource
             'ended_at' => $this->ended_at,
             'disposition' => $this->disposition,
             'passed' => $this->passed,
+            // A training module's short scene, which may not be coded.
+            'scene' => $this->isScene() ? [
+                'title' => $this->persona['scene']['title'],
+                'code_call' => $this->codesCall(),
+            ] : null,
             $this->mergeWhen($isEnded, fn (): array => [
                 'expected_outcome' => $this->expected_outcome,
                 // What the consumer did can change the right code (a
@@ -40,6 +45,7 @@ class RoleplaySessionResource extends JsonResource
                 'correct_reason' => $this->score['correct_reason'] ?? null,
                 'end_reason' => $this->end_reason,
                 'checks' => $this->score['checks'] ?? [],
+
                 'delivery_status' => $this->delivery_status,
                 'delivery' => $this->delivery,
                 'dq_trap' => $this->persona['dq_trap'],

@@ -76,6 +76,7 @@ export function CallScreen({
     conversationNote,
     onReadRebuttal,
     onScriptStepChange,
+    hideRebuttals = false,
 }: {
     view: CallView;
     agentName: string;
@@ -88,12 +89,21 @@ export function CallScreen({
     onReadRebuttal?: (rebuttal: Rebuttal, lineIndex: number) => void;
     /** Live only: the trainee moves the teleprompter themselves. */
     onScriptStepChange?: (step: number) => void;
+    /** A training scene tests the rebuttals, so they aren't shown. */
+    hideRebuttals?: boolean;
 }) {
     return (
         <div className="flex flex-col gap-4">
             <CallBar view={view} actions={barActions} />
 
-            <div className="grid items-start gap-4 lg:grid-cols-[20rem_1fr_22rem]">
+            <div
+                className={cn(
+                    'grid items-start gap-4',
+                    hideRebuttals
+                        ? 'lg:grid-cols-[20rem_1fr]'
+                        : 'lg:grid-cols-[20rem_1fr_22rem]',
+                )}
+            >
                 <ScriptTracker
                     currentStep={view.scriptStep}
                     lead={view.lead}
@@ -108,11 +118,13 @@ export function CallScreen({
                     footer={footer}
                 />
 
-                <RebuttalsPanel
-                    disabled={view.isOver}
-                    isObjectionOpen={view.isObjectionOpen && !view.isOver}
-                    onRead={onReadRebuttal}
-                />
+                {!hideRebuttals && (
+                    <RebuttalsPanel
+                        disabled={view.isOver}
+                        isObjectionOpen={view.isObjectionOpen && !view.isOver}
+                        onRead={onReadRebuttal}
+                    />
+                )}
             </div>
         </div>
     );

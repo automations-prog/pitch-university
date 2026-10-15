@@ -38,4 +38,32 @@ class CourseModuleFactory extends Factory
             'position' => 0,
         ];
     }
+
+    /**
+     * The module ends with a short Medicare roleplay scene.
+     *
+     * @param  array<string, mixed>  $roleplay
+     */
+    public function withRoleplay(array $roleplay = []): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'roleplay' => [
+                'vertical' => 'medicare',
+                'title' => 'Open the Call',
+                'briefing' => 'Open the call and confirm the card.',
+                'context' => 'When they say "Hello?", read the opening.',
+                'consumer_brief' => null,
+                'start_section' => 'opening',
+                'end_section' => 'double_confirm_the_card',
+                'max_seconds' => 60,
+                'transfer' => false,
+                'code_call' => false,
+                'level' => 1,
+                'outcomes' => ['transfer' => 100],
+                'objection_count' => [0, 0],
+                'required_checks' => ['recorded_line'],
+                ...$roleplay,
+            ],
+        ]);
+    }
 }

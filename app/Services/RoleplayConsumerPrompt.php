@@ -35,6 +35,42 @@ class RoleplayConsumerPrompt
     public function __construct(protected readonly RoleplayScript $script) {}
 
     /**
+     * Whether a transcribed trainee line is the transcription prompt read
+     * back rather than speech: on unclear audio, transcription can return
+     * its prompt instead. An echo is the prompt's words in order, with its
+     * fillers, which a real line almost never is. Left in, an echo read as
+     * the trainee stumbling, and on ACA and Meals, whose prompts name the
+     * company and the recorded line, it could pass the opener check.
+     */
+    public function isTranscriptionEcho(string $text): bool
+    {
+        $words = fn (string $value): array => preg_split('/\s+/', trim((string) preg_replace('/[^a-z\s]/', '', strtolower(str_replace(['’', "'"], '', $value)))), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $line = $words($text);
+        $prompt = $words(static::TRANSCRIPTION_PROMPT);
+
+        if (count($line) < 6 || count(array_intersect($line, ['um', 'uh', 'so', 'like', 'know'])) < 2) {
+            return false;
+        }
+
+        // Every word of the line appears in the prompt, in the same order.
+        $position = 0;
+
+        foreach ($line as $word) {
+            while ($position < count($prompt) && $prompt[$position] !== $word) {
+                $position++;
+            }
+
+            if ($position === count($prompt)) {
+                return false;
+            }
+
+            $position++;
+        }
+
+        return true;
+    }
+
+    /**
      * The `session` overrides for `OpenAiRealtimeClient::createEphemeralSession()`.
      * With `$speaksAsText`, the model replies in text for ElevenLabs to
      * speak, instead of in its own voice.
@@ -118,7 +154,39 @@ class RoleplayConsumerPrompt
             TEXT,
         ];
 
+        if ($session->isScene()) {
+            $sections[] = $this->sceneSection($session->persona['scene'], $persona['objections'] !== []);
+        }
+
         return implode("\n\n", array_map('trim', $sections));
+    }
+
+    /**
+     * A training module's short scene: the call is already underway (except
+     * for the opening scene), and the consumer gets to the moment the scene
+     * practices straight away. Last, so it wins over the timing above.
+     *
+     * @param  array{start_section: string, consumer_brief: string|null}  $scene
+     */
+    protected function sceneSection(array $scene, bool $hasObjections): string
+    {
+        $lines = ['# This is a short scene, about a minute long'];
+
+        if ($scene['start_section'] !== 'opening') {
+            $lines[] = "You've already been on this call for a minute and answered the caller's first questions: yes, you have Medicare Parts A and B and the red, white and blue card. The line went quiet for a moment, so when it reconnects you say \"Hello?\" as the rules above say, and the caller picks up where they left off. Don't ask who they are again.";
+        }
+
+        if ($scene['consumer_brief'] !== null) {
+            $lines[] = $scene['consumer_brief'];
+        }
+
+        if ($hasObjections) {
+            $lines[] = "Don't wait for the script to reach your objections: raise your first one right after the caller's first line, and any other right after their next line, whatever the timing above says. An objection about waiting for the specialist still only comes when they ask you to give the specialist a few minutes.";
+        }
+
+        $lines[] = 'Keep every turn short so the scene moves quickly.';
+
+        return implode("\n", $lines);
     }
 
     /**

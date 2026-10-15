@@ -26,6 +26,28 @@ function moduleFile(string $id, array $lessonIds): array
     ];
 }
 
+/**
+ * A minimal valid module roleplay scene.
+ *
+ * @return array<string, mixed>
+ */
+function sceneFile(): array
+{
+    return [
+        'vertical' => 'medicare',
+        'title' => 'Catch the DQ',
+        'briefing' => 'Go.',
+        'context' => 'Ask the work or VA question.',
+        'start_section' => 'work_va_insurance',
+        'end_section' => 'ask_for_the_transfer',
+        'max_seconds' => 60,
+        'transfer' => false,
+        'code_call' => true,
+        'level' => 2,
+        'required_checks' => ['work_va'],
+    ];
+}
+
 afterEach(function () {
     File::deleteDirectory(storage_path('framework/testing/training-import'));
 });
@@ -242,3 +264,62 @@ test('it rejects an invalid module file without importing anything', function ()
 
     expect(CourseTrack::count())->toBe(0);
 });
+
+test('only the bundled medicare modules that train a live call end with a roleplay', function () {
+    $this->artisan('training:import')->assertSuccessful();
+
+    $modules = CourseTrack::where('slug', 'medicare-fronting')->sole()->modules;
+    $theScript = $modules->firstWhere('slug', 'the_script');
+
+    expect($modules->filter(fn (CourseModule $module) => $module->hasRoleplay())->pluck('slug')->values()->all())
+        ->toBe(['the_script', 'qualify_dq', 'rebuttals', 'real_calls', 'compliance', 'dispositions_transfers'])
+        ->and($theScript->roleplay['vertical'])->toBe('medicare')
+        ->and($theScript->roleplay['start_section'])->toBe('opening')
+        ->and($theScript->roleplay['max_seconds'])->toBeLessThanOrEqual(90)
+        ->and($theScript->roleplay['required_checks'])->toBe(['recorded_line', 'double_confirm'])
+        ->and(CourseTrack::where('slug', 'aca-fronting')->sole()->modules->contains(fn (CourseModule $module) => $module->hasRoleplay()))->toBeFalse();
+});
+
+test('it imports a module roleplay and removes it when the file drops it', function () {
+    $directory = storage_path('framework/testing/training-import');
+    File::ensureDirectoryExists("{$directory}/basics");
+    $roleplay = [...sceneFile(), 'objections' => ['busy'], 'judged' => [['key' => 'calm', 'label' => 'Stayed calm', 'rubric' => 'Pass unless rude.']]];
+    File::put("{$directory}/basics/01-intro.json", json_encode([...moduleFile('intro', ['intro_1']), 'roleplay' => $roleplay]));
+
+    $this->artisan('training:import', ['--path' => $directory])->assertSuccessful();
+
+    expect(CourseModule::sole()->roleplay)->toBe($roleplay);
+
+    File::put("{$directory}/basics/01-intro.json", json_encode(moduleFile('intro', ['intro_1'])));
+    $this->artisan('training:import', ['--path' => $directory])->assertSuccessful();
+
+    expect(CourseModule::sole()->roleplay)->toBeNull();
+});
+
+test('it rejects a module roleplay the call engine can not run', function (array $roleplay, string $error) {
+    $directory = storage_path('framework/testing/training-import');
+    File::ensureDirectoryExists("{$directory}/broken");
+    File::put("{$directory}/broken/01-intro.json", json_encode([...moduleFile('intro', ['intro_1']), 'roleplay' => [...sceneFile(), ...$roleplay]]));
+
+    $this->artisan('training:import', ['--path' => $directory])
+        ->expectsOutputToContain($error)
+        ->assertFailed();
+
+    expect(CourseTrack::count())->toBe(0);
+})->with([
+    'unknown objection' => [['objections' => ['nope']], 'unknown objections: nope'],
+    'unknown DQ trap' => [['dq_traps' => ['nope']], 'unknown dq_traps: nope'],
+    'unknown check' => [['required_checks' => ['nope']], 'unknown required_checks: nope'],
+    'no required or judged checks' => [['required_checks' => []], 'at least one required or judged check'],
+    'unknown start section' => [['start_section' => 'nope'], 'unknown start_section: nope'],
+    'unknown end section' => [['end_section' => 'nope'], 'unknown end_section: nope'],
+    'end before start' => [['end_section' => 'opening'], 'end_section comes before its start_section'],
+    'too long' => [['max_seconds' => 600], 'roleplay.max seconds field must be between 30 and 300'],
+    'no context' => [['context' => null], 'roleplay.context field is required when roleplay is present'],
+    'judged check without a rubric' => [['judged' => [['key' => 'calm', 'label' => 'Stayed calm']]], 'roleplay.judged.0.rubric field is required'],
+    'level out of range' => [['level' => 6], 'roleplay.level field must be between 1 and 5'],
+    'unknown vertical' => [['vertical' => 'nope'], 'selected roleplay.vertical is invalid'],
+    'all outcome weights zero' => [['outcomes' => ['transfer' => 0]], 'at least one non-zero weight'],
+    'objection count min above max' => [['objection_count' => [2, 1]], 'roleplay.objection_count.1 field must be greater than or equal to'],
+    'module roleplays on ACA' => [['vertical' => 'aca'], 'unknown required_checks: work_va'],
+]);

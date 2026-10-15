@@ -6,6 +6,7 @@ use App\Models\CourseExamAttempt;
 use App\Models\CourseModule;
 use App\Models\CourseQuizAttempt;
 use App\Models\CourseTrack;
+use App\Models\RoleplaySession;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\DB;
  *
  * Only tracks assigned to an agent count toward their numbers. A track is
  * complete once the agent is certified or, without a final exam, once every
- * module's quiz is passed. The average score is taken over the agent's best
+ * module is passed (its quiz, and its roleplay when it has one). The average score is taken over the agent's best
  * quiz score per attempted module.
  */
 class AgentTrainingReport
@@ -34,6 +35,9 @@ class AgentTrainingReport
     private Collection $passedExamSections;
 
     /** @var Collection<int, Collection<int, int>> */
+    private Collection $passedRoleplayModuleIds;
+
+    /** @var Collection<int, Collection<int, int>> */
     private Collection $lessonModuleIds;
 
     /** @var Collection<int, string> */
@@ -46,7 +50,7 @@ class AgentTrainingReport
     {
         $this->tracks = CourseTrack::query()
             ->when($onlyTrack, fn ($query, CourseTrack $track) => $query->whereKey($track->id))
-            ->with(['exam', 'modules:id,course_track_id'])
+            ->with(['exam', 'modules:id,course_track_id,position,roleplay'])
             ->orderBy('position')
             ->get();
 
@@ -69,6 +73,16 @@ class AgentTrainingReport
             ->get()
             ->groupBy('user_id')
             ->map(fn (Collection $rows) => $rows->keyBy('course_module_id'));
+
+        $this->passedRoleplayModuleIds = RoleplaySession::query()
+            ->whereIn('user_id', $agentIds)
+            ->whereIn('course_module_id', $moduleIds)
+            ->where('passed', true)
+            ->distinct()
+            ->toBase()
+            ->get(['user_id', 'course_module_id'])
+            ->groupBy('user_id')
+            ->map(fn (Collection $rows) => $rows->pluck('course_module_id'));
 
         $this->passedExamSections = CourseExamAttempt::query()
             ->whereIn('user_id', $agentIds)
@@ -237,12 +251,21 @@ class AgentTrainingReport
         return $passedSections >= count($track->exam->sectionKeys());
     }
 
+    /**
+     * Whether every module's quiz is passed and every roleplay is passed or,
+     * as in TrainingProgress, skipped because a later quiz was passed first.
+     */
     private function modulesPassed(int $agentId, CourseTrack $track): bool
     {
         $scores = $this->moduleScores->get($agentId, collect());
+        $passedRoleplays = $this->passedRoleplayModuleIds->get($agentId, collect());
+        $isQuizPassed = fn (CourseModule $module): bool => (bool) $scores->get($module->id)?->passed;
 
         return $track->modules->isNotEmpty()
-            && $track->modules->every(fn (CourseModule $module) => (bool) $scores->get($module->id)?->passed);
+            && $track->modules->every(fn (CourseModule $module) => $isQuizPassed($module)
+                && (! $module->hasRoleplay()
+                    || $passedRoleplays->contains($module->id)
+                    || $track->modules->contains(fn (CourseModule $later) => $later->position > $module->position && $isQuizPassed($later))));
     }
 
     /**

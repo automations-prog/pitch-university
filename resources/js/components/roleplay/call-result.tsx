@@ -5,7 +5,7 @@ import {
     SlidersHorizontal,
     XCircle,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { SyntheticEvent } from 'react';
 import {
     DeliveryCard,
@@ -38,14 +38,19 @@ import {
  */
 export function CallResult({
     endReason,
+    requiresDisposition = true,
     onComplete,
     onRetry,
     onChangeLevel,
+    changeLevelLabel,
 }: {
     endReason: RoleplayEndReason;
+    /** A training scene that stops before the end of the call isn't coded. */
+    requiresDisposition?: boolean;
     onComplete: (disposition: string) => Promise<RoleplaySessionResult>;
     onRetry: () => void;
     onChangeLevel: () => void;
+    changeLevelLabel?: string;
 }) {
     const [dispositionId, setDispositionId] = useState<string | null>(null);
     const [submitted, setSubmitted] = useState<RoleplaySessionResult | null>(
@@ -70,6 +75,24 @@ export function CallResult({
         }
     };
 
+    // Submit an uncoded scene as soon as it ends, once.
+    const isAutoSubmitted = useRef(false);
+
+    useEffect(() => {
+        if (!requiresDisposition && !isAutoSubmitted.current) {
+            isAutoSubmitted.current = true;
+            void onComplete('')
+                .then(setSubmitted)
+                .catch((caught: unknown) =>
+                    setError(
+                        caught instanceof Error
+                            ? caught.message
+                            : 'Could not save the scene.',
+                    ),
+                );
+        }
+    }, [requiresDisposition, onComplete]);
+
     const correctId =
         result?.correct_disposition ??
         (result?.expected_outcome
@@ -79,30 +102,52 @@ export function CallResult({
     return (
         <div className="grid gap-4 lg:grid-cols-[1fr_24rem]">
             <div className="flex flex-col gap-4">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            Disposition the call
-                            {dispositionId !== null && !result && <Spinner />}
-                        </CardTitle>
-                        <CardDescription>
-                            {endReason === 'hung_up'
-                                ? 'The consumer hung up on you. Pick how you would code it.'
-                                : 'Pick the disposition this call should be coded as.'}
-                        </CardDescription>
-                        {error && (
-                            <p className="text-destructive text-sm">{error}</p>
-                        )}
-                    </CardHeader>
-                    <DispositionGrid
-                        selectedId={dispositionId}
-                        correctId={correctId}
-                        disabled={dispositionId !== null}
-                        onSelect={(disposition) => void submit(disposition)}
-                    />
-                </Card>
+                {!requiresDisposition && !result && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                {error ? 'Scene not saved' : 'Saving the scene'}
+                                {!error && <Spinner />}
+                            </CardTitle>
+                            {error && (
+                                <CardDescription className="text-destructive">
+                                    {error}
+                                </CardDescription>
+                            )}
+                        </CardHeader>
+                    </Card>
+                )}
 
-                {result && (
+                {requiresDisposition && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                Disposition the call
+                                {dispositionId !== null && !result && (
+                                    <Spinner />
+                                )}
+                            </CardTitle>
+                            <CardDescription>
+                                {endReason === 'hung_up'
+                                    ? 'The consumer hung up on you. Pick how you would code it.'
+                                    : 'Pick the disposition this call should be coded as.'}
+                            </CardDescription>
+                            {error && (
+                                <p className="text-destructive text-sm">
+                                    {error}
+                                </p>
+                            )}
+                        </CardHeader>
+                        <DispositionGrid
+                            selectedId={dispositionId}
+                            correctId={correctId}
+                            disabled={dispositionId !== null}
+                            onSelect={(disposition) => void submit(disposition)}
+                        />
+                    </Card>
+                )}
+
+                {result?.delivery_status && (
                     <DeliveryCard
                         status={result.delivery_status ?? null}
                         delivery={result.delivery ?? null}
@@ -115,6 +160,7 @@ export function CallResult({
                     result={result}
                     onRetry={onRetry}
                     onChangeLevel={onChangeLevel}
+                    changeLevelLabel={changeLevelLabel}
                 />
             )}
         </div>
@@ -129,10 +175,12 @@ export function ResultCard({
     result,
     onRetry,
     onChangeLevel,
+    changeLevelLabel = 'Change level',
 }: {
     result: RoleplaySessionResult;
     onRetry?: () => void;
     onChangeLevel?: () => void;
+    changeLevelLabel?: string;
 }) {
     const { dispositions, objectionRiskLabel } = useRoleplayContent();
     const outcome = result.expected_outcome ?? 'transfer';
@@ -147,55 +195,63 @@ export function ResultCard({
     const isCodedCorrectly =
         correctDisposition !== undefined &&
         codedDisposition?.id === correctDisposition.id;
+    const noun = result.scene ? 'Scene' : 'Call';
+    const isCoded = result.scene?.code_call ?? true;
 
     return (
         <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                    {result.passed ? (
+                    {result.passed === null ? (
+                        <Spinner />
+                    ) : result.passed ? (
                         <CheckCircle2 className="size-5 text-emerald-500" />
                     ) : (
                         <XCircle className="text-destructive size-5" />
                     )}
-                    {result.passed ? 'Call passed' : 'Call failed'}
+                    {result.passed === null
+                        ? `Grading your ${noun.toLowerCase()}…`
+                        : `${noun} ${result.passed ? 'passed' : 'failed'}`}
                 </CardTitle>
-                <CardDescription className="flex flex-col gap-1">
-                    {result.correct_reason ? (
-                        <span>{result.correct_reason}</span>
-                    ) : (
-                        <span>
-                            This consumer should have ended as{' '}
-                            <span className="text-foreground font-medium">
-                                {OUTCOME_LABELS[outcome]}
+                {isCoded && (
+                    <CardDescription className="flex flex-col gap-1">
+                        {result.correct_reason ? (
+                            <span>{result.correct_reason}</span>
+                        ) : (
+                            <span>
+                                This consumer should have ended as{' '}
+                                <span className="text-foreground font-medium">
+                                    {OUTCOME_LABELS[outcome]}
+                                </span>
+                                .
                             </span>
-                            .
-                        </span>
-                    )}
-                    {correctDisposition && (
-                        <span>
-                            Correct code:{' '}
-                            <span className="text-foreground font-medium">
-                                {correctDisposition.name}
+                        )}
+                        {correctDisposition && (
+                            <span>
+                                Correct code:{' '}
+                                <span className="text-foreground font-medium">
+                                    {correctDisposition.name}
+                                </span>
+                                {codedDisposition && (
+                                    <>
+                                        {' '}
+                                        · You coded:{' '}
+                                        <span className="text-foreground font-medium">
+                                            {codedDisposition.name}
+                                        </span>
+                                    </>
+                                )}
+                                .
                             </span>
-                            {codedDisposition && (
-                                <>
-                                    {' '}
-                                    · You coded:{' '}
-                                    <span className="text-foreground font-medium">
-                                        {codedDisposition.name}
-                                    </span>
-                                </>
-                            )}
-                            .
-                        </span>
-                    )}
-                    {!result.passed && isCodedCorrectly && (
-                        <span className="text-destructive">
-                            You coded it right, but the call failed on the
-                            compliance check marked below.
-                        </span>
-                    )}
-                </CardDescription>
+                        )}
+                        {result.passed === false && isCodedCorrectly && (
+                            <span className="text-destructive">
+                                You coded it right, but the {noun.toLowerCase()}{' '}
+                                failed on the check marked below.
+                            </span>
+                        )}
+                    </CardDescription>
+                )}
             </CardHeader>
             <CardContent className="flex flex-col gap-4 text-sm">
                 <ul className="flex flex-col gap-2">
@@ -216,6 +272,11 @@ export function ResultCard({
                                 }
                             >
                                 {check.label}
+                                {check.feedback && (
+                                    <span className="text-muted-foreground block text-xs">
+                                        {check.feedback}
+                                    </span>
+                                )}
                             </span>
                         </li>
                     ))}
@@ -304,7 +365,7 @@ export function ResultCard({
                     </Button>
                     <Button variant="outline" onClick={onChangeLevel}>
                         <SlidersHorizontal />
-                        Change level
+                        {changeLevelLabel}
                     </Button>
                 </CardFooter>
             )}

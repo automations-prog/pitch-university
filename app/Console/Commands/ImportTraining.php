@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\RoleplayVertical;
 use App\Models\CourseTrack;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -9,6 +10,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -16,6 +18,8 @@ use Illuminate\Validation\ValidationException;
  * track (its name is the track slug) holding an optional `track.json` with the
  * track's name/description/position (defaulting to folder order), an optional
  * `exam.json` final exam, and one JSON file per module, ordered by filename.
+ * A module may end with a `roleplay`: a short scene from a live call, starting
+ * mid-call at one script section, that the trainee must pass after its quiz.
  */
 #[Signature('training:import {--path= : Directory containing one folder per training track}')]
 #[Description('Import (or re-import) the training tracks and their modules from JSON files')]
@@ -173,7 +177,72 @@ class ImportTraining extends Command
             'quiz.questions.*.question' => ['required', 'string'],
             'quiz.questions.*.choices' => ['required', 'array', 'min:2'],
             'quiz.questions.*.answer_index' => ['required', 'integer', 'min:0'],
-        ])->validate();
+            'roleplay' => ['nullable', 'array'],
+            'roleplay.vertical' => ['required_with:roleplay', Rule::enum(RoleplayVertical::class)],
+            'roleplay.title' => ['required_with:roleplay', 'string'],
+            'roleplay.briefing' => ['required_with:roleplay', 'string'],
+            'roleplay.context' => ['required_with:roleplay', 'string'],
+            'roleplay.consumer_brief' => ['nullable', 'string'],
+            'roleplay.start_section' => ['required_with:roleplay', 'string'],
+            'roleplay.end_section' => ['required_with:roleplay', 'string'],
+            'roleplay.max_seconds' => ['required_with:roleplay', 'integer', 'between:30,300'],
+            'roleplay.transfer' => ['required_with:roleplay', 'boolean'],
+            'roleplay.code_call' => ['required_with:roleplay', 'boolean'],
+            'roleplay.level' => ['required_with:roleplay', 'integer', 'between:1,5'],
+            'roleplay.outcomes' => ['nullable', 'array:transfer,dq,dnc'],
+            'roleplay.outcomes.*' => ['integer', 'min:0'],
+            'roleplay.objections' => ['nullable', 'array', 'min:1'],
+            'roleplay.objections.*' => ['string', 'distinct'],
+            'roleplay.objection_count' => ['nullable', 'array', 'size:2'],
+            'roleplay.objection_count.*' => ['integer', 'min:0'],
+            'roleplay.objection_count.1' => ['gte:roleplay.objection_count.0'],
+            'roleplay.dq_traps' => ['nullable', 'array', 'min:1'],
+            'roleplay.dq_traps.*' => ['string', 'distinct'],
+            'roleplay.required_checks' => ['nullable', 'array'],
+            'roleplay.required_checks.*' => ['string', 'distinct'],
+            'roleplay.judged' => ['nullable', 'array'],
+            'roleplay.judged.*.key' => ['required', 'string', 'regex:/^[a-z_]+$/', 'distinct'],
+            'roleplay.judged.*.label' => ['required', 'string'],
+            'roleplay.judged.*.rubric' => ['required', 'string'],
+        ])->after(function ($validator) use ($data) {
+            $roleplay = $data['roleplay'] ?? null;
+            $vertical = is_array($roleplay) ? RoleplayVertical::tryFrom((string) ($roleplay['vertical'] ?? '')) : null;
+
+            if ($vertical === null) {
+                return;
+            }
+
+            $content = $vertical->script()->content();
+            $unknown = [
+                'objections' => array_diff($roleplay['objections'] ?? [], array_column($content['objections'], 'id')),
+                'dq_traps' => array_diff($roleplay['dq_traps'] ?? [], array_column($content['dqTraps'], 'id')),
+                'required_checks' => array_diff($roleplay['required_checks'] ?? [], array_keys($vertical->grader()->checkLabels())),
+                'start_section' => array_diff([$roleplay['start_section'] ?? ''], array_column($content['scriptSections'], 'id')),
+                'end_section' => array_diff([$roleplay['end_section'] ?? ''], array_column($content['scriptSections'], 'id')),
+            ];
+
+            $sectionIds = array_column($content['scriptSections'], 'id');
+            $start = array_search($roleplay['start_section'] ?? null, $sectionIds, true);
+            $end = array_search($roleplay['end_section'] ?? null, $sectionIds, true);
+
+            if ($start !== false && $end !== false && $end < $start) {
+                $validator->errors()->add('roleplay.end_section', 'The roleplay end_section comes before its start_section.');
+            }
+
+            foreach ($unknown as $field => $ids) {
+                if ($ids !== []) {
+                    $validator->errors()->add("roleplay.{$field}", "The roleplay has unknown {$field}: ".implode(', ', $ids).'.');
+                }
+            }
+
+            if (empty($roleplay['required_checks']) && empty($roleplay['judged'])) {
+                $validator->errors()->add('roleplay.required_checks', 'The roleplay needs at least one required or judged check.');
+            }
+
+            if (isset($roleplay['outcomes']) && array_sum($roleplay['outcomes']) === 0) {
+                $validator->errors()->add('roleplay.outcomes', 'The roleplay outcomes need at least one non-zero weight.');
+            }
+        })->validate();
     }
 
     /**
@@ -199,6 +268,7 @@ class ImportTraining extends Command
                         'est_minutes' => $moduleData['est_minutes'] ?? 0,
                         'badge' => $moduleData['badge'] ?? null,
                         'quiz' => $moduleData['quiz'],
+                        'roleplay' => $moduleData['roleplay'] ?? null,
                         'position' => $modulePosition,
                     ],
                 );
