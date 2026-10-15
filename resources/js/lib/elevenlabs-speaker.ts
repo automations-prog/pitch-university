@@ -38,23 +38,17 @@ const SCHEDULE_LEAD_S = 0.05;
 /** A finished line whose `isFinal` never arrives counts as fully sent after this. */
 const FINISH_STALL_MS = 5_000;
 
+/**
+ * Each line is generated on its own. At 0.4 stability a short line like
+ * the opening "Hello?" came out in a different tone from the lines after
+ * it; 0.55 keeps the voice steady from line to line while leaving room
+ * for the consumer's mood.
+ */
 const VOICE_SETTINGS = {
-    stability: 0.4,
+    stability: 0.55,
     similarity_boost: 0.8,
     style: 0.2,
     use_speaker_boost: true,
-};
-
-/**
- * Each line is generated on its own, and a one-word line like the opening
- * "Hello?" varies the most at low stability, so it sounded like someone
- * else from the lines after it. The first line is held closer to the
- * voice; the rest keep their range for the consumer's mood.
- */
-const FIRST_LINE_VOICE_SETTINGS = {
-    ...VOICE_SETTINGS,
-    stability: 0.75,
-    style: 0,
 };
 
 type Line = {
@@ -106,7 +100,6 @@ export function createElevenLabsSpeaker({
     let nextStartAt = 0;
     let isClosing = false;
     let lastSentAt = Date.now();
-    let hasStartedFirstLine = false;
 
     const send = (message: Record<string, unknown>) => {
         if (socket.readyState === WebSocket.OPEN) {
@@ -316,11 +309,8 @@ export function createElevenLabsSpeaker({
                 send({
                     text: ' ',
                     context_id: lineId,
-                    voice_settings: hasStartedFirstLine
-                        ? VOICE_SETTINGS
-                        : FIRST_LINE_VOICE_SETTINGS,
+                    voice_settings: VOICE_SETTINGS,
                 });
-                hasStartedFirstLine = true;
             }
 
             send({ text, context_id: lineId });
