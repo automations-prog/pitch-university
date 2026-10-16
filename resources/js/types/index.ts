@@ -6,3 +6,4 @@ export type * from './screening';
 export type * from './training';
 export type * from './ui';
 export type * from './vertical-training';
+export type * from './organization';

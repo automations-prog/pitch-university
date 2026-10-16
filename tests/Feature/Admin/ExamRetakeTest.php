@@ -28,7 +28,7 @@ function agentOutOfScriptAttempts(): array
 }
 
 test('admins can grant a retake to a user who is out of attempts', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     [$agent, $exam] = agentOutOfScriptAttempts();
 
     $this->actingAs($admin)
@@ -50,7 +50,7 @@ test('admins can grant a retake to a user who is out of attempts', function () {
 });
 
 test('a retake can not be granted while the user still has attempts', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     [$agent, $exam] = agentOutOfScriptAttempts();
 
     $this->actingAs($admin)
@@ -61,7 +61,7 @@ test('a retake can not be granted while the user still has attempts', function (
 });
 
 test('a retake requires a valid exam section', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     [$agent, $exam] = agentOutOfScriptAttempts();
 
     $this->actingAs($admin)

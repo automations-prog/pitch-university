@@ -65,7 +65,7 @@ test('a user can not view an inactive license even if it is assigned to them', f
 });
 
 test('admins can still view an inactive license', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->inactive()->create();
 
     $response = $this->actingAs($admin)->get(route('licenses.show', $license));
@@ -93,7 +93,7 @@ test('a user can not view a license not assigned to them', function () {
 });
 
 test('admins can view any license regardless of assignment', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->get(route('licenses.show', $license));

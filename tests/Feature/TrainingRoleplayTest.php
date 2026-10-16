@@ -226,7 +226,7 @@ test('agents who passed a later quiz before a module had its roleplay skip it', 
 
 test('admins can open an agent\'s roleplay call but not run it', function () {
     $session = RoleplaySession::factory()->ended()->create();
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $this->actingAs($admin)->get(route('medicare-roleplay.sessions.show', $session))->assertOk();
     $this->actingAs($admin)->post(route('medicare-roleplay.call.session', $session))->assertNotFound();
@@ -405,7 +405,7 @@ test('admins see each module\'s roleplay status, attempts and the checks each on
         ]],
     ]);
 
-    $this->actingAs(User::factory()->admin()->create())
+    $this->actingAs(User::factory()->superAdmin()->create())
         ->get(route('admin.training-tracks.show', $agent))
         ->assertInertia(fn (Assert $page) => $page
             ->where('tracks.0.passed_modules', 0)
@@ -472,7 +472,7 @@ test('an admin reviewing an agent\'s attempt goes back to the agent\'s training'
     [, $first, , $agent] = trackWithRoleplayModule();
     $attempt = RoleplaySession::factory()->for($agent)->ended()->create(['course_module_id' => $first->id]);
 
-    $this->actingAs(User::factory()->admin()->create())
+    $this->actingAs(User::factory()->superAdmin()->create())
         ->get(route('medicare-roleplay.sessions.show', $attempt))
         ->assertInertia(fn (Assert $page) => $page
             ->where('trail.2', ['title' => $agent->name, 'href' => route('admin.training-tracks.show', $agent)]));

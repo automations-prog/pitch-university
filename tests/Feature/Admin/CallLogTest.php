@@ -5,7 +5,7 @@ use App\Models\ScreeningResponse;
 use App\Models\User;
 
 test('admins can update call log notes', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $screeningResponse = ScreeningResponse::factory()->for(Screening::factory())->create();
     $callLog = $screeningResponse->callLog;
 
@@ -48,7 +48,7 @@ test('guests are redirected to login when updating call log notes', function () 
 });
 
 test('admins can save the candidate scorecard ratings', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $screeningResponse = ScreeningResponse::factory()->for(Screening::factory())->create();
     $callLog = $screeningResponse->callLog;
 
@@ -70,7 +70,7 @@ test('admins can save the candidate scorecard ratings', function () {
 });
 
 test('an invalid scorecard rating is rejected', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $screeningResponse = ScreeningResponse::factory()->for(Screening::factory())->create();
     $callLog = $screeningResponse->callLog;
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\LicenseStatus;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
+use App\Enums\WorkLocation;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
@@ -12,6 +13,7 @@ use App\Http\Resources\LicenseResource;
 use App\Http\Resources\UserResource;
 use App\Jobs\PullAgentsFromCustomerApiJob;
 use App\Models\License;
+use App\Models\Team;
 use App\Models\User;
 use App\Support\PullProgress;
 use Illuminate\Http\JsonResponse;
@@ -44,7 +46,8 @@ class UserController extends Controller
         $perPage = in_array($perPage, self::PER_PAGE_OPTIONS, true) ? $perPage : self::PER_PAGE_OPTIONS[0];
 
         $users = User::query()
-            ->with('licenses')
+            ->with(['licenses', 'team.campaign'])
+            ->visibleTo($request->user())
             ->when($request->string('search')->toString(), function ($query, string $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")
@@ -53,6 +56,9 @@ class UserController extends Controller
             })
             ->when($request->string('role')->toString(), fn ($query, string $role) => $query->where('role', $role))
             ->when($request->string('status')->toString(), fn ($query, string $status) => $query->where('status', $status))
+            ->when($request->string('work_location')->toString(), fn ($query, string $location) => $query->where('work_location', $location))
+            ->when($request->integer('team'), fn ($query, int $teamId) => $query->where('team_id', $teamId))
+            ->when($request->integer('campaign'), fn ($query, int $campaignId) => $query->whereRelation('team', 'campaign_id', $campaignId))
             ->orderBy('name')
             ->paginate($perPage)
             ->withQueryString();
@@ -66,12 +72,14 @@ class UserController extends Controller
                 'meta' => Arr::except($paginated['meta'], ['links']),
             ],
             'filters' => [
-                ...$request->only(['search', 'role', 'status']),
+                ...$request->only(['search', 'role', 'status', 'work_location', 'team', 'campaign']),
                 'per_page' => (string) $perPage,
             ],
             'perPageOptions' => self::PER_PAGE_OPTIONS,
             'roles' => UserRole::cases(),
             'statuses' => UserStatus::cases(),
+            'workLocations' => WorkLocation::cases(),
+            'teams' => $this->teamOptions($request->user()),
             'licenses' => LicenseResource::collection(License::query()->where('status', LicenseStatus::Active)->orderBy('name')->get()),
         ]);
     }
@@ -79,13 +87,15 @@ class UserController extends Controller
     /**
      * Show the form for creating a new user.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
         Gate::authorize('create', User::class);
 
         return Inertia::render('admin/users/create', [
-            'roles' => UserRole::cases(),
+            'roles' => $request->user()->assignableRoles(),
             'statuses' => UserStatus::cases(),
+            'workLocations' => WorkLocation::cases(),
+            'teams' => $this->teamOptions($request->user()),
         ]);
     }
 
@@ -94,7 +104,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        User::create($request->safe()->only(['name', 'email', 'password', 'role', 'status']));
+        User::create($request->safe()->only(['name', 'email', 'password', 'role', 'status', 'work_location', 'team_id']));
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('User created.')]);
 
@@ -109,21 +119,23 @@ class UserController extends Controller
         Gate::authorize('view', $user);
 
         return Inertia::render('admin/users/show', [
-            'user' => UserResource::make($user->load('licenses')),
+            'user' => UserResource::make($user->load(['licenses', 'team.campaign', 'team.manager:id,name,team_id'])),
         ]);
     }
 
     /**
      * Show the form for editing the given user.
      */
-    public function edit(User $user): Response
+    public function edit(Request $request, User $user): Response
     {
         Gate::authorize('update', $user);
 
         return Inertia::render('admin/users/edit', [
-            'user' => UserResource::make($user),
-            'roles' => UserRole::cases(),
+            'user' => UserResource::make($user->load('team.campaign')),
+            'roles' => $request->user()->assignableRoles(),
             'statuses' => UserStatus::cases(),
+            'workLocations' => WorkLocation::cases(),
+            'teams' => $this->teamOptions($request->user()),
         ]);
     }
 
@@ -243,9 +255,28 @@ class UserController extends Controller
     }
 
     /**
-     * Start impersonating the given user.
+     * The teams the user may put users on, with their campaign.
+     *
+     * @return array<int, array{id: int, name: string, campaign: array{id: int, name: string}}>
      */
+    private function teamOptions(User $user): array
+    {
+        return $user->assignableTeams()
+            ->with('campaign:id,name')
+            ->get(['id', 'name', 'campaign_id'])
+            ->sortBy([['campaign.name', 'asc'], ['name', 'asc']])
+            ->map(fn (Team $team) => [
+                'id' => $team->id,
+                'name' => $team->name,
+                'campaign' => ['id' => $team->campaign->id, 'name' => $team->campaign->name],
+            ])
+            ->values()
+            ->all();
+    }
+
     /**
+     * Start impersonating the given user.
+     *
      * Forces a full-page reload instead of a client-side Inertia visit, so
      * any pages prefetched as the admin (which carry the admin's auth
      * props) are discarded rather than served stale once impersonating.

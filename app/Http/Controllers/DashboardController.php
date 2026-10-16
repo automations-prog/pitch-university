@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Concerns\BuildsAgentReportQuery;
 use App\Enums\CallRating;
 use App\Enums\LicenseStatus;
+use App\Enums\Permission;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Models\CallLog;
@@ -52,9 +53,11 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-        if (! $user->isAdmin()) {
+        if (! $user->can(Permission::ViewReports)) {
             return $this->agentDashboard($user);
         }
+
+        $canViewScreening = $user->can(Permission::ViewScreening);
 
         $tracks = CourseTrack::query()->orderBy('position')->get(['id', 'name']);
         $selectedTrack = $tracks->find($request->integer('track'));
@@ -82,14 +85,14 @@ class DashboardController extends Controller
         // the training tab's agent table currently has applied.
         $hasAgentFilters = collect(['status', 'license', 'track'])->contains(fn (string $key) => $request->filled($key));
         $overviewReport = $hasAgentFilters
-            ? new AgentTrainingReport(User::where('role', UserRole::Agent)->pluck('id'))
+            ? new AgentTrainingReport(User::where('role', UserRole::Agent)->visibleTo($user)->pluck('id'))
             : $report;
         $overviewTracks = $overviewReport->trackOverview();
 
         $tab = in_array($request->query('tab'), self::TABS, true) ? $request->query('tab') : self::TABS[0];
 
-        $totalAgents = User::where('role', UserRole::Agent)->count();
-        $activeAgents = User::where('role', UserRole::Agent)->where('status', UserStatus::Active)->count();
+        $totalAgents = User::where('role', UserRole::Agent)->visibleTo($user)->count();
+        $activeAgents = User::where('role', UserRole::Agent)->visibleTo($user)->where('status', UserStatus::Active)->count();
 
         return Inertia::render('dashboard', [
             'isAdmin' => true,
@@ -107,8 +110,8 @@ class DashboardController extends Controller
             'charts' => $this->chartsFor($allFilteredAgents, $allFilteredAgentModels, $activeLicenses),
             'trackOverview' => $report->trackOverview(),
             'overviewTracks' => $overviewTracks,
-            'todos' => $this->todos($overviewTracks),
-            'screenings' => $this->screeningOverview(),
+            'todos' => $this->todos($overviewTracks, $canViewScreening),
+            'screenings' => $canViewScreening ? $this->screeningOverview() : null,
             'licenses' => $activeLicenses,
             'trainings' => $tracks,
             'filters' => [
@@ -138,19 +141,44 @@ class DashboardController extends Controller
     /**
      * The admin's open tasks, derived from live data so each item clears
      * itself once the work is done: rate finished screening calls, chase
-     * candidates who haven't taken the AI call, and get assigned agents
-     * started on their tracks.
+     * candidates who haven't taken the AI call (both only for users who
+     * can see screening), and get assigned agents started on their tracks.
      *
      * @param  Collection<int, array{slug: string, name: string, not_started: int}>  $tracks
      * @return array{items: Collection<int, array{key: string, type: string, title: string, description: string, screening_response_id: int|null}>, total: int}
      */
-    private function todos(Collection $tracks): array
+    private function todos(Collection $tracks, bool $includeScreening): array
+    {
+        $screening = $includeScreening ? $this->screeningTodos() : ['items' => collect(), 'total' => 0];
+        $notStartedTracks = $tracks->filter(fn (array $track) => $track['not_started'] > 0);
+
+        $items = $screening['items']
+            ->concat($notStartedTracks->map(fn (array $track) => [
+                'key' => "start-{$track['slug']}",
+                'type' => 'start',
+                'title' => sprintf('Get %d %s started', $track['not_started'], Str::plural('agent', $track['not_started'])),
+                'description' => "{$track['name']} not opened yet",
+                'screening_response_id' => null,
+            ]));
+
+        return [
+            'items' => $items->take(self::TODO_LIMIT)->values(),
+            'total' => $screening['total'] + $notStartedTracks->count(),
+        ];
+    }
+
+    /**
+     * The screening to-dos: finished AI calls to rate and candidates still
+     * to take the call.
+     *
+     * @return array{items: Collection<int, array{key: string, type: string, title: string, description: string, screening_response_id: int|null}>, total: int}
+     */
+    private function screeningTodos(): array
     {
         $awaitingReview = ScreeningResponse::query()
             ->whereHas('callLog', fn (Builder $callLog) => $callLog->awaitingReview());
         $awaitingCall = ScreeningResponse::query()
             ->whereHas('callLog', fn (Builder $callLog) => $callLog->whereNull('called_at'));
-        $notStartedTracks = $tracks->filter(fn (array $track) => $track['not_started'] > 0);
 
         $items = collect()
             ->concat((clone $awaitingReview)->latest('id')->limit(self::TODO_LIMIT)->get(['id', 'full_name'])
@@ -168,18 +196,11 @@ class DashboardController extends Controller
                     'title' => "Remind {$response->full_name}",
                     'description' => 'Still needs to take the AI call',
                     'screening_response_id' => $response->id,
-                ]))
-            ->concat($notStartedTracks->map(fn (array $track) => [
-                'key' => "start-{$track['slug']}",
-                'type' => 'start',
-                'title' => sprintf('Get %d %s started', $track['not_started'], Str::plural('agent', $track['not_started'])),
-                'description' => "{$track['name']} not opened yet",
-                'screening_response_id' => null,
-            ]));
+                ]));
 
         return [
-            'items' => $items->take(self::TODO_LIMIT)->values(),
-            'total' => $awaitingReview->count() + $awaitingCall->count() + $notStartedTracks->count(),
+            'items' => $items,
+            'total' => $awaitingReview->count() + $awaitingCall->count(),
         ];
     }
 

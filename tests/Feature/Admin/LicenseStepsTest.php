@@ -6,7 +6,7 @@ use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('the license edit page exposes steps in order', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
     $second = LicenseStep::factory()->for($license)->create(['title' => 'Second', 'order' => 1]);
     $first = LicenseStep::factory()->for($license)->create(['title' => 'First', 'order' => 0]);
@@ -21,7 +21,7 @@ test('the license edit page exposes steps in order', function () {
 });
 
 test('admins can add a step to a license', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.licensing.steps.store', $license), [
@@ -38,7 +38,7 @@ test('admins can add a step to a license', function () {
 });
 
 test('a step description is required', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.licensing.steps.store', $license), [
@@ -53,7 +53,7 @@ test('a step description is required', function () {
 });
 
 test('a new step is appended after existing steps', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
     LicenseStep::factory()->for($license)->create(['order' => 0]);
     LicenseStep::factory()->for($license)->create(['order' => 1]);
@@ -71,7 +71,7 @@ test('a new step is appended after existing steps', function () {
 });
 
 test('admins can update a step', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
     $step = LicenseStep::factory()->for($license)->create();
 
@@ -88,7 +88,7 @@ test('admins can update a step', function () {
 });
 
 test('admins can delete a step', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
     $step = LicenseStep::factory()->for($license)->create();
 
@@ -99,7 +99,7 @@ test('admins can delete a step', function () {
 });
 
 test('admins can reorder steps', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
     $first = LicenseStep::factory()->for($license)->create(['order' => 0]);
     $second = LicenseStep::factory()->for($license)->create(['order' => 1]);
@@ -114,7 +114,7 @@ test('admins can reorder steps', function () {
 });
 
 test('moving the first step up is a no-op', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
     $first = LicenseStep::factory()->for($license)->create(['order' => 0]);
 
@@ -150,7 +150,7 @@ test('agents can not manage license steps', function () {
 });
 
 test('a step can not be managed through a mismatched license url', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
     $otherLicense = License::factory()->create();
     $step = LicenseStep::factory()->for($license)->create();

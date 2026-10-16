@@ -5,7 +5,7 @@ use App\Models\ScreeningResponse;
 use App\Models\User;
 
 test('admins can delete a screening response', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $screeningResponse = ScreeningResponse::factory()->for(Screening::factory())->create();
 
     $response = $this->actingAs($admin)->delete(route('admin.screening-responses.destroy', $screeningResponse));
@@ -25,7 +25,7 @@ test('agents can not delete a screening response', function () {
 });
 
 test('admins can bulk delete screening responses', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $screening = Screening::factory()->create();
     $responses = ScreeningResponse::factory()->for($screening)->count(3)->create();
 
@@ -40,7 +40,7 @@ test('admins can bulk delete screening responses', function () {
 });
 
 test('bulk deleting screening responses requires at least one id', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->delete(route('admin.screening-responses.bulk-destroy'), [
         'ids' => [],

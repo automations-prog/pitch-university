@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Models\RoleplaySession;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -9,13 +10,13 @@ use Illuminate\Auth\Access\Response;
 class RoleplaySessionPolicy
 {
     /**
-     * Determine whether the user can view the model. Admins review agents'
-     * training calls; other users' sessions 404 so their existence isn't
-     * leaked.
+     * Determine whether the user can view the model. Reviewers see the
+     * training calls of agents on their teams; other users' sessions 404
+     * so their existence isn't leaked.
      */
     public function view(User $user, RoleplaySession $roleplaySession): Response
     {
-        return $user->isAdmin()
+        return $user->can(Permission::ReviewRoleplaySessions) && $user->canSee($roleplaySession->user)
             ? Response::allow()
             : $this->update($user, $roleplaySession);
     }

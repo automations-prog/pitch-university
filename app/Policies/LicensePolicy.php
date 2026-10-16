@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Models\License;
 use App\Models\User;
 
@@ -12,7 +13,7 @@ class LicensePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ViewLicensing);
     }
 
     /**
@@ -20,7 +21,7 @@ class LicensePolicy
      */
     public function view(User $user, License $license): bool
     {
-        return $user->isAdmin()
+        return $user->can(Permission::ViewLicensing)
             || ($license->isActive() && $user->licenses()->whereKey($license->id)->exists());
     }
 
@@ -29,7 +30,7 @@ class LicensePolicy
      */
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ManageLicensing);
     }
 
     /**
@@ -37,7 +38,7 @@ class LicensePolicy
      */
     public function update(User $user, License $license): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ManageLicensing);
     }
 
     /**
@@ -45,7 +46,7 @@ class LicensePolicy
      */
     public function delete(User $user, License $license): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ManageLicensing);
     }
 
     /**

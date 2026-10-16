@@ -1,7 +1,9 @@
 <?php
 
+use App\Enums\Permission;
 use App\Enums\RoleplayVertical;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\LicenseController;
 use App\Http\Controllers\RoleplayCallController;
 use App\Http\Controllers\RoleplayController;
@@ -19,10 +21,16 @@ Route::post('screening/{screening:token}', [ScreeningResponseController::class, 
 Route::post('screening/responses/{screeningResponse:token}/call/session', [ScreeningCallController::class, 'session'])->name('screening.call.session');
 Route::post('screening/responses/{screeningResponse:token}/call/complete', [ScreeningCallController::class, 'complete'])->name('screening.call.complete');
 
+Route::middleware('guest')->group(function () {
+    Route::get('invite/{invitation:token}', [InvitationController::class, 'show'])->name('invitations.show');
+    Route::post('invite/{invitation:token}', [InvitationController::class, 'store'])->middleware('throttle:10,1')->name('invitations.store');
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->middleware('can:'.Permission::ViewDashboard->value)->name('dashboard');
 
     Route::prefix('training')
+        ->middleware('can:'.Permission::ViewTraining->value)
         ->name('training.')
         ->scopeBindings()
         ->group(function () {
@@ -43,7 +51,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
     foreach (RoleplayVertical::cases() as $vertical) {
-        Route::prefix($vertical->routePrefix())->name($vertical->routePrefix().'.')->group(function () use ($vertical) {
+        Route::prefix($vertical->routePrefix())->name($vertical->routePrefix().'.')->middleware('can:'.Permission::forRoleplay($vertical)->value)->group(function () use ($vertical) {
             Route::get('/', [RoleplayController::class, 'index'])->defaults('vertical', $vertical->value)->name('index');
             Route::post('sessions', [RoleplayController::class, 'store'])->defaults('vertical', $vertical->value)->middleware('throttle:roleplay-sessions')->name('sessions.store');
             Route::get('sessions/{roleplaySession}', [RoleplayController::class, 'show'])->defaults('vertical', $vertical->value)->name('sessions.show');
@@ -53,8 +61,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     }
 
-    Route::get('licenses', [LicenseController::class, 'index'])->name('licenses.index');
-    Route::get('licenses/{license}', [LicenseController::class, 'show'])->name('licenses.show');
+    Route::middleware('can:'.Permission::ViewLicenses->value)->group(function () {
+        Route::get('licenses', [LicenseController::class, 'index'])->name('licenses.index');
+        Route::get('licenses/{license}', [LicenseController::class, 'show'])->name('licenses.show');
+    });
 });
 
 require __DIR__.'/settings.php';

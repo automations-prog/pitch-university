@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { roleLabel } from '@/lib/roles';
 import { useInitials } from '@/hooks/use-initials';
 import type { User } from '@/types';
 
@@ -29,8 +30,8 @@ export function UserInfo({
                     </span>
                 )}
                 {showRole && (
-                    <span className="text-muted-foreground truncate text-xs capitalize">
-                        {user.role}
+                    <span className="text-muted-foreground truncate text-xs">
+                        {roleLabel(user.role)}
                     </span>
                 )}
             </div>

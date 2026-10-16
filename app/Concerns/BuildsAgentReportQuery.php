@@ -11,8 +11,9 @@ use Illuminate\Http\Request;
 trait BuildsAgentReportQuery
 {
     /**
-     * Build the base query for agents shown in a progress report, applying
-     * the optional search/status/license filters from the request.
+     * Build the base query for agents shown in a progress report, limited to
+     * the agents the current user may see and applying the optional
+     * search/status/license filters from the request.
      */
     protected function agentReportQuery(Request $request): Builder
     {
@@ -20,6 +21,7 @@ trait BuildsAgentReportQuery
 
         return User::query()
             ->where('role', UserRole::Agent)
+            ->visibleTo($request->user())
             ->when($request->string('search')->toString(), function ($query, string $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")

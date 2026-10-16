@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Models\User;
 use App\Models\VerticalTraining;
 
@@ -12,7 +13,7 @@ class VerticalTrainingPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ViewVerticalTraining);
     }
 
     /**
@@ -20,7 +21,7 @@ class VerticalTrainingPolicy
      */
     public function view(User $user, VerticalTraining $verticalTraining): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ViewVerticalTraining);
     }
 
     /**
@@ -28,7 +29,7 @@ class VerticalTrainingPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ManageVerticalTraining);
     }
 
     /**
@@ -36,7 +37,7 @@ class VerticalTrainingPolicy
      */
     public function update(User $user, VerticalTraining $verticalTraining): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ManageVerticalTraining);
     }
 
     /**
@@ -44,7 +45,7 @@ class VerticalTrainingPolicy
      */
     public function delete(User $user, VerticalTraining $verticalTraining): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ManageVerticalTraining);
     }
 
     /**

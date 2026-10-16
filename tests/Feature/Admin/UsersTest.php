@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Bus;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('admins can view the users index', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     User::factory()->count(3)->create();
 
     $response = $this->actingAs($admin)->get(route('admin.users.index'));
@@ -25,7 +25,7 @@ test('admins can view the users index', function () {
 });
 
 test('the users index exposes each user\'s assigned licenses', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $agent = User::factory()->create(['name' => 'Zzyzx Licensed Agent']);
     $license = License::factory()->create();
     $agent->licenses()->attach($license);
@@ -41,7 +41,7 @@ test('the users index exposes each user\'s assigned licenses', function () {
 });
 
 test('the edit page exposes the user as a flat, unwrapped object', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $user = User::factory()->create();
 
     $response = $this->actingAs($admin)->get(route('admin.users.edit', $user));
@@ -56,7 +56,7 @@ test('the edit page exposes the user as a flat, unwrapped object', function () {
 });
 
 test('admins can view a user', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $user = User::factory()->create();
 
     $response = $this->actingAs($admin)->get(route('admin.users.show', $user));
@@ -77,7 +77,7 @@ test('agents cannot view another user', function () {
 });
 
 test('users index can be paginated with a selectable page size', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     User::factory()->count(24)->create();
 
     $response = $this->actingAs($admin)->get(route('admin.users.index', ['per_page' => 10]));
@@ -113,7 +113,7 @@ test('guests are redirected to login', function () {
 });
 
 test('admins can create a user', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.users.store'), [
         'name' => 'New Agent',
@@ -122,6 +122,7 @@ test('admins can create a user', function () {
         'password_confirmation' => 'password',
         'role' => 'agent',
         'status' => 'active',
+        'work_location' => 'offshore',
     ]);
 
     $response->assertRedirect(route('admin.users.index'));
@@ -129,11 +130,12 @@ test('admins can create a user', function () {
         'email' => 'new-agent@example.com',
         'role' => 'agent',
         'status' => 'active',
+        'work_location' => 'offshore',
     ]);
 });
 
 test('creating a user does not assign licenses', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.users.store'), [
@@ -143,6 +145,7 @@ test('creating a user does not assign licenses', function () {
         'password_confirmation' => 'password',
         'role' => 'agent',
         'status' => 'active',
+        'work_location' => 'onshore',
         'license_ids' => [$license->id],
     ]);
 
@@ -152,7 +155,7 @@ test('creating a user does not assign licenses', function () {
 });
 
 test('inactive licenses are excluded from the bulk-assign picker', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     License::factory()->create();
     License::factory()->inactive()->create();
 
@@ -162,7 +165,7 @@ test('inactive licenses are excluded from the bulk-assign picker', function () {
 });
 
 test('an inactive license can not be bulk assigned', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $target = User::factory()->create();
     $license = License::factory()->inactive()->create();
 
@@ -179,7 +182,7 @@ test('an inactive license can not be bulk assigned', function () {
 });
 
 test('the create page offers roles and statuses but no licenses', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     License::factory()->create();
 
     $response = $this->actingAs($admin)->get(route('admin.users.create'));
@@ -209,7 +212,7 @@ test('agents can not create a user', function () {
 });
 
 test('admins can update a user', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $user = User::factory()->create();
 
     $response = $this->actingAs($admin)->put(route('admin.users.update', $user), [
@@ -229,7 +232,7 @@ test('admins can update a user', function () {
 });
 
 test('admins can delete a user', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $user = User::factory()->create();
 
     $response = $this->actingAs($admin)->delete(route('admin.users.destroy', $user));
@@ -239,7 +242,7 @@ test('admins can delete a user', function () {
 });
 
 test('admins can not delete themselves', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->delete(route('admin.users.destroy', $admin));
 
@@ -248,7 +251,7 @@ test('admins can not delete themselves', function () {
 });
 
 test('admins can bulk delete users', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $users = User::factory()->count(3)->create();
 
     $response = $this->actingAs($admin)->delete(route('admin.users.bulk-destroy'), [
@@ -262,7 +265,7 @@ test('admins can bulk delete users', function () {
 });
 
 test('bulk delete is blocked if it includes the acting admin', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $agent = User::factory()->create();
 
     $response = $this->actingAs($admin)->delete(route('admin.users.bulk-destroy'), [
@@ -287,7 +290,7 @@ test('agents can not bulk delete users', function () {
 });
 
 test('bulk delete requires at least one id', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->delete(route('admin.users.bulk-destroy'), [
         'ids' => [],
@@ -297,7 +300,7 @@ test('bulk delete requires at least one id', function () {
 });
 
 test('admins can bulk assign a license to multiple users', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $users = User::factory()->count(3)->create();
     $license = License::factory()->create();
 
@@ -316,7 +319,7 @@ test('admins can bulk assign a license to multiple users', function () {
 });
 
 test('bulk assigning a license already held does not duplicate the row', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $user = User::factory()->create();
     $license = License::factory()->create();
     $user->licenses()->attach($license);
@@ -347,7 +350,7 @@ test('agents can not bulk assign licenses', function () {
 });
 
 test('bulk assign requires at least one user and a valid license', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $this->actingAs($admin)->post(route('admin.users.bulk-assign-license'), [
         'user_ids' => [],
@@ -356,7 +359,7 @@ test('bulk assign requires at least one user and a valid license', function () {
 });
 
 test('admins can update a user via method-spoofed post (matches frontend Form)', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $user = User::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.users.update', $user).'?_method=PUT', [
@@ -380,7 +383,7 @@ test('admins can update a user via method-spoofed post (matches frontend Form)',
 test('admins can trigger a pull of agents from the Customer API', function () {
     Bus::fake();
 
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.users.pull-agents'), [
         'progress_id' => 'test-progress-id',
@@ -404,7 +407,7 @@ test('non-admins cannot trigger a pull of agents from the Customer API', functio
 });
 
 test('the pull status endpoint reports progress for a known progress id', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->get(route('admin.users.pull-status', 'unknown-progress-id'));
 

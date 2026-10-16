@@ -21,7 +21,7 @@ class ExamRetakeController extends Controller
      */
     public function store(Request $request, User $user): RedirectResponse
     {
-        Gate::authorize('update', $user);
+        Gate::authorize('grantExamRetake', $user);
 
         $validated = $request->validate([
             'course_exam_id' => ['required', 'integer', Rule::exists('course_exams', 'id')],

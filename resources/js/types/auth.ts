@@ -1,6 +1,22 @@
 import type { License } from '@/types/license';
 
-export type UserRole = 'admin' | 'agent';
+export type UserRole = 'super_admin' | 'admin' | 'agent';
+
+export type WorkLocation = 'onshore' | 'offshore';
+
+export type UserTeam = {
+    id: number;
+    name: string;
+    campaign: { id: number; name: string } | null;
+    manager: string | null;
+};
+
+/** A team a user can be put on, as listed in user forms and filters. */
+export type TeamOption = {
+    id: number;
+    name: string;
+    campaign: { id: number; name: string };
+};
 
 export type UserStatus = 'active' | 'inactive';
 
@@ -11,6 +27,11 @@ export type User = {
     avatar?: string;
     role: UserRole;
     status: UserStatus;
+    work_location?: WorkLocation | null;
+    team_id?: number | null;
+    team?: UserTeam | null;
+    /** What the signed-in user may do to this user (admin user pages only). */
+    abilities?: { update: boolean; delete: boolean; impersonate: boolean };
     licenses_count: number;
     course_tracks_count?: number;
     licenses?: License[];
@@ -23,6 +44,7 @@ export type User = {
 
 export type Auth = {
     user: User;
+    permissions: string[];
     impersonating: boolean;
 };
 

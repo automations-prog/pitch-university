@@ -7,7 +7,7 @@ use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('admins can view the screening index with all responses', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     Screening::factory()->has(ScreeningResponse::factory()->count(2), 'responses')->create();
     Screening::factory()->has(ScreeningResponse::factory()->count(1), 'responses')->create();
 
@@ -27,7 +27,7 @@ test('admins can view the screening index with all responses', function () {
 });
 
 test('the screening index can be filtered to calls awaiting review', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     ScreeningResponse::factory()->create();
     $awaitingReview = ScreeningResponse::factory()->create();
     $awaitingReview->callLog->update(['called_at' => now()]);
@@ -48,7 +48,7 @@ test('the screening index can be filtered to calls awaiting review', function ()
 });
 
 test('the screening index can be paginated with a selectable page size', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     Screening::factory()
         ->count(15)
         ->has(ScreeningResponse::factory(), 'responses')
@@ -85,7 +85,7 @@ test('guests are redirected to login for the screening index', function () {
 });
 
 test('admins can generate a screening link', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.screening.store'));
 
@@ -95,7 +95,7 @@ test('admins can generate a screening link', function () {
 });
 
 test('admins can choose a voice when generating a screening link', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.screening.store'), [
         'voice' => 'cedar',
@@ -107,7 +107,7 @@ test('admins can choose a voice when generating a screening link', function () {
 });
 
 test('generating a screening link rejects an invalid voice', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.screening.store'), [
         'voice' => 'not-a-real-voice',
@@ -127,7 +127,7 @@ test('agents can not generate a screening link', function () {
 });
 
 test('admins can view a screening\'s responses', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $screening = Screening::factory()->has(ScreeningResponse::factory()->count(2), 'responses')->create();
 
     $response = $this->actingAs($admin)->get(route('admin.screening.show', $screening));
@@ -149,7 +149,7 @@ test('agents can not view a screening\'s responses', function () {
 });
 
 test('admins can view a single screening response', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $screening = Screening::factory()->has(ScreeningResponse::factory(), 'responses')->create();
     $screeningResponse = $screening->responses()->first();
 

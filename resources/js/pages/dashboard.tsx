@@ -46,6 +46,7 @@ import {
 } from '@/components/ui/table';
 import { resourceCardClass } from '@/lib/brand-theme';
 import { scoreBadgeVariant, trackStatusLabels } from '@/lib/scoring';
+import { useCan } from '@/hooks/use-can';
 import { cn } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { index as screeningIndex } from '@/routes/admin/screening';
@@ -93,7 +94,7 @@ type Props =
           trackOverview: TrackOverviewRow[];
           overviewTracks: TrackOverviewRow[];
           todos: DashboardTodos;
-          screenings: ScreeningOverview;
+          screenings: ScreeningOverview | null;
           licenses: DashboardFilterOption[];
           trainings: DashboardFilterOption[];
           filters: {
@@ -153,8 +154,8 @@ function TrackOverviewCard({ tracks }: { tracks: TrackOverviewRow[] }) {
             <CardHeader>
                 <CardTitle>Training tracks</CardTitle>
                 <CardDescription>
-                    Progress of the agents assigned to each track. Tracks with
-                    a final exam are complete once the agent is certified. The
+                    Progress of the agents assigned to each track. Tracks with a
+                    final exam are complete once the agent is certified. The
                     average score is each agent&apos;s best quiz score per
                     module.
                 </CardDescription>
@@ -170,7 +171,9 @@ function TrackOverviewCard({ tracks }: { tracks: TrackOverviewRow[] }) {
                                 <TableHead>In progress</TableHead>
                                 <TableHead>Completed</TableHead>
                                 <TableHead>Avg. score</TableHead>
-                                <TableHead className="w-40">Completion</TableHead>
+                                <TableHead className="w-40">
+                                    Completion
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -261,8 +264,7 @@ export default function Dashboard(props: Props) {
                             Your progress
                         </h2>
                         <p className="text-muted-foreground text-sm">
-                            Your training progress and quiz scores, at a
-                            glance.
+                            Your training progress and quiz scores, at a glance.
                         </p>
                     </div>
 
@@ -297,8 +299,8 @@ export default function Dashboard(props: Props) {
                         <CardHeader>
                             <CardTitle>Your training scores</CardTitle>
                             <CardDescription>
-                                Status and average quiz score for every
-                                assigned track.
+                                Status and average quiz score for every assigned
+                                track.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -384,12 +386,17 @@ export default function Dashboard(props: Props) {
     } = props;
 
     const { auth } = usePage().props;
+    const can = useCan();
     const [search, setSearch] = useState('');
-    const tab = filters.tab;
+    const tab =
+        filters.tab === 'screening' && !screenings ? 'overview' : filters.tab;
+    const visibleTabs = tabs.filter(
+        (option) => option.value !== 'screening' || screenings,
+    );
     const tabCounts: Record<DashboardTab, number> = {
         overview: todos.total,
         training: overviewTracks.length,
-        screening: screenings.stats.awaiting_review,
+        screening: screenings?.stats.awaiting_review ?? 0,
     };
 
     function searchUsers(event: FormEvent) {
@@ -458,20 +465,20 @@ export default function Dashboard(props: Props) {
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-                    <QuickActionCard
-                        title="Review candidates"
-                        description={`${screenings.stats.awaiting_review} ready now`}
-                        tile={screenings.stats.awaiting_review}
-                        color="amber"
-                        href={screeningIndex({
-                            query: { status: 'awaiting_review' },
-                        })}
-                    />
+                    {screenings && (
+                        <QuickActionCard
+                            title="Review candidates"
+                            description={`${screenings.stats.awaiting_review} ready now`}
+                            tile={screenings.stats.awaiting_review}
+                            color="amber"
+                            href={screeningIndex({
+                                query: { status: 'awaiting_review' },
+                            })}
+                        />
+                    )}
                     <QuickActionCard
                         title="Check training"
-                        description={
-                            overviewTracks[0]?.name ?? 'No tracks yet'
-                        }
+                        description={overviewTracks[0]?.name ?? 'No tracks yet'}
                         tile={overviewTracks.length}
                         color="sky"
                         onClick={() => selectTab('training')}
@@ -497,20 +504,22 @@ export default function Dashboard(props: Props) {
                         color="emerald"
                         href={mealsRoleplayIndex()}
                     />
-                    <QuickActionCard
-                        title="Invite an agent"
-                        description="Add to your team"
-                        tile={<Plus className="size-4" />}
-                        color="violet"
-                        href={usersCreate()}
-                    />
+                    {can('users.create') && (
+                        <QuickActionCard
+                            title="Invite an agent"
+                            description="Add to your team"
+                            tile={<Plus className="size-4" />}
+                            color="violet"
+                            href={usersCreate()}
+                        />
+                    )}
                 </div>
 
                 <div
                     role="tablist"
                     className="bg-card inline-flex w-fit gap-1 rounded-2xl border p-1"
                 >
-                    {tabs.map((option) => (
+                    {visibleTabs.map((option) => (
                         <button
                             key={option.value}
                             type="button"
@@ -551,12 +560,14 @@ export default function Dashboard(props: Props) {
                                     onSeeProgress={() => selectTab('training')}
                                 />
                             ))}
-                            <ScreeningSummaryCard screenings={screenings} />
+                            {screenings && (
+                                <ScreeningSummaryCard screenings={screenings} />
+                            )}
                         </div>
                     </div>
                 )}
 
-                {tab === 'screening' && (
+                {tab === 'screening' && screenings && (
                     <ScreeningOverviewCard screenings={screenings} />
                 )}
 
@@ -571,8 +582,8 @@ export default function Dashboard(props: Props) {
                                 <div>
                                     <CardTitle>Agent progress</CardTitle>
                                     <CardDescription>
-                                        Tracks completed and average quiz score per
-                                        agent.
+                                        Tracks completed and average quiz score
+                                        per agent.
                                     </CardDescription>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2">
@@ -630,7 +641,9 @@ export default function Dashboard(props: Props) {
                                             <SelectValue placeholder="Training track" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="all">All tracks</SelectItem>
+                                            <SelectItem value="all">
+                                                All tracks
+                                            </SelectItem>
                                             {trainings.map((training) => (
                                                 <SelectItem
                                                     key={training.id}
@@ -651,8 +664,12 @@ export default function Dashboard(props: Props) {
                                                 <TableHead>Agent</TableHead>
                                                 <TableHead>Status</TableHead>
                                                 <TableHead>Progress</TableHead>
-                                                <TableHead>Avg. score</TableHead>
-                                                <TableHead>Last activity</TableHead>
+                                                <TableHead>
+                                                    Avg. score
+                                                </TableHead>
+                                                <TableHead>
+                                                    Last activity
+                                                </TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -760,98 +777,133 @@ export default function Dashboard(props: Props) {
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {perPageOptions.map((option) => (
-                                                    <SelectItem
-                                                        key={option}
-                                                        value={String(option)}
-                                                    >
-                                                        {option}
-                                                    </SelectItem>
-                                                ))}
+                                                {perPageOptions.map(
+                                                    (option) => (
+                                                        <SelectItem
+                                                            key={option}
+                                                            value={String(
+                                                                option,
+                                                            )}
+                                                        >
+                                                            {option}
+                                                        </SelectItem>
+                                                    ),
+                                                )}
                                             </SelectContent>
                                         </Select>
                                         <span>
                                             {agents.meta.from ?? 0}–
-                                            {agents.meta.to ?? 0} of {agents.meta.total}
+                                            {agents.meta.to ?? 0} of{' '}
+                                            {agents.meta.total}
                                         </span>
                                     </div>
 
                                     {agents.meta.last_page > 1 && (
                                         <Pagination className="mx-0 w-auto">
                                             <PaginationContent>
-                                                {agents.links.map((link, index) => {
-                                                    const goToPage = (
-                                                        e: MouseEvent,
-                                                    ) => {
-                                                        e.preventDefault();
-                                                        if (link.url) {
-                                                            router.get(
-                                                                link.url,
-                                                                {},
-                                                                { preserveState: true },
+                                                {agents.links.map(
+                                                    (link, index) => {
+                                                        const goToPage = (
+                                                            e: MouseEvent,
+                                                        ) => {
+                                                            e.preventDefault();
+                                                            if (link.url) {
+                                                                router.get(
+                                                                    link.url,
+                                                                    {},
+                                                                    {
+                                                                        preserveState: true,
+                                                                    },
+                                                                );
+                                                            }
+                                                        };
+
+                                                        if (
+                                                            link.label === '...'
+                                                        ) {
+                                                            return (
+                                                                <PaginationItem
+                                                                    key={index}
+                                                                >
+                                                                    <PaginationEllipsis />
+                                                                </PaginationItem>
                                                             );
                                                         }
-                                                    };
 
-                                                    if (link.label === '...') {
+                                                        const disabledClass =
+                                                            !link.url
+                                                                ? 'pointer-events-none opacity-50'
+                                                                : undefined;
+
+                                                        if (index === 0) {
+                                                            return (
+                                                                <PaginationItem
+                                                                    key={index}
+                                                                >
+                                                                    <PaginationPrevious
+                                                                        href={
+                                                                            link.url ??
+                                                                            '#'
+                                                                        }
+                                                                        onClick={
+                                                                            goToPage
+                                                                        }
+                                                                        className={
+                                                                            disabledClass
+                                                                        }
+                                                                    />
+                                                                </PaginationItem>
+                                                            );
+                                                        }
+
+                                                        if (
+                                                            index ===
+                                                            agents.links
+                                                                .length -
+                                                                1
+                                                        ) {
+                                                            return (
+                                                                <PaginationItem
+                                                                    key={index}
+                                                                >
+                                                                    <PaginationNext
+                                                                        href={
+                                                                            link.url ??
+                                                                            '#'
+                                                                        }
+                                                                        onClick={
+                                                                            goToPage
+                                                                        }
+                                                                        className={
+                                                                            disabledClass
+                                                                        }
+                                                                    />
+                                                                </PaginationItem>
+                                                            );
+                                                        }
+
                                                         return (
-                                                            <PaginationItem key={index}>
-                                                                <PaginationEllipsis />
-                                                            </PaginationItem>
-                                                        );
-                                                    }
-
-                                                    const disabledClass = !link.url
-                                                        ? 'pointer-events-none opacity-50'
-                                                        : undefined;
-
-                                                    if (index === 0) {
-                                                        return (
-                                                            <PaginationItem key={index}>
-                                                                <PaginationPrevious
-                                                                    href={
-                                                                        link.url ?? '#'
-                                                                    }
-                                                                    onClick={goToPage}
-                                                                    className={
-                                                                        disabledClass
-                                                                    }
-                                                                />
-                                                            </PaginationItem>
-                                                        );
-                                                    }
-
-                                                    if (
-                                                        index ===
-                                                        agents.links.length - 1
-                                                    ) {
-                                                        return (
-                                                            <PaginationItem key={index}>
-                                                                <PaginationNext
-                                                                    href={
-                                                                        link.url ?? '#'
-                                                                    }
-                                                                    onClick={goToPage}
-                                                                    className={
-                                                                        disabledClass
-                                                                    }
-                                                                />
-                                                            </PaginationItem>
-                                                        );
-                                                    }
-
-                                                    return (
-                                                        <PaginationItem key={index}>
-                                                            <PaginationLink
-                                                                href={link.url ?? '#'}
-                                                                isActive={link.active}
-                                                                onClick={goToPage}
+                                                            <PaginationItem
+                                                                key={index}
                                                             >
-                                                                {link.label}
-                                                            </PaginationLink>
-                                                        </PaginationItem>
-                                                    );
-                                                })}
+                                                                <PaginationLink
+                                                                    href={
+                                                                        link.url ??
+                                                                        '#'
+                                                                    }
+                                                                    isActive={
+                                                                        link.active
+                                                                    }
+                                                                    onClick={
+                                                                        goToPage
+                                                                    }
+                                                                >
+                                                                    {link.label}
+                                                                </PaginationLink>
+                                                            </PaginationItem>
+                                                        );
+                                                    },
+                                                )}
                                             </PaginationContent>
                                         </Pagination>
                                     )}

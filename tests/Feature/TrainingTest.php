@@ -69,7 +69,7 @@ test('agents only see the tracks assigned to them', function () {
 test('admins only see and open tracks toggled on for them too', function () {
     $assigned = CourseTrack::factory()->create();
     $unassigned = CourseTrack::factory()->create();
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $admin->courseTracks()->attach($assigned);
 
     $this->actingAs($admin)
@@ -270,6 +270,7 @@ test('my training runs the same number of queries however many tracks are assign
     };
 
     $addTrack(0);
+    $countQueries(); // Warm the permission cache, which the first request fills.
     $queriesWithOneTrack = $countQueries();
 
     $addTrack(1);

@@ -82,7 +82,7 @@ test('an agent\'s training scores show their status and average quiz score in ea
 });
 
 test('admins see progress stats and the agent table', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     User::factory()->count(2)->create();
     User::factory()->inactive()->create();
 
@@ -110,7 +110,7 @@ test('admins see progress stats and the agent table', function () {
 });
 
 test('the admin dashboard agent table can be filtered by status', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     User::factory()->count(2)->create();
     User::factory()->inactive()->count(3)->create();
 
@@ -123,7 +123,7 @@ test('the admin dashboard agent table can be filtered by status', function () {
 });
 
 test('the admin dashboard agent table can be filtered by license', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
     $licensedAgent = User::factory()->create();
     $licensedAgent->licenses()->attach($license);
@@ -138,7 +138,7 @@ test('the admin dashboard agent table can be filtered by license', function () {
 });
 
 test('the admin dashboard agent table shows each agent\'s live track progress', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $agent = User::factory()->create();
     $completedTrack = CourseTrack::factory()->create();
     $module = CourseModule::factory()->for($completedTrack, 'track')->create();
@@ -155,7 +155,7 @@ test('the admin dashboard agent table shows each agent\'s live track progress', 
 });
 
 test('the admin dashboard narrows to agents assigned to a single track when filtered', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $track = CourseTrack::factory()->create();
     $otherTrack = CourseTrack::factory()->create();
     $assignedAgent = User::factory()->create();
@@ -175,7 +175,7 @@ test('the admin dashboard narrows to agents assigned to a single track when filt
 });
 
 test('the admin dashboard agent table can be paginated with a selectable page size', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     User::factory()->count(24)->create();
 
     $response = $this->actingAs($admin)->get(route('dashboard', ['per_page' => 10]));
@@ -196,7 +196,7 @@ test('the admin dashboard agent table can be paginated with a selectable page si
 });
 
 test('the dashboard charts summarize every filtered agent, not just the current page', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     User::factory()->count(24)->create();
 
     $response = $this->actingAs($admin)->get(route('dashboard', ['per_page' => 10]));
@@ -208,7 +208,7 @@ test('the dashboard charts summarize every filtered agent, not just the current 
 });
 
 test('an invalid per_page value on the dashboard falls back to the default', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     User::factory()->count(2)->create();
 
     $response = $this->actingAs($admin)->get(route('dashboard', ['per_page' => 999]));
@@ -220,7 +220,7 @@ test('an invalid per_page value on the dashboard falls back to the default', fun
 });
 
 test('inactive licenses are excluded from the dashboard filter options, which list every training track', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     License::factory()->inactive()->create();
     $track = CourseTrack::factory()->create();
 
@@ -234,7 +234,7 @@ test('inactive licenses are excluded from the dashboard filter options, which li
 });
 
 test('the per-license chart counts agents assigned to each active license', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create(['name' => 'Sales Fundamentals']);
     License::factory()->inactive()->create();
     $agent = User::factory()->create();
@@ -251,7 +251,7 @@ test('the per-license chart counts agents assigned to each active license', func
 });
 
 test('the dashboard charts reflect the filtered agent set', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     User::factory()->count(2)->create();
     User::factory()->inactive()->count(3)->create();
 
@@ -306,7 +306,7 @@ test('a track with a final exam does not count as completed on the agent dashboa
 });
 
 test('the admin dashboard summarizes how assigned agents are progressing in each track', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $track = CourseTrack::factory()->create(['position' => 0]);
     $module = CourseModule::factory()->for($track, 'track')->create();
@@ -379,7 +379,7 @@ test('the agent dashboard averages the agent\'s best quiz score per attempted mo
 });
 
 test('the admin track overview averages assigned agents\' best quiz scores', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $track = CourseTrack::factory()->create();
     $module = CourseModule::factory()->for($track, 'track')->create();
     CourseTrack::factory()->create(['position' => 1]);
@@ -401,7 +401,7 @@ test('the admin track overview averages assigned agents\' best quiz scores', fun
 });
 
 test('the admin dashboard summarizes the screening funnel and lists the latest responses', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     ScreeningResponse::factory()->count(2)->create();
     $calledOnly = ScreeningResponse::factory()->create();
@@ -437,7 +437,7 @@ test('agents do not see screening data on their dashboard', function () {
 });
 
 test('admins share the count of screening calls awaiting review for the sidebar badge', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     ScreeningResponse::factory()->create();
     ScreeningResponse::factory()->count(2)->create()
@@ -460,7 +460,7 @@ test('agents do not receive the screening review count', function () {
 });
 
 test('the admin dashboard lists to-dos derived from screenings and unstarted training', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $awaitingReview = ScreeningResponse::factory()->create(['full_name' => 'Wesley Vasquez']);
     $awaitingReview->callLog->update(['called_at' => now()]);
@@ -500,7 +500,7 @@ test('the admin dashboard lists to-dos derived from screenings and unstarted tra
 });
 
 test('the overview tracks ignore the agent table filters', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $track = CourseTrack::factory()->create();
     $track->users()->attach(User::factory()->count(2)->create());
     $track->users()->attach(User::factory()->inactive()->create());

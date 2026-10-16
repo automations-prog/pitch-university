@@ -3,7 +3,7 @@
 use App\Models\User;
 
 test('admins can impersonate an active agent', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $agent = User::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.users.impersonate', $agent));
@@ -23,8 +23,8 @@ test('agents can not impersonate other users', function () {
 });
 
 test('admins can not impersonate another admin', function () {
-    $admin = User::factory()->admin()->create();
-    $otherAdmin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
+    $otherAdmin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.users.impersonate', $otherAdmin));
 
@@ -33,7 +33,7 @@ test('admins can not impersonate another admin', function () {
 });
 
 test('admins can not impersonate an inactive agent', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $agent = User::factory()->inactive()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.users.impersonate', $agent));
@@ -43,7 +43,7 @@ test('admins can not impersonate an inactive agent', function () {
 });
 
 test('admins can leave impersonation and return to their own session', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $agent = User::factory()->create();
 
     $this->actingAs($admin)->post(route('admin.users.impersonate', $agent));
@@ -56,7 +56,7 @@ test('admins can leave impersonation and return to their own session', function 
 });
 
 test('after leaving impersonation, subsequent pages reflect the admin session and are not cacheable', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $agent = User::factory()->create();
 
     // Visit a page as the impersonated agent, then leave.

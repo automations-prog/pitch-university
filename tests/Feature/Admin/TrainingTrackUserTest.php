@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('admins can view a user\'s progress in each assigned track', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $agent = User::factory()->create();
     $track = CourseTrack::factory()->create();
     $first = CourseModule::factory()->for($track, 'track')->create(['position' => 0]);
@@ -47,7 +47,7 @@ test('admins can view a user\'s progress in each assigned track', function () {
 });
 
 test('tracks the user was removed from are shown only if they have progress', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $agent = User::factory()->create();
     $removedWithProgress = CourseTrack::factory()->create();
     $module = CourseModule::factory()->for($removedWithProgress, 'track')->create();
@@ -72,7 +72,7 @@ test('agents can not view a user\'s training progress', function () {
 });
 
 test('a user\'s training progress page runs the same number of queries however many tracks they have', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $agent = User::factory()->create();
 
     $addTrack = function (int $position, bool $isAssigned) use ($agent): void {
@@ -98,6 +98,7 @@ test('a user\'s training progress page runs the same number of queries however m
 
     $addTrack(0, isAssigned: true);
     $addTrack(1, isAssigned: false);
+    $countQueries(); // Warm the permission cache, which the first request fills.
     $queriesWithTwoTracks = $countQueries();
 
     $addTrack(2, isAssigned: true);

@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Permission;
 use App\Enums\UserRole;
+use App\Enums\UserStatus;
+use App\Enums\WorkLocation;
 use App\Http\Controllers\Controller;
 use App\Models\CourseModule;
 use App\Models\CourseQuizAttempt;
 use App\Models\CourseTrack;
 use App\Models\RoleplaySession;
+use App\Models\Team;
 use App\Models\User;
 use App\Services\TrainingProgress;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,29 +32,36 @@ class TrainingTrackController extends Controller
     private const PER_PAGE_OPTIONS = [10, 25, 50, 100];
 
     /**
-     * Display every user with a toggle for each training track.
+     * Display every agent with a toggle for each training track.
      */
     public function index(Request $request): Response
     {
-        Gate::authorize('viewAny', User::class);
+        Gate::authorize(Permission::ViewTrainingTracks);
 
         $search = $request->string('search')->trim()->toString();
-        $role = $request->string('role')->toString();
 
         $perPage = $request->integer('per_page', self::PER_PAGE_OPTIONS[0]);
         $perPage = in_array($perPage, self::PER_PAGE_OPTIONS, true) ? $perPage : self::PER_PAGE_OPTIONS[0];
 
         $tracks = CourseTrack::query()
             ->orderBy('position')
-            ->withCount('users')
+            ->withCount(['users' => fn (Builder $query) => $query->where('role', UserRole::Agent)])
             ->get();
 
         $users = User::query()
             ->with('courseTracks:id')
+            ->where('role', UserRole::Agent)
+            ->visibleTo($request->user())
             ->when($search !== '', fn (Builder $query) => $query->where(fn (Builder $query) => $query
                 ->where('name', 'like', "%{$search}%")
                 ->orWhere('email', 'like', "%{$search}%")))
-            ->when(UserRole::tryFrom($role), fn (Builder $query, UserRole $role) => $query->where('role', $role))
+            ->when($request->integer('campaign'), fn (Builder $query, int $campaignId) => $query->whereRelation('team', 'campaign_id', $campaignId))
+            ->when($request->integer('team'), fn (Builder $query, int $teamId) => $query->where('team_id', $teamId))
+            ->when(WorkLocation::tryFrom($request->string('work_location')->toString()), fn (Builder $query, WorkLocation $location) => $query->where('work_location', $location))
+            ->when(UserStatus::tryFrom($request->string('status')->toString()), fn (Builder $query, UserStatus $status) => $query->where('status', $status))
+            ->when($request->string('track')->toString(), fn (Builder $query, string $track) => $track === 'none'
+                ? $query->whereDoesntHave('courseTracks')
+                : $query->whereHas('courseTracks', fn (Builder $query) => $query->whereKey((int) $track)))
             ->orderBy('name')
             ->paginate($perPage)
             ->withQueryString();
@@ -59,7 +70,6 @@ class TrainingTrackController extends Controller
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'role' => $user->role,
             'track_ids' => $user->courseTracks->modelKeys(),
         ]);
 
@@ -77,8 +87,23 @@ class TrainingTrackController extends Controller
                 'links' => $paginated['links'],
                 'meta' => Arr::except($paginated, ['data', 'links']),
             ],
-            'roles' => UserRole::cases(),
-            'filters' => ['search' => $search, 'role' => $role, 'per_page' => (string) $perPage],
+            'filters' => [
+                ...$request->only(['campaign', 'team', 'work_location', 'status', 'track']),
+                'search' => $search,
+                'per_page' => (string) $perPage,
+            ],
+            'teams' => $request->user()->assignableTeams()
+                ->with('campaign:id,name')
+                ->get(['id', 'name', 'campaign_id'])
+                ->sortBy([['campaign.name', 'asc'], ['name', 'asc']])
+                ->map(fn (Team $team) => [
+                    'id' => $team->id,
+                    'name' => $team->name,
+                    'campaign' => $team->campaign->only(['id', 'name']),
+                ])
+                ->values(),
+            'workLocations' => WorkLocation::cases(),
+            'statuses' => UserStatus::cases(),
             'perPageOptions' => self::PER_PAGE_OPTIONS,
         ]);
     }
@@ -88,7 +113,7 @@ class TrainingTrackController extends Controller
      */
     public function show(User $user): Response
     {
-        Gate::authorize('viewAny', User::class);
+        Gate::authorize('viewProgress', $user);
 
         $assignedTracks = $user->courseTracks()->orderBy('position')->get();
 

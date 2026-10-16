@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
-use App\Enums\UserRole;
+use App\Concerns\UserAssignmentValidationRules;
 use App\Enums\UserStatus;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -13,7 +13,7 @@ use Illuminate\Validation\Rule;
 
 class StoreUserRequest extends FormRequest
 {
-    use PasswordValidationRules, ProfileValidationRules;
+    use PasswordValidationRules, ProfileValidationRules, UserAssignmentValidationRules;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -33,8 +33,8 @@ class StoreUserRequest extends FormRequest
         return [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
-            'role' => ['required', Rule::enum(UserRole::class)],
             'status' => ['required', Rule::enum(UserStatus::class)],
+            ...$this->assignmentRules($this->user(), requiresWorkLocation: true),
         ];
     }
 }

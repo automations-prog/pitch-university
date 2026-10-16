@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Concerns\ProfileValidationRules;
-use App\Enums\UserRole;
+use App\Concerns\UserAssignmentValidationRules;
 use App\Enums\UserStatus;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -13,7 +13,7 @@ use Illuminate\Validation\Rules\Password;
 
 class UpdateUserRequest extends FormRequest
 {
-    use ProfileValidationRules;
+    use ProfileValidationRules, UserAssignmentValidationRules;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -36,8 +36,8 @@ class UpdateUserRequest extends FormRequest
         return [
             ...$this->profileRules($user->id),
             'password' => ['nullable', 'string', Password::default(), 'confirmed'],
-            'role' => ['required', Rule::enum(UserRole::class)],
             'status' => ['required', Rule::enum(UserStatus::class)],
+            ...$this->assignmentRules($this->user(), requiresWorkLocation: false, user: $user),
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Enums\LicenseStatus;
+use App\Enums\Permission;
 use App\Models\CallLog;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -45,9 +46,10 @@ class HandleInertiaRequests extends Middleware
                     'licenses' => fn ($query) => $query->where('status', LicenseStatus::Active),
                     'courseTracks',
                 ]),
+                'permissions' => fn (): array => $request->user()?->getAllPermissions()->pluck('name')->values()->all() ?? [],
                 'impersonating' => $request->session()->has(config('laravel-impersonate.session_key')),
             ],
-            'screeningAwaitingReview' => fn (): ?int => $request->user()?->isAdmin()
+            'screeningAwaitingReview' => fn (): ?int => $request->user()?->can(Permission::ViewScreening)
                 ? CallLog::awaitingReview()->count()
                 : null,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',

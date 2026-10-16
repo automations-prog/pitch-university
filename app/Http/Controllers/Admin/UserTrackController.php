@@ -15,7 +15,7 @@ class UserTrackController extends Controller
      */
     public function store(User $user, CourseTrack $track): RedirectResponse
     {
-        Gate::authorize('update', $user);
+        Gate::authorize('assignTracks', $user);
 
         $user->courseTracks()->syncWithoutDetaching([$track->id]);
 
@@ -27,7 +27,7 @@ class UserTrackController extends Controller
      */
     public function destroy(User $user, CourseTrack $track): RedirectResponse
     {
-        Gate::authorize('update', $user);
+        Gate::authorize('assignTracks', $user);
 
         $user->courseTracks()->detach($track->id);
 

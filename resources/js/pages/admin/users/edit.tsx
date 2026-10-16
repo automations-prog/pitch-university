@@ -1,6 +1,7 @@
-import { Form, Head, Link } from '@inertiajs/react';
+import { Form, Head, Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import UserController from '@/actions/App/Http/Controllers/Admin/UserController';
+import { UserTeamFields } from '@/components/admin/user-team-fields';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import { Button } from '@/components/ui/button';
@@ -24,20 +25,32 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 import { brandButtonClass, resourceInputClass } from '@/lib/brand-theme';
+import { roleLabel } from '@/lib/roles';
 import { dashboard } from '@/routes';
 import { index as usersIndex } from '@/routes/admin/users';
 import { ArrowLeft, Check, Mail, User as UserIcon } from 'lucide-react';
-import type { User, UserRole, UserStatus } from '@/types';
+import type {
+    TeamOption,
+    User,
+    UserRole,
+    UserStatus,
+    WorkLocation,
+} from '@/types';
 
 export default function EditUser({
     user,
     roles,
     statuses,
+    workLocations,
+    teams,
 }: {
     user: User;
     roles: UserRole[];
     statuses: UserStatus[];
+    workLocations: WorkLocation[];
+    teams: TeamOption[];
 }) {
+    const { auth } = usePage().props;
     const [role, setRole] = useState<UserRole>(user.role);
     const [status, setStatus] = useState<UserStatus>(user.status);
 
@@ -96,9 +109,7 @@ export default function EditUser({
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="email">
-                                        Email address
-                                    </Label>
+                                    <Label htmlFor="email">Email address</Label>
                                     <div className="relative">
                                         <Mail className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
                                         <Input
@@ -121,8 +132,7 @@ export default function EditUser({
                             <CardHeader>
                                 <CardTitle>Password</CardTitle>
                                 <CardDescription>
-                                    Leave blank to keep the current
-                                    password.
+                                    Leave blank to keep the current password.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="grid gap-4 sm:grid-cols-2">
@@ -152,9 +162,7 @@ export default function EditUser({
                                         className={resourceInputClass}
                                     />
                                     <InputError
-                                        message={
-                                            errors.password_confirmation
-                                        }
+                                        message={errors.password_confirmation}
                                     />
                                 </div>
                             </CardContent>
@@ -189,11 +197,8 @@ export default function EditUser({
                                         </SelectTrigger>
                                         <SelectContent>
                                             {roles.map((r) => (
-                                                <SelectItem
-                                                    key={r}
-                                                    value={r}
-                                                >
-                                                    {r}
+                                                <SelectItem key={r} value={r}>
+                                                    {roleLabel(r)}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
@@ -222,10 +227,7 @@ export default function EditUser({
                                         </SelectTrigger>
                                         <SelectContent>
                                             {statuses.map((s) => (
-                                                <SelectItem
-                                                    key={s}
-                                                    value={s}
-                                                >
+                                                <SelectItem key={s} value={s}>
                                                     {s}
                                                 </SelectItem>
                                             ))}
@@ -235,12 +237,35 @@ export default function EditUser({
                                 </div>
 
                                 <p className="text-muted-foreground text-xs">
-                                    Admins can manage users, agents can only
-                                    access their own account.
+                                    Admins manage the agents on their own team.
                                 </p>
                                 <p className="text-muted-foreground text-xs">
                                     Inactive users can&apos;t log in.
                                 </p>
+                            </CardContent>
+
+                            <Separator />
+
+                            <CardHeader>
+                                <CardTitle>Team &amp; location</CardTitle>
+                                <CardDescription>
+                                    Group the user by campaign, team and where
+                                    they work.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid items-start gap-4 sm:grid-cols-2">
+                                <UserTeamFields
+                                    teams={teams}
+                                    workLocations={workLocations}
+                                    defaultTeamId={user.team_id ?? null}
+                                    defaultWorkLocation={
+                                        user.work_location ?? null
+                                    }
+                                    teamRequired={
+                                        auth.user.role !== 'super_admin'
+                                    }
+                                    errors={errors}
+                                />
                             </CardContent>
 
                             <CardFooter className="justify-end gap-3">

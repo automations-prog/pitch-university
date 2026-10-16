@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Models\User;
 
 class UserPolicy
@@ -11,7 +12,7 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ViewUsers);
     }
 
     /**
@@ -19,7 +20,7 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ViewUsers) && $user->canSee($model);
     }
 
     /**
@@ -27,7 +28,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::CreateUsers);
     }
 
     /**
@@ -35,7 +36,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::UpdateUsers) && ($user->canManage($model) || ($user->isSuperAdmin() && $user->is($model)));
     }
 
     /**
@@ -43,7 +44,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return $user->isAdmin() && ! $user->is($model);
+        return $user->can(Permission::DeleteUsers) && $user->canManage($model);
     }
 
     /**
@@ -51,7 +52,31 @@ class UserPolicy
      */
     public function impersonate(User $user, User $model): bool
     {
-        return $user->isAdmin() && ! $user->is($model) && $model->canBeImpersonated();
+        return $user->can(Permission::ImpersonateUsers) && $user->canManage($model) && $model->canBeImpersonated();
+    }
+
+    /**
+     * Determine whether the user can see the model's training progress.
+     */
+    public function viewProgress(User $user, User $model): bool
+    {
+        return $user->can(Permission::ViewTrainingTracks) && $user->canSee($model);
+    }
+
+    /**
+     * Determine whether the user can assign training tracks to the model.
+     */
+    public function assignTracks(User $user, User $model): bool
+    {
+        return $user->can(Permission::ManageTrainingTracks) && ($user->canManage($model) || $user->isSuperAdmin());
+    }
+
+    /**
+     * Determine whether the user can grant the model an exam retake.
+     */
+    public function grantExamRetake(User $user, User $model): bool
+    {
+        return $user->can(Permission::GrantExamRetakes) && $user->canSee($model);
     }
 
     /**

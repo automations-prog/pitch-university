@@ -48,6 +48,8 @@ import {
     RotateCcw,
     Trophy,
 } from 'lucide-react';
+import { useCan } from '@/hooks/use-can';
+import { roleLabel } from '@/lib/roles';
 import type {
     CourseModuleProgress,
     ExamSectionSummary,
@@ -128,7 +130,7 @@ export default function TrainingTrackUser({
                             {user.name}
                         </h2>
                         <Badge variant="secondary" className="capitalize">
-                            {user.role}
+                            {roleLabel(user.role)}
                         </Badge>
                     </div>
                     <p className="text-muted-foreground text-sm">
@@ -340,6 +342,7 @@ function ExamPanel({
     userId: number;
     exam: ExamSummary & { id: number };
 }) {
+    const can = useCan();
     const [pendingSection, setPendingSection] = useState<string | null>(null);
 
     function grantRetake(section: ExamSectionSummary) {
@@ -437,56 +440,59 @@ function ExamPanel({
                                     ))}
                                 </ul>
                             )}
-                            {section.is_out_of_attempts && (
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button
-                                            type="button"
-                                            size="sm"
-                                            variant="outline"
-                                            disabled={
-                                                pendingSection === section.key
-                                            }
-                                        >
-                                            {pendingSection === section.key ? (
-                                                <Spinner />
-                                            ) : (
-                                                <RotateCcw />
-                                            )}
-                                            Grant retake
-                                        </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>
-                                                Grant a retake for{' '}
-                                                {section.title}?
-                                            </AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                This gives the user one more
-                                                attempt at the {section.title}{' '}
-                                                section of {exam.title}. They
-                                                have used{' '}
-                                                {section.attempts_used}/
-                                                {section.attempts_allowed}{' '}
-                                                attempts so far.
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>
-                                                Cancel
-                                            </AlertDialogCancel>
-                                            <AlertDialogAction
-                                                onClick={() =>
-                                                    grantRetake(section)
+                            {section.is_out_of_attempts &&
+                                can('exam-retakes.grant') && (
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button
+                                                type="button"
+                                                size="sm"
+                                                variant="outline"
+                                                disabled={
+                                                    pendingSection ===
+                                                    section.key
                                                 }
                                             >
+                                                {pendingSection ===
+                                                section.key ? (
+                                                    <Spinner />
+                                                ) : (
+                                                    <RotateCcw />
+                                                )}
                                                 Grant retake
-                                            </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            )}
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>
+                                                    Grant a retake for{' '}
+                                                    {section.title}?
+                                                </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This gives the user one more
+                                                    attempt at the{' '}
+                                                    {section.title} section of{' '}
+                                                    {exam.title}. They have used{' '}
+                                                    {section.attempts_used}/
+                                                    {section.attempts_allowed}{' '}
+                                                    attempts so far.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>
+                                                    Cancel
+                                                </AlertDialogCancel>
+                                                <AlertDialogAction
+                                                    onClick={() =>
+                                                        grantRetake(section)
+                                                    }
+                                                >
+                                                    Grant retake
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                )}
                         </div>
                     ))}
                 </div>
@@ -624,6 +630,8 @@ function TrackToggles({
     userId: number;
     availableTracks: Props['availableTracks'];
 }) {
+    const can = useCan();
+    const canAssignTracks = can('training-tracks.manage');
     const [pendingTrackId, setPendingTrackId] = useState<number | null>(null);
 
     function toggle(trackId: number, checked: boolean) {
@@ -671,7 +679,10 @@ function TrackToggles({
                                 <Checkbox
                                     id={`track-${track.id}`}
                                     checked={track.is_assigned}
-                                    disabled={pendingTrackId === track.id}
+                                    disabled={
+                                        !canAssignTracks ||
+                                        pendingTrackId === track.id
+                                    }
                                     onCheckedChange={(checked) =>
                                         toggle(track.id, checked === true)
                                     }

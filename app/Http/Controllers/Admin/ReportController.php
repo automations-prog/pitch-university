@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Concerns\BuildsAgentReportQuery;
 use App\Enums\LicenseStatus;
+use App\Enums\Permission;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LicenseResource;
@@ -34,7 +35,7 @@ class ReportController extends Controller
      */
     public function index(Request $request): Response
     {
-        Gate::authorize('viewAny', User::class);
+        Gate::authorize(Permission::ViewReports);
 
         $tracks = CourseTrack::query()->orderBy('position')->get(['id', 'name']);
         $selectedTrack = $tracks->find($request->integer('track'));

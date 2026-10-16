@@ -1,13 +1,14 @@
-import { Head, Link } from '@inertiajs/react';
-import UserController from '@/actions/App/Http/Controllers/Admin/UserController';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { resourceBadgeClass } from '@/lib/brand-theme';
-import { dashboard } from '@/routes';
-import { index as usersIndex } from '@/routes/admin/users';
-import { ArrowLeft, Pencil } from 'lucide-react';
-import type { User } from '@/types';
+import { Head, Link } from "@inertiajs/react";
+import UserController from "@/actions/App/Http/Controllers/Admin/UserController";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { resourceBadgeClass } from "@/lib/brand-theme";
+import { roleLabel, workLocationLabel } from "@/lib/roles";
+import { dashboard } from "@/routes";
+import { index as usersIndex } from "@/routes/admin/users";
+import { ArrowLeft, Pencil } from "lucide-react";
+import type { User } from "@/types";
 
 export default function ShowUser({ user }: { user: User }) {
     return (
@@ -29,24 +30,26 @@ export default function ShowUser({ user }: { user: User }) {
                                 {user.name}
                             </h2>
                             <Badge className={resourceBadgeClass}>
-                                {user.role}
+                                {roleLabel(user.role)}
                             </Badge>
                             <Badge
                                 variant={
-                                    user.status === 'active'
-                                        ? 'outline'
-                                        : 'destructive'
+                                    user.status === "active"
+                                        ? "outline"
+                                        : "destructive"
                                 }
                             >
                                 {user.status}
                             </Badge>
                         </div>
-                        <Button asChild variant="outline" size="sm">
-                            <Link href={UserController.edit(user.id)}>
-                                <Pencil />
-                                Edit
-                            </Link>
-                        </Button>
+                        {user.abilities?.update && (
+                            <Button asChild variant="outline" size="sm">
+                                <Link href={UserController.edit(user.id)}>
+                                    <Pencil />
+                                    Edit
+                                </Link>
+                            </Button>
+                        )}
                     </div>
                 </div>
 
@@ -63,6 +66,36 @@ export default function ShowUser({ user }: { user: User }) {
                         </div>
                         <div>
                             <p className="text-muted-foreground text-sm">
+                                Campaign · Team
+                            </p>
+                            <p className="text-sm font-medium">
+                                {user.team
+                                    ? `${user.team.campaign?.name ?? ""} · ${user.team.name}`
+                                    : "No team"}
+                            </p>
+                        </div>
+                        <div>
+                            <p className="text-muted-foreground text-sm">
+                                Work location
+                            </p>
+                            <p className="text-sm font-medium">
+                                {user.work_location
+                                    ? workLocationLabel(user.work_location)
+                                    : "Not set"}
+                            </p>
+                        </div>
+                        {user.team && (
+                            <div>
+                                <p className="text-muted-foreground text-sm">
+                                    Team admin
+                                </p>
+                                <p className="text-sm font-medium">
+                                    {user.team.manager ?? "—"}
+                                </p>
+                            </div>
+                        )}
+                        <div>
+                            <p className="text-muted-foreground text-sm">
                                 Email verified
                             </p>
                             <p className="text-sm font-medium">
@@ -70,7 +103,7 @@ export default function ShowUser({ user }: { user: User }) {
                                     ? new Date(
                                           user.email_verified_at,
                                       ).toLocaleDateString()
-                                    : 'Not verified'}
+                                    : "Not verified"}
                             </p>
                         </div>
                         <div>
@@ -95,9 +128,9 @@ export default function ShowUser({ user }: { user: User }) {
                                     <Badge
                                         key={license.id}
                                         variant={
-                                            license.status === 'active'
-                                                ? 'outline'
-                                                : 'destructive'
+                                            license.status === "active"
+                                                ? "outline"
+                                                : "destructive"
                                         }
                                     >
                                         {license.name}
@@ -118,7 +151,7 @@ export default function ShowUser({ user }: { user: User }) {
 
 ShowUser.layout = {
     breadcrumbs: [
-        { title: 'Dashboard', href: dashboard() },
-        { title: 'Users', href: usersIndex() },
+        { title: "Dashboard", href: dashboard() },
+        { title: "Users", href: usersIndex() },
     ],
 };

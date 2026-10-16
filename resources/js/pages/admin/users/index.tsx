@@ -81,7 +81,23 @@ import {
     UserRoundCog,
     X,
 } from 'lucide-react';
-import type { License, Paginated, User, UserRole, UserStatus } from '@/types';
+import { useCan } from '@/hooks/use-can';
+import { roleLabel, workLocationLabel } from '@/lib/roles';
+import type {
+    License,
+    Paginated,
+    TeamOption,
+    User,
+    UserRole,
+    UserStatus,
+    WorkLocation,
+} from '@/types';
+
+/**
+ * The "Pull agents" button (import from the Customer API) is hidden for
+ * now. Set to true to show it again.
+ */
+const SHOW_PULL_AGENTS = false;
 
 type PullStatus = {
     finished: boolean;
@@ -96,6 +112,9 @@ type Filters = {
     search: string;
     role: string;
     status: string;
+    work_location: string;
+    campaign: string;
+    team: string;
     per_page: string;
 };
 
@@ -106,6 +125,8 @@ export default function UsersIndex({
     statuses,
     perPageOptions,
     licenses,
+    workLocations,
+    teams,
 }: {
     users: Paginated<User>;
     filters: Partial<Filters>;
@@ -113,8 +134,20 @@ export default function UsersIndex({
     statuses: UserStatus[];
     perPageOptions: number[];
     licenses: License[];
+    workLocations: WorkLocation[];
+    teams: TeamOption[];
 }) {
     const { auth } = usePage().props;
+    const can = useCan();
+    const campaigns = [
+        ...new Map(
+            teams.map((team) => [team.campaign.id, team.campaign]),
+        ).values(),
+    ].sort((a, b) => a.name.localeCompare(b.name));
+    const teamsInCampaign = teams.filter(
+        (team) =>
+            !filters.campaign || String(team.campaign.id) === filters.campaign,
+    );
     const [search, setSearch] = useState(filters.search ?? '');
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [assignDialogOpen, setAssignDialogOpen] = useState(false);
@@ -126,7 +159,7 @@ export default function UsersIndex({
     );
 
     const selectableIds = users.data
-        .filter((user) => user.id !== auth.user.id)
+        .filter((user) => user.id !== auth.user.id && user.abilities?.update)
         .map((user) => user.id);
     const allSelected =
         selectableIds.length > 0 &&
@@ -257,12 +290,24 @@ export default function UsersIndex({
     }
 
     const hasActiveFilters = Boolean(
-        filters.search || filters.role || filters.status,
+        filters.search ||
+        filters.role ||
+        filters.status ||
+        filters.work_location ||
+        filters.campaign ||
+        filters.team,
     );
 
     function clearAllFilters() {
         setSearch('');
-        applyFilters({ search: '', role: '', status: '' });
+        applyFilters({
+            search: '',
+            role: '',
+            status: '',
+            work_location: '',
+            campaign: '',
+            team: '',
+        });
     }
 
     function toggleStatus(user: User) {
@@ -273,6 +318,8 @@ export default function UsersIndex({
                 email: user.email,
                 role: user.role,
                 status: user.status === 'active' ? 'inactive' : 'active',
+                team_id: user.team_id ?? '',
+                work_location: user.work_location ?? '',
                 password: '',
                 password_confirmation: '',
             },
@@ -300,27 +347,33 @@ export default function UsersIndex({
                             Manage agent accounts, roles, and access.
                         </p>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={pullAgents}
-                            disabled={pulling}
-                        >
-                            {pulling ? (
-                                <Loader2 className="animate-spin" />
-                            ) : (
-                                <RefreshCw />
+                    {can('users.create') && (
+                        <div className="flex items-center gap-2">
+                            {SHOW_PULL_AGENTS && (
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={pullAgents}
+                                    disabled={pulling}
+                                >
+                                    {pulling ? (
+                                        <Loader2 className="animate-spin" />
+                                    ) : (
+                                        <RefreshCw />
+                                    )}
+                                    {pulling
+                                        ? 'Pulling agents…'
+                                        : 'Pull agents'}
+                                </Button>
                             )}
-                            {pulling ? 'Pulling agents…' : 'Pull agents'}
-                        </Button>
-                        <Button asChild className={brandButtonClass}>
-                            <Link href={UserController.create()}>
-                                <Plus />
-                                New user
-                            </Link>
-                        </Button>
-                    </div>
+                            <Button asChild className={brandButtonClass}>
+                                <Link href={UserController.create()}>
+                                    <Plus />
+                                    New user
+                                </Link>
+                            </Button>
+                        </div>
+                    )}
                 </div>
 
                 {pulling && (
@@ -407,7 +460,7 @@ export default function UsersIndex({
                                     </SelectItem>
                                     {roles.map((role) => (
                                         <SelectItem key={role} value={role}>
-                                            {role}
+                                            {roleLabel(role)}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
@@ -448,6 +501,124 @@ export default function UsersIndex({
                             </Select>
                         </div>
 
+                        <div className="grid gap-1.5">
+                            <Label
+                                htmlFor="location-filter"
+                                className="text-muted-foreground text-xs font-semibold uppercase"
+                            >
+                                Location
+                            </Label>
+                            <Select
+                                value={filters.work_location || 'all'}
+                                onValueChange={(value) =>
+                                    applyFilters({
+                                        work_location:
+                                            value === 'all' ? '' : value,
+                                    })
+                                }
+                            >
+                                <SelectTrigger
+                                    id="location-filter"
+                                    className="w-full sm:w-36"
+                                >
+                                    <SelectValue placeholder="Location" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="all">
+                                        All locations
+                                    </SelectItem>
+                                    {workLocations.map((location) => (
+                                        <SelectItem
+                                            key={location}
+                                            value={location}
+                                        >
+                                            {workLocationLabel(location)}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        {campaigns.length > 0 && (
+                            <div className="grid gap-1.5">
+                                <Label
+                                    htmlFor="campaign-filter"
+                                    className="text-muted-foreground text-xs font-semibold uppercase"
+                                >
+                                    Campaign
+                                </Label>
+                                <Select
+                                    value={filters.campaign || 'all'}
+                                    onValueChange={(value) =>
+                                        applyFilters({
+                                            campaign:
+                                                value === 'all' ? '' : value,
+                                            team: '',
+                                        })
+                                    }
+                                >
+                                    <SelectTrigger
+                                        id="campaign-filter"
+                                        className="w-full sm:w-44"
+                                    >
+                                        <SelectValue placeholder="Campaign" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="all">
+                                            All campaigns
+                                        </SelectItem>
+                                        {campaigns.map((campaign) => (
+                                            <SelectItem
+                                                key={campaign.id}
+                                                value={String(campaign.id)}
+                                            >
+                                                {campaign.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
+
+                        {teams.length > 0 && (
+                            <div className="grid gap-1.5">
+                                <Label
+                                    htmlFor="team-filter"
+                                    className="text-muted-foreground text-xs font-semibold uppercase"
+                                >
+                                    Team
+                                </Label>
+                                <Select
+                                    value={filters.team || 'all'}
+                                    onValueChange={(value) =>
+                                        applyFilters({
+                                            team: value === 'all' ? '' : value,
+                                        })
+                                    }
+                                >
+                                    <SelectTrigger
+                                        id="team-filter"
+                                        className="w-full sm:w-44"
+                                    >
+                                        <SelectValue placeholder="Team" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="all">
+                                            All teams
+                                        </SelectItem>
+                                        {teamsInCampaign.map((team) => (
+                                            <SelectItem
+                                                key={team.id}
+                                                value={String(team.id)}
+                                            >
+                                                {team.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
+
                         {hasActiveFilters && (
                             <Button
                                 type="button"
@@ -475,116 +646,123 @@ export default function UsersIndex({
                             >
                                 Clear
                             </Button>
-                            <Dialog
-                                open={assignDialogOpen}
-                                onOpenChange={setAssignDialogOpen}
-                            >
-                                <DialogTrigger asChild>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="sm"
-                                    >
-                                        <Award />
-                                        Assign license
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogTitle>
-                                        Assign license to {selectedIds.length}{' '}
-                                        {selectedIds.length === 1
-                                            ? 'user'
-                                            : 'users'}
-                                    </DialogTitle>
-                                    <DialogDescription>
-                                        Choose a license to assign to all
-                                        selected users.
-                                    </DialogDescription>
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="bulk-license">
-                                            License
-                                        </Label>
-                                        <Select
-                                            value={assignLicenseId}
-                                            onValueChange={setAssignLicenseId}
-                                        >
-                                            <SelectTrigger
-                                                id="bulk-license"
-                                                className="w-full"
-                                            >
-                                                <SelectValue placeholder="Select a license" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {licenses.map((license) => (
-                                                    <SelectItem
-                                                        key={license.id}
-                                                        value={String(
-                                                            license.id,
-                                                        )}
-                                                    >
-                                                        {license.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <DialogFooter className="gap-2">
-                                        <DialogClose asChild>
-                                            <Button variant="secondary">
-                                                Cancel
-                                            </Button>
-                                        </DialogClose>
+                            {can('users.update') && (
+                                <Dialog
+                                    open={assignDialogOpen}
+                                    onOpenChange={setAssignDialogOpen}
+                                >
+                                    <DialogTrigger asChild>
                                         <Button
                                             type="button"
-                                            disabled={!assignLicenseId}
-                                            className={brandButtonClass}
-                                            onClick={bulkAssignLicense}
+                                            variant="outline"
+                                            size="sm"
                                         >
-                                            Assign
+                                            <Award />
+                                            Assign license
                                         </Button>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button
-                                        type="button"
-                                        variant="destructive"
-                                        size="sm"
-                                    >
-                                        <Trash2 />
-                                        Delete selected
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>
-                                            Delete {selectedIds.length}{' '}
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogTitle>
+                                            Assign license to{' '}
+                                            {selectedIds.length}{' '}
                                             {selectedIds.length === 1
                                                 ? 'user'
                                                 : 'users'}
-                                            ?
-                                        </AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            This permanently removes the
-                                            selected user accounts. This cannot
-                                            be undone.
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>
-                                            Cancel
-                                        </AlertDialogCancel>
-                                        <AlertDialogAction
-                                            onClick={bulkDeleteUsers}
+                                        </DialogTitle>
+                                        <DialogDescription>
+                                            Choose a license to assign to all
+                                            selected users.
+                                        </DialogDescription>
+
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="bulk-license">
+                                                License
+                                            </Label>
+                                            <Select
+                                                value={assignLicenseId}
+                                                onValueChange={
+                                                    setAssignLicenseId
+                                                }
+                                            >
+                                                <SelectTrigger
+                                                    id="bulk-license"
+                                                    className="w-full"
+                                                >
+                                                    <SelectValue placeholder="Select a license" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {licenses.map((license) => (
+                                                        <SelectItem
+                                                            key={license.id}
+                                                            value={String(
+                                                                license.id,
+                                                            )}
+                                                        >
+                                                            {license.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        <DialogFooter className="gap-2">
+                                            <DialogClose asChild>
+                                                <Button variant="secondary">
+                                                    Cancel
+                                                </Button>
+                                            </DialogClose>
+                                            <Button
+                                                type="button"
+                                                disabled={!assignLicenseId}
+                                                className={brandButtonClass}
+                                                onClick={bulkAssignLicense}
+                                            >
+                                                Assign
+                                            </Button>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
+                            )}
+                            {can('users.delete') && (
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button
+                                            type="button"
+                                            variant="destructive"
+                                            size="sm"
                                         >
-                                            Delete
-                                        </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
+                                            <Trash2 />
+                                            Delete selected
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>
+                                                Delete {selectedIds.length}{' '}
+                                                {selectedIds.length === 1
+                                                    ? 'user'
+                                                    : 'users'}
+                                                ?
+                                            </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This permanently removes the
+                                                selected user accounts. This
+                                                cannot be undone.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>
+                                                Cancel
+                                            </AlertDialogCancel>
+                                            <AlertDialogAction
+                                                onClick={bulkDeleteUsers}
+                                            >
+                                                Delete
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            )}
                         </div>
                     </div>
                 )}
@@ -612,6 +790,8 @@ export default function UsersIndex({
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
                                 <TableHead>Role</TableHead>
+                                <TableHead>Team</TableHead>
+                                <TableHead>Location</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Joined</TableHead>
                                 <TableHead className="text-right">
@@ -623,7 +803,7 @@ export default function UsersIndex({
                             {users.data.length === 0 && (
                                 <TableRow>
                                     <TableCell
-                                        colSpan={7}
+                                        colSpan={9}
                                         className="text-muted-foreground py-8 text-center"
                                     >
                                         No users found.
@@ -657,7 +837,10 @@ export default function UsersIndex({
                                                         checked === true,
                                                     )
                                                 }
-                                                disabled={isSelf}
+                                                disabled={
+                                                    isSelf ||
+                                                    !user.abilities?.update
+                                                }
                                                 aria-label={`Select ${user.name}`}
                                             />
                                         </TableCell>
@@ -669,8 +852,36 @@ export default function UsersIndex({
                                             <Badge
                                                 className={resourceBadgeClass}
                                             >
-                                                {user.role}
+                                                {roleLabel(user.role)}
                                             </Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            {user.team ? (
+                                                <div className="leading-tight">
+                                                    <div>{user.team.name}</div>
+                                                    <div className="text-muted-foreground text-xs">
+                                                        {
+                                                            user.team.campaign
+                                                                ?.name
+                                                        }
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <span className="text-muted-foreground">
+                                                    —
+                                                </span>
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {user.work_location ? (
+                                                workLocationLabel(
+                                                    user.work_location,
+                                                )
+                                            ) : (
+                                                <span className="text-muted-foreground">
+                                                    —
+                                                </span>
+                                            )}
                                         </TableCell>
                                         <TableCell>
                                             <Badge
@@ -715,100 +926,117 @@ export default function UsersIndex({
                                                             View
                                                         </Link>
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem asChild>
-                                                        <Link
-                                                            href={UserController.edit(
-                                                                user.id,
-                                                            )}
-                                                        >
-                                                            <Pencil />
-                                                            Edit
-                                                        </Link>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        onSelect={() =>
-                                                            toggleStatus(user)
-                                                        }
-                                                        disabled={isSelf}
-                                                    >
-                                                        {user.status ===
-                                                        'active' ? (
-                                                            <PowerOff />
-                                                        ) : (
-                                                            <Power />
-                                                        )}
-                                                        {user.status ===
-                                                        'active'
-                                                            ? 'Deactivate'
-                                                            : 'Activate'}
-                                                    </DropdownMenuItem>
-                                                    {user.role !== 'admin' &&
-                                                        !isSelf && (
-                                                            <DropdownMenuItem
-                                                                asChild
-                                                            >
-                                                                <Link
-                                                                    href={UserController.impersonate(
-                                                                        user.id,
-                                                                    )}
-                                                                    method="post"
-                                                                    as="button"
-                                                                    className="w-full text-left"
-                                                                >
-                                                                    <UserRoundCog />
-                                                                    Impersonate
-                                                                </Link>
-                                                            </DropdownMenuItem>
-                                                        )}
-                                                    <AlertDialog>
-                                                        <AlertDialogTrigger
+                                                    {user.abilities?.update && (
+                                                        <DropdownMenuItem
                                                             asChild
                                                         >
-                                                            <DropdownMenuItem
-                                                                variant="destructive"
-                                                                disabled={
-                                                                    isSelf
-                                                                }
-                                                                onSelect={(e) =>
-                                                                    e.preventDefault()
-                                                                }
+                                                            <Link
+                                                                href={UserController.edit(
+                                                                    user.id,
+                                                                )}
                                                             >
-                                                                <Trash2 />
-                                                                Delete
-                                                            </DropdownMenuItem>
-                                                        </AlertDialogTrigger>
-                                                        <AlertDialogContent>
-                                                            <AlertDialogHeader>
-                                                                <AlertDialogTitle>
-                                                                    Delete{' '}
-                                                                    {user.name}?
-                                                                </AlertDialogTitle>
-                                                                <AlertDialogDescription>
-                                                                    This
-                                                                    permanently
-                                                                    removes the
-                                                                    user
-                                                                    account.
-                                                                    This cannot
-                                                                    be undone.
-                                                                </AlertDialogDescription>
-                                                            </AlertDialogHeader>
-                                                            <AlertDialogFooter>
-                                                                <AlertDialogCancel>
-                                                                    Cancel
-                                                                </AlertDialogCancel>
-                                                                <AlertDialogAction
-                                                                    onClick={() =>
-                                                                        destroyUser(
-                                                                            user,
-                                                                        )
+                                                                <Pencil />
+                                                                Edit
+                                                            </Link>
+                                                        </DropdownMenuItem>
+                                                    )}
+                                                    {user.abilities?.update && (
+                                                        <DropdownMenuItem
+                                                            onSelect={() =>
+                                                                toggleStatus(
+                                                                    user,
+                                                                )
+                                                            }
+                                                            disabled={isSelf}
+                                                        >
+                                                            {user.status ===
+                                                            'active' ? (
+                                                                <PowerOff />
+                                                            ) : (
+                                                                <Power />
+                                                            )}
+                                                            {user.status ===
+                                                            'active'
+                                                                ? 'Deactivate'
+                                                                : 'Activate'}
+                                                        </DropdownMenuItem>
+                                                    )}
+                                                    {user.abilities
+                                                        ?.impersonate && (
+                                                        <DropdownMenuItem
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={UserController.impersonate(
+                                                                    user.id,
+                                                                )}
+                                                                method="post"
+                                                                as="button"
+                                                                className="w-full text-left"
+                                                            >
+                                                                <UserRoundCog />
+                                                                Impersonate
+                                                            </Link>
+                                                        </DropdownMenuItem>
+                                                    )}
+                                                    {user.abilities?.delete && (
+                                                        <AlertDialog>
+                                                            <AlertDialogTrigger
+                                                                asChild
+                                                            >
+                                                                <DropdownMenuItem
+                                                                    variant="destructive"
+                                                                    disabled={
+                                                                        isSelf
+                                                                    }
+                                                                    onSelect={(
+                                                                        e,
+                                                                    ) =>
+                                                                        e.preventDefault()
                                                                     }
                                                                 >
+                                                                    <Trash2 />
                                                                     Delete
-                                                                </AlertDialogAction>
-                                                            </AlertDialogFooter>
-                                                        </AlertDialogContent>
-                                                    </AlertDialog>
+                                                                </DropdownMenuItem>
+                                                            </AlertDialogTrigger>
+                                                            <AlertDialogContent>
+                                                                <AlertDialogHeader>
+                                                                    <AlertDialogTitle>
+                                                                        Delete{' '}
+                                                                        {
+                                                                            user.name
+                                                                        }
+                                                                        ?
+                                                                    </AlertDialogTitle>
+                                                                    <AlertDialogDescription>
+                                                                        This
+                                                                        permanently
+                                                                        removes
+                                                                        the user
+                                                                        account.
+                                                                        This
+                                                                        cannot
+                                                                        be
+                                                                        undone.
+                                                                    </AlertDialogDescription>
+                                                                </AlertDialogHeader>
+                                                                <AlertDialogFooter>
+                                                                    <AlertDialogCancel>
+                                                                        Cancel
+                                                                    </AlertDialogCancel>
+                                                                    <AlertDialogAction
+                                                                        onClick={() =>
+                                                                            destroyUser(
+                                                                                user,
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        Delete
+                                                                    </AlertDialogAction>
+                                                                </AlertDialogFooter>
+                                                            </AlertDialogContent>
+                                                        </AlertDialog>
+                                                    )}
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </TableCell>

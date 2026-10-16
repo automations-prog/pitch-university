@@ -2,8 +2,8 @@ import { Head, Link, router } from '@inertiajs/react';
 import { FormEvent, useState } from 'react';
 import TrainingTrackController from '@/actions/App/Http/Controllers/Admin/TrainingTrackController';
 import UserTrackController from '@/actions/App/Http/Controllers/Admin/UserTrackController';
+import { FilterSelect } from '@/components/admin/filter-select';
 import { TablePagination } from '@/components/table-pagination';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -30,21 +30,13 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import {
-    resourceBadgeClass,
-    resourceCardClass,
-    resourceInputClass,
-} from '@/lib/brand-theme';
+import { resourceCardClass, resourceInputClass } from '@/lib/brand-theme';
 import { dashboard } from '@/routes';
 import { index as trainingTracksIndex } from '@/routes/admin/training-tracks';
-import {
-    Eye,
-    FilterX,
-    MoreHorizontal,
-    Search,
-    X,
-} from 'lucide-react';
-import type { Paginated, UserRole } from '@/types';
+import { Eye, FilterX, MoreHorizontal, Search, X } from 'lucide-react';
+import { useCan } from '@/hooks/use-can';
+import { workLocationLabel } from '@/lib/roles';
+import type { Paginated, TeamOption, UserStatus, WorkLocation } from '@/types';
 
 type TrackColumn = {
     id: number;
@@ -57,32 +49,59 @@ type UserRow = {
     id: number;
     name: string;
     email: string;
-    role: UserRole;
     track_ids: number[];
 };
 
-type Filters = { search: string; role: string; per_page: string };
-
-const ALL_ROLES = 'all';
+type Filters = {
+    search: string;
+    campaign?: string;
+    team?: string;
+    work_location?: string;
+    status?: string;
+    track?: string;
+    per_page: string;
+};
 
 export default function TrainingTracksIndex({
     tracks,
     users,
-    roles,
     filters,
     perPageOptions,
+    teams,
+    workLocations,
+    statuses,
 }: {
     tracks: TrackColumn[];
     users: Paginated<UserRow>;
-    roles: UserRole[];
     filters: Filters;
     perPageOptions: number[];
+    teams: TeamOption[];
+    workLocations: WorkLocation[];
+    statuses: UserStatus[];
 }) {
+    const can = useCan();
+    const canAssignTracks = can('training-tracks.manage');
     const [search, setSearch] = useState(filters.search ?? '');
     const [pendingToggle, setPendingToggle] = useState<string | null>(null);
 
-    const hasActiveFilters = Boolean(filters.search || filters.role);
-    const columnCount = 4 + tracks.length;
+    const campaigns = [
+        ...new Map(
+            teams.map((team) => [team.campaign.id, team.campaign]),
+        ).values(),
+    ].sort((a, b) => a.name.localeCompare(b.name));
+    const teamsInCampaign = teams.filter(
+        (team) =>
+            !filters.campaign || String(team.campaign.id) === filters.campaign,
+    );
+    const hasActiveFilters = Boolean(
+        filters.search ||
+        filters.campaign ||
+        filters.team ||
+        filters.work_location ||
+        filters.status ||
+        filters.track,
+    );
+    const columnCount = 3 + tracks.length;
 
     function applyFilters(next: Partial<Filters>) {
         const merged = { ...filters, ...next };
@@ -90,8 +109,20 @@ export default function TrainingTracksIndex({
         router.get(
             trainingTracksIndex(),
             {
-                ...(merged.search ? { search: merged.search } : {}),
-                ...(merged.role ? { role: merged.role } : {}),
+                ...Object.fromEntries(
+                    (
+                        [
+                            'search',
+                            'campaign',
+                            'team',
+                            'work_location',
+                            'status',
+                            'track',
+                        ] as const
+                    )
+                        .filter((key) => merged[key])
+                        .map((key) => [key, merged[key]]),
+                ),
                 ...(merged.per_page &&
                 merged.per_page !== String(perPageOptions[0])
                     ? { per_page: merged.per_page }
@@ -116,7 +147,14 @@ export default function TrainingTracksIndex({
 
     function clearAllFilters() {
         setSearch('');
-        applyFilters({ search: '', role: '' });
+        applyFilters({
+            search: '',
+            campaign: '',
+            team: '',
+            work_location: '',
+            status: '',
+            track: '',
+        });
     }
 
     function toggle(user: UserRow, track: TrackColumn, checked: boolean) {
@@ -199,39 +237,80 @@ export default function TrainingTracksIndex({
                             </div>
                         </form>
 
-                        <div className="grid gap-1.5">
-                            <Label
-                                htmlFor="role-filter"
-                                className="text-muted-foreground text-xs font-semibold uppercase"
-                            >
-                                Role
-                            </Label>
-                            <Select
-                                value={filters.role || ALL_ROLES}
-                                onValueChange={(role) =>
-                                    applyFilters({
-                                        role: role === ALL_ROLES ? '' : role,
-                                    })
+                        {campaigns.length > 1 && (
+                            <FilterSelect
+                                id="campaign-filter"
+                                label="Campaign"
+                                allLabel="All campaigns"
+                                value={filters.campaign}
+                                options={campaigns.map((campaign) => ({
+                                    value: String(campaign.id),
+                                    label: campaign.name,
+                                }))}
+                                onChange={(campaign) =>
+                                    applyFilters({ campaign, team: '' })
                                 }
-                            >
-                                <SelectTrigger
-                                    id="role-filter"
-                                    className="w-full sm:w-40"
-                                >
-                                    <SelectValue placeholder="Role" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value={ALL_ROLES}>
-                                        All roles
-                                    </SelectItem>
-                                    {roles.map((role) => (
-                                        <SelectItem key={role} value={role}>
-                                            {role}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
+                            />
+                        )}
+
+                        {teams.length > 1 && (
+                            <FilterSelect
+                                id="team-filter"
+                                label="Team"
+                                allLabel="All teams"
+                                value={filters.team}
+                                options={teamsInCampaign.map((team) => ({
+                                    value: String(team.id),
+                                    label: team.name,
+                                }))}
+                                onChange={(team) => applyFilters({ team })}
+                            />
+                        )}
+
+                        <FilterSelect
+                            id="track-filter"
+                            label="Track"
+                            allLabel="Any track"
+                            value={filters.track}
+                            options={[
+                                { value: 'none', label: 'No track assigned' },
+                                ...tracks.map((track) => ({
+                                    value: String(track.id),
+                                    label: track.name,
+                                })),
+                            ]}
+                            onChange={(track) => applyFilters({ track })}
+                        />
+
+                        <FilterSelect
+                            id="location-filter"
+                            label="Location"
+                            allLabel="All locations"
+                            value={filters.work_location}
+                            options={workLocations.map((location) => ({
+                                value: location,
+                                label: workLocationLabel(location),
+                            }))}
+                            onChange={(location) =>
+                                applyFilters({ work_location: location })
+                            }
+                            className="w-full sm:w-36"
+                        />
+
+                        <FilterSelect
+                            id="status-filter"
+                            label="Status"
+                            allLabel="All statuses"
+                            value={filters.status}
+                            options={statuses.map((status) => ({
+                                value: status,
+                                label:
+                                    status.charAt(0).toUpperCase() +
+                                    status.slice(1),
+                            }))}
+                            onChange={(status) => applyFilters({ status })}
+                            className="w-full sm:w-36"
+                        />
 
                         {hasActiveFilters && (
                             <Button
@@ -252,7 +331,6 @@ export default function TrainingTracksIndex({
                             <TableRow>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
-                                <TableHead>Role</TableHead>
                                 {tracks.map((track) => (
                                     <TableHead
                                         key={track.id}
@@ -313,13 +391,6 @@ export default function TrainingTracksIndex({
                                             {user.name}
                                         </TableCell>
                                         <TableCell>{user.email}</TableCell>
-                                        <TableCell>
-                                            <Badge
-                                                className={resourceBadgeClass}
-                                            >
-                                                {user.role}
-                                            </Badge>
-                                        </TableCell>
                                         {tracks.map((track) => {
                                             const key = `${user.id}-${track.id}`;
 
@@ -336,8 +407,9 @@ export default function TrainingTracksIndex({
                                                             track.id,
                                                         )}
                                                         disabled={
+                                                            !canAssignTracks ||
                                                             pendingToggle ===
-                                                            key
+                                                                key
                                                         }
                                                         onCheckedChange={(
                                                             checked,

@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Permission;
 use App\Models\ScreeningResponse;
 use App\Models\User;
 
@@ -12,7 +13,7 @@ class ScreeningResponsePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ViewScreening);
     }
 
     /**
@@ -20,7 +21,7 @@ class ScreeningResponsePolicy
      */
     public function view(User $user, ScreeningResponse $screeningResponse): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ViewScreening);
     }
 
     /**
@@ -28,7 +29,7 @@ class ScreeningResponsePolicy
      */
     public function delete(User $user, ScreeningResponse $screeningResponse): bool
     {
-        return $user->isAdmin();
+        return $user->can(Permission::ManageScreening);
     }
 
     /**

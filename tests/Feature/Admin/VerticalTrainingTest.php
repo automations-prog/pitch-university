@@ -6,7 +6,7 @@ use App\Models\VerticalTraining;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('admins can view the vertical training index', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     VerticalTraining::factory()->count(3)->create();
 
     $response = $this->actingAs($admin)->get(route('admin.vertical-training.index'));
@@ -22,7 +22,7 @@ test('admins can view the vertical training index', function () {
 });
 
 test('the vertical training index can be searched and filtered by status', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     VerticalTraining::factory()->create(['name' => 'Healthcare Vertical']);
     VerticalTraining::factory()->inactive()->create(['name' => 'Retail Vertical']);
 
@@ -34,7 +34,7 @@ test('the vertical training index can be searched and filtered by status', funct
 });
 
 test('the vertical training index can be paginated with a selectable page size', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     VerticalTraining::factory()->count(24)->create();
 
     $response = $this->actingAs($admin)->get(route('admin.vertical-training.index', ['per_page' => 10]));
@@ -70,7 +70,7 @@ test('guests are redirected to login for vertical training', function () {
 });
 
 test('admins can create a vertical training program', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.vertical-training.store'), [
@@ -91,7 +91,7 @@ test('admins can create a vertical training program', function () {
 });
 
 test('admins can create a training with a roleplay script', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.vertical-training.store'), [
@@ -112,7 +112,7 @@ test('admins can create a training with a roleplay script', function () {
 });
 
 test('the roleplay script fields are required when creating a training', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.vertical-training.store'), [
@@ -128,7 +128,7 @@ test('the roleplay script fields are required when creating a training', functio
 });
 
 test('a vertical training requires a license', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.vertical-training.store'), [
         'name' => 'No License Vertical',
@@ -145,7 +145,7 @@ test('a vertical training requires a license', function () {
 });
 
 test('a vertical training must reference an active license', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $license = License::factory()->inactive()->create();
 
     $response = $this->actingAs($admin)->post(route('admin.vertical-training.store'), [
@@ -164,7 +164,7 @@ test('a vertical training must reference an active license', function () {
 });
 
 test('admins can update a training\'s roleplay script', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $training = VerticalTraining::factory()->create();
     $license = License::factory()->create();
 
@@ -185,7 +185,7 @@ test('admins can update a training\'s roleplay script', function () {
 });
 
 test('the edit page exposes the roleplay script fields', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $training = VerticalTraining::factory()->create([
         'script_title' => 'Cold call — initial outreach',
         'script_scenario' => 'Agent calls a prospect.',
@@ -202,7 +202,7 @@ test('the edit page exposes the roleplay script fields', function () {
 });
 
 test('the index reflects whether a training has a script', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     VerticalTraining::factory()->create([
         'name' => 'Zzyzx Scripted Vertical',
         'script_title' => 'Has a script',
@@ -216,7 +216,7 @@ test('the index reflects whether a training has a script', function () {
 });
 
 test('vertical training names must be unique', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     VerticalTraining::factory()->create(['name' => 'Healthcare Vertical']);
     $license = License::factory()->create();
 
@@ -245,7 +245,7 @@ test('agents can not create a vertical training program', function () {
 });
 
 test('admins can update a vertical training program', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $training = VerticalTraining::factory()->create();
     $license = License::factory()->create();
 
@@ -263,7 +263,7 @@ test('admins can update a vertical training program', function () {
 });
 
 test('admins can delete a vertical training program', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $training = VerticalTraining::factory()->create();
 
     $response = $this->actingAs($admin)->delete(route('admin.vertical-training.destroy', $training));
@@ -283,7 +283,7 @@ test('agents can not delete a vertical training program', function () {
 });
 
 test('admins can bulk delete vertical training programs', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $trainings = VerticalTraining::factory()->count(3)->create();
 
     $response = $this->actingAs($admin)->delete(route('admin.vertical-training.bulk-destroy'), [
@@ -297,7 +297,7 @@ test('admins can bulk delete vertical training programs', function () {
 });
 
 test('bulk deleting vertical training programs requires at least one id', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
 
     $response = $this->actingAs($admin)->delete(route('admin.vertical-training.bulk-destroy'), [
         'ids' => [],
@@ -319,7 +319,7 @@ test('agents can not bulk delete vertical training programs', function () {
 });
 
 test('the edit page exposes the training as a flat, unwrapped object', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $training = VerticalTraining::factory()->create();
 
     $response = $this->actingAs($admin)->get(route('admin.vertical-training.edit', $training));
@@ -332,7 +332,7 @@ test('the edit page exposes the training as a flat, unwrapped object', function 
 });
 
 test('admins can view a vertical training program', function () {
-    $admin = User::factory()->admin()->create();
+    $admin = User::factory()->superAdmin()->create();
     $training = VerticalTraining::factory()->create();
 
     $response = $this->actingAs($admin)->get(route('admin.vertical-training.show', $training));
