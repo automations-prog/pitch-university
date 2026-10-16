@@ -10,6 +10,7 @@ dataset('pages each role is refused', [
     'agents can not open users' => ['agent', 'admin.users.index'],
     'agents can not open reports' => ['agent', 'admin.reports.index'],
     'agents can not open training tracks' => ['agent', 'admin.training-tracks.index'],
+    'agents can not open training modules' => ['agent', 'training-modules.index'],
 ]);
 
 dataset('pages each role can open', [
@@ -18,6 +19,7 @@ dataset('pages each role can open', [
     'admins open invite links' => ['admin', 'admin.invitations.index'],
     'admins open licensing' => ['admin', 'admin.licensing.index'],
     'admins open vertical training' => ['admin', 'admin.vertical-training.index'],
+    'admins open training modules' => ['admin', 'training-modules.index'],
     'super admins open screening' => ['super_admin', 'admin.screening.index'],
     'super admins open campaigns' => ['super_admin', 'admin.campaigns.index'],
     'super admins open teams' => ['super_admin', 'admin.teams.index'],

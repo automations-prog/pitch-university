@@ -94,6 +94,8 @@ export type RoleplayContent = {
     quirkMinLevel: DifficultyLevel;
     /** What the objection stats call how often it goes wrong ("Lost"). */
     objectionRiskLabel: string;
+    /** Words the script forbids on a call (ACA and Meals). */
+    forbiddenWords?: string[];
 };
 
 export type Lead = {
@@ -151,6 +153,8 @@ export type RoleplaySessionResult = {
     disposition: string | null;
     /** Null while a training scene's AI checks are still being judged. */
     passed: boolean | null;
+    /** Set when the trainee's speech wasn't captured, so the call wasn't graded. */
+    not_graded_reason: string | null;
     /** A training module's short scene, which may not be coded. */
     scene: { title: string; code_call: boolean } | null;
     expected_outcome?: Outcome;
@@ -208,4 +212,64 @@ export function fillScriptPlaceholders(
         .replace(/\(Customer'?s? Borough\)/gi, lead.borough ?? lead.state)
         .replace(/\((Customer'?s? )?zip( code)?\)/gi, lead.zip)
         .replace(/_{3,}/g, agentName);
+}
+
+/** A trainee line sharing this many of a step's words is reading that step. */
+const SCRIPT_MATCH_MIN_WORDS = 4;
+
+/** ...and at least this share of the line's own words. */
+const SCRIPT_MATCH_MIN_RATIO = 0.5;
+
+const SCRIPT_WORD_MIN_LENGTH = 3;
+
+function scriptWords(text: string): Set<string> {
+    return new Set(
+        text
+            .toLowerCase()
+            .replace(/['’]/g, '')
+            .split(/[^a-z0-9]+/)
+            .filter((word) => word.length >= SCRIPT_WORD_MIN_LENGTH),
+    );
+}
+
+/**
+ * The later script step the trainee's line reads from best, or
+ * `currentStep` when it clearly reads none of them. Never moves back, so a
+ * rebuttal that repeats an earlier question doesn't rewind the script.
+ */
+export function scriptStepForLine(
+    sections: ScriptSection[],
+    line: string,
+    currentStep: number,
+    lead: Lead,
+    agentName: string,
+): number {
+    const lineWords = [...scriptWords(line)];
+    let step = currentStep;
+    let bestShare = 0;
+
+    sections.forEach((section, index) => {
+        if (index <= currentStep) {
+            return;
+        }
+
+        const sectionWords = scriptWords(
+            fillScriptPlaceholders(section.lines.join(' '), lead, agentName),
+        );
+        const matched = lineWords.filter((word) =>
+            sectionWords.has(word),
+        ).length;
+        const share = matched / lineWords.length;
+
+        if (
+            matched >= SCRIPT_MATCH_MIN_WORDS &&
+            share >= SCRIPT_MATCH_MIN_RATIO &&
+            share > bestShare
+        ) {
+            step = index;
+            bestShare = share;
+        }
+    });
+
+    return step;
 }

@@ -43,8 +43,12 @@ export function useCurrentUrl(): UseCurrentUrlReturn {
         const urlToCompare = currentUrl ?? currentUrlPath;
         const urlString = toUrl(urlToCheck);
 
+        // A parent matches whole path segments, so `/training` isn't the
+        // parent of `/training-modules`.
         const comparePath = (path: string): boolean =>
-            startsWith ? urlToCompare.startsWith(path) : path === urlToCompare;
+            path === urlToCompare ||
+            (startsWith &&
+                urlToCompare.startsWith(`${path.replace(/\/+$/, '')}/`));
 
         if (!urlString.startsWith('http')) {
             return comparePath(urlString);

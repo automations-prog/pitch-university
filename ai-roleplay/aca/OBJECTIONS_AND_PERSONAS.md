@@ -353,8 +353,8 @@ dropped rather than shown to a trainee as an example worth copying.
 | 1 | Warm Up | 0–1 | polite, a little distracted, cooperative once they understand |
 | 2 | Guarded | 1–2 | guarded, impatient, wants to get off the phone |
 | 3 | Skeptical | 2–3 | skeptical, sharp, asks pointed questions, won't give information easily |
-| 4 | Hostile | 3–4 | rude and hostile, interrupts, curses at the agent, sarcastic |
-| 5 | Nightmare | 3–5 | unhinged: yells, swears constantly, rambles off-topic, accuses the agent, may be confused or hard of hearing, may try to trap the agent |
+| 4 | Hostile | 3–4 | rude and hostile, interrupts, curses at the agent, sarcastic, fires off two or three questions at once |
+| 5 | Expert | 3–5 | a realistic, hard-to-pin-down caller: distrustful and short, stacks two or three questions in one turn, stalls or answers vaguely on the required questions, and may hide a disqualifier behind vague wording (a spouse's plan, a "state plan", a carrier they bought from directly); never cartoonish or unhinged |
 
 Starting patience is `10 - level`.
 
@@ -372,7 +372,7 @@ Drawn when a persona's correct outcome is DQ. The consumer admits it **only when
 | `spousal_work` | Is covered by their spouse's work insurance. |
 | `military_va` | Has VA or military health care. |
 | `private` | Has a private plan bought directly from an insurer, not through the Marketplace. |
-| `state_insurance` | Has a state health plan. |
+| `state_insurance` | Has a state health plan, which is Medicaid. |
 | `ssdi` | Receives SSDI disability insurance. |
 | `non_citizen` | Is not a US citizen. |
 
@@ -424,7 +424,7 @@ sees after the call.
 |--:|--:|--:|--:|
 | 1–2 | 100% | — | — |
 | 3–4 | 78% | 22% | — |
-| 5 | 55% | 20% | 25% |
+| 5 | 45% | 40% | 15% |
 
 Levels 1 and 2 are always transferable so a new hire can learn the flow. From level 3 the agent has to learn
 when **not** to transfer, because the wrong outcome cannot pass however smooth the call was.

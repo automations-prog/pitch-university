@@ -31,6 +31,7 @@ enum Permission: string
 
     case ViewScreening = 'screening.view';
     case ManageScreening = 'screening.manage';
+    case ViewTrainingModules = 'training-modules.view';
     case ViewVerticalTraining = 'vertical-training.view';
     case ManageVerticalTraining = 'vertical-training.manage';
     case ViewLicensing = 'licensing.view';
@@ -62,6 +63,7 @@ enum Permission: string
             self::ReviewRoleplaySessions => 'Review roleplay attempts',
             self::ViewScreening => 'View screening',
             self::ManageScreening => 'Manage screening',
+            self::ViewTrainingModules => 'View all training modules',
             self::ViewVerticalTraining => 'View vertical training',
             self::ManageVerticalTraining => 'Manage vertical training',
             self::ViewLicensing => 'View licensing',
@@ -83,7 +85,7 @@ enum Permission: string
             self::ViewUsers, self::CreateUsers, self::UpdateUsers, self::DeleteUsers, self::ImpersonateUsers, self::InviteUsers => 'Users',
             self::ViewReports, self::ViewTrainingTracks, self::ManageTrainingTracks, self::GrantExamRetakes, self::ReviewRoleplaySessions => 'Performance & quality',
             self::ViewScreening, self::ManageScreening => 'Screening',
-            self::ViewVerticalTraining, self::ManageVerticalTraining, self::ViewLicensing, self::ManageLicensing => 'Content',
+            self::ViewTrainingModules, self::ViewVerticalTraining, self::ManageVerticalTraining, self::ViewLicensing, self::ManageLicensing => 'Content',
             self::ManageCampaigns, self::ManageTeams, self::ManageRoles => 'System',
         };
     }
@@ -132,6 +134,7 @@ enum Permission: string
                 self::ImpersonateUsers,
                 self::InviteUsers,
                 self::ManageTrainingTracks,
+                self::ViewTrainingModules,
                 self::ViewVerticalTraining,
                 self::ManageVerticalTraining,
                 self::ViewLicensing,

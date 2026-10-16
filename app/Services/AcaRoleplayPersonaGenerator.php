@@ -43,7 +43,7 @@ class AcaRoleplayPersonaGenerator extends RoleplayPersonaGenerator
     /** About a third of qualified consumers already have a Marketplace plan. */
     private const int MARKETPLACE_PERCENT = 33;
 
-    /** How many Marketplace holders name their carrier instead of "Marketplace". */
+    /** How many Marketplace holders name their carrier instead of "Marketplace", below level 3. */
     private const int NAMES_CARRIER_PERCENT = 50;
 
     /** 10–25% genuinely can't say what coverage they have. */
@@ -79,6 +79,11 @@ class AcaRoleplayPersonaGenerator extends RoleplayPersonaGenerator
      */
     public function generate(int $level, ?array $scenario = null): array
     {
+        // The hardest level hides the disqualifier behind vague wording.
+        if ($scenario === null && $level >= (int) config('roleplay.aca.tricky_dq_traps_from_level')) {
+            $scenario = ['dq_traps' => config('roleplay.aca.tricky_dq_traps')];
+        }
+
         $generated = parent::generate($level, $scenario);
         $persona = $generated['persona'];
         $trapId = $persona['dq_trap']['id'] ?? null;
@@ -101,7 +106,7 @@ class AcaRoleplayPersonaGenerator extends RoleplayPersonaGenerator
         $persona['age'] = $trapId === 'medicare'
             ? $this->randomizer->getInt(66, 78)
             : $this->randomizer->getInt(19, 64);
-        $persona['coverage'] = $this->coverage($trapId, $persona['objections']);
+        $persona['coverage'] = $this->coverage($trapId, $persona['objections'], $level);
 
         // The dialer has the wrong state; the agent has to update it.
         if (in_array('wrong_state', $persona['objections'], true)) {
@@ -114,8 +119,8 @@ class AcaRoleplayPersonaGenerator extends RoleplayPersonaGenerator
     }
 
     /**
-     * Focus objections are drawn more often, and brush-offs more often at
-     * the hardest levels.
+     * Focus objections are drawn more often, brush-offs more often at the
+     * hardest levels, and a named carrier more often from level 3.
      *
      * @param  array{id: string, weight: int}  $objection
      */
@@ -130,6 +135,10 @@ class AcaRoleplayPersonaGenerator extends RoleplayPersonaGenerator
         if ($level >= (int) config('roleplay.aca.brush_off_from_level')
             && in_array($objection['id'], config('roleplay.aca.brush_off_objections'), true)) {
             $weight *= (int) config('roleplay.aca.brush_off_weight_multiplier');
+        }
+
+        if ($level >= (int) config('roleplay.aca.named_carrier_from_level') && $objection['id'] === 'insurance_not_familiar') {
+            $weight *= (int) config('roleplay.aca.named_carrier_weight_multiplier');
         }
 
         return $weight;
@@ -172,14 +181,17 @@ class AcaRoleplayPersonaGenerator extends RoleplayPersonaGenerator
      * @param  list<string>  $objections
      * @return Coverage
      */
-    private function coverage(?string $trapId, array $objections): array
+    private function coverage(?string $trapId, array $objections, int $level): array
     {
+        $namesCommonCarrier = $level >= (int) config('roleplay.aca.named_carrier_from_level');
+        $carriers = $namesCommonCarrier ? config('roleplay.aca.common_carriers') : self::CARRIERS;
+
         // A private plan bought straight from a carrier sounds just like a
         // Marketplace one until the agent asks.
         if ($trapId === 'private') {
             return [
                 'has_marketplace_plan' => false,
-                'carrier' => $this->pick(self::CARRIERS),
+                'carrier' => $this->pick($carriers),
                 'knows_what_they_have' => true,
                 'receives_ssi' => false,
             ];
@@ -195,7 +207,7 @@ class AcaRoleplayPersonaGenerator extends RoleplayPersonaGenerator
 
         return [
             'has_marketplace_plan' => $hasMarketplacePlan,
-            'carrier' => $hasMarketplacePlan && ($namesCarrier || $this->chance(self::NAMES_CARRIER_PERCENT)) ? $this->pick(self::CARRIERS) : null,
+            'carrier' => $hasMarketplacePlan && ($namesCarrier || $namesCommonCarrier || $this->chance(self::NAMES_CARRIER_PERCENT)) ? $this->pick($carriers) : null,
             'knows_what_they_have' => ! in_array('dont_know_what_i_have', $objections, true) && ! $this->chance(self::DOESNT_KNOW_PERCENT),
             'receives_ssi' => $trapId === null && $this->chance(self::SSI_PERCENT),
         ];

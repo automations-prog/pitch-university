@@ -376,13 +376,19 @@ function RecentCalls({ sessions }: { sessions: RoleplaySessionResult[] }) {
                                     {session.delivery.overall.toFixed(1)}/5
                                 </span>
                             )}
-                            <Badge
-                                variant={
-                                    session.passed ? 'default' : 'destructive'
-                                }
-                            >
-                                {session.passed ? 'Passed' : 'Failed'}
-                            </Badge>
+                            {session.not_graded_reason ? (
+                                <Badge variant="secondary">Not graded</Badge>
+                            ) : (
+                                <Badge
+                                    variant={
+                                        session.passed
+                                            ? 'default'
+                                            : 'destructive'
+                                    }
+                                >
+                                    {session.passed ? 'Passed' : 'Failed'}
+                                </Badge>
+                            )}
                         </div>
                     </Link>
                 ))}

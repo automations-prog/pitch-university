@@ -11,6 +11,7 @@ use App\Http\Controllers\ScreeningCallController;
 use App\Http\Controllers\ScreeningResponseController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\TrainingExamController;
+use App\Http\Controllers\TrainingModuleController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -48,6 +49,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('{track}/{module}/roleplay', [TrainingController::class, 'showRoleplay'])->name('roleplay.show');
             Route::post('{track}/{module}/roleplay', [TrainingController::class, 'startRoleplay'])->middleware('throttle:roleplay-sessions')->name('roleplay.store');
             Route::get('{track}/{module}/roleplay/attempts/{roleplaySession}', [TrainingController::class, 'showRoleplayAttempt'])->name('roleplay.attempts.show');
+        });
+
+    Route::prefix('training-modules')
+        ->middleware('can:'.Permission::ViewTrainingModules->value)
+        ->name('training-modules.')
+        ->scopeBindings()
+        ->group(function () {
+            Route::get('/', [TrainingModuleController::class, 'index'])->name('index');
+            Route::get('{track}', [TrainingModuleController::class, 'showTrack'])->name('tracks.show');
+            Route::get('{track}/{module}', [TrainingModuleController::class, 'showModule'])->name('modules.show');
+            Route::get('{track}/{module}/lessons/{lesson}', [TrainingModuleController::class, 'showLesson'])->name('lessons.show');
+            Route::get('{track}/{module}/quiz', [TrainingModuleController::class, 'showQuiz'])->name('quiz.show');
         });
 
     foreach (RoleplayVertical::cases() as $vertical) {

@@ -86,6 +86,18 @@ return [
         'brush_off_objections' => ['not_interested', 'busy_callback', 'hesitation'],
         'brush_off_weight_multiplier' => 2,
         'brush_off_from_level' => 4,
+
+        // Disqualifiers that hide behind vague wording, the only ones drawn
+        // from this level.
+        'tricky_dq_traps' => ['spousal_work', 'private', 'state_insurance', 'ssdi'],
+        'tricky_dq_traps_from_level' => 5,
+
+        // From this level, consumers with a plan name one of the carriers
+        // we see most, and the "insurance not familiar" objection is drawn
+        // more often, so the agent has to ask "through the Marketplace?".
+        'named_carrier_from_level' => 3,
+        'common_carriers' => ['Oscar', 'Blue Cross', 'Ambetter'],
+        'named_carrier_weight_multiplier' => 2,
     ],
 
 ];

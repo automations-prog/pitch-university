@@ -188,7 +188,11 @@ export function WrapUp({
                                                 <span className="font-medium">
                                                     {objection.meaning}
                                                 </span>
-                                                <Badge variant="outline">
+                                                <Badge
+                                                    variant="outline"
+                                                    title="How often real agents get this one wrong, from recorded calls. Not your score."
+                                                >
+                                                    Real calls:{' '}
                                                     {objectionRiskLabel}{' '}
                                                     {objection.lostPercent}%
                                                 </Badge>

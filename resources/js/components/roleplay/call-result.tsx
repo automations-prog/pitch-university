@@ -1,4 +1,5 @@
 import {
+    AlertTriangle,
     CheckCircle2,
     MinusCircle,
     RotateCcw,
@@ -198,6 +199,38 @@ export function ResultCard({
     const noun = result.scene ? 'Scene' : 'Call';
     const isCoded = result.scene?.code_call ?? true;
 
+    if (result.not_graded_reason) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <AlertTriangle className="size-5 text-amber-500" />
+                        {noun} not graded: mic not captured
+                    </CardTitle>
+                    <CardDescription>
+                        {result.not_graded_reason}
+                    </CardDescription>
+                </CardHeader>
+                {result.recording_url && (
+                    <CardContent className="flex flex-col gap-2 text-sm">
+                        <p className="font-semibold">Recording</p>
+                        <audio
+                            controls
+                            src={result.recording_url}
+                            className="w-full"
+                            onLoadedMetadata={revealWebmDuration}
+                        />
+                    </CardContent>
+                )}
+                <ResultFooter
+                    onRetry={onRetry}
+                    onChangeLevel={onChangeLevel}
+                    changeLevelLabel={changeLevelLabel}
+                />
+            </Card>
+        );
+    }
+
     return (
         <Card>
             <CardHeader>
@@ -318,8 +351,11 @@ export function ResultCard({
                                     <span className="font-medium">
                                         {objection.meaning}
                                     </span>
-                                    <Badge variant="outline">
-                                        {objectionRiskLabel}{' '}
+                                    <Badge
+                                        variant="outline"
+                                        title="How often real agents get this one wrong, from recorded calls. Not your score."
+                                    >
+                                        Real calls: {objectionRiskLabel}{' '}
                                         {objection.lostPercent}%
                                     </Badge>
                                 </div>
@@ -357,19 +393,39 @@ export function ResultCard({
                     </div>
                 )}
             </CardContent>
-            {onRetry && onChangeLevel && (
-                <CardFooter className="flex flex-wrap gap-2">
-                    <Button className={brandButtonClass} onClick={onRetry}>
-                        <RotateCcw />
-                        Try again
-                    </Button>
-                    <Button variant="outline" onClick={onChangeLevel}>
-                        <SlidersHorizontal />
-                        {changeLevelLabel}
-                    </Button>
-                </CardFooter>
-            )}
+            <ResultFooter
+                onRetry={onRetry}
+                onChangeLevel={onChangeLevel}
+                changeLevelLabel={changeLevelLabel}
+            />
         </Card>
+    );
+}
+
+function ResultFooter({
+    onRetry,
+    onChangeLevel,
+    changeLevelLabel,
+}: {
+    onRetry?: () => void;
+    onChangeLevel?: () => void;
+    changeLevelLabel: string;
+}) {
+    if (!onRetry || !onChangeLevel) {
+        return null;
+    }
+
+    return (
+        <CardFooter className="flex flex-wrap gap-2">
+            <Button className={brandButtonClass} onClick={onRetry}>
+                <RotateCcw />
+                Try again
+            </Button>
+            <Button variant="outline" onClick={onChangeLevel}>
+                <SlidersHorizontal />
+                {changeLevelLabel}
+            </Button>
+        </CardFooter>
     );
 }
 

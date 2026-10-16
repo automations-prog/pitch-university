@@ -31,6 +31,8 @@ class RoleplaySessionResource extends JsonResource
             'ended_at' => $this->ended_at,
             'disposition' => $this->disposition,
             'passed' => $this->passed,
+            // Set when the trainee's speech wasn't captured, so the call wasn't graded.
+            'not_graded_reason' => $this->score['not_graded_reason'] ?? null,
             // A training module's short scene, which may not be coded.
             'scene' => $this->isScene() ? [
                 'title' => $this->persona['scene']['title'],

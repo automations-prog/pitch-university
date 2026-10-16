@@ -20,6 +20,32 @@ test('levels 1 and 2 are always transferable, with no disqualifier', function (i
     }
 })->with([1, 2]);
 
+test('from level 3, consumers with a plan name a carrier we see most', function (int $level) {
+    $carriers = [];
+
+    foreach (range(1, 300) as $seed) {
+        $persona = seededAcaGenerator($seed)->generate($level)['persona'];
+
+        if ($persona['coverage']['has_marketplace_plan'] || ($persona['dq_trap']['id'] ?? null) === 'private') {
+            $carriers[] = $persona['coverage']['carrier'];
+        }
+    }
+
+    expect($carriers)->not->toBeEmpty()
+        ->each->toBeIn(['Oscar', 'Blue Cross', 'Ambetter']);
+})->with([3, 4]);
+
+test('the hardest level only hides disqualifiers behind vague wording', function () {
+    $traps = [];
+
+    foreach (range(1, 300) as $seed) {
+        $traps[] = seededAcaGenerator($seed)->generate(5)['persona']['dq_trap']['id'] ?? null;
+    }
+
+    expect(array_values(array_unique(array_filter($traps))))->each->toBeIn(['spousal_work', 'private', 'state_insurance', 'ssdi'])
+        ->and(array_filter($traps))->not->toBeEmpty();
+});
+
 test('consumers are working age, and only Medicare disqualifiers are over 65', function () {
     foreach (range(1, 300) as $seed) {
         $persona = seededAcaGenerator($seed)->generate(5)['persona'];

@@ -1,6 +1,7 @@
 import { Link, usePage, usePoll } from '@inertiajs/react';
 import {
     Award,
+    BookOpen,
     Building2,
     ClipboardCheck,
     KeyRound,
@@ -44,6 +45,7 @@ import { index as myLicensesIndex } from '@/routes/licenses';
 import { index as mealsRoleplayIndex } from '@/routes/meals-roleplay';
 import { index as medicareRoleplayIndex } from '@/routes/medicare-roleplay';
 import { index as trainingIndex } from '@/routes/training';
+import { index as trainingModulesIndex } from '@/routes/training-modules';
 import type { NavGroup, NavItem } from '@/types';
 
 /**
@@ -101,6 +103,12 @@ export function AppSidebar() {
                     href: trainingTracksIndex(),
                     icon: ToggleLeft,
                     permission: 'training-tracks.view',
+                },
+                {
+                    title: 'Training Modules',
+                    href: trainingModulesIndex(),
+                    icon: BookOpen,
+                    permission: 'training-modules.view',
                 },
                 {
                     title: 'Vertical Training',

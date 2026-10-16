@@ -54,7 +54,7 @@ function acaCleanTranscript(): array
  * Grades an ACA call. Transcript entries can be replaced or dropped
  * (`null`) by key, or the whole transcript given as a list.
  *
- * @return array{passed: bool, checks: array<string, bool|null>, correct: string}
+ * @return array{passed: bool, checks: array<string, bool|null>, correct: string, not_graded: string|null}
  */
 function acaGradedCall(array $attributes = [], array $transcript = [], ?int $transferClickedAt = 40, ?array $events = null): array
 {
@@ -76,6 +76,7 @@ function acaGradedCall(array $attributes = [], array $transcript = [], ?int $tra
         'passed' => $result['passed'],
         'checks' => array_column($result['checks'], 'passed', 'key'),
         'correct' => $result['correct_disposition'],
+        'not_graded' => $result['not_graded_reason'] ?? null,
     ];
 }
 
@@ -260,6 +261,85 @@ test('a hang-up is Not Interested before the conference and a Hung-Up Transfer a
     'after the conference' => [40, 'hung_up_transfer'],
 ]);
 
+test('a disqualified consumer hanging up after the DQ line is still a DQ, not lost patience', function () {
+    $result = acaGradedCall(
+        ['end_reason' => 'hung_up', 'disposition' => 'dq', ...acaDisqualifiedAttributes('state_insurance', 'Has a state health plan.')],
+        [
+            '[0:04] agent: Hey, am I speaking with Ashley?',
+            '[0:06] consumer: Yeah.',
+            '[0:15] agent: You have no Medicare, no Medicaid and no work insurance, correct?',
+            "[0:20] consumer: No, I'm on a state health plan.",
+            '[0:23] agent: Unfortunately at this time you would not be qualified. Have a wonderful day!',
+            "[0:26] consumer: Oh, now you're letting me go? Fine, goodbye.",
+        ],
+        transferClickedAt: null,
+        events: [],
+    );
+
+    expect($result['correct'])->toBe('dq')
+        ->and($result['checks']['disposition'])->toBeTrue()
+        ->and($result['checks']['patience'])->toBeTrue()
+        ->and($result['passed'])->toBeTrue();
+});
+
+test('a qualified consumer hanging up after a wrong DQ line is still Not Interested', function () {
+    $result = acaGradedCall(['end_reason' => 'hung_up', 'disposition' => 'dq'], [
+        '[0:04] agent: Hey, am I speaking with Ashley?',
+        '[0:06] consumer: Yeah.',
+        '[0:08] agent: Unfortunately at this time you would not be qualified. Have a wonderful day!',
+    ], transferClickedAt: null, events: []);
+
+    expect($result['correct'])->toBe('not_interested')
+        ->and($result['checks']['disposition'])->toBeFalse()
+        ->and($result['passed'])->toBeFalse();
+});
+
+test('a call where the trainee spoke but none of it was transcribed is not graded', function () {
+    $result = acaGradedCall(transcript: [
+        '[0:02] consumer: Hello?',
+        "[0:06] consumer: Yeah, I can hear you. What's this about?",
+        '[0:20] consumer: Yeah, I said that.',
+    ], events: [['type' => 'agent_speech', 'start' => 3_000, 'end' => 5_000], ...acaHandoffEvents()]);
+
+    expect($result['not_graded'])->toContain("wasn't captured")
+        ->and($result['checks'])->toBe([])
+        ->and($result['passed'])->toBeFalse();
+});
+
+test('a call that lost more trainee turns than it kept is not graded', function () {
+    $lost = array_fill(0, 3, ['type' => 'agent_turn_untranscribed', 'at' => 20_000]);
+
+    $result = acaGradedCall(transcript: [
+        '[0:02] consumer: Hello?',
+        '[0:04] agent: Hey, am I speaking with Ashley?',
+        '[0:06] consumer: Yeah.',
+        "[0:20] consumer: Alright, what's next?",
+    ], events: [...$lost, ...acaHandoffEvents()]);
+
+    expect($result['not_graded'])->not->toBeNull()
+        ->and($result['checks'])->toBe([]);
+});
+
+test('a few lost trainee turns on an otherwise transcribed call are still graded', function () {
+    $result = acaGradedCall(events: [
+        ...array_fill(0, 3, ['type' => 'agent_turn_untranscribed', 'at' => 20_000]),
+        ...acaHandoffEvents(),
+    ]);
+
+    expect($result['not_graded'])->toBeNull()
+        ->and($result['passed'])->toBeTrue();
+});
+
+test('a trainee who never spoke is graded, and fails', function () {
+    $result = acaGradedCall(transcript: [
+        '[0:02] consumer: Hello?',
+        '[0:08] consumer: Hello? Anyone there?',
+    ], transferClickedAt: null, events: [['type' => 'greeting_repeated', 'at' => 8_000]]);
+
+    expect($result['not_graded'])->toBeNull()
+        ->and($result['passed'])->toBeFalse();
+});
+
 test('asking to be called back again after the rebuttal makes the call a Call Back', function () {
     $result = acaGradedCall(['disposition' => 'call_back'], events: [
         ['type' => 'objection_raised', 'id' => 'busy_callback', 'at' => 10_000],
@@ -346,6 +426,28 @@ test('forbidden words are graded by where the agent said them, and only the agen
         ->and($result['passed'])->toBeTrue();
 });
 
+test('a forbidden word fails the pitch check, quoting the line it was said in', function () {
+    $session = RoleplaySession::factory()->aca()->make([
+        'disposition' => 'transfer',
+        'end_reason' => 'agent',
+        'events' => acaHandoffEvents(),
+        'transcript' => implode("\n", [...acaCleanTranscript(), 'state' => '[0:15] agent: It is not money. Are you still living in Texas to receive it?']),
+    ]);
+
+    $checks = array_column(app(AcaRoleplayGrader::class)->grade($session, 40)['checks'], 'label', 'key');
+
+    expect($checks['forbidden_words_pitch'])->toBe('Kept forbidden words out of the pitch (you said: money in “It is not money. Are you still living in Texas to receive it?”)');
+});
+
+test('the consumer\'s question heard back through the mic is not the agent saying a forbidden word', function () {
+    $result = acaGradedCall(transcript: [
+        'intro_ok' => '[0:14] consumer: Is it money? A cheque?',
+        'state' => "[0:15] agent: Is it money? A cheque?\n[0:16] agent: Are you still living in Texas to receive it?",
+    ]);
+
+    expect($result['checks']['forbidden_words_pitch'])->toBeTrue();
+});
+
 test('"check" only counts as a forbidden word when it means a cheque', function () {
     $result = acaGradedCall(transcript: [
         'state' => '[0:15] agent: Let me check, are you still living in Texas to receive it?',
@@ -394,6 +496,24 @@ test('talking on after a required question fails the waiting coaching check with
 
     expect($result['checks']['waited_for_answers'])->toBeFalse()
         ->and($result['passed'])->toBeTrue();
+});
+
+test('answering every question the consumer stacked passes the coaching check, skipping one fails it', function (string $nextConsumerLine, bool $passes) {
+    $result = acaGradedCall(transcript: [
+        'intro_ok' => "[0:14] consumer: Wait, what is this? How'd you get my number? Does it cost me anything?",
+        'state' => '[0:15] agent: We got your number when you looked into health coverage. Are you still living in Texas to receive it?',
+        'state_yes' => "[0:17] consumer: {$nextConsumerLine}",
+    ]);
+
+    expect($result['checks']['answered_stacked_questions'])->toBe($passes)
+        ->and($result['passed'])->toBeTrue();
+})->with([
+    'moves on' => ['Yes.', true],
+    'asks again' => ['Okay, but does it cost me anything?', false],
+]);
+
+test('with no stacked questions there is nothing to answer', function () {
+    expect(acaGradedCall()['checks']['answered_stacked_questions'])->toBeNull();
 });
 
 test('echoing "how much" or "cheque" is a forbidden word for the agent but not for the consumer', function () {

@@ -101,6 +101,7 @@ class RoleplayCallController extends Controller
                 'transfer_clicked_at' => $transferClickedAt,
                 'correct_disposition' => $result['correct_disposition'],
                 'correct_reason' => $result['correct_reason'],
+                'not_graded_reason' => $result['not_graded_reason'] ?? null,
             ],
             'passed' => $result['passed'],
             'delivery_status' => 'pending',

@@ -97,7 +97,7 @@ class RoleplayGrader
     }
 
     /**
-     * @return array{checks: list<Check>, passed: bool, correct_disposition: string, correct_reason: string|null}
+     * @return array{checks: list<Check>, passed: bool, correct_disposition: string, correct_reason: string|null, not_graded_reason?: string}
      */
     public function grade(RoleplaySession $session, ?int $transferClickedAt): array
     {

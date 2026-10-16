@@ -364,6 +364,8 @@ type CallEvent =
       }
     | { type: 'agent_loudness'; rms: number; at: number }
     | { type: 'echo_discarded'; at: number }
+    /** A trainee turn the model heard but transcription returned no words for. */
+    | { type: 'agent_turn_untranscribed'; at: number }
     | {
           type: 'audio_checked';
           at: number;
@@ -1738,6 +1740,15 @@ export function useRoleplayRealtimeCall({
                 recordingStopped,
                 waitForFinalTranscripts(),
             ]).then(() => {
+                // Committed turns whose transcript never arrived.
+                pendingTranscriptsRef.current.forEach((itemId) => {
+                    if (!echoCheckItemsRef.current.has(itemId)) {
+                        logEvent({
+                            type: 'agent_turn_untranscribed',
+                            at: msIntoCall(),
+                        });
+                    }
+                });
                 recordingRef.current = new Blob(recordedChunksRef.current, {
                     type: recordingTypeRef.current.mimeType,
                 });
@@ -1750,6 +1761,8 @@ export function useRoleplayRealtimeCall({
             cleanup,
             endAgentTurn,
             flushSpeech,
+            logEvent,
+            msIntoCall,
             stopAgentTurnWatch,
             waitForFinalTranscripts,
         ],
@@ -2021,6 +2034,10 @@ export function useRoleplayRealtimeCall({
                 }
                 // eslint-disable-next-line no-console
                 console.warn('[roleplay-call] transcription failed', event);
+                logEvent({
+                    type: 'agent_turn_untranscribed',
+                    at: msIntoCall(),
+                });
                 appendLine(
                     'agent',
                     '(inaudible)',
@@ -2211,6 +2228,17 @@ export function useRoleplayRealtimeCall({
                 echoCheckItemsRef.current.has(itemId)
             ) {
                 discardEchoTurn(itemId);
+                return;
+            }
+
+            // The model heard the turn, but no words came back for it.
+            if (type && AGENT_TRANSCRIPT_EVENTS.has(type) && !text) {
+                // eslint-disable-next-line no-console
+                console.warn('[roleplay-call] empty transcription', event);
+                logEvent({
+                    type: 'agent_turn_untranscribed',
+                    at: msIntoCall(),
+                });
                 return;
             }
 

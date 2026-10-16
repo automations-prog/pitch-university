@@ -133,6 +133,12 @@ export type CourseQuizQuestion = {
     choices: string[];
 };
 
+/** A practice quiz question on the Training Modules page, with its answer. */
+export type CoursePracticeQuestion = CourseQuizQuestion & {
+    answer_index: number;
+    explanation: string | null;
+};
+
 export type CourseQuizResult = {
     id: string;
     selected_index: number | null;

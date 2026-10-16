@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Concerns\PresentsCourseContent;
 use App\Http\Requests\SubmitCourseQuizRequest;
 use App\Http\Resources\RoleplaySessionResource;
 use App\Models\CourseLesson;
@@ -20,6 +21,8 @@ use Inertia\Response;
 
 class TrainingController extends Controller
 {
+    use PresentsCourseContent;
+
     /**
      * Display the training tracks toggled on for the user.
      */
@@ -311,44 +314,6 @@ class TrainingController extends Controller
         abort_unless($progress->isRoleplayUnlocked($module), 403, 'Pass the quiz to unlock the roleplay.');
 
         return $progress;
-    }
-
-    /**
-     * @return array{slug: string, name: string, description: string|null}
-     */
-    private function trackData(CourseTrack $track): array
-    {
-        return [
-            'slug' => $track->slug,
-            'name' => $track->name,
-            'description' => $track->description,
-        ];
-    }
-
-    /**
-     * @return array{slug: string, title: string, summary: string|null, est_minutes: int, badge: array<string, string>|null}
-     */
-    private function moduleData(CourseModule $module): array
-    {
-        return [
-            'slug' => $module->slug,
-            'title' => $module->title,
-            'summary' => $module->summary,
-            'est_minutes' => $module->est_minutes,
-            'badge' => $module->badge,
-        ];
-    }
-
-    /**
-     * @return array{slug: string, title: string, est_minutes: int}
-     */
-    private function lessonData(CourseLesson $lesson): array
-    {
-        return [
-            'slug' => $lesson->slug,
-            'title' => $lesson->title,
-            'est_minutes' => $lesson->est_minutes,
-        ];
     }
 
     /**

@@ -20,6 +20,13 @@ class AcaRoleplayConsumerPrompt extends RoleplayConsumerPrompt
      */
     private const int STALLS_FROM_LEVEL = 3;
 
+    /**
+     * From this level the consumer stacks two or three questions in one
+     * turn, so the agent learns to answer each before going back to the
+     * script.
+     */
+    private const int STACKS_QUESTIONS_FROM_LEVEL = 4;
+
     protected const string TRANSCRIPTION_PROMPT = "Um, so, uh, this is, like, America's Health on a recorded line about your, you know, subsidy through the Affordable Care Act, the ACA, Marketplace, Obamacare. No Medicare, Medicaid or work insurance? Over 19? Okay, the licensed agent.";
 
     /** What real consumers on these calls sound like, from the ACA pack. */
@@ -144,6 +151,10 @@ class AcaRoleplayConsumerPrompt extends RoleplayConsumerPrompt
             $lines[] = 'Once or twice in the call, when the caller asks one of their required questions (your state, Medicare, Medicaid or work insurance, your age, or the okay to get the senior agent), don\'t answer it straight away: stall ("hm, hold on"), drift onto something else, or give a vague answer like "I think so" or "my '.($session->consumerGender() === 'female' ? 'husband' : 'wife').' handles that". Answer clearly once they ask again or pin you down.';
         }
 
+        if ($session->level >= self::STACKS_QUESTIONS_FROM_LEVEL) {
+            $lines[] = 'At least once in the call, ask two or three questions in a single turn, like "Wait, what is this? How\'d you get my number? Does it cost me anything?" If the caller answers only one of them, ask again about the ones they skipped before you answer their next question.';
+        }
+
         if ($coverage['receives_ssi'] ?? false) {
             $lines[] = 'You receive SSI (Supplemental Security Income). If benefits, disability or Social Security come up, mention SSI. You do not get SSDI.';
         }
@@ -165,7 +176,7 @@ class AcaRoleplayConsumerPrompt extends RoleplayConsumerPrompt
     {
         $goal = match ($outcome) {
             Outcome::Transfer => 'Once your objections have been handled well, say okay when the caller asks to get the senior agent on the line.',
-            Outcome::Dq => "Answer the qualifying questions truthfully, including your hidden truth, so the caller has to recognize you don't qualify. If they try to transfer you anyway, go along with it.",
+            Outcome::Dq => "Answer the qualifying questions truthfully, including your hidden truth, so the caller has to recognize you don't qualify. If they try to transfer you anyway, go along with it. Once they tell you that you don't qualify, accept it with a short goodbye like \"Oh, okay. Bye.\" and let them end the call: that isn't lost patience, so don't hang up on them.",
             Outcome::Dnc => 'At some point in the call, firmly tell the caller to stop calling you and to take you off their list, in those words. If they keep going after that, lose patience fast.',
         };
 

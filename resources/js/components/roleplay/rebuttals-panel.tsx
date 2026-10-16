@@ -25,7 +25,11 @@ export function RebuttalsPanel({
     /** Mock only. Live calls show rebuttals as reference, with no "Say this". */
     onRead?: (rebuttal: Rebuttal, lineIndex: number) => void;
 }) {
-    const { rebuttals: allRebuttals, rebuttalCloser } = useRoleplayContent();
+    const {
+        rebuttals: allRebuttals,
+        rebuttalCloser,
+        forbiddenWords = [],
+    } = useRoleplayContent();
     const [query, setQuery] = useState('');
 
     const rebuttals = useMemo(() => {
@@ -89,6 +93,10 @@ export function RebuttalsPanel({
                         className="flex flex-col gap-2 rounded-lg border p-3 text-sm transition-colors hover:border-[#e6cdf7]"
                     >
                         <p className="font-semibold">{rebuttal.title}</p>
+                        <QuotedForbiddenWords
+                            title={rebuttal.title}
+                            forbiddenWords={forbiddenWords}
+                        />
                         {rebuttal.lines.map((line, lineIndex) => (
                             <div
                                 key={line}
@@ -124,5 +132,34 @@ export function RebuttalsPanel({
                 )}
             </CardContent>
         </Card>
+    );
+}
+
+/**
+ * Warns when a rebuttal heading quotes the consumer's forbidden words
+ * ("Is it money, cash, cheque…?"), so they aren't read aloud.
+ */
+function QuotedForbiddenWords({
+    title,
+    forbiddenWords,
+}: {
+    title: string;
+    forbiddenWords: string[];
+}) {
+    const heading = title.toLowerCase();
+    const quoted = forbiddenWords.filter((word) =>
+        new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`).test(
+            heading,
+        ),
+    );
+
+    if (quoted.length === 0) {
+        return null;
+    }
+
+    return (
+        <p className="text-xs text-amber-600 dark:text-amber-400">
+            These are their words. Don't repeat {quoted.join(', ')} on the call.
+        </p>
     );
 }

@@ -81,6 +81,9 @@ Do you receive a red, white or blue card? (YES = DQ)
 **They name an insurance you are not familiar with**
 It is through the Marketplace, correct? (NO or cannot confirm = DQ. YES = proceed with the transfer)
 
+**They have a state plan**
+A state plan is Medicaid, so they are disqualified: read the DQ line. (DISPOSE AS DQ — DO NOT TRANSFER)
+
 **Wrong state**
 That could be the issue. What state can I get you help in? (edit and save on the Call Info page)
 
@@ -141,7 +144,7 @@ CANNOT transfer — disqualified (DQ):
 3. Work insurance / spousal work insurance
 4. Military or veterans insurance (VA)
 5. Private insurance / spousal private insurance
-6. State insurance
+6. State insurance / a "state plan" (state plans are Medicaid)
 7. Disability insurance (SSDI / SSD)
 8. Non-US citizens
 9. Native insurance

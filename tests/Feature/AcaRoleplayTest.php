@@ -117,6 +117,29 @@ test('completing an ACA call accepts ACA dispositions, grades it with the ACA ru
         ->and($response->json('recording_url'))->toBe(route('aca-roleplay.sessions.recording', $session));
 });
 
+test('an ACA call whose trainee speech was never transcribed is stored and shown as not graded', function () {
+    Storage::fake('local');
+    Queue::fake([GradeRoleplayDelivery::class]);
+    $session = RoleplaySession::factory()->aca()->started()->create();
+
+    $response = $this->actingAs($session->user)->post(route('aca-roleplay.call.complete', $session), [
+        'transcript' => implode("\n", [
+            '[0:02] consumer: Hello?',
+            "[0:06] consumer: Yeah, I can hear you. What's this about?",
+        ]),
+        'recording' => acaRoleplayRecording(),
+        'disposition' => 'transfer',
+        'end_reason' => 'agent',
+        'events' => json_encode([['type' => 'agent_speech', 'start' => 3_000, 'end' => 5_000], ['type' => 'agent_turn_untranscribed', 'at' => 5_000]]),
+    ]);
+
+    $response->assertOk();
+    $response->assertJson(['passed' => false]);
+    expect($response->json('not_graded_reason'))->toContain("wasn't captured");
+    expect($response->json('checks'))->toBe([])
+        ->and($session->refresh()->events)->toContain(['type' => 'agent_turn_untranscribed', 'at' => 5_000]);
+});
+
 test('a disposition from another vertical is rejected', function () {
     $medicareCall = RoleplaySession::factory()->started()->create();
 

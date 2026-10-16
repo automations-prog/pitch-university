@@ -22,7 +22,7 @@ test('the ACA docs parse into the content the roleplay page depends on', functio
             'dq', 'dnc', 'dead_air', 'answering_machine', 'robo', 'wrong_number', 'no_english',
         )
         ->and($content['levels'][2]['outcomeMix'])->toBe(['transfer' => 78, 'dq' => 22, 'dnc' => 0])
-        ->and($content['levels'][4]['outcomeMix'])->toBe(['transfer' => 55, 'dq' => 20, 'dnc' => 25])
+        ->and($content['levels'][4]['outcomeMix'])->toBe(['transfer' => 45, 'dq' => 40, 'dnc' => 15])
         ->and($content['forbiddenWords'])->toContain('money', 'cheque', 'how much', 'mortgage');
 });
 

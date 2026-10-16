@@ -111,6 +111,23 @@ class AcaRoleplayGrader extends RoleplayGrader
         'total' => 'totals?',
     ];
 
+    /** Lost trainee turns from which a call is too incomplete to grade, once they outnumber the transcribed ones. */
+    private const int MAX_UNTRANSCRIBED_TURNS = 3;
+
+    /**
+     * An agent line this short, made of the consumer's last words, is their
+     * echo that slipped past the browser's looser echo check.
+     */
+    private const int ECHO_MAX_WORDS = 8;
+
+    private const float ECHO_MATCH_RATIO = 0.8;
+
+    /** Words too common to tell one consumer question from another. */
+    private const array QUESTION_STOPWORDS = ['what', 'whats', 'this', 'that', 'thats', 'does', 'have', 'with', 'your', 'about', 'just', 'like', 'wait', 'know', 'really', 'going', 'gonna', 'howd', 'there', 'they', 'then', 'from', 'will', 'would', 'could', 'doing', 'call', 'calling'];
+
+    /** The trainee line written for a turn whose transcription failed. */
+    private const string INAUDIBLE_LINE = '(inaudible)';
+
     public function __construct(private readonly AcaRoleplayScript $script) {}
 
     /**
@@ -147,7 +164,7 @@ class AcaRoleplayGrader extends RoleplayGrader
         $coverageAsks = $this->coverageAsks($lines);
         $handoff = $expectsTransfer ? $this->transferHandoff($events) : null;
         $instantFail = $this->instantFail($agent);
-        [$pitchWords, $holdWords] = $this->forbiddenWordsUsed($agent, $transferClickedAt);
+        [$pitchWords, $holdWords, $pitchQuote, $holdQuote] = $this->forbiddenWordsUsed($lines, $transferClickedAt);
 
         $checks = [
             $this->check('correct_person', 'Confirmed you had the right person',
@@ -182,14 +199,16 @@ class AcaRoleplayGrader extends RoleplayGrader
                 $this->hedgesPromises($agent)),
             $this->check('forbidden_words_pitch', $pitchWords === []
                 ? 'Kept forbidden words out of the pitch'
-                : 'Kept forbidden words out of the pitch (you said: '.implode(', ', $pitchWords).')',
+                : 'Kept forbidden words out of the pitch (you said: '.implode(', ', $pitchWords)." in “{$pitchQuote}”)",
                 $pitchWords === []),
             $this->check('forbidden_words_hold', $holdWords === []
                 ? 'Kept forbidden words out of the small talk on hold (coaching note)'
-                : 'Kept forbidden words out of the small talk on hold (coaching note, you said: '.implode(', ', $holdWords).')',
+                : 'Kept forbidden words out of the small talk on hold (coaching note, you said: '.implode(', ', $holdWords)." in “{$holdQuote}”)",
                 $transferClickedAt === null ? null : $holdWords === []),
             $this->check('back_to_verification', 'Went back to the verification after each objection (coaching note)',
                 $this->returnedToVerification($lines, $events, $state, $transferClickedAt)),
+            $this->check('answered_stacked_questions', 'Answered every question when they asked several at once (coaching note)',
+                $this->answeredStackedQuestions($lines, $transferClickedAt)),
             $this->check('waited_for_answers', 'Waited for the answer to every required question (coaching note)',
                 $this->waitedForAnswers($lines, $state, $transferClickedAt)),
             $this->check('no_instant_fail', $instantFail === null
@@ -199,10 +218,20 @@ class AcaRoleplayGrader extends RoleplayGrader
             $this->check('disposition', 'Coded the call correctly',
                 $session->disposition === $correctDisposition),
             $this->check('patience', "Didn't run out of patience",
-                $session->end_reason !== 'hung_up'),
+                $session->end_reason !== 'hung_up' || $this->closedBeforeHangUp($lines, $dncRequestIndex)),
         ];
 
         $byKey = array_column($checks, 'passed', 'key');
+
+        if (! $this->agentSpeechCaptured($agent, $events)) {
+            return [
+                'checks' => [],
+                'passed' => false,
+                'correct_disposition' => $correctDisposition,
+                'correct_reason' => $correctReason,
+                'not_graded_reason' => "What you said on this call wasn't captured (your microphone audio didn't come through as text), so it wasn't graded. Check your microphone and try the call again.",
+            ];
+        }
 
         return [
             'checks' => $checks,
@@ -222,7 +251,8 @@ class AcaRoleplayGrader extends RoleplayGrader
     /**
      * The disposition the call should be coded as, from what happened:
      * a real DNC request wins, then a hang-up (Hung-Up Transfer once the
-     * conference was clicked, Not Interested before), then a second
+     * conference was clicked, DQ when a disqualified consumer hung up after
+     * the DQ line, Not Interested before), then a second
      * call-back ask after the rebuttal, then the persona's outcome.
      *
      * @param  list<Line>  $lines
@@ -237,7 +267,14 @@ class AcaRoleplayGrader extends RoleplayGrader
             }
         }
 
+        $trap = $session->persona['dq_trap'];
+        $isDisqualified = $trap !== null && $this->disqualifierCameUp($trap['id'], $lines);
+
         if ($session->end_reason === 'hung_up') {
+            if ($transferClickedAt === null && $isDisqualified && $this->readDqLine($lines)) {
+                return [Outcome::Dq->value, 'They hung up after you read the DQ line, so the call is still a DQ.', null];
+            }
+
             return $transferClickedAt === null
                 ? ['not_interested', 'They hung up before you conferenced '.static::HANDOFF_PARTY.', so the call is Not Interested.', null]
                 : ['hung_up_transfer', 'They hung up after you clicked conference, so the call is a Hung-Up Transfer.', null];
@@ -247,9 +284,7 @@ class AcaRoleplayGrader extends RoleplayGrader
             return ['call_back', 'They asked to be called back again after your rebuttal, so the call should be coded Call Back.', null];
         }
 
-        $trap = $session->persona['dq_trap'];
-
-        if ($trap !== null && ! $this->disqualifierCameUp($trap['id'], $lines)) {
+        if ($trap !== null && ! $isDisqualified) {
             return [Outcome::Transfer->value, "Their disqualifier ({$trap['hidden_truth']}) never came up on the call, so it's graded as a Transfer.", null];
         }
 
@@ -278,6 +313,56 @@ class AcaRoleplayGrader extends RoleplayGrader
         }
 
         return false;
+    }
+
+    /**
+     * Whether enough of the trainee's speech made it into the transcript to
+     * grade. Not when they spoke (the mic picked them up) but none of it
+     * was transcribed, or when more of their turns were lost than kept.
+     *
+     * @param  list<Line>  $agent
+     * @param  list<Event>  $events
+     */
+    private function agentSpeechCaptured(array $agent, array $events): bool
+    {
+        $transcribed = count(array_filter($agent, fn (array $line): bool => trim($line['text']) !== self::INAUDIBLE_LINE));
+        $types = array_column($events, 'type');
+        $untranscribed = count(array_keys($types, 'agent_turn_untranscribed', true));
+
+        if ($transcribed === 0) {
+            return ! in_array('agent_speech', $types, true) && $untranscribed === 0;
+        }
+
+        return $untranscribed < self::MAX_UNTRANSCRIBED_TURNS || $untranscribed < $transcribed;
+    }
+
+    /**
+     * The agent told the consumer they don't qualify.
+     *
+     * @param  list<Line>  $lines
+     */
+    protected function readDqLine(array $lines): bool
+    {
+        foreach ($lines as $line) {
+            if ($line['role'] === 'agent' && preg_match(static::DQ_LINE, $this->normalize($line['text']))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * The agent had already closed the call (the DQ line, or the DNC
+     * disclaimer after a DNC request), so the consumer hanging up after it
+     * isn't lost patience.
+     *
+     * @param  list<Line>  $lines
+     */
+    private function closedBeforeHangUp(array $lines, ?int $dncRequestIndex): bool
+    {
+        return $this->readDqLine($lines)
+            || ($dncRequestIndex !== null && $this->respectedDnc($lines, $dncRequestIndex));
     }
 
     /**
@@ -403,6 +488,98 @@ class AcaRoleplayGrader extends RoleplayGrader
         }
 
         return true;
+    }
+
+    /**
+     * When the consumer asks two or more questions in one turn before the
+     * conference, the agent's answer covers all of them: the consumer's
+     * next line doesn't ask one of them again. Null without such a turn.
+     *
+     * @param  list<Line>  $lines
+     */
+    private function answeredStackedQuestions(array $lines, ?int $transferClickedAt): ?bool
+    {
+        $checked = false;
+
+        foreach ($lines as $index => $line) {
+            if ($line['role'] !== 'consumer' || ($transferClickedAt !== null && $line['at'] >= $transferClickedAt)) {
+                continue;
+            }
+
+            $questions = $this->questionTopics($line['text']);
+
+            if (count($questions) < 2) {
+                continue;
+            }
+
+            $reply = $this->consumerLineAfterAgentTurn($lines, $index);
+
+            if ($reply === null) {
+                continue;
+            }
+
+            $checked = true;
+
+            foreach ($this->questionTopics($reply) as $asked) {
+                foreach ($questions as $question) {
+                    if (array_intersect($asked, $question) !== []) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return $checked ? true : null;
+    }
+
+    /**
+     * The distinctive words of each question in a line ("does it cost me
+     * anything?" is `cost, anything`). Questions with none ("what is this?")
+     * are left out, since a repeat of them can't be told apart.
+     *
+     * @return list<list<string>>
+     */
+    private function questionTopics(string $text): array
+    {
+        $topics = [];
+
+        foreach (preg_split('/(?<=[.!?])\s+/', $this->normalize($text)) ?: [] as $sentence) {
+            if (! str_ends_with(trim($sentence), '?')) {
+                continue;
+            }
+
+            $words = array_values(array_diff(
+                array_filter(preg_split('/[^a-z0-9]+/', $sentence, -1, PREG_SPLIT_NO_EMPTY) ?: [], fn (string $word): bool => strlen($word) >= 4),
+                self::QUESTION_STOPWORDS,
+            ));
+
+            if ($words !== []) {
+                $topics[] = $words;
+            }
+        }
+
+        return $topics;
+    }
+
+    /**
+     * The consumer's first line after the agent's next turn, or null when
+     * the agent never answered or the consumer never spoke again.
+     *
+     * @param  list<Line>  $lines
+     */
+    private function consumerLineAfterAgentTurn(array $lines, int $index): ?string
+    {
+        $agentAnswered = false;
+
+        foreach (array_slice($lines, $index + 1) as $line) {
+            if ($line['role'] === 'agent') {
+                $agentAnswered = true;
+            } elseif ($line['role'] === 'consumer' && $agentAnswered) {
+                return $line['text'];
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -611,18 +788,33 @@ class AcaRoleplayGrader extends RoleplayGrader
 
     /**
      * Forbidden words the agent said, split by where: in the pitch (before
-     * the conference click) and in the small talk while it rang. Only the
-     * agent's own words count.
+     * the conference click) and in the small talk while it rang, each with
+     * the first line it was said in. Only the agent's own words count, so
+     * a short line that is the consumer's last line heard back through the
+     * mic is skipped.
      *
-     * @param  list<Line>  $agent
-     * @return array{0: list<string>, 1: list<string>}
+     * @param  list<Line>  $lines
+     * @return array{0: list<string>, 1: list<string>, 2: string|null, 3: string|null}
      */
-    private function forbiddenWordsUsed(array $agent, ?int $transferClickedAt): array
+    private function forbiddenWordsUsed(array $lines, ?int $transferClickedAt): array
     {
         $pitch = [];
         $hold = [];
+        $pitchQuote = null;
+        $holdQuote = null;
+        $lastConsumerLine = null;
 
-        foreach ($agent as $line) {
+        foreach ($lines as $line) {
+            if ($line['role'] === 'consumer') {
+                $lastConsumerLine = $line['text'];
+
+                continue;
+            }
+
+            if ($line['role'] !== 'agent' || ($lastConsumerLine !== null && $this->echoesConsumer($line['text'], $lastConsumerLine))) {
+                continue;
+            }
+
             $text = $this->normalize($line['text']);
             $onHold = $transferClickedAt !== null && $line['at'] >= $transferClickedAt;
 
@@ -635,13 +827,33 @@ class AcaRoleplayGrader extends RoleplayGrader
 
                 if ($onHold) {
                     $hold[$word] = $word;
+                    $holdQuote ??= $line['text'];
                 } else {
                     $pitch[$word] = $word;
+                    $pitchQuote ??= $line['text'];
                 }
             }
         }
 
-        return [array_values($pitch), array_values($hold)];
+        return [array_values($pitch), array_values($hold), $pitchQuote, $holdQuote];
+    }
+
+    /**
+     * A short agent line made almost entirely of the consumer's last line's
+     * words: their voice picked up by the mic, not the agent talking.
+     */
+    private function echoesConsumer(string $agentText, string $consumerText): bool
+    {
+        $words = fn (string $text): array => preg_split('/[^a-z0-9]+/', $this->normalize($text), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $agentWords = $words($agentText);
+
+        if ($agentWords === [] || count($agentWords) > self::ECHO_MAX_WORDS) {
+            return false;
+        }
+
+        $matched = count(array_intersect($agentWords, $words($consumerText)));
+
+        return $matched / count($agentWords) >= self::ECHO_MATCH_RATIO;
     }
 
     protected function normalize(string $text): string

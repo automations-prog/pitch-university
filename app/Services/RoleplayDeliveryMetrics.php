@@ -36,6 +36,8 @@ class RoleplayDeliveryMetrics
         'greeting_repeated' => ['at'],
         // A trainee turn dropped as the consumer's echo, and what the mic really applied.
         'echo_discarded' => ['at'],
+        // A trainee turn the model heard but transcription returned no words for.
+        'agent_turn_untranscribed' => ['at'],
         'audio_checked' => ['at', 'echo_cancellation', 'noise_suppression', 'auto_gain_control'],
     ];
 

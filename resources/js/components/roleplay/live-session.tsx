@@ -9,7 +9,7 @@ import {
     TriangleAlert,
     Volume2,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CallResult } from '@/components/roleplay/call-result';
 import { CallScreen, type CallView } from '@/components/roleplay/call-screen';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,7 @@ import {
     useRoleplayVertical,
 } from '@/lib/roleplay-content';
 import {
+    scriptStepForLine,
     TRANSFER_ASK_SECTION,
     type PublicPersona,
     type RoleplayVertical,
@@ -96,7 +97,30 @@ export function LiveRoleplaySession({
     const secondsLeft = scene
         ? Math.max(scene.maxSeconds - call.elapsedSeconds, 0)
         : null;
-    const { endCall } = call;
+    const { endCall, transcript } = call;
+    const checkedLinesRef = useRef(new WeakSet<object>());
+
+    // The script follows along as the trainee reads it; Back / Next still work.
+    useEffect(() => {
+        transcript
+            .filter(
+                (line) =>
+                    line.speaker === 'agent' &&
+                    !checkedLinesRef.current.has(line),
+            )
+            .forEach((line) => {
+                checkedLinesRef.current.add(line);
+                setScriptStep((step) =>
+                    scriptStepForLine(
+                        scriptSections,
+                        line.text,
+                        step,
+                        persona.lead,
+                        agentName,
+                    ),
+                );
+            });
+    }, [transcript, scriptSections, persona.lead, agentName]);
 
     // A scene ends itself when its time is up.
     useEffect(() => {
