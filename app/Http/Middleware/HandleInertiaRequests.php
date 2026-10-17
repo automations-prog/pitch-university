@@ -46,7 +46,7 @@ class HandleInertiaRequests extends Middleware
                     'licenses' => fn ($query) => $query->where('status', LicenseStatus::Active),
                     'courseTracks',
                 ]),
-                'permissions' => fn (): array => $request->user()?->getAllPermissions()->pluck('name')->values()->all() ?? [],
+                'permissions' => fn (): array => $this->permissions($request),
                 'impersonating' => $request->session()->has(config('laravel-impersonate.session_key')),
             ],
             'screeningAwaitingReview' => fn (): ?int => $request->user()?->can(Permission::ViewScreening)
@@ -54,5 +54,30 @@ class HandleInertiaRequests extends Middleware
                 : null,
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
+    }
+
+    /**
+     * The permission names the pages check, without the roleplay verticals
+     * the user may not practice, so their links stay hidden.
+     *
+     * @return list<string>
+     */
+    private function permissions(Request $request): array
+    {
+        $user = $request->user();
+
+        if ($user === null) {
+            return [];
+        }
+
+        return $user->getAllPermissions()
+            ->pluck('name')
+            ->reject(function (string $name) use ($user): bool {
+                $vertical = Permission::tryFrom($name)?->roleplayVertical();
+
+                return $vertical !== null && ! $user->canPracticeRoleplay($vertical);
+            })
+            ->values()
+            ->all();
     }
 }

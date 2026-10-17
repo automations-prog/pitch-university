@@ -19,11 +19,14 @@ class RoleplayController extends Controller
 {
     /**
      * Display the vertical's roleplay page with its script content and the
-     * user's recent full calls on it. Training scenes are listed on their
+     * user's recent full calls on it. Agents need a track that opens the
+     * vertical. Training scenes are listed on their
      * module's roleplay page.
      */
     public function index(Request $request, RoleplayVertical $vertical): Response
     {
+        abort_unless($request->user()->canPracticeRoleplay($vertical), 403);
+
         $recentSessions = $request->user()->roleplaySessions()
             ->where('vertical', $vertical)
             ->whereNull('course_module_id')

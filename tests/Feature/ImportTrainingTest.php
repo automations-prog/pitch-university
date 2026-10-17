@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RoleplayVertical;
 use App\Models\CourseModule;
 use App\Models\CourseTrack;
 use Illuminate\Support\Facades\File;
@@ -168,6 +169,28 @@ test('track.json position overrides folder order', function () {
     $this->artisan('training:import', ['--path' => $directory])->assertSuccessful();
 
     expect(CourseTrack::orderBy('position')->pluck('slug')->all())->toBe(['zzz', 'aaa']);
+});
+
+test('track.json sets the roleplay vertical the track opens', function () {
+    $directory = storage_path('framework/testing/training-import');
+    File::ensureDirectoryExists("{$directory}/aca-fronting");
+    File::put("{$directory}/aca-fronting/01-intro.json", json_encode(moduleFile('intro', ['a'])));
+    File::put("{$directory}/aca-fronting/track.json", json_encode(['vertical' => 'aca']));
+
+    $this->artisan('training:import', ['--path' => $directory])->assertSuccessful();
+
+    expect(CourseTrack::sole()->vertical)->toBe(RoleplayVertical::Aca);
+});
+
+test('it rejects a track.json vertical with no roleplay', function () {
+    $directory = storage_path('framework/testing/training-import');
+    File::ensureDirectoryExists("{$directory}/broken");
+    File::put("{$directory}/broken/01-intro.json", json_encode(moduleFile('intro', ['a'])));
+    File::put("{$directory}/broken/track.json", json_encode(['vertical' => 'dental']));
+
+    $this->artisan('training:import', ['--path' => $directory])
+        ->expectsOutputToContain('broken/track.json')
+        ->assertFailed();
 });
 
 test('re-importing updates the track and removes deleted modules and lessons without duplicating', function () {

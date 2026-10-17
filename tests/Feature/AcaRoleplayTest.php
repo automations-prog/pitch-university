@@ -28,7 +28,7 @@ function acaRoleplayRecording(): UploadedFile
 }
 
 test('a verified user can open the ACA roleplay page with the ACA script and only their ACA calls', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withRoleplayTrack(RoleplayVertical::Aca)->create();
     $acaCall = RoleplaySession::factory()->aca()->for($user)->ended()->create();
     RoleplaySession::factory()->for($user)->ended()->create();
 
@@ -49,7 +49,7 @@ test('a verified user can open the ACA roleplay page with the ACA script and onl
 });
 
 test('starting an ACA session saves an ACA persona and keeps its coverage hidden', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withRoleplayTrack(RoleplayVertical::Aca)->create();
 
     $response = $this->actingAs($user)->postJson(route('aca-roleplay.sessions.store'), ['level' => 3]);
 

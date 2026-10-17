@@ -483,27 +483,33 @@ export default function Dashboard(props: Props) {
                         color="sky"
                         onClick={() => selectTab('training')}
                     />
-                    <QuickActionCard
-                        title="Start a Medicare roleplay"
-                        description="Practice a call"
-                        tile={<Play className="size-4 fill-current" />}
-                        color="teal"
-                        href={medicareRoleplayIndex()}
-                    />
-                    <QuickActionCard
-                        title="Start an ACA roleplay"
-                        description="Practice a call"
-                        tile={<Play className="size-4 fill-current" />}
-                        color="rose"
-                        href={acaRoleplayIndex()}
-                    />
-                    <QuickActionCard
-                        title="Start a Meals roleplay"
-                        description="Practice a call"
-                        tile={<Play className="size-4 fill-current" />}
-                        color="emerald"
-                        href={mealsRoleplayIndex()}
-                    />
+                    {can('roleplay.medicare.view') && (
+                        <QuickActionCard
+                            title="Start a Medicare roleplay"
+                            description="Practice a call"
+                            tile={<Play className="size-4 fill-current" />}
+                            color="teal"
+                            href={medicareRoleplayIndex()}
+                        />
+                    )}
+                    {can('roleplay.aca.view') && (
+                        <QuickActionCard
+                            title="Start an ACA roleplay"
+                            description="Practice a call"
+                            tile={<Play className="size-4 fill-current" />}
+                            color="rose"
+                            href={acaRoleplayIndex()}
+                        />
+                    )}
+                    {can('roleplay.meals.view') && (
+                        <QuickActionCard
+                            title="Start a Meals roleplay"
+                            description="Practice a call"
+                            tile={<Play className="size-4 fill-current" />}
+                            color="emerald"
+                            href={mealsRoleplayIndex()}
+                        />
+                    )}
                     {can('users.create') && (
                         <QuickActionCard
                             title="Invite an agent"

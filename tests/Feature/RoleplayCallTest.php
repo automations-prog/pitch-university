@@ -102,7 +102,7 @@ test('guests are redirected to login on every roleplay endpoint', function (stri
 ]);
 
 test('starting a session saves a persona and returns only its public part', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withRoleplayTrack()->create();
 
     $response = $this->actingAs($user)->postJson(route('medicare-roleplay.sessions.store'), ['level' => 3]);
 
@@ -118,7 +118,7 @@ test('starting a session saves a persona and returns only its public part', func
 });
 
 test('starting a session requires a level from 1 to 5', function (mixed $level) {
-    $response = $this->actingAs(User::factory()->create())
+    $response = $this->actingAs(User::factory()->withRoleplayTrack()->create())
         ->postJson(route('medicare-roleplay.sessions.store'), ['level' => $level]);
 
     $response->assertJsonValidationErrors(['level']);
@@ -126,7 +126,7 @@ test('starting a session requires a level from 1 to 5', function (mixed $level) 
 
 test('starting sessions past the daily cap is rejected', function () {
     config(['services.openai.roleplay_daily_limit' => 2]);
-    $user = User::factory()->create();
+    $user = User::factory()->withRoleplayTrack()->create();
 
     $this->actingAs($user)->postJson(route('medicare-roleplay.sessions.store'), ['level' => 1])->assertCreated();
     $this->actingAs($user)->postJson(route('medicare-roleplay.sessions.store'), ['level' => 1])->assertCreated();
@@ -138,7 +138,7 @@ test('starting sessions past the daily cap is rejected', function () {
 
 test('a daily cap of 0 lets sessions start without limit', function () {
     config(['services.openai.roleplay_daily_limit' => 0]);
-    $user = User::factory()->create();
+    $user = User::factory()->withRoleplayTrack()->create();
 
     foreach (range(1, 3) as $attempt) {
         $this->actingAs($user)->postJson(route('medicare-roleplay.sessions.store'), ['level' => 1])->assertCreated();
@@ -303,7 +303,7 @@ test('a user cannot mint, complete or listen to another user\'s session', functi
     fakeClientSecrets();
     $session = RoleplaySession::factory()->started()->create(['recording_path' => 'roleplay-recordings/call.wav']);
 
-    $response = $this->actingAs(User::factory()->create())
+    $response = $this->actingAs(User::factory()->withRoleplayTrack()->create())
         ->{$method}(route($route, $session), $route === 'medicare-roleplay.call.complete' ? completePayload() : []);
 
     $response->assertNotFound();

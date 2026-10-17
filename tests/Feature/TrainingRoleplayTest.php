@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\Outcome;
+use App\Enums\RoleplayVertical;
 use App\Jobs\GradeRoleplayDelivery;
 use App\Jobs\JudgeRoleplayScene;
 use App\Models\CourseModule;
@@ -24,7 +25,7 @@ use Inertia\Testing\AssertableInertia as Assert;
  */
 function trackWithRoleplayModule(array $roleplay = []): array
 {
-    $track = CourseTrack::factory()->create();
+    $track = CourseTrack::factory()->create(['vertical' => RoleplayVertical::Medicare]);
     $first = CourseModule::factory()->for($track, 'track')->withRoleplay($roleplay)->create(['position' => 0]);
     $second = CourseModule::factory()->for($track, 'track')->create(['position' => 1]);
     $agent = User::factory()->create();

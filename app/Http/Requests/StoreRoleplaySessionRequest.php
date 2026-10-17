@@ -2,17 +2,21 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\RoleplayVertical;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRoleplaySessionRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Agents may only start calls on a vertical one of their tracks opens.
      */
     public function authorize(): bool
     {
-        return true;
+        /** @var RoleplayVertical $vertical */
+        $vertical = $this->route('vertical');
+
+        return $this->user()->canPracticeRoleplay($vertical);
     }
 
     /**

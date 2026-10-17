@@ -16,7 +16,8 @@ use Illuminate\Validation\ValidationException;
 /**
  * Imports training tracks from disk. Each sub-directory of the data path is a
  * track (its name is the track slug) holding an optional `track.json` with the
- * track's name/description/position (defaulting to folder order), an optional
+ * track's name/description/position (defaulting to folder order) and the
+ * roleplay `vertical` it opens, an optional
  * `exam.json` final exam, and one JSON file per module, ordered by filename.
  * A module may end with a `roleplay`: a short scene from a live call, starting
  * mid-call at one script section, that the trainee must pass after its quiz.
@@ -64,7 +65,7 @@ class ImportTraining extends Command
     /**
      * Read and validate every file in a track folder.
      *
-     * @return array{slug: string, name: string, description: string|null, position: int|null, modules: array<int, array<string, mixed>>, exam: array<string, mixed>|null}|null
+     * @return array{slug: string, vertical: string|null, name: string, description: string|null, position: int|null, modules: array<int, array<string, mixed>>, exam: array<string, mixed>|null}|null
      */
     private function readTrack(string $trackDirectory): ?array
     {
@@ -72,6 +73,14 @@ class ImportTraining extends Command
         $metadata = File::exists("{$trackDirectory}/track.json")
             ? json_decode(File::get("{$trackDirectory}/track.json"), true)
             : [];
+
+        try {
+            Validator::make($metadata, ['vertical' => ['nullable', Rule::enum(RoleplayVertical::class)]])->validate();
+        } catch (ValidationException $exception) {
+            $this->error("{$slug}/track.json: ".$exception->validator->errors()->first());
+
+            return null;
+        }
 
         $moduleFiles = collect(File::glob("{$trackDirectory}/*.json"))
             ->reject(fn (string $file) => in_array(basename($file), ['track.json', 'exam.json'], true))
@@ -116,6 +125,7 @@ class ImportTraining extends Command
 
         return [
             'slug' => $slug,
+            'vertical' => $metadata['vertical'] ?? null,
             'name' => $metadata['name'] ?? str($slug)->headline()->toString(),
             'description' => $metadata['description'] ?? null,
             'position' => isset($metadata['position']) ? (int) $metadata['position'] : null,
@@ -249,14 +259,14 @@ class ImportTraining extends Command
      * Sync a track and its modules/lessons with the files. Modules and lessons
      * that are no longer in the files are removed.
      *
-     * @param  array{slug: string, name: string, description: string|null, position: int|null, modules: array<int, array<string, mixed>>, exam: array<string, mixed>|null}  $data
+     * @param  array{slug: string, vertical: string|null, name: string, description: string|null, position: int|null, modules: array<int, array<string, mixed>>, exam: array<string, mixed>|null}  $data
      */
     private function importTrack(array $data, int $position): void
     {
         DB::transaction(function () use ($data, $position) {
             $track = CourseTrack::updateOrCreate(
                 ['slug' => $data['slug']],
-                ['name' => $data['name'], 'description' => $data['description'], 'position' => $position],
+                ['vertical' => $data['vertical'], 'name' => $data['name'], 'description' => $data['description'], 'position' => $position],
             );
 
             foreach ($data['modules'] as $modulePosition => $moduleData) {

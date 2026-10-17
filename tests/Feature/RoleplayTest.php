@@ -11,7 +11,7 @@ test('guests are redirected to the login page', function () {
 });
 
 test('a verified user can open the roleplay page with the script content', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withRoleplayTrack()->create();
 
     $response = $this->actingAs($user)->get(route('medicare-roleplay.index'));
 
@@ -25,7 +25,7 @@ test('a verified user can open the roleplay page with the script content', funct
 });
 
 test('the roleplay page lists only the user\'s own finished calls', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withRoleplayTrack()->create();
     $finished = RoleplaySession::factory()->for($user)->ended()->create();
     RoleplaySession::factory()->for($user)->started()->create();
     RoleplaySession::factory()->ended()->create();

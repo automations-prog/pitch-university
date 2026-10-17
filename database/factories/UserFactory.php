@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Enums\RoleplayVertical;
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
+use App\Models\CourseTrack;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -69,6 +71,16 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'role' => UserRole::Admin,
         ]);
+    }
+
+    /**
+     * Assign the user a training track that opens the given roleplay vertical.
+     */
+    public function withRoleplayTrack(RoleplayVertical $vertical = RoleplayVertical::Medicare): static
+    {
+        return $this->afterCreating(fn (User $user) => $user->courseTracks()->attach(
+            CourseTrack::factory()->create(['vertical' => $vertical]),
+        ));
     }
 
     /**

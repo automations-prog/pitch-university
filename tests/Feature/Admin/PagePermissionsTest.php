@@ -11,6 +11,7 @@ dataset('pages each role is refused', [
     'agents can not open reports' => ['agent', 'admin.reports.index'],
     'agents can not open training tracks' => ['agent', 'admin.training-tracks.index'],
     'agents can not open training modules' => ['agent', 'training-modules.index'],
+    'agents can not open a roleplay without its track' => ['agent', 'medicare-roleplay.index'],
 ]);
 
 dataset('pages each role can open', [
@@ -25,7 +26,6 @@ dataset('pages each role can open', [
     'super admins open teams' => ['super_admin', 'admin.teams.index'],
     'super admins open roles' => ['super_admin', 'admin.roles.index'],
     'agents open the dashboard' => ['agent', 'dashboard'],
-    'agents open a roleplay' => ['agent', 'medicare-roleplay.index'],
 ]);
 
 test('roles without a page\'s permission are refused', function (string $role, string $routeName) {

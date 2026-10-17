@@ -91,6 +91,19 @@ enum Permission: string
     }
 
     /**
+     * The roleplay vertical this permission opens, if it is a roleplay one.
+     */
+    public function roleplayVertical(): ?RoleplayVertical
+    {
+        return match ($this) {
+            self::ViewMedicareRoleplay => RoleplayVertical::Medicare,
+            self::ViewAcaRoleplay => RoleplayVertical::Aca,
+            self::ViewMealsRoleplay => RoleplayVertical::Meals,
+            default => null,
+        };
+    }
+
+    /**
      * The permission that opens the given roleplay vertical's pages.
      */
     public static function forRoleplay(RoleplayVertical $vertical): self

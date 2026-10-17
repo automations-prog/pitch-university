@@ -27,7 +27,7 @@ function mealsRoleplayRecording(): UploadedFile
 }
 
 test('a verified user can open the Meals roleplay page with the Meals script and only their Meals calls', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withRoleplayTrack(RoleplayVertical::Meals)->create();
     $mealsCall = RoleplaySession::factory()->meals()->for($user)->ended()->create();
     RoleplaySession::factory()->aca()->for($user)->ended()->create();
 
@@ -47,7 +47,7 @@ test('a verified user can open the Meals roleplay page with the Meals script and
 });
 
 test('starting a Meals session saves a Meals persona and keeps its Medicaid answer hidden', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->withRoleplayTrack(RoleplayVertical::Meals)->create();
 
     $response = $this->actingAs($user)->postJson(route('meals-roleplay.sessions.store'), ['level' => 3]);
 

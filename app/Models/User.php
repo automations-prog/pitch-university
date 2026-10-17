@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Permission;
+use App\Enums\RoleplayVertical;
 use App\Enums\UserRole;
 use App\Enums\UserSource;
 use App\Enums\UserStatus;
@@ -118,6 +119,20 @@ class User extends Authenticatable implements PasskeyUser
     public function canBeImpersonated(): bool
     {
         return ! $this->isSuperAdmin() && $this->isActive();
+    }
+
+    /**
+     * Whether this user may practice the given roleplay vertical: they need
+     * its permission, and agents also need a track assigned that opens it.
+     */
+    public function canPracticeRoleplay(RoleplayVertical $vertical): bool
+    {
+        if (! $this->can(Permission::forRoleplay($vertical))) {
+            return false;
+        }
+
+        return $this->role !== UserRole::Agent
+            || $this->courseTracks()->where('vertical', $vertical)->exists();
     }
 
     /**
